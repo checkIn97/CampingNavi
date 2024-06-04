@@ -2,11 +2,8 @@ package com.demo.campingnavi.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -17,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Recommned {
+public class Recommend {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
