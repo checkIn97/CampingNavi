@@ -1,0 +1,23 @@
+# project name
+spring:
+  application:
+    name: CampingNavi
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:XE
+    username: camp_user
+    password: ora123
+  jpa:
+    database: oracle
+    hibernate:
+      ddl-auto: update
+    generate-ddl: false
+    show-sql: true
+    database-platform: org.hibernate.dialect.OracleDialect
+    properties:
+      hibernate:
+        format_sql: true
+
+# server port
+server:
+  port: 8080
