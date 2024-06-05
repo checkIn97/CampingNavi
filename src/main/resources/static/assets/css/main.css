@@ -16,8 +16,7 @@ button {
 }
 
 button:hover {
-    background-color: #da945c;
-    color: #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 마우스를 올렸을 때의 그림자 효과를 설정합니다. */
 }
 
 /*loginPage*/
