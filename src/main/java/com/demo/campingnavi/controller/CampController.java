@@ -6,4 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/camp")
 public class CampController {
+
+    @RequestMapping("/index")
+    public String index() {
+        return "loginPage";
+    }
 }
