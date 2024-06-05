@@ -53,14 +53,6 @@ button:hover {
     flex: 1;
 }
 
-#logoMark {
-    width: 10%;
-    top: 50%;
-    left: 50%;
-    position: sticky;
-    transform: translate(-50px, 0px);
-}
-
 #logoTypo {
     width: 100%;
 }
