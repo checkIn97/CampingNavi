@@ -19,6 +19,30 @@ button:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 마우스를 올렸을 때의 그림자 효과를 설정합니다. */
 }
 
+/*footer*/
+
+#footer {
+    -moz-transition: -moz-transform 0.325s ease-in-out, -moz-filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
+    -webkit-transition: -webkit-transform 0.325s ease-in-out, -webkit-filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
+    -ms-transition: -ms-transform 0.325s ease-in-out, -ms-filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
+    transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+#footer .copyright {
+    letter-spacing: 0.2rem;
+    font-size: 0.6rem;
+    opacity: 0.75;
+    margin-bottom: 0;
+    text-transform: uppercase;
+    position: fixed; /* footer를 고정 위치에 둡니다. */
+    bottom: 0; /* footer를 하단에 위치하게 합니다. */
+    width: 100%; /* footer의 너비를 100%로 설정하여 전체 너비를 차지하게 합니다. */
+}
+
 /*loginPage*/
 
 #wrapper {

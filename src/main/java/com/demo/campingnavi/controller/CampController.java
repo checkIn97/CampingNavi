@@ -11,4 +11,9 @@ public class CampController {
     public String index() {
         return "loginPage";
     }
+
+    @RequestMapping("/search")
+    public String search() {
+        return "search/searchPage";
+    }
 }
