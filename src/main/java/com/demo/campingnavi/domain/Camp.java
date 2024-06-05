@@ -29,7 +29,7 @@ public class Camp {
     @Column(length = 500, nullable = false)
     private String name; // 캠핑장 이름
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = true)
     private LocalDate createdAt; // 캠핑장 설립일
 
     @Column(length = 1000, nullable = false)
