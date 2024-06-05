@@ -7,13 +7,4 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/camp")
 public class CampController {
 
-    @RequestMapping("/index")
-    public String index() {
-        return "loginPage";
-    }
-
-    @RequestMapping("/search")
-    public String search() {
-        return "search/searchPage";
-    }
 }

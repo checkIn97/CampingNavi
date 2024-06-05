@@ -1,13 +1,13 @@
 package com.demo.campingnavi.service;
 
+import com.demo.campingnavi.config.PathConfig;
 import com.demo.campingnavi.domain.Camp;
+import com.demo.campingnavi.domain.Review;
 import com.demo.campingnavi.repository.CampRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,7 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public List<Camp> campInFromCsv(String csvFile, String n) {
+        // CSV 파일에서 camp 데이터를 읽어 데이터베이스에 저장하는 메소드
         List<Camp> camps = new ArrayList<Camp>();
         List<String> errors = new ArrayList<String>();
 
@@ -98,6 +99,79 @@ public class DataServiceImpl implements DataService {
 
         System.out.println(camps.get(0).getName());
         return camps;
+    }
+
+    @Override
+    public void reviewListOutToCsv(List<Review> reviewList) {
+        // 리뷰가 작성될 때 Review.csv 파일로 평점정보를 내보내는 메소드
+        String csvFile = "tmp_review.csv";
+        String pyFile = "ReviewListToCsv.py";
+        csvFile = PathConfig.realPath(csvFile);
+        pyFile = PathConfig.realPath(pyFile);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("mseq,")
+                .append("cseq,")
+                .append("rate\n");
+
+        for (Review review : reviewList) {
+            stringBuilder
+                    .append(review.getMember().getMseq()).append(",")
+                    .append(review.getCamp().getCseq()).append(",")
+                    .append(review.getLikes()).append("\n");
+        }
+
+        try {
+            FileWriter fileWriter = new FileWriter(csvFile);
+            try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+                bufferedWriter.write(stringBuilder.toString());
+            }
+            fileWriter.close();
+            ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, csvFile);
+            Process process = processBuilder.start();
+            process.waitFor();
+            System.out.println("review 데이터 내보내기 성공");
+        }catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("review 데이터 내보내기 실패");
+        }
+
+        File file = new File(csvFile);
+        if (file.exists()) {
+            if (file.delete()) {
+                System.out.println("임시파일 삭제 완료");
+            } else {
+                System.out.println("임시파일 삭제 실패");
+            }
+        }
+    }
+
+    @Override
+    public void filteredListOutToCsv(List<Camp> filteredList) {
+        // 평점정보를 가져올 캠프 리스트를 내보내는 메소드
+        String csvFile = "tmp_filtered.csv";
+        csvFile = PathConfig.realPath(csvFile);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("cseq\n");
+
+        for (Camp camp : filteredList) {
+            stringBuilder.append(camp.getCseq()).append('\n');
+        }
+
+        try {
+            FileWriter fileWriter = new FileWriter(csvFile);
+            try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+                bufferedWriter.write(stringBuilder.toString());
+            }
+            fileWriter.close();
+            System.out.println("filtered 캠프 데이터 내보내기 성공");
+        }catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("filtered 캠프 데이터 내보내기 실패");
+        }
     }
 
 }
