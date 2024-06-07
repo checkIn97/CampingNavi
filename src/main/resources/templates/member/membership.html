@@ -9,18 +9,44 @@
 </head>
 <body>
 
-    <div id="box">
-        <h1 class="major">회원가입</h1>
-        <div id="Contain">
+<a href="/index"><img alt="typo" id="typo" th:src="@{/assets/images/logo/typo.png}"></a>
+
+<div id="box">
+    <h1 class="major">회원가입</h1>
+    <div id="membershipContain">
+
+        <div class="memberContain">
             <input placeholder="아이디" type="text">
-            <input placeholder="비밀번호" type="text">
-            <input placeholder="비밀번호 확인" type="text">
-            <input placeholder="이름" type="text">
-            <input placeholder="전화번호" type="text">
-            <input placeholder="이메일" type="text">
-            <input placeholder="주소" type="text">
-            <button class="searchBtn" type="button">회원가입</button>
+            <button type="button">id 중복 확인</button>
         </div>
+
+        <div class="memberContain">
+            <div class="buttonContain">
+                <input placeholder="비밀번호" type="text">
+                <input placeholder="비밀번호 확인" type="text">
+            </div>
+            <button type="button">비밀번호 중복 확인</button>
+        </div>
+
+        <input placeholder="이름" type="text">
+
+        <div class="memberContain">
+            <input placeholder="전화번호" type="text">
+            <button type="button">핸드폰 번호 인증</button>
+        </div>
+
+        <div class="memberContain">
+            <input placeholder="이메일" type="text">
+            <button type="button">이메일 인증</button>
+        </div>
+
+        <div class="memberContain">
+            <input placeholder="주소" type="text">
+            <button type="button">주소 검색</button>
+        </div>
+
+        <button class="mainBtn" type="button">회원가입</button>
+    </div>
 
 
 </div>

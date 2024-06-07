@@ -49,8 +49,17 @@
     <button class="mainBtn" id="agreeBtn" type="button">회원가입</button>
 </div>
 
-
 <th:block th:insert="insert/footer.html"></th:block>
+
+<script>
+    document.getElementById('agreeBtn').addEventListener('click', function () {
+        if (document.getElementById('agree').checked) {
+            location.href = '/member/membership';
+        } else {
+            location.href = '/index';
+        }
+    })
+</script>
 <!--배경사진-->
 <div id="bg"></div>
 
