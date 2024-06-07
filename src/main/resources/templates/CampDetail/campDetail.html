@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .two-line {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+<h1>Camp Data</h1>
+<form action="/camp/detail/" method="get">
+    <input type="text" name="mapX" placeholder="Enter X coordinate" required />
+    <input type="text" name="mapY" placeholder="Enter Y coordinate" required />
+    <button type="submit">Fetch Data</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>캠핑장명</th>
+        <th>주소</th>
+        <th>연락처</th>
+        <th>개수대 개수</th>
+        <th>화로대</th>
+        <th>부대시설</th>
+        <th>주변이용가능시설</th>
+        <th>화장실 개수</th>
+        <th>샤워실 개수</th>
+        <th>특징</th>
+        <th>홈페이지</th>
+        <th>예약 페이지</th>
+        <th>소개</th>
+        <th>애완동물출입</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="data : ${item}">
+        <td th:text="${data.facltNm}"></td>
+        <td class="two-line">
+            <span th:text="${data.addr1}"></span>
+            <span th:text="${data.addr2}"></span>
+            <a th:href="'https://map.kakao.com/link/to/' + ${data.facltNm} + ',' + ${data.mapY} + ',' + ${data.mapX}" target="_blank">캠핑장 길찾기</a>
+        </td>
+        <td th:text="${data.tel}"></td>
+        <td th:text="${data.wtrplCo}"></td>
+        <td th:text="${data.brazierCl}"></td>
+        <td th:text="${data.sbrsCl}"></td>
+        <td th:text="${data.caravAcmpnyAt}"></td>
+        <td th:text="${data.toiletCo}"></td>
+        <td th:text="${data.swrmCo}"></td>
+        <td th:text="${data.featureNm}"></td>
+        <td><a th:href="${data.homepage}" target="_blank" th:text="${data.homepage}"></a></td>
+        <td><a th:href="${data.resveUrl}" target="_blank" th:text="${data.resveUrl}"></a></td>
+        <td th:text="${data.intro}"></td>
+        <td th:text="${data.animalCmgCl}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
