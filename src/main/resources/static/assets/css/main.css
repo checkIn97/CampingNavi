@@ -1,5 +1,10 @@
 /*Basic*/
 
+font {
+    color: rgb(27, 31, 34);
+    font-size: 20px;
+}
+
 input[type="text"], input[type="password"] {
     border: 1px solid #ccc;
     background-color: #f9f9f9;
@@ -8,7 +13,22 @@ input[type="text"], input[type="password"] {
     padding: 15px 15px 15px 25px;
 }
 
+a {
+    text-decoration: none;
+    color: rgb(27, 31, 34);
+}
+
+/*typo*/
+
+#typo{
+    width: 15%;
+    margin-top: 10px;
+}
+
+/*button*/
+
 button {
+    border: 1px solid #ccc;
     background-color: #f9f9f9;
     font-size: 20px;
     border-radius: 40px;
@@ -19,6 +39,31 @@ button:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 마우스를 올렸을 때의 그림자 효과를 설정합니다. */
 }
 
+.mainBtn{
+    background-color: #E58B33;
+    font-size: 25px;
+}
+
+/*header*/
+
+h1.major, h2.major, h3.major, h4.major, h5.major, h6.major {
+    border-bottom: solid 1px rgba(27, 31, 34, 0.5);
+    width: max-content;
+    padding-bottom: 0.5rem;
+    margin: 0 0 2rem 0;
+}
+
+#box {
+    width: -webkit-fill-available;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2rem;
+    margin: 0 0 2rem 0;
+    background-color: #fdfada;
+    border-radius: 60px;
+}
 /*footer*/
 
 #footer {
@@ -43,6 +88,107 @@ button:hover {
     width: 100%; /* footer의 너비를 100%로 설정하여 전체 너비를 차지하게 합니다. */
 }
 
+/*Table*/
+
+table {
+    margin: 0 0 2rem 0;
+    width: 100%;
+    font-size: 20px;
+}
+
+table tbody tr {
+    border: solid 1px #ffffff;
+    border-left: 0;
+    border-right: 0;
+}
+
+table tbody tr:nth-child(2n + 1) {
+    background-color: rgba(127, 127, 127, 0.15)
+}
+
+table td {
+    padding: 0.75em 0.75em;
+}
+
+table th {
+    /*color: #ffffff;*/
+    font-size: 0.9em;
+    font-weight: 600;
+    padding: 0.75em 0.75em 0.75em 0.75em;
+    text-align: left;
+}
+
+table thead {
+    border-bottom: solid 2px #ffffff;
+}
+
+table tfoot {
+    border-top: solid 2px #ffffff;
+}
+
+table.alt {
+    border-collapse: separate;
+}
+
+table.alt tbody tr td {
+    border: solid 1px #ffffff;
+    border-left-width: 0;
+    border-top-width: 0;
+}
+
+table.alt tbody tr td:first-child {
+    border-left-width: 1px;
+}
+
+table.alt tbody tr:first-child td {
+    border-top-width: 1px;
+}
+
+table.alt thead {
+    border-bottom: 0;
+}
+
+table.alt tfoot {
+    border-top: 0;
+}
+
+.tableResult:hover{
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/*membership*/
+
+#privacy {
+    width: 100%;
+    height: 400px;
+}
+
+#membershipAgree {
+    font-size: 20px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+#membershipAgree input {
+    margin-right: 10px;
+}
+
+#membershipAgree label {
+    margin-right: 20px;
+}
+
+.membershipBtn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+#agreeBtn {
+    width: 100%;
+    margin-top: 20px;
+}
+
 /*loginPage*/
 
 #wrapper {
@@ -57,11 +203,6 @@ button:hover {
 .content {
     display: flex;
     flex-direction: column;
-}
-
-#loginBtn {
-    background-color: #E58B33;
-    font-size: 25px;
 }
 
 #userPw {
@@ -79,4 +220,19 @@ button:hover {
 
 #logoTypo {
     width: 100%;
+}
+
+/*searchPage*/
+
+#searchContain {
+    margin-bottom: 20px;
+}
+
+#search-box {
+    width: 25%; /* 화면의 가로 1/3을 차지하도록 설정합니다. */
+    height: 90vh;
+    margin: 0; /* 요소를 화면 중앙에 배치합니다. */
+    padding: 20px;
+    border-radius: 50px;
+    background-color: #fdfada
 }
