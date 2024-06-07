@@ -5,15 +5,77 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
     <link href="/assets/css/main.css" rel="stylesheet"/>
-    <title>Title</title>
+    <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
+    <title>Search</title>
 </head>
 
 <body>
 
-<h2>HelloWord</h2>
+<div id="search-box">
+    <h1 class="major">검색</h1>
+    <div id="searchContain">
+        <input id="search" placeholder="검색어를 입력하세요" type="text">
+        <button id="searchBtn" type="button">검색</button>
+    </div>
+    <div id="searchRequirement">
+        <input id="name" type="checkbox" name="name" value="river">
+        <label for="name">강</label>
+    </div>
+    <table id="searchList">
+        <tr>
+            <th>번호</th>
+            <th>이름</th>
+            <th>주소</th>
+            <th>전화번호</th>
+        </tr>
+        <tr class="tableResult">
+            <td>1</td>
+            <td>홍길동</td>
+            <td>서울시 강남구</td>
+            <td>010-1234-5678</td>
+        </tr>
+        <tr class="tableResult">
+            <td>1</td>
+            <td>홍길동</td>
+            <td>서울시 강남구</td>
+            <td>010-1234-5678</td>
+        </tr>
+        <tr class="tableResult">
+            <td>1</td>
+            <td>홍길동</td>
+            <td>서울시 강남구</td>
+            <td>010-1234-5678</td>
+        </tr>
+        <tr class="tableResult">
+            <td>1</td>
+            <td>가다나라마바사아차카타파하</td>
+            <td>서울시 강남구</td>
+            <td>010-1234-5678</td>
+        </tr>
+        <tr class="tableResult">
+            <td>1</td>
+            <td>홍길동</td>
+            <td>서울시 강남구</td>
+            <td>010-1234-5678</td>
+        </tr>
+
+    </table>
+</div>
+
+<!--<div id="map" style="width:500px;height:400px;"></div>-->
 
 
 <th:block th:insert="insert/footer.html"></th:block>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=111da259e98b1b5051c14284b257bd46" type="text/javascript"></script>
+<script>
+    var container = document.getElementById('map');
+    var options = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667),
+        level: 3
+    };
+
+    var map = new kakao.maps.Map(container, options);
+</script>
 
 </body>
 </html>
