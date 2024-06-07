@@ -189,6 +189,32 @@ table.alt tfoot {
     margin-top: 20px;
 }
 
+#membershipContain {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#membershipContain input,
+#membershipContain button {
+    margin: 10px 0; /* 위아래로 10px의 마진을 추가합니다. */
+}
+
+#membershipContain .input-group {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#membershipContain .input-group input {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.memberContain {
+    margin-bottom: 50px;
+}
+
 /*loginPage*/
 
 #wrapper {
@@ -252,3 +278,4 @@ table.alt tfoot {
     border-radius: 50px;
     background-color: #fdfada
 }
+
