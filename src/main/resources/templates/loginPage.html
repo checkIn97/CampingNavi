@@ -17,7 +17,7 @@
     </div>
 
     <div class="buttonContain" id="loginGroup">
-        <button id="registerBtn" type="button"><a href="/member/membershipAgree"> 회원가입 </a></button>
+        <button id="registerBtn" type="button">회원가입</button>
         <button id="adminBtn" type="button">관리자</button>
     </div>
 
@@ -34,6 +34,15 @@
     <p class="copyright">&copy; Team Navigation. </p>
 </footer>
 
+<script>
+    document.getElementById('registerBtn').addEventListener('click', function () {
+        location.href = '/member/membershipAgree';
+    });
+
+    document.getElementById('adminBtn').addEventListener('click', function () {
+        location.href = '/admin';
+    });
+</script>
 <!--배경사진-->
 <div id="bg"></div>
 
