@@ -11,4 +11,9 @@ public class MemberController {
     public String membershipAgree() {
         return "member/membershipAgree";
     }
+
+    @RequestMapping("/membership")
+    public String membership() {
+        return "member/membership";
+    }
 }
