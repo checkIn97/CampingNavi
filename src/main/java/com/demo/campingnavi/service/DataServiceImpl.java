@@ -155,10 +155,15 @@ public class DataServiceImpl implements DataService {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
-                .append("cseq\n");
+                .append("cseq,")
+                .append("mapX,")
+                .append("mapY\n");
 
         for (Camp camp : filteredList) {
-            stringBuilder.append(camp.getCseq()).append('\n');
+            stringBuilder
+                    .append(String.valueOf(camp.getCseq())).append(",")
+                    .append(camp.getMapX()).append(",")
+                    .append(camp.getMapY()).append("\n");
         }
 
         try {
