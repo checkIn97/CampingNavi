@@ -1,6 +1,7 @@
 package com.demo.campingnavi.service;
 
 import com.demo.campingnavi.domain.Camp;
+import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.dto.CampRecommendVo;
 import com.demo.campingnavi.dto.CampVo;
 import com.demo.campingnavi.repository.CampRepository;
@@ -23,20 +24,22 @@ public class CampServiceImpl implements CampService {
     }
 
     @Override
-    public CampVo getCampVoByCseq(int cseq) {
+    public CampVo getCampVoByCseq(int cseq, Member member) {
         List<Camp> campList = new ArrayList<>();
         campList.add(getCampByCseq(cseq));
         dataService.filteredListOutToCsv(campList);
-        return getCampRecommendList(new CampRecommendVo()).get(0);
+        return getCampRecommendList(member).get(0);
     }
 
     @Override
     public List<Camp> getCampScanList(CampRecommendVo campRecommendVo) {
+
         return List.of();
     }
 
     @Override
-    public List<CampVo> getCampRecommendList(CampRecommendVo campRecommendVo) {
+    public List<CampVo> getCampRecommendList(Member member) {
+
         return List.of();
     }
 
