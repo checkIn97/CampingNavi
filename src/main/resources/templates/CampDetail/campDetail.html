@@ -3,6 +3,7 @@
 <head>
     <title>Test</title>
     <style>
+        /* 기본 스타일 */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -39,36 +40,77 @@
             background-color: #0056b3;
         }
 
+        /* 테이블 스타일 */
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
         }
 
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
         th, td {
-            padding: 12px;
-            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top; /* 셀 내용을 상단 정렬 */
         }
 
         th {
             background-color: #f2f2f2;
+            font-weight: bold;
         }
 
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
 
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
         .two-line {
             display: flex;
             flex-direction: column;
+        }
+
+        /* 슬라이드쇼 스타일 */
+        .slideshow-container {
+            max-width: 1000px;
+            position: relative;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .slideshow {
+            display: flex;
+            width: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+        }
+
+        input[name="slide"] {
+            display: none;
+        }
+
+        .navigation-manual {
+            text-align: center;
+            position: absolute;
+            width: 100%;
+            bottom: 10px;
+        }
+
+        .manual-btn {
+            cursor: pointer;
+            border: 2px solid #f2f2f2;
+            padding: 5px;
+            border-radius: 10px;
+            display: inline-block;
+            transition: background 0.6s;
+        }
+
+        .manual-btn:not(:last-child) {
+            margin-right: 20px;
+        }
+
+        .manual-btn:hover {
+            background: #f2f2f2;
         }
     </style>
 </head>
@@ -77,8 +119,28 @@
 <form action="/camp/detail/" method="get">
     <input type="text" name="mapX" placeholder="Enter X coordinate" required />
     <input type="text" name="mapY" placeholder="Enter Y coordinate" required />
+    <input type="text" name="contentId" placeholder="Enter contentID" required/>
     <button type="submit">Fetch Data</button>
 </form>
+
+<!-- 슬라이드쇼 -->
+<div class="slideshow-container">
+    <div class="slideshow">
+        <div th:each="image : ${imageUrls}" class="slide">
+            <img th:src="${image.imageUrl}" style="width:100%">
+        </div>
+    </div>
+
+    <div class="navigation-manual">
+        <label th:each="image, index : ${imageUrls}" th:for="'radio' + ${index}" class="manual-btn"></label>
+    </div>
+
+    <div th:each="image, index : ${imageUrls}">
+        <input type="radio" name="slide" th:id="'radio' + ${index}" th:checked="${index == 0}">
+    </div>
+</div>
+
+<!-- 캠핑장 정보 테이블 -->
 <table>
     <thead>
     <tr>
@@ -99,27 +161,32 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="data : ${item}">
-        <td th:text="${data.facltNm}"></td>
-        <td class="two-line">
-            <span th:text="${data.addr1}"></span>
-            <span th:text="${data.addr2}"></span>
-            <a th:href="'https://map.kakao.com/link/to/' + ${data.facltNm} + ',' + ${data.mapY} + ',' + ${data.mapX}" target="_blank">캠핑장 길찾기</a>
+    <tr th:each="camp : ${camps}">
+        <td th:text="${camp.facltNm}"></td>
+        <td>
+            <span th:text="${camp.addr1}"></span><br/>
+            <span th:text="${camp.addr2}"></span><br/>
+            <a th:href="'https://map.kakao.com/link/to/' + ${camp.facltNm} + ',' + ${camp.mapY} + ',' + ${camp.mapX}" target="_blank">캠핑장 길찾기</a>
         </td>
-        <td th:text="${data.tel}"></td>
-        <td th:text="${data.wtrplCo}"></td>
-        <td th:text="${data.brazierCl}"></td>
-        <td th:text="${data.sbrsCl}"></td>
-        <td th:text="${data.caravAcmpnyAt}"></td>
-        <td th:text="${data.toiletCo}"></td>
-        <td th:text="${data.swrmCo}"></td>
-        <td th:text="${data.featureNm}"></td>
-        <td><a th:href="${data.homepage}" target="_blank" th:text="${data.homepage}"></a></td>
-        <td><a th:href="${data.resveUrl}" target="_blank" th:text="${data.resveUrl}"></a></td>
-        <td th:text="${data.intro}"></td>
-        <td th:text="${data.animalCmgCl}"></td>
+        <td th:text="${camp.tel}"></td>
+        <td th:text="${camp.wtrplCo}"></td>
+        <td th:text="${camp.brazierCl}"></td>
+        <td th:text="${camp.sbrsCl}"></td>
+        <td th:text="${camp.caravAcmpnyAt}"></td>
+        <td th:text="${camp.toiletCo}"></td>
+        <td th:text="${camp.swrmCo}"></td>
+        <td th:text="${camp.featureNm}"></td>
+        <td>
+            <a th:href="${camp.homepage}" target="_blank" th:text="${camp.homepage}"></a>
+        </td>
+        <td>
+            <a th:href="${camp.resveUrl}" target="_blank" th:text="${camp.resveUrl}"></a>
+        </td>
+        <td th:text="${camp.intro}"></td>
+        <td th:text="${camp.animalCmgCl}"></td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>
