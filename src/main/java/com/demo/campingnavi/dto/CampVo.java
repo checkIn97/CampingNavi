@@ -13,10 +13,11 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 public class CampVo {
-    private Camp camp;
-    private String score;
-    private String homepage;
-    private String address;
+    private Camp camp = null;
+    private float score = 0f;
+    private String scoreView = "";
+    private String homepage = "";
+    private String address = "";
 
     public CampVo(Camp camp) {
         this.camp = camp;
@@ -25,6 +26,7 @@ public class CampVo {
 
     public CampVo(Camp camp, float score) {
         new CampVo(camp);
-        this.score = String.format("%.2f", score);
+        this.score = score;
+        this.scoreView = String.format("%.1f", score);
     }
 }
