@@ -1,7 +1,10 @@
 package com.demo.campingnavi.service;
 
+import com.demo.campingnavi.domain.Recommend;
 import com.demo.campingnavi.model.ApiImageResponse;
 import com.demo.campingnavi.model.ApiResponse;
+import com.demo.campingnavi.repository.RecommendRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -11,6 +14,9 @@ import java.util.logging.Logger;
 
 @Service
 public class CampDetailServiceImpl implements CampDetailService {
+
+    @Autowired
+    RecommendRepository recommendRepo;
 
     private final WebClient webClient;
 
@@ -97,5 +103,11 @@ public class CampDetailServiceImpl implements CampDetailService {
             logger.severe("Exception occurred while calling API: " + e.getMessage());
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public void addToJjimlist(Recommend recommend) {
+
+        recommendRepo.save(recommend);
     }
 }

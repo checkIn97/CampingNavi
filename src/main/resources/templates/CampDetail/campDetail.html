@@ -120,6 +120,7 @@
     <input type="text" name="mapX" placeholder="Enter X coordinate" required />
     <input type="text" name="mapY" placeholder="Enter Y coordinate" required />
     <input type="text" name="contentId" placeholder="Enter contentID" required/>
+    <input type="text" name="cseq" placeholder="Enter Cseq" required/>
     <button type="submit">Fetch Data</button>
 </form>
 
@@ -163,7 +164,6 @@
         <td th:text="${camp.facltNm}"></td>
         <td>
             <span th:text="${camp.addr1}"></span><br/>
-            <span th:text="${camp.addr2}"></span><br/>
             <a th:href="'https://map.kakao.com/link/to/' + ${camp.facltNm} + ',' + ${camp.mapY} + ',' + ${camp.mapX}" target="_blank">캠핑장 길찾기</a>
         </td>
         <td th:text="${camp.tel}"></td>
@@ -182,18 +182,19 @@
     </tr>
     </tbody>
 </table>
-<form action="/camp/detail/jjim/{{camp.contentId}}" method="POST">
+<form action="/camp/detail/jjim/{cseq}" method="POST">
+    <input type="hidden" name="cseq" th:value="${cseq}"/>
     <button type="submit">캠핑장 찜하기</button>
 </form>
 </body>
 <script>
-    function addToWishlist(campId) {
-        fetch(`/camp/detail/jjim/${camp.contentId}`, {
+    function addToWishlist(cseq) {
+        fetch(`/camp/detail/jjim/${cseq}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ contentId: campId }),
+            body: JSON.stringify({ cseq : cseq }),
         })
             .then(response => {
                 if (response.ok) {
