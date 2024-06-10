@@ -60,13 +60,16 @@ public class DataServiceImpl implements DataService {
 
                         try {
                             camp.setContentId(input[0]);
-                            camp.setName(input[1].isEmpty() ? "" : input[1]);
+                            camp.setName(input[1]);
                             camp.setCreatedAt(input[2].isEmpty() ? null : LocalDate.parse(input[2]));
-                            camp.setAddr1(input[3].isEmpty() ? "" : input[3]);
-                            camp.setAddr2(input[4].isEmpty() ? "" : input[4]);
+                            camp.setAddr1(input[3]);
+                            camp.setAddr2(input[4]);
                             camp.setMapY(input[5]);
                             camp.setMapX(input[6]);
                             camp.setCampType(input[7]);
+                            camp.setReservationLink(input[8]);
+                            camp.setLocationB(input[9]);
+                            camp.setLocationS(input[10]);
                             camp.setUseyn("y");
                             campRepo.save(camp);
                             camp = campRepo.findFirstByOrderByCseqDesc();

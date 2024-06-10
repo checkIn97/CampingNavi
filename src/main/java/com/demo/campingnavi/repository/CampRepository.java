@@ -12,8 +12,14 @@ public interface CampRepository extends JpaRepository<Camp, Integer> {
     @Query("SELECT camp FROM Camp camp " +
             "WHERE camp.useyn LIKE %:useyn% " +
             "AND camp.name LIKE %:name% " +
-            "AND camp.campType LIKE %:campType% " +
-            "AND camp.addr1 LIKE %:addrL% " +
-            "OR camp.addr1 LIKE %:addrS%")
-    public List<Camp> getCampList(String useyn, String name, String campType, String addrL, String addrS);
+            "AND camp.locationB LIKE %:locationB% " +
+            "AND camp.locationS LIKE %:locationS% " +
+            "INTERSECT " +
+            "SELECT camp FROM Camp camp " +
+            "WHERE camp.campType LIKE %:campType1% " +
+            "OR camp.campType LIKE %:campType2% " +
+            "OR camp.campType LIKE %:campType3% " +
+            "OR camp.campType LIKE %:campType4% ")
+    public List<Camp> getCampList(String useyn, String name, String locationB, String locationS,
+                                  String campType1, String campType2, String campType3, String campType4);
 }

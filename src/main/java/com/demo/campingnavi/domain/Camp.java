@@ -52,4 +52,13 @@ public class Camp {
 
     @Column(length = 1000)
     private String image; // 이미지
+
+    @Column(length = 200)
+    private String reservationLink; // 예약링크
+
+    @Column(length = 50)
+    private String locationB; // 소재지(시도)
+
+    @Column(length = 50)
+    private String locationS; // 소재지(시군구)
 }

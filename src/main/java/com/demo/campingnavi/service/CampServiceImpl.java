@@ -42,11 +42,25 @@ public class CampServiceImpl implements CampService {
             useyn = "";
         }
 
-        String searchWord = campRecommendVo.getSearchWord();
+        String name = campRecommendVo.getSearchWord()[0];
+        String locationB = campRecommendVo.getSearchWord()[1];
+        String locationS = campRecommendVo.getSearchWord()[2];
 
+        String[] campType = campRecommendVo.getCampType();
+        int tmp = 0;
+        for (String s : campType) {
+            tmp += s.length();
+        }
+        if (tmp == 0) {
+            for (int i = 0 ; i < campType.length ; i++) {
+                campType[i] = campRecommendVo.getCampTypeArray()[i][1];
+            }
+        }
 
+        List<Camp> campList = campRepo.getCampList(useyn, name, locationB, locationS,
+                campType[0], campType[1], campType[2], campType[3]);
 
-        return List.of();
+        return campList;
     }
 
     @Override
