@@ -6,9 +6,7 @@ import com.demo.campingnavi.service.CampDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,7 +24,7 @@ public class CampDetailController {
     }
 
     @GetMapping("/")
-    public String campDetailView(@RequestParam("mapX") String mapX, @RequestParam("mapY") String mapY,@RequestParam("contentId") String contentId, Model model) {
+    public String campDetailView(@RequestParam("mapX") String mapX, @RequestParam("mapY") String mapY,@RequestParam("contentId") String contentId, @RequestParam("cseq") int cseq, Model model) {
 
         List<ApiResponse.Item> itemList = campDetailService.DataFromApi(mapX, mapY);
         List<ApiImageResponse.Item> imageList = campDetailService.DataFromApiImage((contentId));

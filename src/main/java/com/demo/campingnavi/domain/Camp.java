@@ -24,7 +24,7 @@ public class Camp {
     private int cseq; // 캠핑장 번호
 
     @Column(length = 20, nullable = false)
-    private int contentId; // 캠핑장 컨텐츠 아이디(이미지 조회 시 필요)
+    private String contentId; // 캠핑장 컨텐츠 아이디(이미지 조회 시 필요)
 
     @Column(length = 500, nullable = false)
     private String name; // 캠핑장 이름
