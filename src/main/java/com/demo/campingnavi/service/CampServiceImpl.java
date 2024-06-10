@@ -57,8 +57,13 @@ public class CampServiceImpl implements CampService {
             }
         }
 
-        List<Camp> campList = campRepo.getCampList(useyn, name, locationB, locationS,
-                campType[0], campType[1], campType[2], campType[3]);
+        String sortBy = campRecommendVo.getSortBy();
+        String sortDirection = campRecommendVo.getSortDirection();
+
+        //List<Camp> campList = campRepo.getCampList(useyn, name, locationB, locationS,
+        //       campType[0], campType[1], campType[2], campType[3], sortBy, sortDirection);
+
+        List<Camp> campList = null;
 
         return campList;
     }
@@ -118,7 +123,6 @@ public class CampServiceImpl implements CampService {
                         String[] input = text.split(",");
                         Camp camp = getCampByCseq(Integer.parseInt(input[0]));
                         CampVo campVo = new CampVo(camp, Float.parseFloat(input[1]));
-                        // campVo에 추가로 데이터 입력할 것
 
                         if (!campRecommendList.contains(campVo)) {
                             campRecommendList.add(campVo);

@@ -17,11 +17,13 @@ public class CampVo {
     private float score = 0f;
     private String scoreView = "";
     private String homepage = "";
-    private String address = "";
+    private String addressFull = "";
+    private String addressShort = "";
 
     public CampVo(Camp camp) {
         this.camp = camp;
-        this.address = camp.getAddr1() + " " + camp.getAddr2();
+        this.addressFull = camp.getAddr1() + " " + camp.getAddr2();
+        this.addressShort = camp.getLocationB() + " " + camp.getLocationS();
     }
 
     public CampVo(Camp camp, float score) {

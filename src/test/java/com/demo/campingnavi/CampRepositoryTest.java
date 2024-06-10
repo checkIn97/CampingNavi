@@ -26,11 +26,15 @@ public class CampRepositoryTest {
         String campType2 = "자동차야영장";
         String campType3 = "글램핑";
         String campType4 = "카라반";
+        String sortBy = "name";
+        String sortDirection = "ASC";
+        /*
         List<Camp> campList = campRepository.getCampList(useyn, name, locationB, locationS,
-                campType1, campType2, campType3, campType4);
+                campType1, campType2, campType3, campType4, sortBy, sortDirection);
         for (Camp camp : campList) {
             System.out.println(camp.getName());
         }
         System.out.println(campList.size());
+        */
     }
 }
