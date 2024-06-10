@@ -59,7 +59,7 @@ public class DataServiceImpl implements DataService {
                         Camp camp = new Camp();
 
                         try {
-                            camp.setContentId(Integer.parseInt(input[0]));
+                            camp.setContentId(input[0]);
                             camp.setName(input[1].isEmpty() ? "" : input[1]);
                             camp.setCreatedAt(input[2].isEmpty() ? null : LocalDate.parse(input[2]));
                             camp.setAddr1(input[3].isEmpty() ? "" : input[3]);

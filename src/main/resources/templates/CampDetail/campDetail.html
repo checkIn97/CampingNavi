@@ -140,6 +140,7 @@
     </div>
 </div>
 
+
 <!-- 캠핑장 정보 테이블 -->
 <table>
     <thead>
@@ -147,16 +148,13 @@
         <th>캠핑장명</th>
         <th>주소</th>
         <th>연락처</th>
-        <th>개수대 개수</th>
+        <th>소개</th>
+        <th>특징</th>
         <th>화로대</th>
         <th>부대시설</th>
         <th>주변이용가능시설</th>
-        <th>화장실 개수</th>
-        <th>샤워실 개수</th>
-        <th>특징</th>
         <th>홈페이지</th>
         <th>예약 페이지</th>
-        <th>소개</th>
         <th>애완동물출입</th>
     </tr>
     </thead>
@@ -169,24 +167,46 @@
             <a th:href="'https://map.kakao.com/link/to/' + ${camp.facltNm} + ',' + ${camp.mapY} + ',' + ${camp.mapX}" target="_blank">캠핑장 길찾기</a>
         </td>
         <td th:text="${camp.tel}"></td>
-        <td th:text="${camp.wtrplCo}"></td>
+        <td th:text="${camp.intro}"></td>
+        <td th:text="${camp.featureNm}"></td>
         <td th:text="${camp.brazierCl}"></td>
         <td th:text="${camp.sbrsCl}"></td>
-        <td th:text="${camp.caravAcmpnyAt}"></td>
-        <td th:text="${camp.toiletCo}"></td>
-        <td th:text="${camp.swrmCo}"></td>
-        <td th:text="${camp.featureNm}"></td>
+        <td th:text="${camp.posblFcltyEtc}"></td>
         <td>
             <a th:href="${camp.homepage}" target="_blank" th:text="${camp.homepage}"></a>
         </td>
         <td>
             <a th:href="${camp.resveUrl}" target="_blank" th:text="${camp.resveUrl}"></a>
         </td>
-        <td th:text="${camp.intro}"></td>
         <td th:text="${camp.animalCmgCl}"></td>
     </tr>
     </tbody>
 </table>
-
+<form action="/camp/detail/jjim/{{camp.contentId}}" method="POST">
+    <button type="submit">캠핑장 찜하기</button>
+</form>
 </body>
+<script>
+    function addToWishlist(campId) {
+        fetch(`/camp/detail/jjim/${camp.contentId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ contentId: campId }),
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('캠핑장이 찜 목록에 추가되었습니다.');
+                } else {
+                    alert('찜하기에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('찜하기 요청 중 오류가 발생했습니다.');
+            });
+    }
+</script>
+
 </html>
