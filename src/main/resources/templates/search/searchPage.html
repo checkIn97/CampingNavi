@@ -10,8 +10,8 @@
 </head>
 
 <body>
-
 <div id="search-box">
+    <button id="search-box-close"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
     <h1 class="major">검색</h1>
     <div id="searchContain">
         <select>
@@ -62,23 +62,28 @@
             <td>4.5(별로 표시)</td>
             <td>서울시 신림동</td>
         </tr>
-
     </table>
 </div>
 
-<!--<div id="map" style="width:500px;height:400px;"></div>-->
-
+<div id="contentSearchArea" class="box">
+    <div id="kakaoMap">카카오 api 들어갈 곳</div>
+    <button id="search-box-toggle">검색하기</button>
+</div>
 
 <th:block th:insert="insert/footer.html"></th:block>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=111da259e98b1b5051c14284b257bd46" type="text/javascript"></script>
 <script>
-    var container = document.getElementById('map');
-    var options = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3
-    };
+    document.getElementById('search-box-toggle').addEventListener('click', function () {
+        var searchBox = document.getElementById('search-box');
+        if (searchBox.style.display === 'none') {
+            searchBox.style.display = 'block';
+        } else {
+            searchBox.style.display = 'none';
+        }
+    });
 
-    var map = new kakao.maps.Map(container, options);
+    document.getElementById('search-box-close').addEventListener('click', function () {
+        document.getElementById('search-box').style.display = 'none';
+    });
 </script>
 
 </body>
