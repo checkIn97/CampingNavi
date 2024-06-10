@@ -20,10 +20,14 @@ public class CampRepositoryTest {
     public void getCampList() {
         String useyn = "y";
         String name = "";
-        String campType = "";
-        String addrL = "";
-        String addrS = "|";
-        List<Camp> campList = campRepository.getCampList(useyn, name, campType, addrL, addrS);
+        String locationB = "";
+        String locationS = "";
+        String campType1 = "일반야영장";
+        String campType2 = "자동차야영장";
+        String campType3 = "글램핑";
+        String campType4 = "카라반";
+        List<Camp> campList = campRepository.getCampList(useyn, name, locationB, locationS,
+                campType1, campType2, campType3, campType4);
         for (Camp camp : campList) {
             System.out.println(camp.getName());
         }

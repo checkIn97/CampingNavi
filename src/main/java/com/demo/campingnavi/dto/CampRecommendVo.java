@@ -21,11 +21,15 @@ public class CampRecommendVo {
     private List<Camp> exCampList = new ArrayList<>();;
     private List<CampVo> exCampRecommendList = new ArrayList<>();;
     private String useyn = "";
-    private String searchWord = "";
+    private String[][] searchFieldArray = {{"name", "이름"}, {"locationB", "시도"}, {"locationS", "시군구"}};
+    private String searchField = "";
+    private String[] searchWord = new String[searchFieldArray.length];
     private String[][] campTypeArray = {{"general", "일반야영장"}, {"automobile", "자동차야영장"}, {"glamping", "글램핑"}, {"caravan", "카라반"}};
-    private String[] campType = {"", "", "", ""};
+    private String[] campType = new String[campTypeArray.length];
+
     private int totalPages = 0;
     private int page = 0;
+    private int size = 5;
     private int pageMaxDisplay = 5;
     private String sortBy = "name";
     private String sortDirection = "ASC";
