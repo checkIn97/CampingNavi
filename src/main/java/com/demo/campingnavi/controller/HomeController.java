@@ -10,8 +10,5 @@ public class HomeController {
         return "loginPage";
     }
 
-    @RequestMapping("/search")
-    public String search() {
-        return "search/searchPage";
-    }
+
 }
