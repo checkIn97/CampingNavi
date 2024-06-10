@@ -10,64 +10,71 @@
 </head>
 
 <body>
-<div id="search-box">
-    <button id="search-box-close"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
-    <h1 class="major">검색</h1>
-    <div id="searchContain">
-        <select>
-            <option id="searchOptionName" value="name">이름</option>
-            <option id="searchOptionAdd" value="address">주소</option>
-        </select>
-        <input id="search" placeholder="검색어를 입력하세요" type="text">
-        <button id="searchBtn" type="button">검색</button>
+<div id="search-area">
+    <div class="box" id="search-box">
+        <button id="search-box-close"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
+        <h1 class="major">검색</h1>
+        <div id="searchContain">
+            <select>
+                <option id="searchOptionName" value="name">이름</option>
+                <option id="searchOptionAdd" value="address">주소</option>
+            </select>
+            <input id="search" placeholder="검색어를 입력하세요" type="text">
+            <button id="searchBtn" type="button">검색</button>
+        </div>
+        <div id="searchRequirement">
+            <input id="autocamping" name="name" type="checkbox" value="autocamping">
+            <label class="checkboxLabel" for="autocamping">오토캠핑</label>
+            <input id="glamping" name="name" type="checkbox" value="glamping">
+            <label class="checkboxLabel" for="glamping">글램핑</label>
+            <input id="caravan" name="name" type="checkbox" value="caravan">
+            <label class="checkboxLabel" for="caravan">카라반</label>
+            <input id="generalCamping" name="name" type="checkbox" value="generalCamping">
+            <label class="checkboxLabel" for="generalCamping">일반</label>
+        </div>
+        <table id="searchList">
+            <tr>
+                <th>이름</th>
+                <th>주소</th>
+                <th>평점</th>
+            </tr>
+            <tr class="tableResult">
+                <td>홍길동</td>
+                <td>서울시 신림동</td>
+                <td>4.5(별로 표시)</td>
+            </tr>
+            <tr class="tableResult">
+                <td>홍길동</td>
+                <td>서울시 신림동</td>
+                <td>4.5(별로 표시)</td>
+            </tr>
+            <tr class="tableResult">
+                <td>홍길동</td>
+                <td>서울시 신림동</td>
+                <td>4.5(별로 표시)</td>
+            </tr>
+            <tr class="tableResult">
+                <td>홍길동</td>
+                <td>서울시 신림동</td>
+                <td>4.5(별로 표시)</td>
+            </tr>
+            <tr class="tableResult">
+                <td>이름이 긴 경우 어떻게 나오는지 확인</td>
+                <td>서울시 신림동</td>
+                <td>4.5(별로 표시)</td>
+            </tr>
+            <tr class="tableResult">
+                <td>6개 보여주는게 적당해 보임</td>
+                <td>서울시 신림동</td>
+                <td>4.5(별로 표시)</td>
+            </tr>
+        </table>
     </div>
-    <div id="searchRequirement">
-        <input id="autocamping" name="name" type="checkbox" value="autocamping">
-        <label class="checkboxLabel" for="autocamping">오토캠핑</label>
-        <input id="glamping" name="name" type="checkbox" value="glamping">
-        <label class="checkboxLabel" for="glamping">글램핑</label>
-        <input id="caravan" name="name" type="checkbox" value="caravan">
-        <label class="checkboxLabel" for="caravan">카라반</label>
-        <input id="generalCamping" name="name" type="checkbox" value="generalCamping">
-        <label class="checkboxLabel" for="generalCamping">일반</label>
-    </div>
-    <table id="searchList">
-        <tr>
-            <th>이름</th>
-            <th>평점</th>
-            <th>주소</th>
-        </tr>
-        <tr class="tableResult">
-            <td>홍길동</td>
-            <td>4.5(별로 표시)</td>
-            <td>서울시 신림동</td>
-        </tr>
-        <tr class="tableResult">
-            <td>홍길동</td>
-            <td>4.5(별로 표시)</td>
-            <td>서울시 신림동</td>
-        </tr>
-        <tr class="tableResult">
-            <td>홍길동</td>
-            <td>4.5(별로 표시)</td>
-            <td>서울시 신림동</td>
-        </tr>
-        <tr class="tableResult">
-            <td>홍길동</td>
-            <td>4.5(별로 표시)</td>
-            <td>서울시 신림동</td>
-        </tr>
-        <tr class="tableResult">
-            <td>이름이 긴 경우 어떻게 나오는지 확인</td>
-            <td>4.5(별로 표시)</td>
-            <td>서울시 신림동</td>
-        </tr>
-    </table>
-</div>
 
-<div id="contentSearchArea" class="box">
-    <div id="kakaoMap">카카오 api 들어갈 곳</div>
-    <button id="search-box-toggle">검색하기</button>
+    <span class="box" id="contentSearchArea">
+        <div id="kakaoMap">카카오 api 들어갈 곳</div>
+        <button id="search-box-toggle">검색하기</button>
+    </span>
 </div>
 
 <th:block th:insert="insert/footer.html"></th:block>
@@ -75,7 +82,7 @@
     document.getElementById('search-box-toggle').addEventListener('click', function () {
         var searchBox = document.getElementById('search-box');
         if (searchBox.style.display === 'none') {
-            searchBox.style.display = 'block';
+            searchBox.style.display = 'flex';
         } else {
             searchBox.style.display = 'none';
         }

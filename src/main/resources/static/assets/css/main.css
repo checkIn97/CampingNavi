@@ -336,10 +336,13 @@ table#searchList td {
 }
 
 #closeImg {
-    width: 10px;
+    width: 7px;
 }
 
 #search-box-close {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
     float: right;
 }
 
@@ -355,4 +358,12 @@ table#searchList td {
     width: 400px;
     height: 100px;
     background-color: tomato;
+}
+
+#contentSearchArea {
+    display: inline-grid;
+}
+
+#search-area {
+    display: flex;
 }
