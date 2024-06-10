@@ -38,7 +38,16 @@ input[type="checkbox"]{
     display: none;
 }
 
+input[typ="radio"]{
+    display: none;
+}
+
 input[type="checkbox"]:checked + label {
+    background-color: #E58B33;
+    color: white;
+}
+
+input[type="radio"]:checked + label {
     background-color: #E58B33;
     color: white;
 }
