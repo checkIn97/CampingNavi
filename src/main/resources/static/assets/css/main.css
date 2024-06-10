@@ -311,6 +311,7 @@ table.alt tfoot {
 }
 
 #search-box {
+    display: none;
     width: 25%; /* 화면의 가로 25%을 차지하도록 설정합니다. */
     height: 90vh;
     margin: 0; /* 요소를 화면 중앙에 배치합니다. */
@@ -340,14 +341,13 @@ table#searchList td {
 }
 
 #search-box-close {
+    display: flex;
     width: 20px;
     height: 20px;
+    justify-content: center;
+    align-items: center;
     border-radius: 50%;
     float: right;
-}
-
-#search-box{
-    display: none;
 }
 
 #search-box-toggle {
@@ -366,4 +366,7 @@ table#searchList td {
 
 #search-area {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
