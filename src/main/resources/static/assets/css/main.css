@@ -1,5 +1,4 @@
 /*Basic*/
-
 font {
     color: rgb(27, 31, 34);
     font-size: 15px;
@@ -99,13 +98,11 @@ h1.major, h2.major, h3.major, h4.major, h5.major, h6.major {
 }
 
 .box {
-    width: auto;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    width: max-content;
+    display: flex;
+    flex-direction: column;
     padding: 2rem;
-    margin: 0 0 2rem 0;
+    margin: auto;
     background-color: #fdfada;
     border-radius: 60px;
 }
@@ -256,10 +253,6 @@ table.alt tfoot {
 
 .memberContain {
     margin-bottom: 20px;
-}
-
-#membershipBox {
-    width: -webkit-fill-available;
 }
 
 /*loginPage*/
