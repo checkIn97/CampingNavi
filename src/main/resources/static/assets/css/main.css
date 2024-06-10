@@ -10,12 +10,42 @@ input[type="text"], input[type="password"] {
     background-color: #f9f9f9;
     font-size: 25px;
     border-radius: 60px;
-    padding: 15px 15px 15px 25px;
+    padding: 15px 15px 15px 15px;
 }
 
 a {
     text-decoration: none;
     color: rgb(27, 31, 34);
+}
+
+select {
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    font-size: 25px;
+    border-radius: 60px;
+    padding: 15px 15px 15px 25px;
+}
+
+label {
+    font-size: 25px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 60px;
+    padding: 15px 15px 15px 15px;
+}
+
+input[type="checkbox"]{
+    display: none;
+}
+
+input[type="checkbox"]:checked + label {
+    background-color: #E58B33;
+    color: white;
+}
+
+label:hover {
+    background-color: #dddddd;
+    border: 1px solid #afafaf;
 }
 
 /*typo*/
@@ -42,6 +72,12 @@ button:hover {
 .mainBtn{
     background-color: #E58B33;
     font-size: 25px;
+    color: white;
+}
+
+#Btn100 {
+    width: 100%;
+    margin-top: 20px;
 }
 
 /*header*/
@@ -53,7 +89,7 @@ h1.major, h2.major, h3.major, h4.major, h5.major, h6.major {
     margin: 0 0 2rem 0;
 }
 
-#box {
+.box {
     width: -webkit-fill-available;
     position: absolute;
     top: 50%;
@@ -190,9 +226,7 @@ table.alt tfoot {
 }
 
 #membershipContain {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    display: table;
 }
 
 #membershipContain input,
@@ -213,6 +247,10 @@ table.alt tfoot {
 
 .memberContain {
     margin-bottom: 50px;
+}
+
+#membershipBox {
+    width: auto;
 }
 
 /*loginPage*/
@@ -271,11 +309,17 @@ table.alt tfoot {
 }
 
 #search-box {
-    width: 25%; /* 화면의 가로 1/3을 차지하도록 설정합니다. */
+    width: 25%; /* 화면의 가로 25%을 차지하도록 설정합니다. */
     height: 90vh;
     margin: 0; /* 요소를 화면 중앙에 배치합니다. */
     padding: 20px;
     border-radius: 50px;
     background-color: #fdfada
+}
+
+table#searchList td {
+    max-width: 100px;
+    word-break: break-all;
+    padding: 0.75em 0.75em;
 }
 
