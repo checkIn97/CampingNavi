@@ -60,10 +60,8 @@ public class CampServiceImpl implements CampService {
         String sortBy = campRecommendVo.getSortBy();
         String sortDirection = campRecommendVo.getSortDirection();
 
-        //List<Camp> campList = campRepo.getCampList(useyn, name, locationB, locationS,
-        //       campType[0], campType[1], campType[2], campType[3], sortBy, sortDirection);
-
-        List<Camp> campList = null;
+        List<Camp> campList = campRepo.getCampList(useyn, name, locationB, locationS,
+               campType[0], campType[1], campType[2], campType[3]);
 
         return campList;
     }
