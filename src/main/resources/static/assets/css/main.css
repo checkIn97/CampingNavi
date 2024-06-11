@@ -490,3 +490,9 @@ input[name="slide"] {
 #detailBox {
     width: 50%;
 }
+
+.campAreaImg{
+    width: 400px;
+    height: auto;
+
+}
