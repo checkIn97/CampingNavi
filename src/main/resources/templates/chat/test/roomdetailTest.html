@@ -13,42 +13,70 @@
             display: none;
         }
         .input-group {
-            justify-content: center;
-            align-items: center;
-            margin: auto;
             position: fixed;
-            bottom: 30px;
-            left: 0;
-            width: 60%;
+            bottom: 70px;
+            left: auto;
+            width: 58%;
         }
         .chat-container {
-            margin-bottom: 60px;
+            margin-bottom: 80px;
             overflow-y: auto;
-            height: calc(100vh - 120px);
+            height: calc(100vh - 160px);
+        }
+        .list-group-item {
+            padding: 10px;
+            word-wrap: break-word;
+            white-space: normal;
+            max-width: 60%;
+            margin-bottom: 10px;
+        }
+        .list-group-item.own {
+            margin-left: auto;
+            background-color: #e6f3ff;
+            text-align: right;
+        }
+        .list-group-item.other {
+            margin-right: auto;
+            background-color: #f1f1f1;
+        }
+        .list-group-item.notice {
+            background-color: #fff3cd;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 <div class="container" id="app" v-cloak>
-    <div>
-        <h2>{{ room.roomName }}</h2>
-    </div>
-    <div class="chat-container">
-        <ul class="list-group">
-            <!-- 채팅 내용 -->
-            <li class="list-group-item" v-for="message in messages">
-                {{ message.sender }} - {{ message.message }}
-            </li>
-        </ul>
-    </div>
-    <div class="input-group">
-        <!-- 메시지 입력란 -->
-        <div class="input-group-prepend">
-            <label class="input-group-text">내용</label>
+    <div class="row">
+        <div class="col-12">
+            <h2>{{ room.roomName }}</h2>
         </div>
-        <input type="text" class="form-control" v-model="message" v-on:keypress.enter="sendMessage">
-        <div class="input-group-append">
-            <button class="btn btn-primary" type="button" @click="sendMessage">보내기</button>
+        <div class="col-12 chat-container">
+            <ul class="list-group">
+                <!-- 채팅 내용 -->
+                <li class="list-group-item"
+                    v-for="message in messages"
+                    :class="{
+                        'own': message.isOwn && message.type === 'TALK',
+                        'other': !message.isOwn && message.type === 'TALK',
+                        'notice': message.type === 'ENTER' || message.type === 'LEAVE'
+                    }">
+                    <template v-if="message.isOwn || message.type !== 'TALK'">{{ message.message }}</template>
+                    <template v-else>{{ message.sender }} - {{ message.message }}</template>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="input-group-container">
+        <div class="input-group">
+            <!-- 메시지 입력란 -->
+            <div class="input-group-prepend">
+                <label class="input-group-text">내용</label>
+            </div>
+            <input type="text" class="form-control" v-model="message" v-on:keypress.enter="sendMessage">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button" @click="sendMessage">보내기</button>
+            </div>
         </div>
     </div>
 </div>
@@ -91,7 +119,13 @@
             },
             loadMessages() {
                 axios.get('/chat/room/' + this.roomId + '/messages').then(response => {
-                    this.messages = response.data;
+                    this.messages = response.data.map(msg => {
+                        msg.isOwn = msg.sender === this.sender;
+                        if (msg.type === 'ENTER' || msg.type === 'LEAVE') {
+                            msg.sender = '[알림]';
+                        }
+                        return msg;
+                    });
                     this.$nextTick(() => {
                         this.scrollToBottom();
                     });
@@ -99,29 +133,22 @@
             },
             sendMessage() {
                 if (this.message.trim() !== '') {
-                    ws.send("/pub/chat/message", {}, JSON.stringify({
+                    const message = {
                         type: 'TALK',
                         roomId: this.roomId,
                         sender: this.sender,
                         message: this.message
-                    }));
+                    };
+                    ws.send("/pub/chat/message", {}, JSON.stringify(message));
                     this.message = '';
                 }
             },
             recvMessage(recv) {
+                recv.isOwn = recv.sender === this.sender;
                 if (recv.type === 'ENTER' || recv.type === 'LEAVE') {
-                    this.messages.push({
-                        type: recv.type,
-                        sender: '[알림]',
-                        message: recv.message
-                    });
-                } else {
-                    this.messages.push({
-                        type: recv.type,
-                        sender: recv.sender,
-                        message: recv.message
-                    });
+                    recv.sender = '[알림]';
                 }
+                this.messages.push(recv);
                 this.$nextTick(() => {
                     this.scrollToBottom();
                 });
