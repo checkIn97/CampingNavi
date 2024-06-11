@@ -12,14 +12,37 @@
         [v-cloak] {
             display: none;
         }
+        .input-group {
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            position: fixed;
+            bottom: 30px;
+            left: 0;
+            width: 60%;
+        }
+        .chat-container {
+            margin-bottom: 60px;
+            overflow-y: auto;
+            height: calc(100vh - 120px);
+        }
     </style>
 </head>
 <body>
 <div class="container" id="app" v-cloak>
     <div>
-        <h2>{{ room.name }}</h2>
+        <h2>{{ room.roomName }}</h2>
+    </div>
+    <div class="chat-container">
+        <ul class="list-group">
+            <!-- 채팅 내용 -->
+            <li class="list-group-item" v-for="message in messages">
+                {{ message.sender }} - {{ message.message }}
+            </li>
+        </ul>
     </div>
     <div class="input-group">
+        <!-- 메시지 입력란 -->
         <div class="input-group-prepend">
             <label class="input-group-text">내용</label>
         </div>
@@ -28,17 +51,13 @@
             <button class="btn btn-primary" type="button" @click="sendMessage">보내기</button>
         </div>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item" v-for="message in messages">
-            {{ message.sender }} - {{ message.message }}
-        </li>
-    </ul>
 </div>
 <!-- JavaScript -->
 <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
 <script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
 <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
 <script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>
+
 <script>
     // WebSocket & Stomp 초기화
     var sock = new SockJS("/ws-stomp");
@@ -61,6 +80,9 @@
             this.findRoom();
             this.loadMessages();
         },
+        mounted() {
+            this.scrollToBottom();
+        },
         methods: {
             findRoom() {
                 axios.get('/chat/room/' + this.roomId).then(response => {
@@ -69,21 +91,44 @@
             },
             loadMessages() {
                 axios.get('/chat/room/' + this.roomId + '/messages').then(response => {
-                    this.messages = response.data.reverse();
+                    this.messages = response.data;
+                    this.$nextTick(() => {
+                        this.scrollToBottom();
+                    });
                 });
             },
             sendMessage() {
                 if (this.message.trim() !== '') {
-                    ws.send("/pub/chat/message", {}, JSON.stringify({type: 'TALK', roomId: this.roomId, sender: this.sender, message: this.message}));
+                    ws.send("/pub/chat/message", {}, JSON.stringify({
+                        type: 'TALK',
+                        roomId: this.roomId,
+                        sender: this.sender,
+                        message: this.message
+                    }));
                     this.message = '';
                 }
             },
             recvMessage(recv) {
-                this.messages.unshift({
-                    type: recv.type,
-                    sender: recv.type == 'ENTER' ? '[알림]' : recv.sender,
-                    message: recv.message
+                if (recv.type === 'ENTER' || recv.type === 'LEAVE') {
+                    this.messages.push({
+                        type: recv.type,
+                        sender: '[알림]',
+                        message: recv.message
+                    });
+                } else {
+                    this.messages.push({
+                        type: recv.type,
+                        sender: recv.sender,
+                        message: recv.message
+                    });
+                }
+                this.$nextTick(() => {
+                    this.scrollToBottom();
                 });
+            },
+            scrollToBottom() {
+                const container = this.$el.querySelector('.chat-container');
+                container.scrollTop = container.scrollHeight;
             }
         }
     });
