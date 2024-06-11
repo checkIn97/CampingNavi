@@ -4,7 +4,7 @@ import com.demo.campingnavi.config.PathConfig;
 import com.demo.campingnavi.service.DataService;
 import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.Member;
-import com.demo.campingnavi.repository.MemberRepository;
+import com.demo.campingnavi.repository.jpa.MemberRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

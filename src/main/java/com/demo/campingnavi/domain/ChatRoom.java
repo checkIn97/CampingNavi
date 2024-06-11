@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,11 +19,18 @@ import java.time.LocalDate;
 @Entity
 public class ChatRoom {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int crseq; // 채팅방 번호
-
     @ManyToOne
-    @JoinColumn(name="cseq", nullable=false)
+    @JoinColumn(name="cseq")
     private Camp camp;
+    @Id
+    private String roomId;
+    private String name;
+
+    public static com.demo.campingnavi.domain.ChatRoom create(String name) {
+        com.demo.campingnavi.domain.ChatRoom chatRoom = new com.demo.campingnavi.domain.ChatRoom();
+        chatRoom.roomId = UUID.randomUUID().toString();
+        chatRoom.name = name;
+        return chatRoom;
+    }
+
 }
