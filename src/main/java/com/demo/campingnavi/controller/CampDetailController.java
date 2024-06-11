@@ -35,6 +35,8 @@ public class CampDetailController {
         model.addAttribute("camps", itemList);
         model.addAttribute("imageUrls", imageList);
         model.addAttribute("cseq", cseq);
+        model.addAttribute("mapX", mapX);
+        model.addAttribute("mapY", mapY);
 
         return "/campDetail/campDetail";
     }

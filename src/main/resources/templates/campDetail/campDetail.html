@@ -11,15 +11,34 @@
 
 <body>
 
-<div class="box" id="detailBox">
-    <div class="slideshow">
-        <!--        <div class="slide" th:each="image : ${imageUrls}">-->
-        <!--            <img class="campAreaImg" th:src="${image.imageUrl}">-->
-        <!--        </div>-->
-        이미지 들어가는 곳
+<form action="/camp/detail/" method="get">
+    <input type="text" name="mapX" placeholder="Enter X coordinate" required />
+    <input type="text" name="mapY" placeholder="Enter Y coordinate" required />
+    <input type="text" name="contentId" placeholder="Enter contentID" required/>
+    <input type="text" name="cseq" placeholder="Enter Cseq" required/>
+    <button type="submit">Fetch Data</button>
+</form>
+
+<div class="box">
+    <div class="slideshow-container">
+        <div class="slideshow">
+            <div th:each="image : ${imageUrls}" class="slide">
+                <img th:src="${image.imageUrl}" style="width:100%">
+            </div>
+        </div>
+        <div class="navigation-manual">
+            <label th:each="image, index : ${imageUrls}" th:for="'radio' + ${index}" class="manual-btn"></label>
+        </div>
+
+        <div th:each="image, index : ${imageUrls}">
+            <input type="radio" name="slide" th:id="'radio' + ${index}" th:checked="${index == 0}">
+        </div>
     </div>
 
-    <h3 class="campingName">캠핑장 이름이 들어가는 곳</h3>
+    <th:block th:each="camp : ${camps}">
+        <h3 class="campingName" th:text="${camp.facltNm}">캠핑장 이름이 들어가는 곳</h3>
+    </th:block>
+
     <p class="campingGrade">
         <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
         <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
@@ -30,8 +49,10 @@
         <img class="humanIcon" src="/assets/images/icon/human.png">
         <span>평점이 들어가는곳(소수점 1자리까지)</span><span>리뷰수(000개의 후기)</span>
     </div>
-    <div class="buttonContain">
-        <button class="mainBtn" id="reservationBtn" type="button">예약하기</button>
+    <div class="buttonContain" th:each="camp : ${camps}">
+
+        <a th:href="${camp.resveUrl}" target="_blank">
+            <button class="mainBtn" id="reservationBtn" type="button">예약하기</button> </a>
         <button class="mainBtn" id="goingBtn" type="button">채팅방가기?(뭐라하지...?)</button>
     </div>
     <div class="buttonContain" id="detailContain">
@@ -41,39 +62,38 @@
         <label for="reviewBtn">후기</label>
     </div>
 
-    <div id="campDetail">
+    <div id="campDetail" th:each="camp : ${camps}">
         <h2 class="major">소개</h2>
         <span class="detailContent">
-        소개글 들어가는 곳
+        <span th:text="${camp.intro}"></span>
             <button class="moreBtn" id="moreBtn" type="button">더보기</button>
-    </span>
+        </span>
 
         <h2 class="major">위치</h2>
-        <span class="detailContent">
-        지도 api 들어가는 곳
-    </span>
+        <span class="detailContent"></span>
+        <div id="staticMap" style="width:800px;height:500px;"></div>
 
         <h2 class="major">전화번호</h2>
         <span class="detailContent">
-        전화번호 들어가는 곳
+        <span th:text="${camp.tel}"></span>
     </span>
 
         <h2 class="major">홈페이지</h2>
         <span class="detailContent">
-        홈페이지 주소 들어가는 곳
+        <a th:href="${camp.homepage}" target="_blank" th:text="${camp.homepage}"></a>
     </span>
 
         <h2 class="major">편의시설</h2>
         <div id="detailIcon">
-            <span><img alt="car" class="imgIcon" src="/assets/images/icon/car.png">자동차 야영장</span>
-            <span><img alt="caravan" class="imgIcon" src="/assets/images/icon/caravan.png">카라반</span>
-            <span><img alt="glamping" class="imgIcon" src="/assets/images/icon/glamping.png">글램핑</span>
-            <span><img alt="camping" class="imgIcon" src="/assets/images/icon/camping.png">일반 야영장</span>
-            <span><img alt="brazier" class="imgIcon" src="/assets/images/icon/brazier.png">화로대</span>
-            <span><img alt="emergency" class="imgIcon" src="/assets/images/icon/emergency.png">소화기</span>
-            <span><img alt="toilet" class="imgIcon" src="/assets/images/icon/toilet.png">화장실</span>
-            <span><img alt="shower" class="imgIcon" src="/assets/images/icon/shower-room.png">샤워실</span>
-            <span><img alt="dog" class="imgIcon" src="/assets/images/icon/dog.png">애완동물출입</span>
+            <span><img alt="car" class="imgIcon" src="/assets/images/icon/car.png" th:text="${camp.autoSiteCo}">자동차 야영장</span>
+            <span><img alt="caravan" class="imgIcon" src="/assets/images/icon/caravan.png" th:text="${camp.caravSiteCo}">카라반</span>
+            <span><img alt="glamping" class="imgIcon" src="/assets/images/icon/glamping.png" th:text="${camp.glampSiteCo}">글램핑</span>
+            <span><img alt="camping" class="imgIcon" src="/assets/images/icon/camping.png" th:text="${camp.gnrlSiteCo}">일반 야영장</span>
+            <span><img alt="brazier" class="imgIcon" src="/assets/images/icon/brazier.png" th:text="${camp.brazierCl}">화로대</span>
+            <span><img alt="emergency" class="imgIcon" src="/assets/images/icon/emergency.png" th:text="${camp.extshrCo}">소화기</span>
+            <span><img alt="toilet" class="imgIcon" src="/assets/images/icon/toilet.png" th:text="${camp.toiletCo}">화장실</span>
+            <span><img alt="shower" class="imgIcon" src="/assets/images/icon/shower-room.png" th:text="${camp.swrmCo}">샤워실</span>
+            <span><img alt="dog" class="imgIcon" src="/assets/images/icon/dog.png" th:text="${camp.animalCmgCl}">애완동물출입</span>
         </div>
     </div>
 
@@ -90,11 +110,42 @@
             <div class="userContent">
                 <span>리뷰 내용 들어가는 곳</span>
             </div>
+            <!-- 서버로부터 전달된 mapX, mapY 값을 받을 수 있는 공간 (화면에 보이지 않음) -->
+            <div style="display: none;">
+                <input type="hidden" id="LoMapX" th:value="${mapX}" />
+                <input type="hidden" id="LoMapY" th:value="${mapY}" />
+            </div>
         </div>
     </div>
 </div>
 
 <th:block th:insert="insert/footer.html"></th:block>
+//카카오맵 api
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5e3a16b6086d7012444eab79f129328"></script>
+<script>
+    // 이미지 지도에 표시할 마커입니다
+    // 서버로부터 전달된 mapX, mapY 값을 가져와서 JavaScript 변수에 할당
+    const mapX = document.getElementById('LoMapX').value;
+    const mapY = document.getElementById('LoMapY').value;
+
+    console.log("mapX:", mapX);
+    console.log("mapY:", mapY);
+
+    var marker = {
+        position: new kakao.maps.LatLng(mapY, mapX),
+        text: '텍스트를 표시할 수 있어요!' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
+    };
+
+    var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
+        staticMapOption = {
+            center: new kakao.maps.LatLng(mapY, mapX), // 이미지 지도의 중심좌표
+            level: 3, // 이미지 지도의 확대 레벨
+            marker: marker // 이미지 지도에 표시할 마커
+        };
+
+    // 이미지 지도를 생성합니다
+    var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+</script>
 
 <script>
     document.getElementById('viewDetailBtn').addEventListener('click', function () {
