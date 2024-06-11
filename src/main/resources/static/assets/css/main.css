@@ -486,3 +486,7 @@ input[name="slide"] {
 #review {
     display: none;
 }
+
+#detailBox {
+    width: 50%;
+}
