@@ -24,7 +24,7 @@ public class CampDetailController {
 
     @GetMapping("/go")
     public String go() {
-        return "CampDetail/campDetail";
+        return "campDetailTest";
     }
 
     @GetMapping("/")
@@ -36,7 +36,7 @@ public class CampDetailController {
         model.addAttribute("imageUrls", imageList);
         model.addAttribute("cseq", cseq);
 
-        return "CampDetail/campDetail";
+        return "campDetailTest";
     }
 
     @PostMapping("/jjim/{cseq}")
