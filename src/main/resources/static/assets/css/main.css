@@ -56,6 +56,10 @@ label:hover {
     border: 1px solid #afafaf;
 }
 
+li {
+    list-style-type: none;
+}
+
 /*typo*/
 
 #typo{
@@ -495,4 +499,75 @@ input[name="slide"] {
     width: 400px;
     height: auto;
 
+}
+
+/*chat*/
+
+#chatBox {
+    width: 50%;
+}
+
+.buttonContain .form-control {
+    flex-grow: 1;
+}
+
+/* 사용자가 보낸 메시지 */
+.message-user {
+    background-color: #eca07f; /* 카카오톡의 기본 색상 */
+    color: rgb(27, 31, 34);
+    text-align: right;
+    border-radius: 50px;
+    box-shadow: 0 0 10px rgba(120, 120, 120, 0.5);
+    margin: 10px;
+    margin-left: auto;
+    padding: 20px;
+    width: max-content;
+}
+
+/* 상대방이 보낸 메시지 */
+.message-other {
+    background-color: #f9f9f9;
+    color: rgb(27, 31, 34);
+    text-align: left;
+    border-radius: 50px;
+    box-shadow: 0 0 10px rgba(120, 120, 120, 0.5);
+    margin: 10px;
+    margin-right: auto;
+    padding: 20px;
+    width: max-content;
+}
+
+.list-group {
+    padding-inline-start: 0;
+}
+
+.chat-container {
+    height: 560px;
+    overflow-y: scroll; /* 스크롤이 가능하도록 설정 */
+}
+
+/* 스크롤바의 스타일을 설정 */
+.chat-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* 스크롤바의 트랙(바탕) 스타일을 설정 */
+.chat-container::-webkit-scrollbar-track {
+    background: transparent; /* 트랙을 투명하게 설정 */
+}
+
+/* 스크롤바의 핸들(움직이는 부분) 스타일을 설정 */
+.chat-container::-webkit-scrollbar-thumb {
+    background: #888; /* 핸들의 색상을 설정 */
+    border-radius: 20px; /* 핸들의 모서리를 둥글게 설정 */
+}
+
+/* 스크롤바의 핸들을 호버(마우스 오버)했을 때의 스타일을 설정 */
+.chat-container::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 핸들의 색상을 변경 */
+}
+
+.message-notification {
+    text-align: center;
+    color: gray;
 }
