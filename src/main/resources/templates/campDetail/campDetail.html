@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <link href="/assets/css/main.css" rel="stylesheet"/>
+    <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
+    <title>CampNavi</title>
+</head>
+
+<body>
+
+<div class="box" id="detailBox">
+    <div class="slideshow">
+        <!--        <div class="slide" th:each="image : ${imageUrls}">-->
+        <!--            <img class="campAreaImg" th:src="${image.imageUrl}">-->
+        <!--        </div>-->
+        이미지 들어가는 곳
+    </div>
+
+    <h3 class="campingName">캠핑장 이름이 들어가는 곳</h3>
+    <p class="campingGrade">
+        <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
+        <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
+        <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+        평점이 들어가는 곳(별로 표시)
+    </p>
+    <div class="buttonContain" id="reviewGrade">
+        <img class="humanIcon" src="/assets/images/icon/human.png">
+        <span>평점이 들어가는곳(소수점 1자리까지)</span><span>리뷰수(000개의 후기)</span>
+    </div>
+    <div class="buttonContain">
+        <button class="mainBtn" id="reservationBtn" type="button">예약하기</button>
+        <button class="mainBtn" id="goingBtn" type="button">채팅방가기?(뭐라하지...?)</button>
+    </div>
+    <div class="buttonContain" id="detailContain">
+        <input class="detailBtn" id="viewDetailBtn" name="btn" type="radio">
+        <label for="viewDetailBtn">상세보기</label>
+        <input class="detailBtn" id="reviewBtn" name="btn" type="radio">
+        <label for="reviewBtn">후기</label>
+    </div>
+
+    <div id="campDetail">
+        <h2 class="major">소개</h2>
+        <span class="detailContent">
+        소개글 들어가는 곳
+            <button class="moreBtn" id="moreBtn" type="button">더보기</button>
+    </span>
+
+        <h2 class="major">위치</h2>
+        <span class="detailContent">
+        지도 api 들어가는 곳
+    </span>
+
+        <h2 class="major">전화번호</h2>
+        <span class="detailContent">
+        전화번호 들어가는 곳
+    </span>
+
+        <h2 class="major">홈페이지</h2>
+        <span class="detailContent">
+        홈페이지 주소 들어가는 곳
+    </span>
+
+        <h2 class="major">편의시설</h2>
+        <div id="detailIcon">
+            <span><img alt="car" class="imgIcon" src="/assets/images/icon/car.png">자동차 야영장</span>
+            <span><img alt="caravan" class="imgIcon" src="/assets/images/icon/caravan.png">카라반</span>
+            <span><img alt="glamping" class="imgIcon" src="/assets/images/icon/glamping.png">글램핑</span>
+            <span><img alt="camping" class="imgIcon" src="/assets/images/icon/camping.png">일반 야영장</span>
+            <span><img alt="brazier" class="imgIcon" src="/assets/images/icon/brazier.png">화로대</span>
+            <span><img alt="emergency" class="imgIcon" src="/assets/images/icon/emergency.png">소화기</span>
+            <span><img alt="toilet" class="imgIcon" src="/assets/images/icon/toilet.png">화장실</span>
+            <span><img alt="shower" class="imgIcon" src="/assets/images/icon/shower-room.png">샤워실</span>
+            <span><img alt="dog" class="imgIcon" src="/assets/images/icon/dog.png">애완동물출입</span>
+        </div>
+    </div>
+
+    <div id="review">
+        <div class="userReview">
+            <div class="userName">
+                <!--                <img alt="userIcon" class="userIcon" src="/assets/images/icon/user.png">-->
+                <span>사용자 이름 들어가는 곳</span>
+                <span class="userDate">작성일자 들어가는 곳 (2024년 6월) 월 까지만</span>
+            </div>
+            <div class="userGrade">
+                <span>평점 들어가는 곳(별로 표시)</span>
+            </div>
+            <div class="userContent">
+                <span>리뷰 내용 들어가는 곳</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:insert="insert/footer.html"></th:block>
+
+<script>
+    document.getElementById('viewDetailBtn').addEventListener('click', function () {
+        document.getElementById('campDetail').style.display = 'block';
+        document.getElementById('review').style.display = 'none';
+    });
+
+    document.getElementById('reviewBtn').addEventListener('click', function () {
+        document.getElementById('campDetail').style.display = 'none';
+        document.getElementById('review').style.display = 'block';
+    });
+
+    document.getElementById('moreBtn').addEventListener('click', function () {
+        var detailContent = document.querySelector('.detailContent');
+        if (detailContent.style.height === 'auto') {
+            detailContent.style.height = '100px';
+            document.getElementById('moreBtn').innerText = '더보기';
+        } else {
+            detailContent.style.height = 'auto';
+            document.getElementById('moreBtn').innerText = '접기';
+        }
+    });
+</script>
+
+</body>
+</html>

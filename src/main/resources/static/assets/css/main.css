@@ -88,6 +88,22 @@ button:hover {
     margin-top: 20px;
 }
 
+.moreBtn {
+    width: auto;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    text-align: center;
+    font-size: 0.7rem;
+    color: #5a5a5a;
+    font-weight: bolder;
+    padding: 0;
+}
+
+.moreBtn:hover {
+    box-shadow: none;
+}
+
 /*header*/
 
 h1.major, h2.major, h3.major, h4.major, h5.major, h6.major {
@@ -95,6 +111,10 @@ h1.major, h2.major, h3.major, h4.major, h5.major, h6.major {
     width: max-content;
     padding-bottom: 0.5rem;
     margin: 0 0 2rem 0;
+}
+
+h2.major{
+    margin: 0 0 1rem 0;
 }
 
 .box {
@@ -369,4 +389,110 @@ table#searchList td {
     justify-content: center;
     align-items: center;
     height: 100vh;
+}
+
+/* 슬라이드쇼 스타일 */
+.slideshow-container {
+    max-width: 1000px;
+    position: relative;
+    margin: auto;
+    overflow: hidden;
+}
+
+.slideshow {
+    display: flex;
+    width: 100%;
+    transition: transform 0.5s ease;
+    justify-content: center;
+}
+
+.slide {
+    min-width: 100%;
+}
+
+input[name="slide"] {
+    display: none;
+}
+
+/*CampDetail*/
+
+.imgIcon {
+    width: 20px;
+}
+
+.humanIcon {
+    width: 30px;
+}
+
+.detailContent {
+    display: block;
+    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+}
+
+#detailContain {
+    margin-bottom: 2rem;
+}
+
+#detailIcon {
+    display: flex;
+    flex-direction: column;
+}
+
+.campingName {
+    margin-bottom: 0.5rem;
+}
+
+.campingGrade {
+    margin-top: 0;
+}
+
+#reviewGrade {
+    margin-bottom: 1rem;
+}
+
+#detailContain {
+    border-bottom: 1px solid rgb(27, 31, 34);
+    width: 100%;
+}
+
+#detailContain label{
+    background: none;
+    border: none;
+    border-radius: 0;
+    width: 50%;
+    text-align: center;
+}
+
+#detailContain input[type="radio"]:checked + label {
+    background: none;
+    border: none;
+    border-radius: 0;
+    color: rgb(27, 31, 34);
+}
+
+#detailContain input[type="radio"]{
+    display: none;
+}
+
+#detailContain input[type="radio"]:checked + label {
+    border-bottom: 2px solid rgb(27, 31, 34);
+}
+
+.star {
+    width: 20px;
+}
+
+#review {
+    display: none;
+}
+
+#detailBox {
+    width: 50%;
+}
+
+.campAreaImg{
+    width: 400px;
+    height: auto;
+
 }
