@@ -90,7 +90,6 @@ button:hover {
 
 .moreBtn {
     width: auto;
-    margin-top: 20px;
     background-color: transparent;
     border: none;
     border-radius: 0;
@@ -98,6 +97,7 @@ button:hover {
     font-size: 0.7rem;
     color: #5a5a5a;
     font-weight: bolder;
+    padding: 0;
 }
 
 .moreBtn:hover {
@@ -425,7 +425,9 @@ input[name="slide"] {
 }
 
 .detailContent {
+    display: block;
     margin-bottom: 2rem;
+    margin-top: 1.5rem;
 }
 
 #detailContain {
@@ -479,4 +481,8 @@ input[name="slide"] {
 
 .star {
     width: 20px;
+}
+
+#review {
+    display: none;
 }
