@@ -100,7 +100,7 @@ button:hover {
     font-weight: bolder;
 }
 
-.moreBtn {
+.moreBtn:hover {
     box-shadow: none;
 }
 
