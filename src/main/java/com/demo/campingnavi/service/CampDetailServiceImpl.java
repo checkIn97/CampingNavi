@@ -3,7 +3,7 @@ package com.demo.campingnavi.service;
 import com.demo.campingnavi.domain.Recommend;
 import com.demo.campingnavi.model.ApiImageResponse;
 import com.demo.campingnavi.model.ApiResponse;
-import com.demo.campingnavi.repository.RecommendRepository;
+import com.demo.campingnavi.repository.jpa.RecommendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;

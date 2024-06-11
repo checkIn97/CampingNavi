@@ -5,7 +5,7 @@ import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.dto.CampRecommendVo;
 import com.demo.campingnavi.dto.CampVo;
-import com.demo.campingnavi.repository.CampRepository;
+import com.demo.campingnavi.repository.jpa.CampRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

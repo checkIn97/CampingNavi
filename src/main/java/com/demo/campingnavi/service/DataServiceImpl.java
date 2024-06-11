@@ -3,7 +3,7 @@ package com.demo.campingnavi.service;
 import com.demo.campingnavi.config.PathConfig;
 import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.Review;
-import com.demo.campingnavi.repository.CampRepository;
+import com.demo.campingnavi.repository.jpa.CampRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

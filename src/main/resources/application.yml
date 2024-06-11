@@ -17,6 +17,17 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  # ststic파일 개발시 서버를 재시작하지않고 수정한 내용이 반영되도록 추가된 툴
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: false
+  freemarker:
+    cache: false
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/chatdb
 
 # server port
 server:
