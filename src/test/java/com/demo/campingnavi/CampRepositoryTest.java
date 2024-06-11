@@ -1,7 +1,7 @@
 package com.demo.campingnavi;
 
 import com.demo.campingnavi.domain.Camp;
-import com.demo.campingnavi.repository.CampRepository;
+import com.demo.campingnavi.repository.jpa.CampRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
