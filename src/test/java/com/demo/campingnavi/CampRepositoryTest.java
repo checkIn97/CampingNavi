@@ -35,4 +35,5 @@ public class CampRepositoryTest {
         }
         System.out.println(campList.size());
     }
+
 }

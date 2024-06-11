@@ -7,11 +7,9 @@ import com.demo.campingnavi.service.CampService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 import java.util.*;
 
 @Controller
@@ -87,23 +85,23 @@ public class CampController {
             campRecommendVo.setPageMaxDisplay(pageMaxDisplay);
             session.setAttribute("campRecommendVo", campRecommendVo);
         }
+
         campRecommendVo = (CampRecommendVo)session.getAttribute("campRecommendVo");
         model.addAttribute("campRecommendVo", campRecommendVo);
 
         return "search/searchPage";
     }
 
+    @PostMapping("/reloadList")
     @ResponseBody
-    @GetMapping
-    public Map<String, Object> reloadList(HttpSession session, CampRecommendVo campRecommendVo,
+    public Map<String, Object> reloadList(HttpSession session,
                                           @RequestParam(value="page") int page,
                                           @RequestParam(value="sortBy") String sortBy,
                                           @RequestParam(value="sortDirection") String sortDirection) {
         Map<String, Object> result = new HashMap<>();
         Member member = (Member) session.getAttribute("loginMember");
         if (member != null) {
-            result.put("result", "success");
-            campRecommendVo = (CampRecommendVo)session.getAttribute("campRecommendVo");
+            CampRecommendVo campRecommendVo = (CampRecommendVo) session.getAttribute("campRecommendVo");
             if (campRecommendVo.getPage() != page) {
                 campRecommendVo.setPage(page);
             } else if (!campRecommendVo.getSortBy().equals(sortBy)) {
@@ -111,22 +109,36 @@ public class CampController {
                 campRecommendVo.setPage(1);
                 campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
                 campRecommendVo.setCampRecommendList(campService.getCampRecommendList(campRecommendVo.getCampList(), member));
-                campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+campRecommendVo.getSize()-1)/campRecommendVo.getSize());
+                campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
             } else if (!campRecommendVo.getSortDirection().equals(sortDirection)) {
                 campRecommendVo.setSortDirection(sortDirection);;
                 campRecommendVo.setPage(1);
                 campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
                 campRecommendVo.setCampRecommendList(campService.getCampRecommendList(campRecommendVo.getCampList(), member));
-                campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+campRecommendVo.getSize()-1)/campRecommendVo.getSize());
+                campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
             }
+            
+            // 테스트용 임시 데이터
+            List<CampVo> campRecommendList = campRecommendVo.getCampRecommendList();
+            if (campRecommendList.size() == 0) {
+                for (int i = 0 ; i < 100 ; i++) {
+                    campRecommendList.add(new CampVo(campService.getCampByCseq(i+1), ((int)(Math.random()*10)+1)/2f));
+                }
+                campRecommendVo.setCampRecommendList(campRecommendList);
+                campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
+            }
+
+
             result.put("campRecommendList", campRecommendVo.getCampRecommendList());
             result.put("totalPages", campRecommendVo.getTotalPages());
             result.put("page", campRecommendVo.getPage());
             result.put("size", campRecommendVo.getSize());
             result.put("pageMaxDisplay", campRecommendVo.getPageMaxDisplay());
+            result.put("result", "success");
         } else {
             result.put("result", "fail");
         }
+
         return result;
     }
 

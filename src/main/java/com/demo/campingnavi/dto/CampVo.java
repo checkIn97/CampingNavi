@@ -27,7 +27,7 @@ public class CampVo {
     }
 
     public CampVo(Camp camp, float score) {
-        new CampVo(camp);
+        this(camp);
         this.score = score;
         this.scoreView = String.format("%.1f", score);
     }
