@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,6 +42,9 @@ public class ChatController {
         }
     }
 
-
+    @RequestMapping("/chat/create")
+    public String chatCreate() {
+        return "/chat/create";
+    }
 
 }
