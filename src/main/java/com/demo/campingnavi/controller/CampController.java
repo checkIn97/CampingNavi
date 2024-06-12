@@ -109,17 +109,6 @@ public class CampController {
                 campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
             }
             
-            // 테스트용 임시 데이터
-            List<CampVo> campRecommendList = campRecommendVo.getCampRecommendList();
-            if (campRecommendList.size() == 0) {
-                for (int i = 0 ; i < 100 ; i++) {
-                    campRecommendList.add(new CampVo(campService.getCampByCseq(i+1), ((int)(Math.random()*10)+1)/2f));
-                }
-                campRecommendVo.setCampRecommendList(campRecommendList);
-                campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
-            }
-
-
             result.put("campRecommendList", campRecommendVo.getCampRecommendList());
             result.put("totalPages", campRecommendVo.getTotalPages());
             result.put("page", campRecommendVo.getPage());

@@ -89,8 +89,8 @@ public class CampServiceImpl implements CampService {
         String pyFile = "Recommend.py";
         String csvFile = "tmp_filtered.csv";
         pyFile = PathConfig.realPath(pyFile);
-        csvFile = PathConfig.realPath(csvFile);
         dataService.campListOutToCsv(filteredList, csvFile, "");
+        csvFile = PathConfig.realPath(csvFile);
 
         List<CampVo> campRecommendList = new ArrayList<>();
 
@@ -139,7 +139,7 @@ public class CampServiceImpl implements CampService {
                     if (check != -1) {
                         String[] input = text.split(",");
                         Camp camp = getCampByCseq(Integer.parseInt(input[0]));
-                        CampVo campVo = new CampVo(camp, Float.parseFloat(input[1]));
+                        CampVo campVo = new CampVo(camp, Float.parseFloat(input[1]), input[2]);
 
                         if (!campRecommendList.contains(campVo)) {
                             campRecommendList.add(campVo);
