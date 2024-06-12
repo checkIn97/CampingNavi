@@ -42,9 +42,18 @@ public class CampServiceImpl implements CampService {
             useyn = "";
         }
 
-        String name = campRecommendVo.getSearchWord()[0];
-        String locationB = campRecommendVo.getSearchWord()[1];
-        String locationS = campRecommendVo.getSearchWord()[2];
+        String name = "";
+        String locationB = "";
+        String locationS = "";
+        String searchField = campRecommendVo.getSearchField();
+        String searchWord = campRecommendVo.getSearchWord();
+        if (searchField.equals("name")) {
+            name = searchWord;
+        } else if (searchField.equals("locationB")) {
+            locationB = searchWord;
+        } else if (searchField.equals("locationS")) {
+            locationS = searchWord;
+        }
 
         String[] campType = campRecommendVo.getCampType();
         int tmp = 0;
@@ -53,7 +62,16 @@ public class CampServiceImpl implements CampService {
         }
         if (tmp == 0) {
             for (int i = 0 ; i < campType.length ; i++) {
-                campType[i] = campRecommendVo.getCampTypeArray()[i][1];
+                campType[i] = campRecommendVo.getCampTypeArray()[i][0];
+            }
+            campRecommendVo.setCampType(campType);
+        }
+
+        String[] campTypeParams = new String[campType.length];
+        for (int i = 0 ; i < campType.length ; i++) {
+            String type = campRecommendVo.getCampType()[i];
+            if (!type.equals("|")) {
+                campTypeParams[i] = campRecommendVo.getCampTypeArray()[i][1];
             }
         }
 
@@ -61,7 +79,7 @@ public class CampServiceImpl implements CampService {
         String sortDirection = campRecommendVo.getSortDirection();
 
         List<Camp> campList = campRepo.getCampList(useyn, name, locationB, locationS,
-               campType[0], campType[1], campType[2], campType[3]);
+               campTypeParams[0], campTypeParams[1], campTypeParams[2], campTypeParams[3]);
 
         return campList;
     }
