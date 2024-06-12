@@ -11,6 +11,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DataServiceImpl implements DataService {
@@ -21,7 +22,8 @@ public class DataServiceImpl implements DataService {
     @Override
     public List<Camp> campInFromCsv(String csvFile, String n) {
         // CSV 파일에서 camp 데이터를 읽어 데이터베이스에 저장하는 메소드
-        List<Camp> camps = new ArrayList<Camp>();
+        csvFile = PathConfig.realPath(csvFile);
+        List<Camp> campList = new ArrayList<Camp>();
         List<String> errors = new ArrayList<String>();
 
         int num = -1;
@@ -55,10 +57,15 @@ public class DataServiceImpl implements DataService {
                         break;
 
                     if (check != -1) {
-                        String[] input = text.split(",");
-                        Camp camp = new Camp();
+                        String[] input = text.split(";");
+
+                        Optional<Camp> op_camp = campRepo.findCampByContentId(input[0]);
 
                         try {
+                            Camp camp = new Camp();
+                            if (!op_camp.isEmpty()) {
+                                camp = op_camp.get();
+                            }
                             camp.setContentId(input[0]);
                             camp.setName(input[1]);
                             camp.setCreatedAt(input[2].isEmpty() ? null : LocalDate.parse(input[2]));
@@ -72,8 +79,10 @@ public class DataServiceImpl implements DataService {
                             camp.setLocationS(input[10]);
                             camp.setUseyn("y");
                             campRepo.save(camp);
-                            camp = campRepo.findFirstByOrderByCseqDesc();
-                            camps.add(camp);
+                            if (op_camp.isEmpty()) {
+                                camp = campRepo.findFirstByOrderByCseqDesc();
+                            }
+                            campList.add(camp);
                             count++;
                         } catch(Exception e) {
                             e.printStackTrace();
@@ -100,8 +109,12 @@ public class DataServiceImpl implements DataService {
             System.out.println("데이터 입력 실패!");
         }
 
-        System.out.println(camps.get(0).getName());
-        return camps;
+        System.out.println(campList.get(0).getName());
+        csvFile = "tmp_camp.csv";
+        String pyFile = "campListToCsv.py";
+        campListOutToCsv(campList, csvFile, pyFile);
+
+        return campList;
     }
 
     @Override
@@ -151,22 +164,23 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public void filteredListOutToCsv(List<Camp> filteredList) {
+    public void campListOutToCsv(List<Camp> campList, String csvFile, String pyFile) {
         // 평점정보를 가져올 캠프 리스트를 내보내는 메소드
-        String csvFile = "tmp_filtered.csv";
         csvFile = PathConfig.realPath(csvFile);
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append("cseq,")
                 .append("mapX,")
-                .append("mapY\n");
+                .append("mapY,")
+                .append("useyn\n");
 
-        for (Camp camp : filteredList) {
+        for (Camp camp : campList) {
             stringBuilder
                     .append(String.valueOf(camp.getCseq())).append(",")
                     .append(camp.getMapX()).append(",")
-                    .append(camp.getMapY()).append("\n");
+                    .append(camp.getMapY()).append(",")
+                    .append(camp.getUseyn()).append("\n");
         }
 
         try {
@@ -175,10 +189,24 @@ public class DataServiceImpl implements DataService {
                 bufferedWriter.write(stringBuilder.toString());
             }
             fileWriter.close();
-            System.out.println("filtered 캠프 데이터 내보내기 성공");
+            System.out.println("캠프 데이터 내보내기 성공("+csvFile+")");
+            if (!pyFile.equals("")) {
+                pyFile = PathConfig.realPath(pyFile);
+                ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, csvFile);
+                Process process = processBuilder.start();
+                process.waitFor();
+                File file = new File(csvFile);
+                if (file.exists()) {
+                    if (file.delete()) {
+                        System.out.println(csvFile+"삭제 완료");
+                    } else {
+                        System.out.println(csvFile+"삭제 실패");
+                    }
+                }
+            }
         }catch (Exception e) {
             e.printStackTrace();
-            System.out.println("filtered 캠프 데이터 내보내기 실패");
+            System.out.println("캠프 데이터 내보내기 실패("+csvFile+")");
         }
     }
 
