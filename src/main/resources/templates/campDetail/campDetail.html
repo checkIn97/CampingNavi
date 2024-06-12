@@ -10,7 +10,7 @@
 </head>
 
 <body>
-
+<!-- 추천 페이지와 연결 전 테스트용 입력창 -->
 <form action="/camp/detail/" method="get">
     <input type="text" name="mapX" placeholder="Enter X coordinate" required />
     <input type="text" name="mapY" placeholder="Enter Y coordinate" required />
@@ -37,6 +37,7 @@
 
     <th:block th:each="camp : ${camps}">
         <h3 class="campingName" th:text="${camp.facltNm}">캠핑장 이름이 들어가는 곳</h3>
+        <input type="hidden" id="campName" th:value="${camp.facltNm}"/>
     </th:block>
 
     <p class="campingGrade">
@@ -51,7 +52,7 @@
     </div>
     <div class="buttonContain" th:each="camp : ${camps}">
 
-        <a th:href="${camp.resveUrl}" target="_blank">
+        <a th:href="${camp.homepage}" target="_blank">
             <button class="mainBtn" id="reservationBtn" type="button">예약하기</button> </a>
         <button class="mainBtn" id="goingBtn" type="button">채팅방가기?(뭐라하지...?)</button>
     </div>
@@ -85,16 +86,35 @@
 
         <h2 class="major">편의시설</h2>
         <div id="detailIcon">
-            <span><img alt="car" class="imgIcon" src="/assets/images/icon/car.png" th:text="${camp.autoSiteCo}">자동차 야영장</span>
-            <span><img alt="caravan" class="imgIcon" src="/assets/images/icon/caravan.png" th:text="${camp.caravSiteCo}">카라반</span>
-            <span><img alt="glamping" class="imgIcon" src="/assets/images/icon/glamping.png" th:text="${camp.glampSiteCo}">글램핑</span>
-            <span><img alt="camping" class="imgIcon" src="/assets/images/icon/camping.png" th:text="${camp.gnrlSiteCo}">일반 야영장</span>
-            <span><img alt="brazier" class="imgIcon" src="/assets/images/icon/brazier.png" th:text="${camp.brazierCl}">화로대</span>
-            <span><img alt="emergency" class="imgIcon" src="/assets/images/icon/emergency.png" th:text="${camp.extshrCo}">소화기</span>
-            <span><img alt="toilet" class="imgIcon" src="/assets/images/icon/toilet.png" th:text="${camp.toiletCo}">화장실</span>
-            <span><img alt="shower" class="imgIcon" src="/assets/images/icon/shower-room.png" th:text="${camp.swrmCo}">샤워실</span>
-            <span><img alt="dog" class="imgIcon" src="/assets/images/icon/dog.png" th:text="${camp.animalCmgCl}">애완동물출입</span>
+    <span th:if="${camp.autoSiteCo != '0'}">
+        <img alt="car" class="imgIcon" src="/assets/images/icon/car.png">자동차 야영장 <span th:text="${camp.autoSiteCo}"></span> EA
+    </span>
+            <span th:if="${camp.caravSiteCo != '0'}">
+        <img alt="caravan" class="imgIcon" src="/assets/images/icon/caravan.png">카라반 <span th:text="${camp.caravSiteCo}"></span> EA
+    </span>
+            <span th:if="${camp.glampSiteCo != '0'}">
+        <img alt="glamping" class="imgIcon" src="/assets/images/icon/glamping.png">글램핑 <span th:text="${camp.glampSiteCo}"></span> EA
+    </span>
+            <span th:if="${camp.gnrlSiteCo != '0'}">
+        <img alt="camping" class="imgIcon" src="/assets/images/icon/camping.png">일반 야영장 <span th:text="${camp.gnrlSiteCo}"></span> EA
+    </span>
+            <span th:if="${camp.brazierCl != '0'}">
+        <img alt="brazier" class="imgIcon" src="/assets/images/icon/brazier.png">화로대 <span th:text="${camp.brazierCl}"></span>
+    </span>
+            <span th:if="${camp.extshrCo != '0'}">
+        <img alt="emergency" class="imgIcon" src="/assets/images/icon/emergency.png">소화기 <span th:text="${camp.extshrCo}"></span> EA
+    </span>
+            <span th:if="${camp.toiletCo != '0'}">
+        <img alt="toilet" class="imgIcon" src="/assets/images/icon/toilet.png">화장실 <span th:text="${camp.toiletCo}"></span> EA
+    </span>
+            <span th:if="${camp.swrmCo != '0'}">
+        <img alt="shower" class="imgIcon" src="/assets/images/icon/shower-room.png">샤워실 <span th:text="${camp.swrmCo}"></span> EA
+    </span>
+            <span th:if="${camp.animalCmgCl != '0'}">
+        <img alt="dog" class="imgIcon" src="/assets/images/icon/dog.png">애완동물출입 <span th:text="${camp.animalCmgCl}"></span>
+    </span>
         </div>
+
     </div>
 
     <div id="review">
@@ -114,26 +134,30 @@
             <div style="display: none;">
                 <input type="hidden" id="LoMapX" th:value="${mapX}" />
                 <input type="hidden" id="LoMapY" th:value="${mapY}" />
+
             </div>
         </div>
     </div>
 </div>
 
 <th:block th:insert="insert/footer.html"></th:block>
-//카카오맵 api
+
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5e3a16b6086d7012444eab79f129328"></script>
 <script>
+    //카카오맵 api
+
     // 이미지 지도에 표시할 마커입니다
     // 서버로부터 전달된 mapX, mapY 값을 가져와서 JavaScript 변수에 할당
     const mapX = document.getElementById('LoMapX').value;
     const mapY = document.getElementById('LoMapY').value;
+    const campName = document.getElementById('campName').value;
 
     console.log("mapX:", mapX);
     console.log("mapY:", mapY);
 
     var marker = {
         position: new kakao.maps.LatLng(mapY, mapX),
-        text: '텍스트를 표시할 수 있어요!' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
+        text: campName //옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
     };
 
     var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
