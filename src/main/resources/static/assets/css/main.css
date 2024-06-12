@@ -581,3 +581,48 @@ input[name="slide"] {
     right: 2rem;
     top: 2rem;
 }
+
+/*chatRoom*/
+
+#chatRoomBox {
+    width: 65%;
+}
+
+.input-group-append {
+    position: relative;
+    /* 기존 스타일 속성들 */
+}
+
+#createChatRoomBtn {
+    position: unset;
+    width: -webkit-fill-available;
+
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.row .col-md-4 {
+    margin-bottom: 20px; /* 열 사이의 간격을 20px로 설정 */
+}
+
+.chatRoomBox {
+    width: -webkit-fill-available;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    background-color: #d5d5d5;
+    border-radius: 25px;
+}
+
+.chatRoomBox:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 마우스를 올렸을 때의 그림자 효과를 설정합니다. */
+}
+
+#chatRoomBox {
+    padding: 5rem;
+    width: 40%;
+}
