@@ -8,5 +8,5 @@ import java.util.List;
 public interface DataService {
     public List<Camp> campInFromCsv(String csvFile, String n);
     public void reviewListOutToCsv(List<Review> reviewList);
-    public void filteredListOutToCsv(List<Camp> fijlteredList);
+    public void campListOutToCsv(List<Camp> campList, String csvFile, String pyFile);
 }

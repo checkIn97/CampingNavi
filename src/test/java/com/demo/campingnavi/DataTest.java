@@ -42,8 +42,8 @@ public class DataTest {
     @Test
     public void CampInput () {
         String csvFile = "campingData.csv";
-        csvFile = PathConfig.realPath(csvFile);
         String n = "all";
         List<Camp> campList = dataService.campInFromCsv(csvFile, n);
+
     }
 }

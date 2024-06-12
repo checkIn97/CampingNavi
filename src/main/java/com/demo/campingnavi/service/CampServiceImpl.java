@@ -86,11 +86,12 @@ public class CampServiceImpl implements CampService {
 
     @Override
     public List<CampVo> getCampRecommendList(List<Camp> filteredList, Member member) {
-        dataService.filteredListOutToCsv(filteredList);
         String pyFile = "Recommend.py";
         String csvFile = "tmp_filtered.csv";
         pyFile = PathConfig.realPath(pyFile);
         csvFile = PathConfig.realPath(csvFile);
+        dataService.campListOutToCsv(filteredList, csvFile, "");
+
         List<CampVo> campRecommendList = new ArrayList<>();
 
         ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, String.valueOf(member.getMseq()));
