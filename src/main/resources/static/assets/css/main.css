@@ -51,6 +51,23 @@ input[type="radio"]:checked + label {
     color: white;
 }
 
+input[type="date"]{
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    font-size: 15px;
+    border-radius: 60px;
+    padding: 15px 15px 15px 15px;
+}
+
+input[type="number"]{
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    font-size: 15px;
+    border-radius: 60px;
+    padding: 15px 15px 15px 15px;
+
+}
+
 label:hover {
     background-color: #dddddd;
     border: 1px solid #afafaf;
@@ -525,8 +542,7 @@ input[name="slide"] {
     text-align: right;
     border-radius: 50px;
     box-shadow: 0 0 10px rgba(120, 120, 120, 0.5);
-    margin: 10px;
-    margin-left: auto;
+    margin: 10px 10px 10px auto;
     padding: 20px;
     width: max-content;
 }
@@ -538,8 +554,7 @@ input[name="slide"] {
     text-align: left;
     border-radius: 50px;
     box-shadow: 0 0 10px rgba(120, 120, 120, 0.5);
-    margin: 10px;
-    margin-right: auto;
+    margin: 10px auto 10px 10px;
     padding: 20px;
     width: max-content;
 }
@@ -617,16 +632,13 @@ input[name="slide"] {
     display: flex;
     flex-direction: column;
     padding: 2rem;
-    background-color: #d5d5d5;
     border-radius: 25px;
-    background: linear-gradient(to top, rgba(255, 255, 255, 1) 8%,
-                                        rgba(255, 255, 255, 0.5) 111%,
-                                        rgba(255, 255, 255, 0) 100%),
-                                        url('https://i.pinimg.com/originals/c4/40/30/c44030431da165bb2c36835d7a5121cd.jpg');
     background-size: cover;
     background-blend-mode: inherit;
     background-clip: border-box;
-    background-position: bottom;
+    background: #d5d5d5 linear-gradient(to top, rgba(255, 255, 255, 1) 8%,
+    rgba(255, 255, 255, 0.5) 111%,
+    rgba(255, 255, 255, 0) 100%) url('https://i.pinimg.com/originals/c4/40/30/c44030431da165bb2c36835d7a5121cd.jpg') bottom;
 }
 
 .chatRoomBox:hover {
@@ -749,4 +761,25 @@ input[name="slide"] {
     margin-left: 0.5rem;
     font-weight: bolder;
     color: #888888;
+}
+
+/*chatCreate*/
+.createName {
+    width: -webkit-fill-available;
+    margin-bottom: 2rem;
+}
+
+.createPurposeDiv {
+    margin-bottom: 2rem;
+}
+
+#chatCreateBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.createMember {
+    margin-bottom: 1rem;
 }
