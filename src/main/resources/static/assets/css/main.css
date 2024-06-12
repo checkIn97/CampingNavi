@@ -338,11 +338,11 @@ table.alt tfoot {
 }
 
 #search-box {
-    display: none;
-    width: 25%; /* 화면의 가로 25%을 차지하도록 설정합니다. */
+    display: block;
+    width: 27%;
     height: 90vh;
     margin: 0; /* 요소를 화면 중앙에 배치합니다. */
-    padding: 35px;
+    padding: 2rem;
     border-radius: 50px;
     background-color: #fdfada
 }
@@ -382,9 +382,8 @@ table#searchList td {
 }
 
 #kakaoMap {
-    width: 400px;
-    height: 100px;
-    background-color: tomato;
+    width: 50rem;
+    height: 37rem;
 }
 
 #contentSearchArea {
@@ -396,6 +395,10 @@ table#searchList td {
     justify-content: center;
     align-items: center;
     height: 100vh;
+}
+
+#searchBtn {
+    width: 5rem;
 }
 
 /* 슬라이드쇼 스타일 */

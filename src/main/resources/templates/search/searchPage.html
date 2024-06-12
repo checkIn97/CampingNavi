@@ -13,7 +13,7 @@
 <div id="search-area">
     <div id="search-box">
         <form id="camp_search_form">
-            <button id="search-box-close"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
+            <button class="close" id="searchExit" type="button"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
             <h1 class="major">검색</h1>
             <div id="searchContain">
                 <select name="searchField">
@@ -23,7 +23,7 @@
                     </th:block>
                 </select>
                 <input type="text" id="search" name="searchWord" placeholder="검색어를 입력하세요" th:value="${campRecommendVo.searchWord}">
-                <button id="searchBtn" type="button" onclick="camp_search()">검색</button>
+                <button id="searchBtn" type="button" class="mainBtn" onclick="camp_search()">검색</button>
             </div>
             <div id="searchRequirement">
                 <th:block th:each="campType, iterStat : ${campRecommendVo.campTypeArray}">
@@ -41,7 +41,7 @@
 
     <div class="box" id="contentSearchArea">
         <div id="kakaoMap"></div>
-        <button id="search-box-toggle">검색하기</button>
+        <button id="search-box-toggle" class="mainBtn">검색하기</button>
     </div>
 </div>
 
@@ -57,7 +57,7 @@
         }
     });
 
-    document.getElementById('search-box-close').addEventListener('click', function () {
+    document.getElementById('searchExit').addEventListener('click', function () {
         document.getElementById('search-box').style.display = 'none';
     });
 </script>
