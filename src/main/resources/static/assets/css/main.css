@@ -619,7 +619,10 @@ input[name="slide"] {
     padding: 2rem;
     background-color: #d5d5d5;
     border-radius: 25px;
-    background: linear-gradient(to top, rgba(255, 255, 255, 1) 8%, rgba(255, 255, 255, 0) 111%, rgba(255, 255, 255, 0) 100%), url('https://i.pinimg.com/originals/c4/40/30/c44030431da165bb2c36835d7a5121cd.jpg');
+    background: linear-gradient(to top, rgba(255, 255, 255, 1) 8%,
+                                        rgba(255, 255, 255, 0.5) 111%,
+                                        rgba(255, 255, 255, 0) 100%),
+                                        url('https://i.pinimg.com/originals/c4/40/30/c44030431da165bb2c36835d7a5121cd.jpg');
     background-size: cover;
     background-blend-mode: inherit;
     background-clip: border-box;
