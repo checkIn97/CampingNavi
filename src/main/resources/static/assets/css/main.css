@@ -616,6 +616,9 @@ input[name="slide"] {
     padding: 2rem;
     background-color: #d5d5d5;
     border-radius: 25px;
+    background: linear-gradient(to top, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 111%, rgba(255, 255, 255, 0) 100%), url('https://i.pinimg.com/originals/c4/40/30/c44030431da165bb2c36835d7a5121cd.jpg');
+    background-size: cover;
+    background-position: center;
 }
 
 .chatRoomBox:hover {
@@ -625,4 +628,117 @@ input[name="slide"] {
 #chatRoomBox {
     padding: 5rem;
     width: 40%;
+}
+
+.listChat{
+    margin-top: 14rem;
+}
+
+.campingNameChat{
+    margin: 0;
+    font-size: xx-large;
+}
+
+.lengthContain{
+    display: flex;
+    flex-direction: column;
+}
+
+#chatGradeMember{
+    margin-left: 1rem;
+}
+
+.chatGrade img{
+    width: 0.5rem;
+}
+.chatReviewNum{
+    color: #424242;
+    margin-left: 1rem;
+    font-size: 0.8rem;
+}
+
+.chatHumanIcon{
+    width:1rem;
+    object-fit: contain;
+}
+
+.chatPurpose{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 3rem 4rem 2rem;
+}
+
+.chatRoomName{
+    font-weight: bolder;
+    font-size: 1.5rem;
+}
+
+.chatPurposeSee{
+    border: 2px solid rgb(112, 112, 112);
+    border-radius: 50px;
+    width: max-content;
+    padding: 0.7rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+.chatPurposeIcon{
+    width: 1.3rem;
+    object-fit: contain;
+}
+
+.chatPurposeText {
+    color: #7c7c7c;
+}
+
+.chat-info {
+    display: block;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+}
+
+.people {
+    width: 1rem;
+    object-fit: contain;
+}
+
+.calender {
+    width: 2rem;
+    margin: 1rem;
+    object-fit: contain;
+}
+
+.chatInfo {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+    border: 2px solid #7c7c7c;
+    border-radius: 1rem;
+    padding: 0.5rem;
+}
+
+.chat-day {
+    font-weight: bolder;
+    color: #9e5c21;
+}
+
+.chat-member-num {
+    font-weight: bolder;
+    font-size: 1.1rem;
+}
+
+.chatRoomNameBox {
+    display: block;
+}
+
+.chatRoomPN {
+    margin-left: 0.5rem;
+    font-weight: bolder;
+    color: #888888;
 }
