@@ -636,9 +636,10 @@ input[name="slide"] {
     background-size: cover;
     background-blend-mode: inherit;
     background-clip: border-box;
-    background: #d5d5d5 linear-gradient(to top, rgba(255, 255, 255, 1) 8%,
-    rgba(255, 255, 255, 0.5) 111%,
-    rgba(255, 255, 255, 0) 100%) url('https://i.pinimg.com/originals/c4/40/30/c44030431da165bb2c36835d7a5121cd.jpg') bottom;
+    background-color: #d5d5d5;
+    background: linear-gradient(to top, rgba(255, 255, 255, 1) 25%, rgba(255, 255, 255, 0.2) 100%, rgba(255, 255, 255, 0) 100%), url('https://i.pinimg.com/originals/c4/40/30/c44030431da165bb2c36835d7a5121cd.jpg');
+    background-size: cover;
+    background-position: center;
 }
 
 .chatRoomBox:hover {
