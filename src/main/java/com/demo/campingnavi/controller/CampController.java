@@ -53,40 +53,30 @@ public class CampController {
             return "redirect:/index";
         }
 
-        if (page == 0) {
-            campRecommendVo.setPage(1);
-            campRecommendVo.setSize(size);
-            campRecommendVo.setSortBy(sortBy);
-            campRecommendVo.setSortDirection(sortDirection);
-            campRecommendVo.setPageMaxDisplay(pageMaxDisplay);
-            campRecommendVo.setUseyn(useyn);
-            campRecommendVo.setSearchField(searchField);
+        campRecommendVo.setPage(1);
+        campRecommendVo.setSize(size);
+        campRecommendVo.setSortBy(sortBy);
+        campRecommendVo.setSortDirection(sortDirection);
+        campRecommendVo.setPageMaxDisplay(pageMaxDisplay);
+        campRecommendVo.setUseyn(useyn);
+        campRecommendVo.setSearchField(searchField);
+        campRecommendVo.setSearchWord(searchWord);
 
-            String[] searchWordInit = new String[campRecommendVo.getSearchWord().length];
-            for (int i = 0 ; i < campRecommendVo.getSearchWord().length ; i++) {
-                searchWordInit[i] = "";
+        List<String> campTypeList = Arrays.asList(campType);
+        campType = new String[campRecommendVo.getCampTypeArray().length];
+        for (int i = 0 ; i < campRecommendVo.getCampTypeArray().length ; i++) {
+            String type = campRecommendVo.getCampTypeArray()[i][0];
+            if (campTypeList.contains(type)) {
+                campType[i] = type;
+            } else {
+                campType[i] = "";
             }
-            campRecommendVo.setSearchWord(searchWordInit);
-
-            String[] campTypeInit = new String[campRecommendVo.getCampType().length];
-            for (int i = 0 ; i < campRecommendVo.getCampType().length ; i++) {
-                campTypeInit[i] = "";
-            }
-            campRecommendVo.setCampType(campTypeInit);
-            campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
-            campRecommendVo.setCampRecommendList(campService.getCampRecommendList(campRecommendVo.getCampList(), member));
-            session.setAttribute("campRecommendVo", campRecommendVo);
-        } else {
-            campRecommendVo = (CampRecommendVo)session.getAttribute("campRecommendVo");
-            campRecommendVo.setPage(page);
-            campRecommendVo.setSize(size);
-            campRecommendVo.setSortBy(sortBy);
-            campRecommendVo.setSortDirection(sortDirection);
-            campRecommendVo.setPageMaxDisplay(pageMaxDisplay);
-            session.setAttribute("campRecommendVo", campRecommendVo);
         }
+        campRecommendVo.setCampType(campType);
 
-        campRecommendVo = (CampRecommendVo)session.getAttribute("campRecommendVo");
+        campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
+        campRecommendVo.setCampRecommendList(campService.getCampRecommendList(campRecommendVo.getCampList(), member));
+        session.setAttribute("campRecommendVo", campRecommendVo);
         model.addAttribute("campRecommendVo", campRecommendVo);
 
         return "search/searchPage";
@@ -104,6 +94,7 @@ public class CampController {
             CampRecommendVo campRecommendVo = (CampRecommendVo) session.getAttribute("campRecommendVo");
             if (campRecommendVo.getPage() != page) {
                 campRecommendVo.setPage(page);
+                campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
             } else if (!campRecommendVo.getSortBy().equals(sortBy)) {
                 campRecommendVo.setSortBy(sortBy);
                 campRecommendVo.setPage(1);
@@ -134,6 +125,51 @@ public class CampController {
             result.put("page", campRecommendVo.getPage());
             result.put("size", campRecommendVo.getSize());
             result.put("pageMaxDisplay", campRecommendVo.getPageMaxDisplay());
+            result.put("result", "success");
+        } else {
+            result.put("result", "fail");
+        }
+
+        return result;
+    }
+
+    @PostMapping("/re_search")
+    @ResponseBody
+    public Map<String, Object> re_search(HttpSession session,
+                                         @RequestParam(value="searchField") String searchField,
+                                         @RequestParam(value="searchWord") String searchWord,
+                                         @RequestParam(value="campType") String[] campType) {
+        Map<String, Object> result = new HashMap<>();
+        Member member = (Member) session.getAttribute("loginMember");
+        if (member != null) {
+            CampRecommendVo campRecommendVo = new CampRecommendVo();
+            campRecommendVo.setPage(1);
+            campRecommendVo.setSortBy(((CampRecommendVo)session.getAttribute("campRecommendVo")).getSortBy());
+            campRecommendVo.setSortDirection(((CampRecommendVo)session.getAttribute("campRecommendVo")).getSortDirection());
+            campRecommendVo.setSize(((CampRecommendVo)session.getAttribute("campRecommendVo")).getSize());
+            campRecommendVo.setPageMaxDisplay(((CampRecommendVo)session.getAttribute("campRecommendVo")).getPageMaxDisplay());
+            campRecommendVo.setUseyn(((CampRecommendVo)session.getAttribute("campRecommendVo")).getUseyn());
+            campRecommendVo.setSearchField(searchField);
+            campRecommendVo.setSearchWord(searchWord);
+
+            List<String> campTypeList = Arrays.asList(campType);
+            campType = new String[campRecommendVo.getCampTypeArray().length];
+            for (int i = 0 ; i < campRecommendVo.getCampTypeArray().length ; i++) {
+                String type = campRecommendVo.getCampTypeArray()[i][0];
+                if (campTypeList.contains(type)) {
+                    campType[i] = type;
+                } else {
+                    campType[i] = "";
+                }
+            }
+            campRecommendVo.setCampType(campType);
+
+            campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
+            campRecommendVo.setCampRecommendList(campService.getCampRecommendList(campRecommendVo.getCampList(), member));
+
+            session.setAttribute("campRecommendVo", campRecommendVo);
+
+            result.put("campRecommendVo", campRecommendVo);
             result.put("result", "success");
         } else {
             result.put("result", "fail");

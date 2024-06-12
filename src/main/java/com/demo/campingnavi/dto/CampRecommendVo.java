@@ -23,7 +23,7 @@ public class CampRecommendVo {
     private String useyn = "";
     private String[][] searchFieldArray = {{"name", "이름"}, {"locationB", "시도"}, {"locationS", "시군구"}};
     private String searchField = "";
-    private String[] searchWord = new String[searchFieldArray.length];
+    private String searchWord = "";
     private String[][] campTypeArray = {{"generalCamping", "일반야영장"}, {"autoCamping", "자동차야영장"}, {"glamping", "글램핑"}, {"caravan", "카라반"}};
     private String[] campType = new String[campTypeArray.length];
 

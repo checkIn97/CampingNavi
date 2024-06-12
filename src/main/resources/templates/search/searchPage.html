@@ -12,28 +12,27 @@
 <body>
 <div id="search-area">
     <div id="search-box">
-        <button id="search-box-close"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
-        <h1 class="major">검색</h1>
-        <div id="searchContain">
-            <select name="searchField">
-                <th:block th:each="field : ${campRecommendVo.searchFieldArray}">
-                    <option th:if="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}" selected>[[${field[1]}]]</option>
-                    <option th:unless="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}">[[${field[1]}]]</option>
+        <form id="camp_search_form">
+            <button id="search-box-close"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
+            <h1 class="major">검색</h1>
+            <div id="searchContain">
+                <select name="searchField">
+                    <th:block th:each="field : ${campRecommendVo.searchFieldArray}">
+                        <option th:if="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}" selected>[[${field[1]}]]</option>
+                        <option th:unless="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}">[[${field[1]}]]</option>
+                    </th:block>
+                </select>
+                <input type="text" id="search" name="searchWord" placeholder="검색어를 입력하세요" th:value="${campRecommendVo.searchWord}">
+                <button id="searchBtn" type="button" onclick="camp_search()">검색</button>
+            </div>
+            <div id="searchRequirement">
+                <th:block th:each="campType, iterStat : ${campRecommendVo.campTypeArray}">
+                    <input type="checkbox" name="campType" th:id="${campType[0]}" th:value="${campType[0]}" th:if="${campRecommendVo.campType[iterStat.index] == campType[0]}" checked/>
+                    <input type="checkbox" name="campType" th:id="${campType[0]}" th:value="${campType[0]}" th:unless="${campRecommendVo.campType[iterStat.index] == campType[0]}"/>
+                    <label class="checkboxLabel" th:for="${campType[0]}">[[${campType[1]}]]</label>
                 </th:block>
-            </select>
-            <input id="search" name="searchWord" placeholder="검색어를 입력하세요" type="text">
-            <button id="searchBtn" type="button">검색</button>
-        </div>
-        <div id="searchRequirement">
-            <input id="generalCamping" name="campType" type="checkbox" value="generalCamping">
-            <label class="checkboxLabel" for="generalCamping">일반</label>
-            <input id="autocamping" name="campType" type="checkbox" value="autoCamping">
-            <label class="checkboxLabel" for="autocamping">오토캠핑</label>
-            <input id="glamping" name="campType" type="checkbox" value="glamping">
-            <label class="checkboxLabel" for="glamping">글램핑</label>
-            <input id="caravan" name="campType" type="checkbox" value="caravan">
-            <label class="checkboxLabel" for="caravan">카라반</label>
-        </div>
+            </div>
+        </form>
         <div id="list_area"></div>
         <div id="page_area"></div>
     </div>
@@ -206,6 +205,22 @@
                 alert("리스트 갱신 실패!");
             }
         });
+    }
+
+    function camp_search() {
+        $.ajax({
+            type: 'POST',
+            url: '/camp/re_search',
+            dataType: 'json',
+            data: $("#camp_search_form").serialize(),
+            success: function(data) {
+                alert(data.result);
+            },
+            error: function() {
+                alert("검색 실패");
+            },
+        });
+
     }
 </script>
 <style>
