@@ -1,7 +1,6 @@
 package com.demo.campingnavi.controller;
 
 import com.demo.campingnavi.dto.ChatMessage;
-
 import com.demo.campingnavi.repository.mongo.MongoChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -44,7 +43,7 @@ public class ChatController {
 
     @RequestMapping("/chat/create")
     public String chatCreate() {
-        return "/chat/create";
+        return "chat/create";
     }
 
 }
