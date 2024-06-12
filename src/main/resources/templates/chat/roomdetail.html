@@ -147,6 +147,11 @@
     }
 
     connect();
+
+    document.getElementById('chatExit').addEventListener('click', function () {
+        ws.send("/pub/chat/message", {}, JSON.stringify({type: 'LEAVE', roomId: vm.$data.roomId, sender: vm.$data.sender}));
+        location.href = "/chat/room";
+    });
 </script>
 
 </body>
