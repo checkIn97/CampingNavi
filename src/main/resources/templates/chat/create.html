@@ -56,7 +56,12 @@
         <div class="createMember">
             <input id="chatPeople" max="10" min="1" name="chatPeople" type="number">
         </div>
-        <button @click="createRoom" class="mainBtn">방 생성</button>
+        <div class="buttonContain">
+            <!--상세보기로 들어온 경우 보이지 않음-->
+            <button type="button">캠핑장 검색</button>
+
+            <button @click="createRoom" class="mainBtn" type="button">방 생성</button>
+        </div>
     </div>
 </article>
 <th:block th:insert="insert/footer.html"></th:block>
