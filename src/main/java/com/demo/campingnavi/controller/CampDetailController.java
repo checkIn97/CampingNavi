@@ -3,9 +3,11 @@ package com.demo.campingnavi.controller;
 import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.domain.Recommend;
+import com.demo.campingnavi.dto.CampVo;
 import com.demo.campingnavi.model.ApiImageResponse;
 import com.demo.campingnavi.model.ApiResponse;
 import com.demo.campingnavi.service.CampDetailService;
+import com.demo.campingnavi.service.CampService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ public class CampDetailController {
 
     @Autowired
     private CampDetailService campDetailService;
+    @Autowired
+    private CampService campService;
 
     @GetMapping("/go")
     public String go() {
@@ -32,11 +36,17 @@ public class CampDetailController {
 
         List<ApiResponse.Item> itemList = campDetailService.DataFromApi(mapX, mapY);
         List<ApiImageResponse.Item> imageList = campDetailService.DataFromApiImage((contentId));
+
+        Member member = new Member();
+        CampVo campVo = campService.getCampVoByCseq(cseq, member);
+        float score = Float.parseFloat(campVo.getScoreView());
+
         model.addAttribute("camps", itemList);
         model.addAttribute("imageUrls", imageList);
         model.addAttribute("cseq", cseq);
         model.addAttribute("mapX", mapX);
         model.addAttribute("mapY", mapY);
+        model.addAttribute("starScore", score);
 
         return "/campDetail/campDetail";
     }
