@@ -21,7 +21,7 @@
                     <option th:unless="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}">[[${field[1]}]]</option>
                 </th:block>
             </select>
-            <input type="text" id="search" name="searchWord" placeholder="검색어를 입력하세요" th:value="${campRecommendVo.searchWord}">
+            <input type="text" id="searchBar" name="searchWord" placeholder="검색어를 입력하세요" th:value="${campRecommendVo.searchWord}">
             <button id="searchBtn" type="button" class="mainBtn" onclick="camp_search(); return false;">검색</button>
         </div>
         <div id="searchRequirement">
@@ -202,7 +202,7 @@
 
     function camp_search() {
         let searchField = $("#searchField").val();
-        let searchWord = $("#search").val();
+        let searchWord = $("#searchBar").val();
 
         // 체크박스 배열 가져오기
         let campType = [];
@@ -235,7 +235,7 @@
         });
     }
 
-    let searchBox = document.getElementById('search');
+    let searchBox = document.getElementById('searchBar');
     searchBox.addEventListener('keyup', event => press_enter_in_searchBox(event));
 
     function press_enter_in_searchBox(event) {
@@ -261,7 +261,7 @@
                     let mapContainer = document.getElementById('kakaoMap'); // 지도를 표시할 div
                         let mapOption = {
                         center: new kakao.maps.LatLng(initY, initX), // 지도의 중심좌표
-                        level: 3 // 지도의 확대 레벨
+                        level: 5 // 지도의 확대 레벨
                     };
                     map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
@@ -271,30 +271,29 @@
                         let x = list[i].camp.mapX;
                         let y = list[i].camp.mapY;
                         let name = list[i].camp.name;
-                        positions.push({title:name, latlng: new kakao.maps.LatLng(y, x)});
+                        positions.push({title:name, latlng: new kakao.maps.LatLng(y, x), rating: list[i].scoreView});
                     }
 
                     // 마커 출력
                     for (let i = 0; i < positions.length; i ++) {
 
-                        // 마커 이미지의 이미지 크기 입니다
-                        //let imageSize = new kakao.maps.Size(24, 35);
-
-                        // 마커 이미지를 생성합니다
-                        //let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
                         // 마커를 생성합니다
                         let marker = new kakao.maps.Marker({
                             map: map, // 마커를 표시할 지도
                             position: positions[i].latlng, // 마커를 표시할 위치
-                            title: positions[i].title,
-                            text: positions[i].title, // 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
-                            //image : markerImage, // 마커 이미지
                         });
 
                         kakao.maps.event.addListener(marker, 'click', function() {
                             location.href="/camp/detail/?mapX="+list[i].camp.mapX+"&mapY="+list[i].camp.mapY+"&contentId="+list[i].camp.contentId+"&cseq="+list[i].camp.cseq;
                         });
+
+                        // 마커에 표시할 인포윈도우를 생성합니다
+                        var infowindow = new kakao.maps.InfoWindow({
+                            // 인포윈도우에 표시할 내용
+                            content: "<div style=\"padding:3px; font-weight:bold;\">" + list[i].camp.name + "<br>" + list[i].scoreview + "</div>"
+                        });
+                        kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+                        kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
                     }
                 }
             },
@@ -302,6 +301,20 @@
                 alert("지도 갱신 실패!");
             }
         });
+    }
+
+    // 인포윈도우를 표시하는 클로저를 만드는 함수입니다
+    function makeOverListener(map, marker, infowindow) {
+        return function() {
+            infowindow.open(map, marker);
+        };
+    }
+
+    // 인포윈도우를 닫는 클로저를 만드는 함수입니다
+    function makeOutListener(infowindow) {
+        return function() {
+            infowindow.close();
+        };
     }
 
     function move_map(mapX, mapY) {
