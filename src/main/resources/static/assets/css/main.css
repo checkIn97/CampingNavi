@@ -886,3 +886,59 @@ input[name="slide"] {
 .createMember {
     margin-bottom: 1rem;
 }
+
+/*mainPage*/
+
+.mainPageBtn {
+    width: 9rem;
+}
+
+#chat {
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#myPage {
+    width: 12rem;
+    position: fixed;
+    top: 150px;
+    right: 0;
+    transform: translateX(-190%);
+}
+
+#admin {
+    position: fixed;
+    top: 490px;
+    right: 0;
+    transform: translateX(-350%);
+}
+
+#search {
+    position: fixed;
+    top: 505px;
+    right: 0;
+    transform: translateX(-810%);
+    width: 7rem;
+}
+
+#product {
+    position: fixed;
+    top: 200px;
+    right: 0;
+    transform: translateX(-870%);
+    width: 7rem;
+}
+
+.mainBoxText {
+    width: max-content;
+    display: none;
+    flex-direction: column;
+    padding: 1rem;
+    margin: auto;
+    background-color: #fdfada;
+    border-radius: 27px;
+    position: absolute;
+    transition: left 0.3s, top 0.3s;
+}
