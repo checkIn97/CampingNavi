@@ -21,7 +21,7 @@
                     <option th:unless="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}">[[${field[1]}]]</option>
                 </th:block>
             </select>
-            <input type="text" id="search" name="searchWord" placeholder="검색어를 입력하세요" th:value="${campRecommendVo.searchWord}" onkeyup="press_enter(); return false;">
+            <input type="text" id="search" name="searchWord" placeholder="검색어를 입력하세요" th:value="${campRecommendVo.searchWord}">
             <button id="searchBtn" type="button" class="mainBtn" onclick="camp_search(); return false;">검색</button>
         </div>
         <div id="searchRequirement">
@@ -240,13 +240,22 @@
         });
     }
 
-    function press_enter() {
-        let keyValue = window.event.keyCode;
-        if (keyValue == 13) {
+    let searchBox = document.getElementById('search');
+    searchBox.addEventListener('keyup', event => press_enter_in_searchBox(event));
+
+    function press_enter_in_searchBox(event) {
+        let key = event.key || event.keyCode;
+        if (key === 'Enter' || key === 13) {
             camp_search();
-        } else {
-            return false;
         }
+    }
+
+
+
+
+
+    function reloadMap() {
+
     }
 </script>
 <style>
