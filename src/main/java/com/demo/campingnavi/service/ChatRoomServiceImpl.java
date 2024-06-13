@@ -34,8 +34,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     }
 
     @Override
-    public ChatRoom createChatRoom(String name) {
-        ChatRoom chatRoom = ChatRoom.create(name);
+    public ChatRoom createChatRoom(ChatRoom chatRoom) {
         chatRoomRepository.save(chatRoom);
         return chatRoom;
     }

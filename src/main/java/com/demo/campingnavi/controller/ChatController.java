@@ -41,9 +41,4 @@ public class ChatController {
         }
     }
 
-    @RequestMapping("/chat/create")
-    public String chatCreate() {
-        return "chat/create";
-    }
-
 }

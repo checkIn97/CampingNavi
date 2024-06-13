@@ -9,6 +9,6 @@ public interface ChatRoomService {
 
     public List<ChatRoom> findAllRoom();
     public ChatRoom findRoomById(String roomId);
-    public ChatRoom createChatRoom(String name);
+    public ChatRoom createChatRoom(ChatRoom chatRoom);
 
 }

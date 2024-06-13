@@ -10,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 
 @RequiredArgsConstructor
@@ -38,8 +40,20 @@ public class ChatRoomController {
     // 채팅방 생성
     @PostMapping("/room")
     @ResponseBody
-    public ChatRoom createRoom(@RequestParam String name) {
-        return chatRoomService.createChatRoom(name);
+    public ChatRoom createRoom(@RequestParam String name,
+                               @RequestParam String startDate,
+                               @RequestParam String endDate,
+                               @RequestParam int maxMem,
+                               @RequestParam String[] purpose) {
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setRoomId(UUID.randomUUID().toString());
+        chatRoom.setName(name);
+        chatRoom.setStartDate(startDate);
+        chatRoom.setEndDate(endDate);
+        chatRoom.setMaxMem(maxMem);
+        chatRoom.setPurpose(List.of(purpose));
+        chatRoomService.createChatRoom(chatRoom);
+        return chatRoomService.createChatRoom(chatRoom);
     }
 
     // 채팅방 입장 화면
@@ -62,4 +76,11 @@ public class ChatRoomController {
     public List<ChatMessage> roomMessages(@PathVariable String roomId) {
         return mongoChatMessageRepository.findByRoomId(roomId);
     }
+
+    @RequestMapping("/create")
+    public String chatCreate() {
+        return "chat/create";
+    }
+
+
 }
