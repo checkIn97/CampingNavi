@@ -63,6 +63,7 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0f99991591de7a581b0817b2c20056f0"></script>
 
 <script type="text/javascript">
+    var choice = 0;
     $(document).ready(function() {
         reloadList(1, "name", "ASC");
         reloadMap();
@@ -273,15 +274,28 @@
                         let name = list[i].camp.name;
                         positions.push({title:name, latlng: new kakao.maps.LatLng(y, x), rating: list[i].scoreView});
                     }
+                    let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+                    let imageSize = new kakao.maps.Size(24, 35);
+                    let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
                     // 마커 출력
                     for (let i = 0; i < positions.length; i ++) {
 
                         // 마커를 생성합니다
-                        let marker = new kakao.maps.Marker({
-                            map: map, // 마커를 표시할 지도
-                            position: positions[i].latlng, // 마커를 표시할 위치
-                        });
+                        let marker = null;
+                        if (i == choice) {
+                            marker = new kakao.maps.Marker({
+                                map: map, // 마커를 표시할 지도
+                                position: positions[i].latlng, // 마커를 표시할 위치
+                                image : markerImage // 마커 이미지
+                            });
+                        } else {
+                            marker = new kakao.maps.Marker({
+                                map: map, // 마커를 표시할 지도
+                                position: positions[i].latlng, // 마커를 표시할 위치
+                            });
+                        }
+
 
                         kakao.maps.event.addListener(marker, 'click', function() {
                             location.href="/camp/detail/?mapX="+list[i].camp.mapX+"&mapY="+list[i].camp.mapY+"&contentId="+list[i].camp.contentId+"&cseq="+list[i].camp.cseq;
@@ -290,7 +304,7 @@
                         // 마커에 표시할 인포윈도우를 생성합니다
                         var infowindow = new kakao.maps.InfoWindow({
                             // 인포윈도우에 표시할 내용
-                            content: "<div style=\"padding:3px; font-weight:bold;\">" + list[i].camp.name + "<br>" + list[i].scoreView + "</div>"
+                            content: "<div style=\"padding:3px; font-weight:bold;\">" + list[i].camp.name + " (★ : " + list[i].scoreView + ")</div>"
                         });
                         kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
                         kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
