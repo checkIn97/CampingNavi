@@ -915,7 +915,7 @@ input[name="slide"] {
     transform: translateX(-350%);
 }
 
-#search {
+#mainSearch {
     position: fixed;
     top: 505px;
     right: 0;

@@ -17,7 +17,7 @@
         <div class="mainBoxText" id="mainText">마이페이지</div>
     </div>
     <div id="mainSearchBox">
-        <img alt="캠핑장검색" class="mainPageBtn" id="search" src="/assets/images/button/compass.png">
+        <img alt="캠핑장 추천" class="mainPageBtn" id="mainSearch" src="/assets/images/button/compass.png">
         <div class="mainBoxText" id="searchText">캠핑장 추천</div>
     </div>
     <div id="mainChatBox">
@@ -51,7 +51,7 @@
 
     var texts = {
         'myPage': document.getElementById('mainText'),
-        'search': document.getElementById('searchText'),
+        'mainSearch': document.getElementById('searchText'),
         'chat': document.getElementById('chatText'),
         'product': document.getElementById('productText'),
         'admin': document.getElementById('adminText')
@@ -77,7 +77,7 @@
     }
 
     /*링크 연결*/
-    document.getElementById('search').addEventListener('click', function () {
+    document.getElementById('mainSearch').addEventListener('click', function () {
         location.href = '/camp/search';
     });
 
