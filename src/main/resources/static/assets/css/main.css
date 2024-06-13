@@ -707,8 +707,10 @@ input[name="slide"] {
 }
 
 #createChatRoomBtn {
-    position: unset;
-    width: -webkit-fill-available;
+    width: 10rem;
+    position: fixed;
+    bottom: 0;
+    right: 0;
 
 }
 
