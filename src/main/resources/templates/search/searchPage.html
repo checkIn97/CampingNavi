@@ -21,7 +21,7 @@
                     <option th:unless="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}">[[${field[1]}]]</option>
                 </th:block>
             </select>
-            <input type="text" id="searchBar" name="searchWord" placeholder="검색어를 입력하세요" th:value="${campRecommendVo.searchWord}">
+            <input type="text" id="searchBar" name="searchWord" placeholder="검색어를 입력하세요" spellcheck="false" th:value="${campRecommendVo.searchWord}">
             <button id="searchBtn" type="button" class="mainBtn" onclick="camp_search(); return false;">검색</button>
         </div>
         <div id="searchRequirement">
@@ -63,7 +63,15 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0f99991591de7a581b0817b2c20056f0"></script>
 
 <script type="text/javascript">
+    var map = null;
+    var markers = null;
     var choice = 0;
+
+    // 선택한 마커 이미지 정보
+    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+    var imageSize = new kakao.maps.Size(24, 35);
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
     $(document).ready(function() {
         reloadList(1, "name", "ASC");
         reloadMap();
@@ -92,7 +100,7 @@
                     for (let i = (page-1)*size ; i < (page*size < list.length ? page*size : list.length) ; i++) {
                         HTML += "<tr class=\"tableResult\">";
                         HTML += "<a href=\"\" onclick=\"reloadList(1, '" + sortBy + "', '" + sortDirection + "')\; return false\;\" aria-label=\"First\">";
-                        HTML += "<td><a href=\"\" onclick=\"move_map(" + list[i].camp.mapX + ", " + list[i].camp.mapY + ")\; return false\;\">" + list[i].camp.name + "</a></td>";
+                        HTML += "<td><a href=\"\" onclick=\"move_map(" + i + ", " + list[i].camp.mapX + ", " + list[i].camp.mapY + ")\; return false\;\">" + list[i].camp.name + "</a></td>";
                         HTML += "<td>" + list[i].addressShort + "</td>";
 
                         let starScore = parseFloat(list[i].scoreView);
@@ -253,6 +261,8 @@
             type: 'POST',
             url: '/camp/reloadMap',
             success: function(data) {
+                markers = [];
+                choice = 0;
                 let list = data.campRecommendVo.campRecommendList;
                 let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
                 if (list.length > 0) {
@@ -274,9 +284,6 @@
                         let name = list[i].camp.name;
                         positions.push({title:name, latlng: new kakao.maps.LatLng(y, x), rating: list[i].scoreView});
                     }
-                    let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-                    let imageSize = new kakao.maps.Size(24, 35);
-                    let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
                     // 마커 출력
                     for (let i = 0; i < positions.length; i ++) {
@@ -295,7 +302,7 @@
                                 position: positions[i].latlng, // 마커를 표시할 위치
                             });
                         }
-
+                        markers.push(marker);
 
                         kakao.maps.event.addListener(marker, 'click', function() {
                             location.href="/camp/detail/?mapX="+list[i].camp.mapX+"&mapY="+list[i].camp.mapY+"&contentId="+list[i].camp.contentId+"&cseq="+list[i].camp.cseq;
@@ -304,7 +311,7 @@
                         // 마커에 표시할 인포윈도우를 생성합니다
                         var infowindow = new kakao.maps.InfoWindow({
                             // 인포윈도우에 표시할 내용
-                            content: "<div style=\"padding:3px; font-weight:bold;\">" + list[i].camp.name + " (★ : " + list[i].scoreView + ")</div>"
+                            content: "<div style=\"padding:5px; font-weight:bold; white-space:nowrap;\">" + list[i].camp.name + " (★ : " + list[i].scoreView + ")</div>"
                         });
                         kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
                         kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
@@ -331,7 +338,10 @@
         };
     }
 
-    function move_map(mapX, mapY) {
+    function move_map(index, mapX, mapY) {
+        markers[choice].setImage(null);
+        markers[index].setImage(markerImage);
+        choice = index;
         let moveLatLon = new kakao.maps.LatLng(mapY, mapX);
         map.panTo(moveLatLon);
     }
