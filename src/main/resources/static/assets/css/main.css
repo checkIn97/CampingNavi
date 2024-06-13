@@ -477,6 +477,10 @@ input[name="slide"] {
     width: 50rem;
 }
 
+.detailBox {
+    width: 52rem;
+}
+
 /* 동그라미의 기본 스타일을 설정합니다. */
 .dot {
     height: 15px;

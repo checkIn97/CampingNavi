@@ -19,7 +19,7 @@
     <button type="submit">Fetch Data</button>
 </form>
 
-<div class="box">
+<div class="box detailBox">
     <div class="slideshow-container">
         <img alt="arrowL" class="arrow" id="arrowL" src="/assets/images/icon/arrowL.png">
         <img alt="arrowR" class="arrow" id="arrowR" src="/assets/images/icon/arrowR.png">
@@ -76,7 +76,6 @@
         <h2 class="major">소개</h2>
         <span class="detailContent">
         <span th:text="${camp.intro}"></span>
-            <button class="moreBtn" id="moreBtn" type="button">더보기</button>
         </span>
 
         <h2 class="major">위치</h2>
@@ -198,17 +197,6 @@
     document.getElementById('reviewBtn').addEventListener('click', function () {
         document.getElementById('campDetail').style.display = 'none';
         document.getElementById('review').style.display = 'block';
-    });
-
-    document.getElementById('moreBtn').addEventListener('click', function () {
-        var detailContent = document.querySelector('.detailContent');
-        if (detailContent.style.height === 'auto') {
-            detailContent.style.height = '100px';
-            document.getElementById('moreBtn').innerText = '더보기';
-        } else {
-            detailContent.style.height = 'auto';
-            document.getElementById('moreBtn').innerText = '접기';
-        }
     });
 
     window.onload = function () {
