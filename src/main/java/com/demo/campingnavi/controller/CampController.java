@@ -38,7 +38,7 @@ public class CampController {
                 .sex("m")
                 .useyn("y")
                 .birth("2000-01-01")
-                .id("test")
+                .username("test")
                 .name("testuser")
                 .nickname("테스트유저")
                 .phone("010-1234-5678")

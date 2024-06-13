@@ -11,9 +11,11 @@
 <div id="wrapper">
     <img src="/assets/images/logo/typo.png" id="logoTypo">
     <div class="content">
-        <input id="userId" type="text" placeholder="아이디">
-        <input id="userPw" type="password" placeholder="비밀번호">
-        <button class="mainBtn" id="loginBtn" type="button">로그인</button>
+        <form id="loginForm" action="/member/loginProc" method="post">
+            <input id="userId" type="text" name="username" th:placeholder="아이디">
+            <input id="userPw" type="password" name="pw" th:placeholder="비밀번호">
+            <button class="mainBtn" id="loginBtn" type="submit">로그인</button>
+        </form>
     </div>
 
     <div class="buttonContain" id="loginGroup">

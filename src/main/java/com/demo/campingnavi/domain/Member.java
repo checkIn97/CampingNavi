@@ -2,7 +2,6 @@ package com.demo.campingnavi.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -21,8 +20,8 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int mseq; // 회원 번호
     
-    @Column(length = 50, nullable = false)
-    private String id; // 회원 아이디
+    @Column(length = 50, nullable = false, unique = true)
+    private String username; // 회원 아이디
 
     @Column(length = 100, nullable = false)
     private String pw; // 회원 비밀번호
@@ -42,7 +41,7 @@ public class Member {
     @Column(length = 1, nullable = false)
     private String sex; // 회원 성별
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = false, unique = true)
     private String nickname; // 회원 닉네임
 
     @Column(length = 50, nullable = false)
@@ -53,4 +52,7 @@ public class Member {
 
     @Column(length = 50, nullable = false)
     private String birth; // 회원 생년월일(1999-11-11) 형식
+
+    @Column
+    private String role; // 일반회원: USER, 관리자: ADMIN
 }

@@ -40,26 +40,34 @@
 글씨의 색깔, 굵기 또는 밑줄 등을 통하여 그 내용이 명확히 표시되도록 할 것`
 동의 사항이 많아 중요한 내용이 명확히 구분되기 어려운 경우에는 중요한 내용이 쉽게 확인될 수 있도록 그 밖의 내용과 별도로 구분하여 표시할
     </textarea>
-    <div class="buttonContain" id="membershipAgree">
-        <input id="agree" name="privacy" type="radio" value="agree">
-        <label for="agree">동의합니다.</label>
-        <input id="disAgree" name="privacy" type="radio" value="disagree">
-        <label for="disAgree">동의하지 않습니다.</label>
-    </div>
-    <button class="mainBtn" id="agreeBtn" type="button">회원가입</button>
+    <form action="/member/membership" method="get" id="goJoin">
+        <div class="buttonContain" id="membershipAgree">
+            <input id="agree" name="privacy" type="radio" value="agree" checked>
+            <label for="agree">동의합니다.</label>
+            <input id="disAgree" name="privacy" type="radio" value="disagree">
+            <label for="disAgree">동의하지 않습니다.</label>
+        </div>
+        <button class="mainBtn" id="submitBtn" type="button" onclick="agreeCheck()">회원가입</button>
+    </form>
 </div>
 
 <th:block th:insert="insert/footer.html"></th:block>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.getElementById('agreeBtn').addEventListener('click', function () {
-        if (document.getElementById('agree').checked) {
-            location.href = '/member/membership';
+    function agreeCheck() {
+        var agree = $("#agree").is(":checked");
+
+        if (agree) {
+            $("#goJoin").submit()
         } else {
-            location.href = '/index';
+            alert("약관에 동의하셔야 회원가입을 진행하실 수 있습니다.")
         }
-    })
+    }
+
+
 </script>
+
 <!--배경사진-->
 <div id="bg"></div>
 

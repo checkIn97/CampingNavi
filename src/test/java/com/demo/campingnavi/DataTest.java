@@ -24,7 +24,7 @@ public class DataTest {
     void memberInputTest() {
         Member m = Member.builder()
                 .id("123")
-                .pw("123")
+                .password("123")
                 .addr1("123")
                 .addr2("123")
                 .email("123")
@@ -38,7 +38,6 @@ public class DataTest {
         memberRepository.save(m);
     }
 
-    @Disabled
     @Test
     public void CampInput () {
         String csvFile = "campingData.csv";
