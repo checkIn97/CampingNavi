@@ -16,6 +16,7 @@ public class CampVo {
     private Camp camp = null;
     private float score = 0f;
     private String scoreView = "";
+    private String predict = "";
     private String homepage = "";
     private String addressFull = "";
     private String addressShort = "";
@@ -26,9 +27,10 @@ public class CampVo {
         this.addressShort = camp.getLocationB() + " " + camp.getLocationS();
     }
 
-    public CampVo(Camp camp, float score) {
+    public CampVo(Camp camp, float score, String predict) {
         this(camp);
         this.score = score;
         this.scoreView = String.format("%.1f", score);
+        this.predict = predict;
     }
 }

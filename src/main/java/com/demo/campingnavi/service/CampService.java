@@ -11,5 +11,5 @@ public interface CampService {
     public Camp getCampByCseq(int cseq);
     public CampVo getCampVoByCseq(int cseq, Member member);
     public List<Camp> getCampScanList(CampRecommendVo campRecommendVo);
-    public List<CampVo> getCampRecommendList(List<Camp> filteredList, Member member);
+    public void saveCampRecommendList(List<Camp> filteredList, Member member, CampRecommendVo campRecommendVo);
 }

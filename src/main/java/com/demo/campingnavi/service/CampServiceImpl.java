@@ -32,7 +32,9 @@ public class CampServiceImpl implements CampService {
     public CampVo getCampVoByCseq(int cseq, Member member) {
         List<Camp> campList = new ArrayList<>();
         campList.add(getCampByCseq(cseq));
-        return getCampRecommendList(campList, member).get(0);
+        CampRecommendVo campRecommendVo = new CampRecommendVo();
+        saveCampRecommendList(campList, member, campRecommendVo);
+        return campRecommendVo.getCampRecommendListAll().get(0);
     }
 
     @Override
@@ -85,14 +87,16 @@ public class CampServiceImpl implements CampService {
     }
 
     @Override
-    public List<CampVo> getCampRecommendList(List<Camp> filteredList, Member member) {
+    public void saveCampRecommendList(List<Camp> filteredList, Member member, CampRecommendVo campRecommendVo) {
         String pyFile = "Recommend.py";
         String csvFile = "tmp_filtered.csv";
         pyFile = PathConfig.realPath(pyFile);
-        csvFile = PathConfig.realPath(csvFile);
         dataService.campListOutToCsv(filteredList, csvFile, "");
+        csvFile = PathConfig.realPath(csvFile);
 
         List<CampVo> campRecommendList = new ArrayList<>();
+        List<CampVo> campRecommendListVisited = new ArrayList<>();
+        List<CampVo> campRecommendListAll = new ArrayList<>();
 
         ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, String.valueOf(member.getMseq()));
         try {
@@ -117,10 +121,11 @@ public class CampServiceImpl implements CampService {
             }
         }
 
-        String recommendFile = PathConfig.realPath("tmp_recommendList.csv");
+        String recommendFile = "recommend.csv";
+        recommendFile = PathConfig.realPath(recommendFile);
         file = new File(recommendFile);
         if (file.exists()) {
-            System.out.println("tmp_recommendList.csv 파일 생성 성공");
+            System.out.println(recommendFile + " 생성 성공");
 
             // 받아오기 프로세스 입력
             int check = -1;
@@ -139,11 +144,15 @@ public class CampServiceImpl implements CampService {
                     if (check != -1) {
                         String[] input = text.split(",");
                         Camp camp = getCampByCseq(Integer.parseInt(input[0]));
-                        CampVo campVo = new CampVo(camp, Float.parseFloat(input[1]));
+                        CampVo campVo = new CampVo(camp, Float.parseFloat(input[1]), input[2]);
 
-                        if (!campRecommendList.contains(campVo)) {
+                        campRecommendListAll.add(campVo);
+                        if (input[2].equals("y")) {
                             campRecommendList.add(campVo);
+                        } else {
+                            campRecommendListVisited.add(campVo);
                         }
+
                         text = "";
                     } else {
                         check = 0;
@@ -157,21 +166,23 @@ public class CampServiceImpl implements CampService {
                 file = new File(recommendFile);
                 if (file.exists()) {
                     if (file.delete()) {
-                        System.out.println("tmp_recommendList.csv 삭제 완료");
+                        System.out.println(recommendFile + " 삭제 완료");
                     } else {
-                        System.out.println("tmp_recommendList.csv 삭제 실패");
+                        System.out.println(recommendFile + " 삭제 실패");
                     }
                 }
+                campRecommendVo.setCampRecommendList(campRecommendList);
+                campRecommendVo.setCampRecommendListVisited(campRecommendListVisited);
+                campRecommendVo.setCampRecommendListAll(campRecommendListAll);
 
             } catch (IOException e) {
                 System.out.println((count+1)+"번 데이터 입력 중 오류 발생!");
                 e.printStackTrace();
             }
         } else {
-            System.out.println("tmp_recommendList.csv 파일 생성 실패");
+            System.out.println(recommendFile + " 생성 실패");
         }
 
-        return campRecommendList;
     }
 
 

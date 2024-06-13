@@ -18,8 +18,8 @@ import java.util.List;
 public class CampRecommendVo {
     private List<Camp> campList = new ArrayList<>();
     private List<CampVo> campRecommendList = new ArrayList<>();;
-    private List<Camp> exCampList = new ArrayList<>();;
-    private List<CampVo> exCampRecommendList = new ArrayList<>();;
+    private List<CampVo> campRecommendListVisited = new ArrayList<>();;
+    private List<CampVo> campRecommendListAll = new ArrayList<>();;
     private String useyn = "";
     private String[][] searchFieldArray = {{"name", "이름"}, {"locationB", "시도"}, {"locationS", "시군구"}};
     private String searchField = "";

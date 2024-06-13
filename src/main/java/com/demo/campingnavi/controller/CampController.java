@@ -75,7 +75,8 @@ public class CampController {
         campRecommendVo.setCampType(campType);
 
         campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
-        campRecommendVo.setCampRecommendList(campService.getCampRecommendList(campRecommendVo.getCampList(), member));
+        campService.saveCampRecommendList(campRecommendVo.getCampList(), member, campRecommendVo);
+        campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
         session.setAttribute("campRecommendVo", campRecommendVo);
         model.addAttribute("campRecommendVo", campRecommendVo);
 
@@ -99,27 +100,16 @@ public class CampController {
                 campRecommendVo.setSortBy(sortBy);
                 campRecommendVo.setPage(1);
                 campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
-                campRecommendVo.setCampRecommendList(campService.getCampRecommendList(campRecommendVo.getCampList(), member));
+                campService.saveCampRecommendList(campRecommendVo.getCampList(), member, campRecommendVo);
                 campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
             } else if (!campRecommendVo.getSortDirection().equals(sortDirection)) {
                 campRecommendVo.setSortDirection(sortDirection);;
                 campRecommendVo.setPage(1);
                 campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
-                campRecommendVo.setCampRecommendList(campService.getCampRecommendList(campRecommendVo.getCampList(), member));
+                campService.saveCampRecommendList(campRecommendVo.getCampList(), member, campRecommendVo);
                 campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
             }
             
-            // 테스트용 임시 데이터
-            List<CampVo> campRecommendList = campRecommendVo.getCampRecommendList();
-            if (campRecommendList.size() == 0) {
-                for (int i = 0 ; i < 100 ; i++) {
-                    campRecommendList.add(new CampVo(campService.getCampByCseq(i+1), ((int)(Math.random()*10)+1)/2f));
-                }
-                campRecommendVo.setCampRecommendList(campRecommendList);
-                campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
-            }
-
-
             result.put("campRecommendList", campRecommendVo.getCampRecommendList());
             result.put("totalPages", campRecommendVo.getTotalPages());
             result.put("page", campRecommendVo.getPage());
@@ -138,7 +128,7 @@ public class CampController {
     public Map<String, Object> re_search(HttpSession session,
                                          @RequestParam(value="searchField") String searchField,
                                          @RequestParam(value="searchWord") String searchWord,
-                                         @RequestParam(value="campType") String[] campType) {
+                                         @RequestParam(value="campType", defaultValue="") String[] campType) {
         Map<String, Object> result = new HashMap<>();
         Member member = (Member) session.getAttribute("loginMember");
         if (member != null) {
@@ -165,7 +155,8 @@ public class CampController {
             campRecommendVo.setCampType(campType);
 
             campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
-            campRecommendVo.setCampRecommendList(campService.getCampRecommendList(campRecommendVo.getCampList(), member));
+            campService.saveCampRecommendList(campRecommendVo.getCampList(), member, campRecommendVo);
+            campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
 
             session.setAttribute("campRecommendVo", campRecommendVo);
 
