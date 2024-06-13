@@ -6,6 +6,7 @@ import com.demo.campingnavi.model.ApiResponse;
 import com.demo.campingnavi.repository.jpa.RecommendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
@@ -107,7 +108,17 @@ public class CampDetailServiceImpl implements CampDetailService {
 
     @Override
     public void addToJjimlist(Recommend recommend) {
-
         recommendRepo.save(recommend);
+    }
+
+    @Transactional
+    @Override
+    public void removeFromJjimlist(int mseq, int cseq) {
+        recommendRepo.deleteByMemberAndCamp(mseq, cseq);
+    }
+
+    @Override
+    public boolean isCampJjimmedByUser(int mseq, int cseq) {
+        return recommendRepo.existsByMember_MseqAndCamp_Cseq(mseq, cseq);
     }
 }
