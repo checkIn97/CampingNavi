@@ -43,11 +43,12 @@
         <th:block th:each="camp : ${camps}">
             <h1 class="campingName" th:text="${camp.facltNm}">캠핑장 이름이 들어가는 곳</h1>
             <!--찜하기 버튼-->
-            <input class="saveInput" id="saveBtn" name="saveBtn" type="checkbox">
-            <label class="saveLabel" for="saveBtn"><img class="saveBtn saveBtnImg"
-                                                        src="/assets/images/icon/like-empty.png"></label>
-
+            <input class="saveInput" th:id="'saveBtn-' + ${cseq}" th:name="'saveBtn-' + ${cseq}" type="checkbox" th:checked="${jjimChecked}">
+            <label th:for="'saveBtn-' + ${cseq}" th:data-cseq="${cseq}" class="saveLabel">
+                <img class="saveBtn saveBtnImg" th:src="${jjimChecked ? '/assets/images/icon/like-full.png' : '/assets/images/icon/like-empty.png'}">
+            </label>
             <input id="campName" th:value="${camp.facltNm}" type="hidden"/>
+            <input id="cseq" th:value="${cseq}" type="hidden"/>
         </th:block>
     </div>
 
@@ -208,11 +209,69 @@
 </div>
 
 <th:block th:insert="insert/footer.html"></th:block>
+<!-- 찜하기 기능 스크립트 -->
+<script>
+    document.querySelectorAll('.saveLabel').forEach(label => {
+        label.addEventListener('click', function (event) {
+            event.preventDefault(); // 기본 동작 방지
 
+            const cseq = document.getElementById('cseq').value;
+            const checkbox = document.getElementById('saveBtn-' + cseq);
+            let isChecked = checkbox.checked;
+
+            // isChecked 변수는 checkbox의 현재 상태를 나타냅니다.
+            // 예시로, isChecked가 true인 경우는 찜 상태를 나타내며, false인 경우는 찜 해제 상태를 나타냅니다.
+
+            if (isChecked === false) { // 현재 체크가 되지 않은 상태인 경우
+                if (confirm("캠핑장을 찜하시겠습니까?")) {
+                    fetch('/camp/detail/jjim/' + cseq, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            checkbox.checked = true; // checkbox를 체크 상태로 변경
+                            this.querySelector('.saveBtnImg').src = '/assets/images/icon/like-full.png'; // 이미지 변경
+                            alert("캠핑장 찜리스트에 추가되었습니다.")
+                        } else {
+                            alert("캠핑장 찜하기에 실패했습니다.");
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        alert("캠핑장 찜하기에 실패했습니다.");
+                    });
+                }
+            } else if (isChecked === true) { // 현재 체크된 상태인 경우
+                if (confirm("찜을 취소하시겠습니까?")) {
+                    fetch('/camp/detail/jjim/delete/' + cseq, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            checkbox.checked = false; // checkbox를 체크 해제 상태로 변경
+                            this.querySelector('.saveBtnImg').src = '/assets/images/icon/like-empty.png'; // 이미지 변경
+                            alert("캠핑장 찜 리스트에서 삭제되었습니다.")
+                        } else {
+                            response.text().then(text => {
+                                console.error('Failed to remove from jjim list:', text);
+                                alert("캠핑장 찜 삭제에 실패하였습니다." + text);
+                            });
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        alert("캠핑장 찜 삭제에 실패하였습니다.");
+                    });
+                }
+            }
+        });
+    });
+</script>
+<!-- 카카오맵 api 스크립트 -->
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5e3a16b6086d7012444eab79f129328" type="text/javascript"></script>
 <script>
-    //카카오맵 api
-
     // 이미지 지도에 표시할 마커입니다
     // 서버로부터 전달된 mapX, mapY 값을 가져와서 JavaScript 변수에 할당
     const mapX = document.getElementById('LoMapX').value;

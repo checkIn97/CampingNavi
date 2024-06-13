@@ -38,8 +38,15 @@ public class CampDetailController {
         List<ApiImageResponse.Item> imageList = campDetailService.DataFromApiImage((contentId));
 
         Member member = new Member();
+
         CampVo campVo = campService.getCampVoByCseq(cseq, member);
         float score = Float.parseFloat(campVo.getScoreView());
+
+        // 사용자가 찜한 상태인지 확인
+        int mseq = 1; // 예: 현재 사용자의 ID (로그인 사용자의 경우 세션에서 가져옴)
+        boolean jjimChecked = campDetailService.isCampJjimmedByUser(mseq, cseq);
+
+        System.out.println("jjimChecked = " + jjimChecked);
 
         model.addAttribute("camps", itemList);
         model.addAttribute("imageUrls", imageList);
@@ -47,6 +54,7 @@ public class CampDetailController {
         model.addAttribute("mapX", mapX);
         model.addAttribute("mapY", mapY);
         model.addAttribute("starScore", score);
+        model.addAttribute("jjimChecked", jjimChecked);
 
         return "/campDetail/campDetail";
     }
@@ -70,6 +78,21 @@ public class CampDetailController {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("찜하기에 실패했습니다.");
+        }
+    }
+    @PostMapping("/jjim/delete/{cseq}")
+    @ResponseBody
+    public ResponseEntity<Void> removeFromJjimlist(@PathVariable("cseq") int cseq) {
+        try {
+            // 실제 사용자 ID를 세션에서 가져와서 설정
+            int mseq = 1; // 예: 세션에서 사용자 ID를 가져옴
+
+            campDetailService.removeFromJjimlist(mseq, cseq);
+
+            return ResponseEntity.ok().build();
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
