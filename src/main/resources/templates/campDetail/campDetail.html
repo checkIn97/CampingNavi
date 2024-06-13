@@ -131,7 +131,8 @@
 
         <h2 class="major">위치</h2>
         <span class="detailContent"></span>
-        <div id="staticMap" style="width:800px;height:500px;"></div>
+        <span th:text="${camp.addr1} + ${camp.addr2}"/>
+        <div id="staticMap" style="width:800px;height:500px;margin: 10px"></div>
 
         <h2 class="major">전화번호</h2>
         <span class="detailContent">
@@ -243,7 +244,7 @@
                     });
                 }
             } else if (isChecked === true) { // 현재 체크된 상태인 경우
-                if (confirm("찜을 취소하시겠습니까?")) {
+                if (confirm("캠핑장 찜하기를 취소하시겠습니까?")) {
                     fetch('/camp/detail/jjim/delete/' + cseq, {
                         method: 'POST',
                         headers: {
