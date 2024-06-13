@@ -95,7 +95,6 @@ public class CampController {
             CampRecommendVo campRecommendVo = (CampRecommendVo) session.getAttribute("campRecommendVo");
             if (campRecommendVo.getPage() != page) {
                 campRecommendVo.setPage(page);
-                campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
             } else if (!campRecommendVo.getSortBy().equals(sortBy)) {
                 campRecommendVo.setSortBy(sortBy);
                 campRecommendVo.setPage(1);
@@ -159,6 +158,22 @@ public class CampController {
 
             session.setAttribute("campRecommendVo", campRecommendVo);
 
+            result.put("campRecommendVo", campRecommendVo);
+            result.put("result", "success");
+        } else {
+            result.put("result", "fail");
+        }
+
+        return result;
+    }
+
+    @PostMapping("/reloadMap")
+    @ResponseBody
+    public Map<String, Object> reloadMap(HttpSession session) {
+        Map<String, Object> result = new HashMap<>();
+        Member member = (Member) session.getAttribute("loginMember");
+        if (member != null) {
+            CampRecommendVo campRecommendVo = (CampRecommendVo) session.getAttribute("campRecommendVo");
             result.put("campRecommendVo", campRecommendVo);
             result.put("result", "success");
         } else {

@@ -61,18 +61,13 @@
 </script>
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0f99991591de7a581b0817b2c20056f0"></script>
-<script>
-    var container = document.getElementById('kakaoMap');
-    var options = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3
-    };
-    var map = new kakao.maps.Map(container, options);
-</script>
+
 <script type="text/javascript">
     $(document).ready(function(){
-       reloadList(1, "name", "ASC");
+        reloadList(1, "name", "ASC");
+        reloadMap();
     });
+
 
     function reloadList(page, sortBy, sortDirection) {
         $.ajax({
@@ -88,7 +83,6 @@
                 let totalPages = data.totalPages;
                 let page = data.page;
                 let size = data.size;
-                let pageMaxDisplay = data.pageMaxDisplay;
                 let result = data.result;
                 if (result === "success") {
                     let HTML = "";
@@ -96,7 +90,8 @@
 
                     for (let i = (page-1)*size ; i < (page*size < list.length ? page*size : list.length) ; i++) {
                         HTML += "<tr class=\"tableResult\">";
-                        HTML += "<td>" + list[i].camp.name + "</td>";
+                        HTML += "<a href=\"\" onclick=\"reloadList(1, '" + sortBy + "', '" + sortDirection + "')\; return false\;\" aria-label=\"First\">";
+                        HTML += "<td><a href=\"\" onclick=\"move_map(" + list[i].camp.mapX + ", " + list[i].camp.mapY + ")\; return false\;\">" + list[i].camp.name + "</a></td>";
                         HTML += "<td>" + list[i].addressShort + "</td>";
 
                         let starScore = parseFloat(list[i].scoreView);
@@ -231,12 +226,12 @@
                 let page = 1;
                 let sortBy = data.campRecommendVo.sortBy;
                 let sortDirection = data.campRecommendVo.sortDirection;
-                let campType = data.campRecommendVo.campType;
                 reloadList(page, sortBy, sortDirection);
+                reloadMap();
             },
             error: function() {
                 alert("검색 실패");
-            },
+            }
         });
     }
 
@@ -252,11 +247,73 @@
 
 
 
-
-
     function reloadMap() {
+        $.ajax({
+            type: 'POST',
+            url: '/camp/reloadMap',
+            success: function(data) {
+                let list = data.campRecommendVo.campRecommendList;
+                let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+                if (list.length > 0) {
+                    // 지도 생성
+                    let initX = list[0].camp.mapX;
+                    let initY = list[0].camp.mapY;
+                    let mapContainer = document.getElementById('kakaoMap'); // 지도를 표시할 div
+                        let mapOption = {
+                        center: new kakao.maps.LatLng(initY, initX), // 지도의 중심좌표
+                        level: 3 // 지도의 확대 레벨
+                    };
+                    map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
+                    // 마커 위치 설정
+                    let positions = []
+                    for (let i = 0 ; i < list.length ; i++) {
+                        let x = list[i].camp.mapX;
+                        let y = list[i].camp.mapY;
+                        let name = list[i].camp.name;
+                        positions.push({title:name, latlng: new kakao.maps.LatLng(y, x)});
+                    }
+
+                    // 마커 출력
+                    for (let i = 0; i < positions.length; i ++) {
+
+                        // 마커 이미지의 이미지 크기 입니다
+                        //let imageSize = new kakao.maps.Size(24, 35);
+
+                        // 마커 이미지를 생성합니다
+                        //let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+                        // 마커를 생성합니다
+                        let marker = new kakao.maps.Marker({
+                            map: map, // 마커를 표시할 지도
+                            position: positions[i].latlng, // 마커를 표시할 위치
+                            title: positions[i].title,
+                            text: positions[i].title, // 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
+                            //image : markerImage, // 마커 이미지
+                        });
+
+                        kakao.maps.event.addListener(marker, 'click', function() {
+                            location.href="/camp/detail/?mapX="+list[i].camp.mapX+"&mapY="+list[i].camp.mapY+"&contentId="+list[i].camp.contentId+"&cseq="+list[i].camp.cseq;
+                        });
+                    }
+                }
+            },
+            error: function() {
+                alert("지도 갱신 실패!");
+            }
+        });
     }
+
+    function move_map(mapX, mapY) {
+        let moveLatLon = new kakao.maps.LatLng(mapY, mapX);
+        map.panTo(moveLatLon);
+    }
+
+
+
+
+
+
 </script>
 <style>
     .disabled {
