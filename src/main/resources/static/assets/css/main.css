@@ -51,7 +51,7 @@ input[type="radio"]:checked + label {
     color: white;
 }
 
-input[type="date"]{
+input[type="date"] {
     border: 1px solid #ccc;
     background-color: #f9f9f9;
     font-size: 15px;
@@ -59,7 +59,7 @@ input[type="date"]{
     padding: 15px 15px 15px 15px;
 }
 
-input[type="number"]{
+input[type="number"] {
     border: 1px solid #ccc;
     background-color: #f9f9f9;
     font-size: 15px;
@@ -142,7 +142,7 @@ h2.major {
     width: max-content;
     display: flex;
     flex-direction: column;
-    padding: 2rem;
+    padding: 3rem;
     margin: auto;
     background-color: #fdfada;
     border-radius: 60px;
@@ -418,6 +418,38 @@ table#searchList td {
     width: 5rem;
 }
 
+.saveBtn {
+    width: 1rem;
+}
+
+.saveLabel {
+    width: fit-content;
+    border: none;
+    background: none;
+    height: fit-content;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    padding: 1px;
+    margin-top: 2rem;
+    margin-left: 1rem;
+}
+
+.saveLabel:hover {
+    border: none;
+    background: none;
+}
+
+#saveBtn:checked + .saveLabel {
+    border: none;
+    background: none;
+    color: rgb(27, 31, 34);
+}
+
+.saveBtnImg {
+    margin-right: 0.5rem;
+}
+
 /* 슬라이드쇼 스타일 */
 .slideshow-container {
     max-width: 1000px;
@@ -439,6 +471,34 @@ table#searchList td {
 
 input[name="slide"] {
     display: none;
+}
+
+.detailImg {
+    width: 50rem;
+}
+
+/* 동그라미의 기본 스타일을 설정합니다. */
+.dot {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    border: 2px solid #717171;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+
+/* 현재 표시되는 슬라이드에 대응하는 동그라미의 스타일을 설정합니다. */
+.dot.active {
+    background-color: #717171;
+}
+
+.dots {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 0.5rem;
 }
 
 /*CampDetail*/
@@ -522,6 +582,41 @@ input[name="slide"] {
     width: 400px;
     height: auto;
 
+}
+
+.arrow {
+    width: 2rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+    background-color: #c6c6c6;
+    border-radius: 3rem;
+    padding: 0.5rem;
+}
+
+.arrow:hover {
+    opacity: 1;
+}
+
+#arrowL {
+    left: 10px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    padding-right: 0.7rem;
+}
+
+#arrowR {
+    right: 10px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    padding-left: 0.7rem;
+}
+
+#goingBtn {
+    width: auto;
 }
 
 /*chat*/
@@ -651,39 +746,40 @@ input[name="slide"] {
     width: 40%;
 }
 
-.listChat{
+.listChat {
     margin-top: 14rem;
 }
 
-.campingNameChat{
+.campingNameChat {
     margin: 0;
     font-size: xx-large;
 }
 
-.lengthContain{
+.lengthContain {
     display: flex;
     flex-direction: column;
 }
 
-#chatGradeMember{
+#chatGradeMember {
     margin-left: 1rem;
 }
 
-.chatGrade img{
+.chatGrade img {
     width: 0.5rem;
 }
-.chatReviewNum{
+
+.chatReviewNum {
     color: #424242;
     margin-left: 1rem;
     font-size: 0.8rem;
 }
 
-.chatHumanIcon{
-    width:1rem;
+.chatHumanIcon {
+    width: 1rem;
     object-fit: contain;
 }
 
-.chatPurpose{
+.chatPurpose {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -691,12 +787,12 @@ input[name="slide"] {
     margin: 2rem 4.5rem 2rem;
 }
 
-.chatRoomName{
+.chatRoomName {
     font-weight: bolder;
     font-size: 1.5rem;
 }
 
-.chatPurposeSee{
+.chatPurposeSee {
     border: 2px solid rgb(112, 112, 112);
     border-radius: 50px;
     width: max-content;
@@ -707,7 +803,7 @@ input[name="slide"] {
     align-items: center;
 }
 
-.chatPurposeIcon{
+.chatPurposeIcon {
     width: 1.3rem;
     object-fit: contain;
 }

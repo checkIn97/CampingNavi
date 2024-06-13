@@ -12,33 +12,44 @@
 <body>
 <!-- 추천 페이지와 연결 전 테스트용 입력창 -->
 <form action="/camp/detail/" method="get">
-    <input type="text" name="mapX" placeholder="Enter X coordinate" required />
-    <input type="text" name="mapY" placeholder="Enter Y coordinate" required />
-    <input type="text" name="contentId" placeholder="Enter contentID" required/>
-    <input type="text" name="cseq" placeholder="Enter Cseq" required/>
+    <input name="mapX" placeholder="Enter X coordinate" required type="text"/>
+    <input name="mapY" placeholder="Enter Y coordinate" required type="text"/>
+    <input name="contentId" placeholder="Enter contentID" required type="text"/>
+    <input name="cseq" placeholder="Enter Cseq" required type="text"/>
     <button type="submit">Fetch Data</button>
 </form>
 
 <div class="box">
     <div class="slideshow-container">
+        <img alt="arrowL" class="arrow" id="arrowL" src="/assets/images/icon/arrowL.png">
+        <img alt="arrowR" class="arrow" id="arrowR" src="/assets/images/icon/arrowR.png">
         <div class="slideshow">
-            <div th:each="image : ${imageUrls}" class="slide">
-                <img th:src="${image.imageUrl}" style="width:100%">
+            <div class="slide" th:each="image : ${imageUrls}">
+                <img class="detailImg" th:src="${image.imageUrl}">
             </div>
         </div>
-        <div class="navigation-manual">
-            <label th:each="image, index : ${imageUrls}" th:for="'radio' + ${index}" class="manual-btn"></label>
+        <!-- 슬라이드 쇼의 하단에 동그라미를 추가 -->
+        <div class="dots" id="dots">
+            <!-- 각 슬라이드에 대응하는 동그라미를 추가 -->
+            <div class="dot" th:each="image, index : ${imageUrls}" th:id="'dot' + ${index}"></div>
         </div>
 
         <div th:each="image, index : ${imageUrls}">
-            <input type="radio" name="slide" th:id="'radio' + ${index}" th:checked="${index == 0}">
+            <input name="slide" th:checked="${index == 0}" th:id="'radio' + ${index}" type="radio">
         </div>
     </div>
 
-    <th:block th:each="camp : ${camps}">
-        <h3 class="campingName" th:text="${camp.facltNm}">캠핑장 이름이 들어가는 곳</h3>
-        <input type="hidden" id="campName" th:value="${camp.facltNm}"/>
-    </th:block>
+    <div class="buttonContain">
+        <th:block th:each="camp : ${camps}">
+            <h1 class="campingName" th:text="${camp.facltNm}">캠핑장 이름이 들어가는 곳</h1>
+            <!--찜하기 버튼-->
+            <input class="saveInput" id="saveBtn" name="saveBtn" type="checkbox">
+            <label class="saveLabel" for="saveBtn"><img class="saveBtn saveBtnImg"
+                                                        src="/assets/images/icon/like-empty.png"></label>
+
+            <input id="campName" th:value="${camp.facltNm}" type="hidden"/>
+        </th:block>
+    </div>
 
     <p class="campingGrade">
         <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
@@ -50,11 +61,9 @@
         <img class="humanIcon" src="/assets/images/icon/human.png">
         <span>평점이 들어가는곳(소수점 1자리까지)</span><span>리뷰수(000개의 후기)</span>
     </div>
-    <div class="buttonContain" th:each="camp : ${camps}">
-
-        <a th:href="${camp.homepage}" target="_blank">
-            <button class="mainBtn" id="reservationBtn" type="button">예약하기</button> </a>
-        <button class="mainBtn" id="goingBtn" type="button">채팅방가기?(뭐라하지...?)</button>
+    <div class="buttonContain">
+        <button class="mainBtn" data-url="${camp.homepage}" id="reservationBtn" type="button">예약하기</button>
+        <button id="goingBtn" type="button">커뮤니티</button>
     </div>
     <div class="buttonContain" id="detailContain">
         <input class="detailBtn" id="viewDetailBtn" name="btn" type="radio">
@@ -81,37 +90,46 @@
 
         <h2 class="major">홈페이지</h2>
         <span class="detailContent">
-        <a th:href="${camp.homepage}" target="_blank" th:text="${camp.homepage}"></a>
+        <a target="_blank" th:href="${camp.homepage}" th:text="${camp.homepage}"></a>
     </span>
 
         <h2 class="major">편의시설</h2>
         <div id="detailIcon">
     <span th:if="${camp.autoSiteCo != '0'}">
-        <img alt="car" class="imgIcon" src="/assets/images/icon/car.png">자동차 야영장 <span th:text="${camp.autoSiteCo}"></span> EA
+        <img alt="car" class="imgIcon" src="/assets/images/icon/car.png">자동차 야영장 <span
+            th:text="${camp.autoSiteCo}"></span> EA
     </span>
             <span th:if="${camp.caravSiteCo != '0'}">
-        <img alt="caravan" class="imgIcon" src="/assets/images/icon/caravan.png">카라반 <span th:text="${camp.caravSiteCo}"></span> EA
+        <img alt="caravan" class="imgIcon" src="/assets/images/icon/caravan.png">카라반 <span
+                    th:text="${camp.caravSiteCo}"></span> EA
     </span>
             <span th:if="${camp.glampSiteCo != '0'}">
-        <img alt="glamping" class="imgIcon" src="/assets/images/icon/glamping.png">글램핑 <span th:text="${camp.glampSiteCo}"></span> EA
+        <img alt="glamping" class="imgIcon" src="/assets/images/icon/glamping.png">글램핑 <span
+                    th:text="${camp.glampSiteCo}"></span> EA
     </span>
             <span th:if="${camp.gnrlSiteCo != '0'}">
-        <img alt="camping" class="imgIcon" src="/assets/images/icon/camping.png">일반 야영장 <span th:text="${camp.gnrlSiteCo}"></span> EA
+        <img alt="camping" class="imgIcon" src="/assets/images/icon/camping.png">일반 야영장 <span
+                    th:text="${camp.gnrlSiteCo}"></span> EA
     </span>
             <span th:if="${camp.brazierCl != '0'}">
-        <img alt="brazier" class="imgIcon" src="/assets/images/icon/brazier.png">화로대 <span th:text="${camp.brazierCl}"></span>
+        <img alt="brazier" class="imgIcon" src="/assets/images/icon/brazier.png">화로대 <span
+                    th:text="${camp.brazierCl}"></span>
     </span>
             <span th:if="${camp.extshrCo != '0'}">
-        <img alt="emergency" class="imgIcon" src="/assets/images/icon/emergency.png">소화기 <span th:text="${camp.extshrCo}"></span> EA
+        <img alt="emergency" class="imgIcon" src="/assets/images/icon/emergency.png">소화기 <span
+                    th:text="${camp.extshrCo}"></span> EA
     </span>
             <span th:if="${camp.toiletCo != '0'}">
-        <img alt="toilet" class="imgIcon" src="/assets/images/icon/toilet.png">화장실 <span th:text="${camp.toiletCo}"></span> EA
+        <img alt="toilet" class="imgIcon" src="/assets/images/icon/toilet.png">화장실 <span
+                    th:text="${camp.toiletCo}"></span> EA
     </span>
             <span th:if="${camp.swrmCo != '0'}">
-        <img alt="shower" class="imgIcon" src="/assets/images/icon/shower-room.png">샤워실 <span th:text="${camp.swrmCo}"></span> EA
+        <img alt="shower" class="imgIcon" src="/assets/images/icon/shower-room.png">샤워실 <span
+                    th:text="${camp.swrmCo}"></span> EA
     </span>
             <span th:if="${camp.animalCmgCl != '0'}">
-        <img alt="dog" class="imgIcon" src="/assets/images/icon/dog.png">애완동물출입 <span th:text="${camp.animalCmgCl}"></span>
+        <img alt="dog" class="imgIcon" src="/assets/images/icon/dog.png">애완동물출입 <span
+                    th:text="${camp.animalCmgCl}"></span>
     </span>
         </div>
 
@@ -132,8 +150,8 @@
             </div>
             <!-- 서버로부터 전달된 mapX, mapY 값을 받을 수 있는 공간 (화면에 보이지 않음) -->
             <div style="display: none;">
-                <input type="hidden" id="LoMapX" th:value="${mapX}" />
-                <input type="hidden" id="LoMapY" th:value="${mapY}" />
+                <input id="LoMapX" th:value="${mapX}" type="hidden"/>
+                <input id="LoMapY" th:value="${mapY}" type="hidden"/>
 
             </div>
         </div>
@@ -142,7 +160,7 @@
 
 <th:block th:insert="insert/footer.html"></th:block>
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5e3a16b6086d7012444eab79f129328"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5e3a16b6086d7012444eab79f129328" type="text/javascript"></script>
 <script>
     //카카오맵 api
 
@@ -160,7 +178,7 @@
         text: campName //옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
     };
 
-    var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
+    var staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
         staticMapOption = {
             center: new kakao.maps.LatLng(mapY, mapX), // 이미지 지도의 중심좌표
             level: 3, // 이미지 지도의 확대 레벨
@@ -190,6 +208,76 @@
         } else {
             detailContent.style.height = 'auto';
             document.getElementById('moreBtn').innerText = '접기';
+        }
+    });
+
+    window.onload = function () {
+        // 슬라이드 쇼의 슬라이드를 가져옵니다.
+        var slides = document.querySelectorAll('.slide');
+
+        // 슬라이드 쇼의 동그라미를 가져옵니다.
+        var dots = document.querySelectorAll('.dot');
+
+        // 현재 표시되는 슬라이드의 인덱스를 저장합니다.
+        var currentSlide = 0;
+
+        // 모든 슬라이드와 동그라미를 숨깁니다.
+        function hideAllSlides() {
+            for (var i = 0; i < slides.length; i++) {
+                slides[i].style.display = 'none';
+                dots[i].classList.remove('active');
+            }
+        }
+
+        // 지정된 슬라이드를 표시하고, 해당 슬라이드에 대응하는 동그라미의 색상을 변경합니다.
+        function showSlide(index) {
+            hideAllSlides();
+            slides[index].style.display = 'block';
+            dots[index].classList.add('active');
+        }
+
+        // 다음 슬라이드를 표시합니다.
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        // 이전 슬라이드를 표시합니다.
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        // 첫 번째 슬라이드를 표시합니다.
+        showSlide(currentSlide);
+
+        // arrowR 버튼과 arrowL 버튼에 이벤트 리스너를 추가합니다.
+        document.querySelector('#arrowR').addEventListener('click', nextSlide);
+        document.querySelector('#arrowL').addEventListener('click', prevSlide);
+    }
+
+    document.getElementById('reservationBtn').addEventListener('click', function () {
+        // data-url 속성을 읽어옴
+        location.href = this.getAttribute('data-url');
+    });
+
+    document.querySelector('.saveLabel').addEventListener('mouseover', function () {
+        if (!document.querySelector('#saveBtn').checked) {
+            document.querySelector('.saveBtnImg').src = '/assets/images/icon/like-full.png';
+        }
+    });
+
+    document.querySelector('.saveLabel').addEventListener('mouseout', function () {
+        if (!document.querySelector('#saveBtn').checked) {
+            document.querySelector('.saveBtnImg').src = '/assets/images/icon/like-empty.png';
+        }
+    });
+
+    document.querySelector('#saveBtn').addEventListener('change', function () {
+        if (this.checked) {
+            document.querySelector('.saveBtnImg').src = '/assets/images/icon/like-full.png';
+        } else {
+            document.querySelector('.saveBtnImg').src = '/assets/images/icon/like-empty.png';
         }
     });
 </script>
