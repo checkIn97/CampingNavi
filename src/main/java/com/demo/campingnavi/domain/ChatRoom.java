@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -25,6 +26,12 @@ public class ChatRoom {
     @Id
     private String roomId;
     private String name;
+    private String startDate;
+    private String endDate;
+    private Integer maxMem;
+
+    @ElementCollection
+    private List<String> purpose;
 
     public static com.demo.campingnavi.domain.ChatRoom create(String name) {
         com.demo.campingnavi.domain.ChatRoom chatRoom = new com.demo.campingnavi.domain.ChatRoom();
