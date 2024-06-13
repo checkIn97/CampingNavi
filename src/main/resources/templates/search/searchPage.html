@@ -63,7 +63,7 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0f99991591de7a581b0817b2c20056f0"></script>
 
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function() {
         reloadList(1, "name", "ASC");
         reloadMap();
     });
@@ -290,7 +290,7 @@
                         // 마커에 표시할 인포윈도우를 생성합니다
                         var infowindow = new kakao.maps.InfoWindow({
                             // 인포윈도우에 표시할 내용
-                            content: "<div style=\"padding:3px; font-weight:bold;\">" + list[i].camp.name + "<br>" + list[i].scoreview + "</div>"
+                            content: "<div style=\"padding:3px; font-weight:bold;\">" + list[i].camp.name + "<br>" + list[i].scoreView + "</div>"
                         });
                         kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
                         kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));

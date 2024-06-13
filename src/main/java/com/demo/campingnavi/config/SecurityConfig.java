@@ -49,7 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/resources/**", "/static/**", "/assets/**", "/templates/**","/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/member/join", "/index", "/member/joinProc", "/member/membershipAgree", "/member/membership", "/member/validateUser", "/member/validateNickname").permitAll()
                         .requestMatchers("/mailSend", "mailCheck", "/camp/search").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 );
         http
                 .formLogin((auth) -> auth
