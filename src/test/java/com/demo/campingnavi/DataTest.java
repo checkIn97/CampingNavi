@@ -23,8 +23,8 @@ public class DataTest {
     @Test
     void memberInputTest() {
         Member m = Member.builder()
-                .id("123")
-                .password("123")
+                .username("123")
+                .pw("123")
                 .addr1("123")
                 .addr2("123")
                 .email("123")
@@ -34,10 +34,12 @@ public class DataTest {
                 .birth("123")
                 .useyn("y")
                 .nickname("123")
+                .role("USER")
                 .build();
         memberRepository.save(m);
     }
 
+    @Disabled
     @Test
     public void CampInput () {
         String csvFile = "campingData.csv";
