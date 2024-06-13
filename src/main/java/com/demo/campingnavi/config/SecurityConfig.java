@@ -48,20 +48,20 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/resources/**", "/static/**", "/assets/**", "/templates/**","/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/member/join", "/index", "/member/joinProc", "/member/membershipAgree", "/member/membership", "/member/validateUser", "/member/validateNickname").permitAll()
-                        .requestMatchers("/mailSend", "mailCheck", "/camp/search").permitAll()
+                        .requestMatchers("/mailSend", "mailCheck", "/camp/search", "/camp/detail/go").permitAll()
                         .anyRequest().permitAll()
                 );
         http
                 .formLogin((auth) -> auth
                         .loginPage("/member/login")
-                        .defaultSuccessUrl("/camp/search")
+                        .defaultSuccessUrl("/main")
                         .usernameParameter("username")
                         .passwordParameter("pw")
                         .loginProcessingUrl("/member/loginProc")
                         .successHandler(
                                 (request, response, authentication) -> {
                                     System.out.println("authentication : " + authentication.getName());
-                                    response.sendRedirect("/camp/search");
+                                    response.sendRedirect("/main");
                                 }
                         )
                         .failureHandler(
