@@ -12,27 +12,25 @@
 <body>
 <div id="search-area">
     <div id="search-box">
-        <form id="camp_search_form">
-            <button class="close" id="searchExit" type="button"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
-            <h1 class="major">검색</h1>
-            <div id="searchContain">
-                <select name="searchField">
-                    <th:block th:each="field : ${campRecommendVo.searchFieldArray}">
-                        <option th:if="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}" selected>[[${field[1]}]]</option>
-                        <option th:unless="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}">[[${field[1]}]]</option>
-                    </th:block>
-                </select>
-                <input type="text" id="search" name="searchWord" placeholder="검색어를 입력하세요" th:value="${campRecommendVo.searchWord}">
-                <button id="searchBtn" type="button" class="mainBtn" onclick="camp_search()">검색</button>
-            </div>
-            <div id="searchRequirement">
-                <th:block th:each="campType, iterStat : ${campRecommendVo.campTypeArray}">
-                    <input type="checkbox" name="campType" th:id="${campType[0]}" th:value="${campType[0]}" th:if="${campRecommendVo.campType[iterStat.index] == campType[0]}" checked/>
-                    <input type="checkbox" name="campType" th:id="${campType[0]}" th:value="${campType[0]}" th:unless="${campRecommendVo.campType[iterStat.index] == campType[0]}"/>
-                    <label class="checkboxLabel" th:for="${campType[0]}">[[${campType[1]}]]</label>
+        <button class="close" id="searchExit" type="button"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
+        <h1 class="major">검색</h1>
+        <div id="searchContain">
+            <select name="searchField" id="searchField">
+                <th:block th:each="field : ${campRecommendVo.searchFieldArray}">
+                    <option th:if="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}" selected>[[${field[1]}]]</option>
+                    <option th:unless="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}">[[${field[1]}]]</option>
                 </th:block>
-            </div>
-        </form>
+            </select>
+            <input type="text" id="search" name="searchWord" placeholder="검색어를 입력하세요" th:value="${campRecommendVo.searchWord}" onkeyup="press_enter(); return false;">
+            <button id="searchBtn" type="button" class="mainBtn" onclick="camp_search(); return false;">검색</button>
+        </div>
+        <div id="searchRequirement">
+            <th:block th:each="campType, iterStat : ${campRecommendVo.campTypeArray}">
+                <input type="checkbox" name="campType" th:id="${campType[0]}" th:value="${campType[0]}" th:if="${campRecommendVo.campType[iterStat.index] == campType[0]}" checked/>
+                <input type="checkbox" name="campType" th:id="${campType[0]}" th:value="${campType[0]}" th:unless="${campRecommendVo.campType[iterStat.index] == campType[0]}"/>
+                <label class="checkboxLabel" th:for="${campType[0]}">[[${campType[1]}]]</label>
+            </th:block>
+        </div>
         <div id="list_area"></div>
         <div id="page_area"></div>
     </div>
@@ -148,8 +146,8 @@
                     HTML += "</table>";
                     $("#list_area").html(HTML);
 
+                    HTML = "";
                     if (totalPages !== 0) {
-                        HTML = "";
                         HTML = "<div class=\"page_area\">";
                         HTML += "<ul class=\"pagination\">";
                         HTML += "<li class=\"paging\">";
@@ -197,8 +195,8 @@
                             HTML += "<span aria-hidden=\"true\">Last</span></a></li>";
                         }
                         HTML += "</ul></div>";
-                        $("#page_area").html(HTML);
                     }
+                    $("#page_area").html(HTML);
                 }
             },
             error: function () {
@@ -208,19 +206,47 @@
     }
 
     function camp_search() {
+        let searchField = $("#searchField").val();
+        let searchWord = $("#search").val();
+
+        // 체크박스 배열 가져오기
+        let campType = [];
+        $("input[name='campType']:checked").each(function(i) {campType.push($(this).val());});
+
+        if (campType.length == 0) {
+            alert("캠핑장 유형을 하나 이상 선택해야 합니다.");
+            return false;
+        }
+
         $.ajax({
             type: 'POST',
             url: '/camp/re_search',
             dataType: 'json',
-            data: $("#camp_search_form").serialize(),
+            data: {
+                searchField: searchField,
+                searchWord: searchWord,
+                campType: campType
+            },
             success: function(data) {
-                alert(data.result);
+                let page = 1;
+                let sortBy = data.campRecommendVo.sortBy;
+                let sortDirection = data.campRecommendVo.sortDirection;
+                let campType = data.campRecommendVo.campType;
+                reloadList(page, sortBy, sortDirection);
             },
             error: function() {
                 alert("검색 실패");
             },
         });
+    }
 
+    function press_enter() {
+        let keyValue = window.event.keyCode;
+        if (keyValue == 13) {
+            camp_search();
+        } else {
+            return false;
+        }
     }
 </script>
 <style>

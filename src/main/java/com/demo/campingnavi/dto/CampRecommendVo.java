@@ -33,7 +33,7 @@ public class CampRecommendVo {
     private int pageMaxDisplay = 5;
     private String sortBy = "name";
     private String sortDirection = "ASC";
-    Map<String, String> addrMatch = null;
+    private Map<String, String> addrMatch = null;
 
     public CampRecommendVo() {
         addrMatch = new HashMap<String, String>();

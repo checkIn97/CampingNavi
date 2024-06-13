@@ -52,6 +52,12 @@ public class CampServiceImpl implements CampService {
         if (searchField.equals("name")) {
             name = searchWord;
         } else if (searchField.equals("locationB")) {
+            if (searchWord.length() == 2) {
+                String tmp = campRecommendVo.getAddrMatch().get(searchWord);
+                if (tmp != null) {
+                    searchWord = tmp;
+                }
+            }
             locationB = searchWord;
         } else if (searchField.equals("locationS")) {
             locationS = searchWord;
@@ -72,8 +78,10 @@ public class CampServiceImpl implements CampService {
         String[] campTypeParams = new String[campType.length];
         for (int i = 0 ; i < campType.length ; i++) {
             String type = campRecommendVo.getCampType()[i];
-            if (!type.equals("|")) {
+            if (!type.equals("")) {
                 campTypeParams[i] = campRecommendVo.getCampTypeArray()[i][1];
+            } else {
+                campTypeParams[i] = "|";
             }
         }
 

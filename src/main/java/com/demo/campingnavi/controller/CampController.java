@@ -128,7 +128,7 @@ public class CampController {
     public Map<String, Object> re_search(HttpSession session,
                                          @RequestParam(value="searchField") String searchField,
                                          @RequestParam(value="searchWord") String searchWord,
-                                         @RequestParam(value="campType", defaultValue="") String[] campType) {
+                                         @RequestParam(value="campType[]") List<String> campTypeList) {
         Map<String, Object> result = new HashMap<>();
         Member member = (Member) session.getAttribute("loginMember");
         if (member != null) {
@@ -142,8 +142,7 @@ public class CampController {
             campRecommendVo.setSearchField(searchField);
             campRecommendVo.setSearchWord(searchWord);
 
-            List<String> campTypeList = Arrays.asList(campType);
-            campType = new String[campRecommendVo.getCampTypeArray().length];
+            String [] campType = campRecommendVo.getCampType();
             for (int i = 0 ; i < campRecommendVo.getCampTypeArray().length ; i++) {
                 String type = campRecommendVo.getCampTypeArray()[i][0];
                 if (campTypeList.contains(type)) {
