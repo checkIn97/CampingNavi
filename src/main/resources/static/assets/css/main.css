@@ -942,3 +942,9 @@ input[name="slide"] {
     position: absolute;
     transition: left 0.3s, top 0.3s;
 }
+
+#mainToggle {
+    position: fixed;
+    top: 0;
+    right: 0;
+}
