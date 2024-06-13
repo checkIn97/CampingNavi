@@ -34,7 +34,6 @@ public class DataTest {
                 .birth("123")
                 .useyn("y")
                 .nickname("123")
-                .role("USER")
                 .build();
         memberRepository.save(m);
     }

@@ -48,8 +48,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/resources/**", "/static/**", "/assets/**", "/templates/**","/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/member/join", "/index", "/member/joinProc", "/member/membershipAgree", "/member/membership", "/member/validateUser", "/member/validateNickname").permitAll()
-                        .requestMatchers("/mailSend", "mailCheck", "/camp/search", "/main").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/mailSend", "mailCheck", "/camp/search", "/camp/detail/go").permitAll()
+                        .anyRequest().permitAll()
                 );
         http
                 .formLogin((auth) -> auth
