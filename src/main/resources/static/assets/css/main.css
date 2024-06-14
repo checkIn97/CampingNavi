@@ -110,7 +110,8 @@ li {
 
 .headerValBox.box {
     border-radius: 1rem;
-    z-index: 9998
+    z-index: 9998;
+    top: 2rem;
 }
 
 #headerCampingBtn {
@@ -118,9 +119,8 @@ li {
 }
 
 #headerCamping {
-    position: absolute;
+    position: fixed;
     display: none;
-    top: 100%;
     left: 50%;
 }
 
@@ -129,9 +129,8 @@ li {
 }
 
 #headerCommunity {
-    position: absolute;
+    position: fixed;
     display: none;
-    top: 100%;
     left: 50%;
 }
 
