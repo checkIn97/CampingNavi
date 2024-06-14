@@ -31,24 +31,8 @@ public class CampController {
                          @RequestParam(value="campType", defaultValue="") String[] campType,
                          @RequestParam(value="useyn", defaultValue="y") String useyn) {
 
-        // 테스트를 위한 임시 Member
-        Member member_init = new Member();
-        member_init.builder()
-                .mseq(1)
-                .sex("m")
-                .useyn("y")
-                .birth("2000-01-01")
-                .username("test")
-                .name("testuser")
-                .nickname("테스트유저")
-                .phone("010-1234-5678")
-                .pw("1234")
-                .email("test@camp.com")
-                .addr1("서울특별시 관악구 신림동 1번지")
-                .build();
-        session.setAttribute("loginMember", member_init);
-
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
+        System.out.println(member);
         if (member == null) {
             return "redirect:/index";
         }
@@ -90,7 +74,7 @@ public class CampController {
                                           @RequestParam(value="sortBy") String sortBy,
                                           @RequestParam(value="sortDirection") String sortDirection) {
         Map<String, Object> result = new HashMap<>();
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
         if (member != null) {
             CampRecommendVo campRecommendVo = (CampRecommendVo) session.getAttribute("campRecommendVo");
             if (campRecommendVo.getPage() != page) {
@@ -134,7 +118,7 @@ public class CampController {
                                          @RequestParam(value="searchWord") String searchWord,
                                          @RequestParam(value="campType[]") List<String> campTypeList) {
         Map<String, Object> result = new HashMap<>();
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
         if (member != null) {
             CampRecommendVo campRecommendVo = new CampRecommendVo();
             campRecommendVo.setPage(1);
@@ -176,7 +160,7 @@ public class CampController {
     @ResponseBody
     public Map<String, Object> reloadMap(HttpSession session) {
         Map<String, Object> result = new HashMap<>();
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
         if (member != null) {
             CampRecommendVo campRecommendVo = (CampRecommendVo) session.getAttribute("campRecommendVo");
             result.put("campRecommendVo", campRecommendVo);
