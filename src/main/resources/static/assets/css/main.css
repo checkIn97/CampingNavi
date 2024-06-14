@@ -917,8 +917,7 @@ input[name="slide"] {
     border-radius: 50px;
     width: max-content;
     padding: 0.7rem;
-    margin-top: 1rem;
-    margin-left: 1rem;
+    margin: auto auto 1rem;
     box-sizing: border-box;
     align-items: center;
 }
