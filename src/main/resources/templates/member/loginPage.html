@@ -11,7 +11,7 @@
 <div id="wrapper">
     <img src="/assets/images/logo/typo.png" id="logoTypo">
     <div class="content">
-        <form id="loginForm" action="/member/loginProc" method="post">
+        <form id="loginForm" action="/oauth-login/member/loginProc" method="post">
             <input id="userId" type="text" name="username" th:placeholder="아이디">
             <input id="userPw" type="password" name="pw" th:placeholder="비밀번호">
             <button class="mainBtn" id="loginBtn" type="submit">로그인</button>
@@ -26,7 +26,7 @@
     <div class="buttonContain" id="snsGroup">
         <a href="#" class="snsA"><img src="/assets/images/icon/kakao.png" alt="kakaoLogin"></a>
         <a href="#" class="snsA"><img src="/assets/images/icon/naver.png" alt="naverLogin"></a>
-        <a href="#" class="snsA"><img src="/assets/images/icon/google.png" alt="googleLogin"></a>
+        <a href="/oauth2/authorization/google" class="snsA"><img src="/assets/images/icon/google.png" alt="googleLogin"></a>
         <a href="#" class="snsA"><img src="/assets/images/icon/facebook.png" alt="facebookLogin"></a>
     </div>
 

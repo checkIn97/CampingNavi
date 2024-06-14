@@ -1,6 +1,7 @@
 package com.demo.campingnavi.service;
 
 import com.demo.campingnavi.domain.Member;
+import com.demo.campingnavi.domain.Role;
 import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class MemberServiceImpl implements MemberService{
                     .nickname(vo.getNickname())
                     .birth(vo.getBirth())
                     .useyn("y")
-                    .role("USER")
+                    .role(Role.USER.getKey())
                     .build();
             memberRepository.save(member);
             result = true;
