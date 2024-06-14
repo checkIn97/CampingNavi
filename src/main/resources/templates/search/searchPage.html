@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="/assets/css/main.css" rel="stylesheet"/>
     <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
     <title>Search</title>
@@ -75,7 +76,6 @@
     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
     $(document).ready(function() {
-        alert("document_ready 테스트");
         reloadList(1, "name", "ASC");
         reloadMap();
     });
