@@ -151,6 +151,14 @@ li {
     letter-spacing: 2px; /* 원하는 값으로 변경 */
 }
 
+.headerCategory, .headerVal {
+    transition: line-height 0.3s, letter-spacing 0.3s;
+}
+
+.headerCategory:hover, .headerVal:hover {
+    letter-spacing: 2px; /* 원하는 값으로 변경 */
+}
+
 .headerBtn.mainBtn {
     padding: 0.5rem;
 }
