@@ -98,15 +98,20 @@ public class CampController {
             } else if (!campRecommendVo.getSortBy().equals(sortBy)) {
                 campRecommendVo.setSortBy(sortBy);
                 campRecommendVo.setPage(1);
-                campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
-                campService.saveCampRecommendList(campRecommendVo.getCampList(), member, campRecommendVo);
-                campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
+
+                if (sortBy.equals("name")) {
+
+                } else if (sortBy.equals("addr")) {
+
+                } else if (sortBy.equals("score")) {
+
+                }
             } else if (!campRecommendVo.getSortDirection().equals(sortDirection)) {
                 campRecommendVo.setSortDirection(sortDirection);;
                 campRecommendVo.setPage(1);
-                campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
-                campService.saveCampRecommendList(campRecommendVo.getCampList(), member, campRecommendVo);
-                campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
+                List<CampVo> list = campRecommendVo.getCampRecommendList();
+
+
             }
             
             result.put("campRecommendList", campRecommendVo.getCampRecommendList());
