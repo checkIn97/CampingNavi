@@ -96,6 +96,7 @@ li {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
+    background-color: #E58B33;
     z-index: 9999; /* 다른 요소들 위에 위치하도록 z-index 값을 높게 설정합니다. */
 }
 
@@ -108,10 +109,16 @@ li {
     width: 180px;
 }
 
+.headerVal {
+    color: whitesmoke;
+}
+
 .headerValBox.box {
     border-radius: 1rem;
     z-index: 9998;
     top: 2rem;
+    background-color: #E58B33;
+    width: 10rem;
 }
 
 #headerCampingBtn {
@@ -136,6 +143,12 @@ li {
 
 .headerBtn {
     padding: 0.5rem;
+    font-size: 0.8rem;
+    transition: line-height 0.3s, letter-spacing 0.3s;
+}
+
+.headerBtn:hover {
+    letter-spacing: 2px; /* 원하는 값으로 변경 */
 }
 
 .headerBtn.mainBtn {
@@ -144,6 +157,7 @@ li {
 
 .headerCategory {
     font-family: fantasy;
+    color: whitesmoke;
 }
 
 .headerName {
