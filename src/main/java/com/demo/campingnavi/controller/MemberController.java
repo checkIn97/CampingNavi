@@ -1,9 +1,14 @@
 package com.demo.campingnavi.controller;
 
+import com.demo.campingnavi.domain.Member;
+import com.demo.campingnavi.dto.CustomSecurityUserDetails;
 import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
 import com.demo.campingnavi.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -90,5 +95,20 @@ public class MemberController {
     @RequestMapping("/membershipAgree")
     public String membershipAgree() {
         return "member/membershipAgree";
+    }
+
+    @GetMapping("/mypage")
+    public String mypageP(Model model) {
+        // 인증 객체 생성
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 객체의 아이디를 얻기 위해서 타입 변환
+        CustomSecurityUserDetails userDetails = (CustomSecurityUserDetails) authentication.getPrincipal();
+        // 객체 아이디만 추출
+        String username = userDetails.getUsername();
+        // 추출된 아이디로 회원 객체 생성
+        Member member = memberRepository.findByUsername(username);
+        // 뷰에 전송
+        model.addAttribute("member", member);
+        return "member/myPage";
     }
 }

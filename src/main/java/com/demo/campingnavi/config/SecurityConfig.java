@@ -62,7 +62,7 @@ public class SecurityConfig {
                 ); // 테스트하기 위해 잠시 disable
         http
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 );
         http
                 .headers((headerConfig) -> headerConfig.frameOptions(
