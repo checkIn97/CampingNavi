@@ -1,6 +1,10 @@
 package com.demo.campingnavi.config;
 
+import com.demo.campingnavi.domain.Member;
+import com.demo.campingnavi.repository.jpa.MemberRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +19,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final MemberRepository memberRepository;
+    private final HttpSession session;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -46,6 +53,8 @@ public class SecurityConfig {
                         .successHandler(
                                 (request, response, authentication) -> {
                                     System.out.println("authentication : " + authentication.getName());
+                                    Member member = memberRepository.findByUsername(authentication.getName());
+                                    session.setAttribute("loginUser", member);
                                     response.sendRedirect("/main");
                                 }
                         )
@@ -72,6 +81,20 @@ public class SecurityConfig {
                 .oauth2Login((oauth) -> oauth.loginPage("/oauth-login/member/login")
                         .defaultSuccessUrl("/main")
                         .failureUrl("/oauth-login/member/login")
+                        .successHandler(
+                                (request, response, authentication) -> {
+                                    System.out.println("authentication : " + authentication.getName());
+                                    Member member = memberRepository.findByUsername(authentication.getName());
+                                    session.setAttribute("loginUser", member);
+                                    response.sendRedirect("/main");
+                                }
+                        )
+                        .failureHandler(
+                                (request, response, exception) -> {
+                                    System.out.println("exception : " + exception.getMessage());
+                                    response.sendRedirect("/oauth-login/member/login");
+                                }
+                        )
                         .permitAll());
         return http.build();
     }
