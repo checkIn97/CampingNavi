@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/review")
 public class ReviewController {
 
     @Autowired
@@ -31,7 +30,7 @@ public class ReviewController {
     public String showWriteForm(HttpSession session, Model model) {
         // 세션에서 사용자 정보 가져오기
         Member member = (Member) session.getAttribute("loginMember");
-        MemberVo memberVo = new MemberVo();
+       // MemberVo memberVo = new MemberVo();
         // 세션에 로그인 정보가 없는 경우
         if (member == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
@@ -39,7 +38,7 @@ public class ReviewController {
             model.addAttribute("redirectTo","/user_login_form");
             return "review/review_alert";
         } else {
-            model.addAttribute("memberVo", memberVo);
+           // model.addAttribute("memberVo", memberVo);
             return "review/reviewInsert"; //게시글 작성페이지로 이동.
         }
 

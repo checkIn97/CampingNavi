@@ -55,10 +55,8 @@
         </tbody>
     </table>
     <!-- 페이지 영역 -->
-    <!-- 리스트에 맞게 페이지가 입력되는 영역 -->
-    <!-- 리스트의 사이즈가 0인 경우에는 표시되지 않음 -->
-    <th:block id="page_insert" th:if="${pageInfo.totalPages != 0}"
-              th:insert="~{/review/include/review_page_area}"></th:block>
+    <div id="page_area"></div>
+
 
 
     <form th:action="@{/review_list_search}" method="get">
@@ -77,9 +75,7 @@
     </form>
 
 
-    <button onclick="window.location.href='/review_insert_form'" class="button">새로운
-        글 작성
-    </button>
+    <a href="/review_insert_form"><button class="button" type="button">새로운 글1 작성</button></a>
 
 
 </article>
