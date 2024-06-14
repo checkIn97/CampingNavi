@@ -36,7 +36,7 @@
         </div>
         <div class="input-group">
             <!-- 메시지 입력란 -->
-            <div class="buttonContain">
+            <div class="buttonContain" id="chatInputGroup">
                 <input class="form-control" type="text" v-model="message" v-on:keypress.enter="sendMessage">
                 <div class="input-group-append">
                     <button @click="sendMessage" class="btn btn-primary" type="button">보내기</button>

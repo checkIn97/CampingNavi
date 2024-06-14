@@ -728,6 +728,7 @@ input[name="slide"] {
 #chatBox {
     position: relative;
     width: 50%;
+    overflow: auto;
 }
 
 .buttonContain .form-control {
@@ -744,7 +745,7 @@ input[name="slide"] {
     box-shadow: 0 0 10px rgba(120, 120, 120, 0.5);
     margin: 10px 10px 10px auto;
     padding: 20px;
-    width: max-content;
+    width: fit-content;
 }
 
 /* 상대방이 보낸 메시지 */
@@ -798,6 +799,10 @@ input[name="slide"] {
     position: absolute;
     right: 2rem;
     top: 2rem;
+}
+
+#chatInputGroup {
+    width: 100%;
 }
 
 /*chatRoom*/
