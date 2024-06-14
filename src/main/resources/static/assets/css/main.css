@@ -242,6 +242,15 @@ h2.major {
     border-radius: 60px;
 }
 
+.nonPaddingBox{
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin: auto;
+    background-color: burlywood;
+}
+
 /*footer*/
 
 #footer {
@@ -816,6 +825,15 @@ input[name="slide"] {
 
 /*chatRoom*/
 
+#chatSearchNameBtn {
+    flex: none;
+    width: 8rem;
+}
+
+#chatSearchBar {
+    flex-grow: 0;
+}
+
 #chatRoomBox {
     width: 65%;
 }
@@ -827,10 +845,6 @@ input[name="slide"] {
 
 #createChatRoomBtn {
     width: 10rem;
-    position: fixed;
-    bottom: 0;
-    right: 0;
-
 }
 
 .row {
@@ -841,6 +855,22 @@ input[name="slide"] {
 
 .row .col-md-4 {
     margin-bottom: 20px; /* 열 사이의 간격을 20px로 설정 */
+}
+
+#chatRoomSearch {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    background-color: #E58B33;
+}
+
+#chatRoomSearchBtn {
+    width: 10rem;
+    position: fixed;
+    bottom: 0;
+    right: 0;
 }
 
 .chatRoomBox {
@@ -978,6 +1008,19 @@ input[name="slide"] {
     margin-left: 0.5rem;
     font-weight: bolder;
     color: #888888;
+}
+
+#chatSearchName {
+    margin-bottom: 1rem;
+}
+
+#chatSearchPurposeListBtn {
+    width: 10rem;
+    margin-bottom: 1rem;
+}
+
+.chatRoomPur {
+    display: none;
 }
 
 /*chatCreate*/
