@@ -47,10 +47,15 @@ public class MemberController {
 
         boolean result = memberService.joinProcess(vo);
         if(result) {
-            return "redirect:member/loginPage";
+            return "redirect:login";
         } else {
-            return "redirect:member/joinAlert";
+            return "redirect:joinAlertView";
         }
+    }
+
+    @GetMapping("/joinAlertView")
+    public String joinAlertView() {
+        return "member/joinAlert";
     }
 
     @PostMapping("/validateUser")
@@ -85,10 +90,5 @@ public class MemberController {
     @RequestMapping("/membershipAgree")
     public String membershipAgree() {
         return "member/membershipAgree";
-    }
-
-    @RequestMapping("/membership")
-    public String membership() {
-        return "member/membership";
     }
 }

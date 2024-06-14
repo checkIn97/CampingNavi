@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<meta charset="UTF-8">
+<title>Review List</title>
+
+
+
+<article id="box">
+
+    <h2>커뮤니티 게시글 목록</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일시</th>
+            <th>추천수</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="review, iterStat : ${reviewBestList}" th:if="${iterStat.index < 3}">
+            <td>
+                <div class="popularPosts">[인기] <a th:href="@{'/review_detail/' + ${review.vseq}}">
+                                                            <span th:text="${review.title}"></span>
+                                                            <img src="/assets/images/reply.png" style="width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);"/>
+                                                            <span>전체댓글수 표시</span>
+                </a></div>
+                <input type="hidden" name="vseq" th:value="${review.vseq}"/></td>
+            <td> <a th:href="@{'/review_memberList/' + ${review.member.mseq}}" th:text="${review.member.username}"></a>
+             <input type="hidden" name="mseq" th:value="${review.member.mseq}" /></td>
+            <td th:text="${#dates.format(review.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td>추천수 표시</td>
+            <td th:text="${review.count}"></td>
+        </tr>
+
+        <tr th:each="review : ${reviewList}">
+            <td>
+                <div class="review_list">
+                    <a th:href="@{'/review_detail/' + ${review.vseq}}">
+                        <span th:text="${review.title}"></span>
+                        <img src="/assets/images/reply.png" style="width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);"/>
+                        <span>전체댓글수 표시</span></a>
+                   </div>
+                <input type="hidden" id="vseq"
+                       name="vseq" th:value="${review.vseq}"/></td>
+            <td> <a th:href="@{'/review_memberList/' + ${review.member.mseq}}" th:text="${review.member.username}"></a>
+                <input type="hidden" name="mseq" th:value="${review.member.mseq}" /></td>
+            <td
+                    th:text="${#dates.format(review.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td>추천수 표시</td>
+            <td th:text="${review.count}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- 페이지 영역 -->
+    <!-- 리스트에 맞게 페이지가 입력되는 영역 -->
+    <!-- 리스트의 사이즈가 0인 경우에는 표시되지 않음 -->
+    <th:block id="page_insert" th:if="${pageInfo.totalPages != 0}"
+              th:insert="~{/review/include/review_page_area}"></th:block>
+
+
+    <form th:action="@{/review_list_search}" method="get">
+        <div class="search-container">
+            <select name="searchField" id="search" class="search">
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="titleContent">제목 / 내용</option>
+                <option value="writer">작성자</option>
+            </select>
+            <label> <input type="text" name="searchWord" class="searchWord">
+            </label>
+
+            <button type="submit" class="searchButton">검색</button>
+        </div>
+    </form>
+
+
+    <button onclick="window.location.href='/review_insert_form'" class="button">새로운
+        글 작성
+    </button>
+
+
+</article>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+

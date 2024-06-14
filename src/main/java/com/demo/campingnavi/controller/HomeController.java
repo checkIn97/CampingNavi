@@ -5,13 +5,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class HomeController {
-//    @RequestMapping("/index")
-//    public String index() {
-//        return "loginPage";
-//    }
+    @RequestMapping("/")
+    public String goindex() {
+        return "member/loginPage";
+    }
 
     @RequestMapping("/main")
-    public String main() {
+    public String gomain() {
         return "mainPage";
     }
 }
