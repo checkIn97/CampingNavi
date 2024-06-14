@@ -775,6 +775,7 @@ input[name="slide"] {
 .chat-container {
     height: 560px;
     overflow-y: scroll; /* 스크롤이 가능하도록 설정 */
+    width: -webkit-fill-available;
 }
 
 /* 스크롤바의 스타일을 설정 */
