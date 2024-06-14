@@ -50,16 +50,23 @@
                                 <img class="calender" src="/assets/images/icon/calendar.png">
                                 <div class="lengthContain">
                                     <span class="chat-day">{{item.startDate}} - {{item.endDate}}</span>
-                                    <span class="chat-member">캠핑 참가 인원수 <span class="chat-member-num">{{item.maxMem}}</span></span>
+                                    <span class="chat-member">캠핑 참가 인원수 <span
+                                            class="chat-member-num">{{item.maxMem}}</span></span>
                                 </div>
                             </div>
                             <div class="chatPurpose">
                                 <div class="chatPurposeSee" v-for="purpose in item.purpose">
-                                    <img v-if="purpose === '같이 놀아요!'" alt="dance" class="chatPurposeIcon" src="/assets/images/icon/dance.png">
-                                    <img v-else-if="purpose === '애완동물과 함께해요!'" alt="dogwith" class="chatPurposeIcon" src="/assets/images/icon/dogwith.png">
-                                    <img v-else-if="purpose === '만남을 원해요!'" alt="love" class="chatPurposeIcon" src="/assets/images/icon/love.png">
-                                    <img v-else-if="purpose === '아이와 함께해요!'" alt="parent" class="chatPurposeIcon" src="/assets/images/icon/parent.png">
-                                    <img v-else-if="purpose === '조용히 쉬어요!'" alt="campingHuman" class="chatPurposeIcon" src="/assets/images/icon/campingHuman.png">
+                                    <img alt="dance" class="chatPurposeIcon" src="/assets/images/icon/dance.png"
+                                         v-if="purpose === '같이 놀아요!'">
+                                    <img alt="dogwith" class="chatPurposeIcon" src="/assets/images/icon/dogwith.png"
+                                         v-else-if="purpose === '애완동물과 함께해요!'">
+                                    <img alt="love" class="chatPurposeIcon" src="/assets/images/icon/love.png"
+                                         v-else-if="purpose === '만남을 원해요!'">
+                                    <img alt="parent" class="chatPurposeIcon" src="/assets/images/icon/parent.png"
+                                         v-else-if="purpose === '아이와 함께해요!'">
+                                    <img alt="campingHuman" class="chatPurposeIcon"
+                                         src="/assets/images/icon/campingHuman.png"
+                                         v-else-if="purpose === '조용히 쉬어요!'">
                                     <span class="chatPurposeText">{{ purpose }}</span>
                                 </div>
                             </div>
@@ -75,9 +82,53 @@
         </div>
     </div>
     <div class="input-group-append">
-        <button class="mainBtn" id="createChatRoomBtn" type="button">채팅방 개설</button>
+        <button id="chatRoomSearchBtn" type="button">검색하기</button>
     </div>
+
 </article>
+
+
+<div id="chatRoomSearch">
+    <div class="nonPaddingBox">
+        <div class="buttonContain" id="chatSearchName">
+            <input class="form-control" id="chatSearchBar" placeholder="방 이름을 입력해주세요" type="text">
+            <button class="chatRoomSearchBtn" id="chatSearchNameBtn" type="button">검색</button>
+        </div>
+        <div class="buttonContain" id="chatRoomBtnZ">
+            <button id="chatSearchPurposeListBtn" type="button">캠핑 목적</button>
+            <div class="input-group-append">
+                <button class="mainBtn" id="createChatRoomBtn" type="button">채팅방 개설</button>
+            </div>
+        </div>
+        <div class="chatRoomPur">
+            <input id="chatPurpose1" name="chatPurpose" type="checkbox" v-model="purpose" value="같이 놀아요!">
+            <label for="chatPurpose1">
+                <img alt="dance" class="chatPurposeIcon" src="/assets/images/icon/dance.png">
+                같이 놀아요!
+            </label>
+            <input id="chatPurpose2" name="chatPurpose" type="checkbox" v-model="purpose" value="애완동물과 함께해요!">
+            <label for="chatPurpose2">
+                <img alt="dogwith" class="chatPurposeIcon" src="/assets/images/icon/dogwith.png">
+                애완동물과 함께해요!
+            </label>
+            <input id="chatPurpose3" name="chatPurpose" type="checkbox" v-model="purpose" value="만남을 원해요!">
+            <label for="chatPurpose3">
+                <img alt="love" class="chatPurposeIcon" src="/assets/images/icon/love.png">
+                만남을 원해요!
+            </label>
+            <input id="chatPurpose4" name="chatPurpose" type="checkbox" v-model="purpose" value="조용히 쉬어요!">
+            <label for="chatPurpose4">
+                <img alt="campingHuman" class="chatPurposeIcon" src="/assets/images/icon/campingHuman.png">
+                조용히 쉬어요!
+            </label>
+            <input id="chatPurpose5" name="chatPurpose" type="checkbox" v-model="purpose" value="아이와 함께해요!">
+            <label for="chatPurpose5">
+                <img alt="parent" class="chatPurposeIcon" src="/assets/images/icon/parent.png">
+                아이와 함께해요!
+            </label>
+        </div>
+    </div>
+</div>
 <th:block th:insert="insert/footer.html"></th:block>
 
 <!-- JavaScript -->
@@ -138,14 +189,32 @@
         location.href = "/chat/create";
     });
 
-/*    /!*배경 url 입력하는 스크립트*!/
-    window.onload = function () {
-        var imageUrl = document.getElementById('chatCampingImg').src;
-        var chatRoomBox = document.querySelector('.chatRoomBox');
-        chatRoomBox.style.background = 'to top, rgba(255, 255, 255, 1) 25%, rgba(255, 255, 255, 0.2) 100%, rgba(255, 255, 255, 0) 100%), url(' + imageUrl + ')';
-        chatRoomBox.style.backgroundSize = 'cover';
-        chatRoomBox.style.backgroundPosition = 'center';
-    }*/
+    /*    /!*배경 url 입력하는 스크립트*!/
+        window.onload = function () {
+            var imageUrl = document.getElementById('chatCampingImg').src;
+            var chatRoomBox = document.querySelector('.chatRoomBox');
+            chatRoomBox.style.background = 'to top, rgba(255, 255, 255, 1) 25%, rgba(255, 255, 255, 0.2) 100%, rgba(255, 255, 255, 0) 100%), url(' + imageUrl + ')';
+            chatRoomBox.style.backgroundSize = 'cover';
+            chatRoomBox.style.backgroundPosition = 'center';
+        }*/
+
+    document.getElementById('chatSearchPurposeListBtn').addEventListener('click', function () {
+        var chatRoomPur = document.querySelector('.chatRoomPur');
+        if (chatRoomPur.style.display === 'none' || chatRoomPur.style.display === '') {
+            chatRoomPur.style.display = 'block'; // 보이도록 설정합니다.
+        } else {
+            chatRoomPur.style.display = 'none'; // 숨깁니다.
+        }
+    });
+
+    document.getElementById('chatRoomSearchBtn').addEventListener('click', function () {
+        var chatRoomSearch = document.getElementById('chatRoomSearch');
+        if (chatRoomSearch.style.display === 'none' || chatRoomSearch.style.display === '') {
+            chatRoomSearch.style.display = 'block'; // 보이도록 설정합니다.
+        } else {
+            chatRoomSearch.style.display = 'none'; // 숨깁니다.
+        }
+    });
 </script>
 
 </body>

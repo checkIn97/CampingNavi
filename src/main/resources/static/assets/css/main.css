@@ -151,6 +151,14 @@ li {
     letter-spacing: 2px; /* 원하는 값으로 변경 */
 }
 
+.headerCategory, .headerVal {
+    transition: line-height 0.3s, letter-spacing 0.3s;
+}
+
+.headerCategory:hover, .headerVal:hover {
+    letter-spacing: 2px; /* 원하는 값으로 변경 */
+}
+
 .headerBtn.mainBtn {
     padding: 0.5rem;
 }
@@ -232,6 +240,15 @@ h2.major {
     margin: auto;
     background-color: #fdfada;
     border-radius: 60px;
+}
+
+.nonPaddingBox{
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin: auto;
+    background-color: burlywood;
 }
 
 /*footer*/
@@ -767,6 +784,7 @@ input[name="slide"] {
 .chat-container {
     height: 560px;
     overflow-y: scroll; /* 스크롤이 가능하도록 설정 */
+    width: -webkit-fill-available;
 }
 
 /* 스크롤바의 스타일을 설정 */
@@ -807,6 +825,15 @@ input[name="slide"] {
 
 /*chatRoom*/
 
+#chatSearchNameBtn {
+    flex: none;
+    width: 8rem;
+}
+
+#chatSearchBar {
+    flex-grow: 0;
+}
+
 #chatRoomBox {
     width: 65%;
 }
@@ -818,10 +845,6 @@ input[name="slide"] {
 
 #createChatRoomBtn {
     width: 10rem;
-    position: fixed;
-    bottom: 0;
-    right: 0;
-
 }
 
 .row {
@@ -832,6 +855,22 @@ input[name="slide"] {
 
 .row .col-md-4 {
     margin-bottom: 20px; /* 열 사이의 간격을 20px로 설정 */
+}
+
+#chatRoomSearch {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    background-color: #E58B33;
+}
+
+#chatRoomSearchBtn {
+    width: 10rem;
+    position: fixed;
+    bottom: 0;
+    right: 0;
 }
 
 .chatRoomBox {
@@ -909,8 +948,7 @@ input[name="slide"] {
     border-radius: 50px;
     width: max-content;
     padding: 0.7rem;
-    margin-top: 1rem;
-    margin-left: 1rem;
+    margin: auto auto 1rem;
     box-sizing: border-box;
     align-items: center;
 }
@@ -970,6 +1008,19 @@ input[name="slide"] {
     margin-left: 0.5rem;
     font-weight: bolder;
     color: #888888;
+}
+
+#chatSearchName {
+    margin-bottom: 1rem;
+}
+
+#chatSearchPurposeListBtn {
+    width: 10rem;
+    margin-bottom: 1rem;
+}
+
+.chatRoomPur {
+    display: none;
 }
 
 /*chatCreate*/
