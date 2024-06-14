@@ -4,6 +4,7 @@ import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.domain.Role;
 import com.demo.campingnavi.dto.CustomOauth2UserDetails;
 import com.demo.campingnavi.dto.GoogleUserDetails;
+import com.demo.campingnavi.dto.KakaoUserDetails;
 import com.demo.campingnavi.info.OAuth2UserInfo;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,9 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         if(provider.equals("google")) {
             log.info("구글 로그인");
             oAuth2UserInfo = new GoogleUserDetails(oAuth2User.getAttributes());
+        } else if (provider.equals("kakao")) {
+            log.info("카카오 로그인");
+            oAuth2UserInfo = new KakaoUserDetails(oAuth2User.getAttributes());
         }
 
         String providerId = oAuth2UserInfo.getProviderId();
@@ -56,7 +60,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
                     .role(Role.USER.getKey())
                     .useyn("y")
                     .img(img)
-                    .nickname("google_"+name)
+                    .nickname(provider+ "_" +name)
                     .build();
             memberRepository.save(member);
         } else {
