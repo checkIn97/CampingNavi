@@ -42,6 +42,36 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/chatdb
 
+  # SNS 로그인
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 39193396108-o1mgb8rf2260m52p8q3qbnd3d5p2i0ut.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+          kakao:
+            client-id: 70a5d863975155cec231394cf76dd4f1
+            client-secret: QZkFwo7qpxWURGus8qEdhjp2OGkAPWgx
+            scope:
+              - account_email
+              - profile_nickname
+              - profile_image
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            client-name: Kakao
+            client-authentication-method: client_secret_post
+
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
 # server port
 server:
   port: 8080

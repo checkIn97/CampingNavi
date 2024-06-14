@@ -1,7 +1,8 @@
 package com.demo.campingnavi.service;
 
 import com.demo.campingnavi.domain.Member;
-import com.demo.campingnavi.dto.CustomUserDetails;
+import com.demo.campingnavi.dto.CustomOauth2UserDetails;
+import com.demo.campingnavi.dto.CustomSecurityUserDetails;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found with id: " + username);
         }
 
-        return new CustomUserDetails(member);
+        return new CustomSecurityUserDetails(member);
     }
 }

@@ -21,7 +21,7 @@ public class MemberController {
     MemberRepository memberRepository;
 
     @GetMapping("/login")
-    public String loginP() {
+    public String loginP(Model model) {
         return "member/loginPage";
     }
 

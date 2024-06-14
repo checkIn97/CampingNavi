@@ -1,30 +1,15 @@
 package com.demo.campingnavi.config;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import java.io.IOException;
-
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 @Configuration
 @EnableWebSecurity
@@ -53,11 +38,11 @@ public class SecurityConfig {
                 );
         http
                 .formLogin((auth) -> auth
-                        .loginPage("/member/login")
+                        .loginPage("/oauth-login/member/login")
                         .defaultSuccessUrl("/main")
                         .usernameParameter("username")
                         .passwordParameter("pw")
-                        .loginProcessingUrl("/member/loginProc")
+                        .loginProcessingUrl("/oauth-login/member/loginProc")
                         .successHandler(
                                 (request, response, authentication) -> {
                                     System.out.println("authentication : " + authentication.getName());
@@ -67,7 +52,7 @@ public class SecurityConfig {
                         .failureHandler(
                                 (request, response, exception) -> {
                                     System.out.println("exception : " + exception.getMessage());
-                                    response.sendRedirect("/member/login");
+                                    response.sendRedirect("/oauth-login/member/login");
                                 }
                         )
                         .permitAll()
@@ -79,6 +64,15 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
+        http
+                .headers((headerConfig) -> headerConfig.frameOptions(
+                        frameOptionsConfig -> frameOptionsConfig.disable()
+                ))
+                .logout((logoutConfig) -> logoutConfig.logoutSuccessUrl("/"))
+                .oauth2Login((oauth) -> oauth.loginPage("/oauth-login/member/login")
+                        .defaultSuccessUrl("/main")
+                        .failureUrl("/oauth-login/member/login")
+                        .permitAll());
         return http.build();
     }
 
