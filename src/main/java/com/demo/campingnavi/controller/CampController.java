@@ -23,8 +23,8 @@ public class CampController {
     public String search(HttpSession session, Model model, CampRecommendVo campRecommendVo,
                          @RequestParam(value="page", defaultValue="0") int page,
                          @RequestParam(value="size", defaultValue="5") int size,
-                         @RequestParam(value="sortBy", defaultValue="name") String sortBy,
-                         @RequestParam(value="sortDirection", defaultValue="ASC") String sortDirection,
+                         @RequestParam(value="sortBy", defaultValue="score") String sortBy,
+                         @RequestParam(value="sortDirection", defaultValue="DESC") String sortDirection,
                          @RequestParam(value="pageMaxDisplay", defaultValue="5") int pageMaxDisplay,
                          @RequestParam(value="searchField", defaultValue="name") String searchField,
                          @RequestParam(value="searchWord", defaultValue="") String searchWord,
@@ -34,7 +34,7 @@ public class CampController {
         Member member = (Member) session.getAttribute("loginUser");
         System.out.println(member);
         if (member == null) {
-            return "redirect:/index";
+            return "redirect:/";
         }
 
         campRecommendVo.setPage(1);
@@ -60,6 +60,7 @@ public class CampController {
 
         campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
         campService.saveCampRecommendList(campRecommendVo.getCampList(), member, campRecommendVo);
+        campRecommendVo.setCampRecommendList(campRecommendVo.getCampRecommendListNotVisited());
         campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
         session.setAttribute("campRecommendVo", campRecommendVo);
         model.addAttribute("campRecommendVo", campRecommendVo);
@@ -81,21 +82,34 @@ public class CampController {
                 campRecommendVo.setPage(page);
             } else if (!campRecommendVo.getSortBy().equals(sortBy)) {
                 campRecommendVo.setSortBy(sortBy);
+                campRecommendVo.setSortDirection(sortDirection);
                 campRecommendVo.setPage(1);
-
                 if (sortBy.equals("name")) {
-
+                    campRecommendVo.setCampRecommendList(campRecommendVo.listSortBy(campRecommendVo.getCampRecommendList()));
                 } else if (sortBy.equals("addr")) {
-
+                    campRecommendVo.setCampRecommendList(campRecommendVo.listSortBy(campRecommendVo.getCampRecommendList()));
                 } else if (sortBy.equals("score")) {
-
+                    List<CampVo> list = campRecommendVo.getCampRecommendListNotVisited();
+                    List<CampVo> reverseList = new ArrayList<>();
+                    if (sortDirection.equals("DESC")) {
+                        campRecommendVo.setCampRecommendList(list);
+                    } else {
+                        for (int i = 0 ; i < list.size() ; i++) {
+                            reverseList.add(list.get(list.size()-i-1));
+                        }
+                        campRecommendVo.setCampRecommendList(reverseList);
+                    }
                 }
             } else if (!campRecommendVo.getSortDirection().equals(sortDirection)) {
-                campRecommendVo.setSortDirection(sortDirection);;
+                campRecommendVo.setSortBy(sortBy);
+                campRecommendVo.setSortDirection(sortDirection);
                 campRecommendVo.setPage(1);
                 List<CampVo> list = campRecommendVo.getCampRecommendList();
-
-
+                List<CampVo> reverseList = new ArrayList<>();
+                for (int i = 0 ; i < list.size() ; i++) {
+                    reverseList.add(list.get(list.size()-i-1));
+                }
+                campRecommendVo.setCampRecommendList(reverseList);
             }
             
             result.put("campRecommendList", campRecommendVo.getCampRecommendList());
@@ -143,6 +157,7 @@ public class CampController {
 
             campRecommendVo.setCampList(campService.getCampScanList(campRecommendVo));
             campService.saveCampRecommendList(campRecommendVo.getCampList(), member, campRecommendVo);
+            campRecommendVo.setCampRecommendList(campRecommendVo.getCampRecommendListNotVisited());
             campRecommendVo.setTotalPages((campRecommendVo.getCampRecommendList().size()+ campRecommendVo.getSize()-1)/ campRecommendVo.getSize());
 
             session.setAttribute("campRecommendVo", campRecommendVo);

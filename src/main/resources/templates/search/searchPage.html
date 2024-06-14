@@ -9,6 +9,25 @@
     <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
     <title>Search</title>
 </head>
+<style>
+    .disabled {
+        display: none;
+    }
+
+    .active {
+        font-weight: 700;
+    }
+
+    .page_area {
+        margin:0 auto;
+    }
+
+    .page_area ul li {
+        list-style: none;
+        display: inline-block;
+    }
+
+</style>
 <body>
 
 <th:block th:insert="insert/header.html"></th:block>
@@ -37,9 +56,6 @@
         <div id="list_area"></div>
         <div id="page_area"></div>
     </div>
-
-
-
     <div class="box" id="contentSearchArea">
         <div id="kakaoMap"></div>
         <button id="search-box-toggle" class="mainBtn">검색하기</button>
@@ -76,12 +92,11 @@
     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
     $(document).ready(function() {
-        reloadList(1, "name", "ASC");
-        reloadMap();
+        reloadList(1, "score", "DESC", true);
     });
 
 
-    function reloadList(page, sortBy, sortDirection) {
+    function reloadList(page, sortBy, sortDirection, mapRefresh) {
         $.ajax({
             type: 'POST',
             url: '/camp/reloadList',
@@ -97,12 +112,43 @@
                 let size = data.size;
                 let result = data.result;
                 if (result === "success") {
+                    if (mapRefresh) {
+                        reloadMap();
+                    }
                     let HTML = "";
-                    HTML += "<table id=\"searchList\"><tr><th>이름</th><th>지역</th><th>평점</th></tr>";
+                    HTML += "<table id=\"searchList\"><tr>";
+                    HTML += "<th>이름</th><th>지역</th><th>추천점수</th>"
+
+                    /*
+                    if (sortBy == "name" && sortDirection == 'ASC') {
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'name', 'DESC', true); return false;\">△이름△</a></th>";
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'addr', 'ASC', true); return false;\">지역</a></th>";
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'score', 'DESC', true); return false;\">추천점수</a></th></tr>";
+                    } else if (sortBy == "name" && sortDirection == 'DESC') {
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'name', 'ASC', true); return false;\">▽이름▽</a></th>";
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'addr', 'ASC', true); return false;\">지역</a></th>";
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'score', 'DESC', true); return false;\">추천점수</a></th></tr>";
+                    } else if (sortBy == "addr" && sortDirection == 'ASC') {
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'name', 'ASC', true); return false;\">이름</a></th>";
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'addr', 'DESC', true); return false;\">△지역△</a></th>";
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'score', 'DESC', true); return false;\">추천점수</a></th></tr>";
+                    } else if (sortBy == "addr" && sortDirection == 'DESC') {
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'name', 'ASC', true); return false;\">이름</a></th>";
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'addr', 'ASC', true); return false;\">▽지역▽</a></th>";
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'score', 'DESC', true); return false;\">추천점수</a></th></tr>";
+                    } else if (sortBy == "score" && sortDirection == 'ASC') {
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'name', 'ASC', true); return false;\">이름</a></th>";
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'addr', 'ASC', true); return false;\">지역</a></th>";
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'score', 'DESC', true); return false;\">△추천점수△</a></th></tr>";
+                    } else if (sortBy == "score" && sortDirection == 'DESC') {
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'name', 'ASC', true); return false;\">이름</a></th>";
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'addr', 'ASC', true); return false;\">지역</a></th>";
+                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'score', 'ASC', true); return false;\">▽추천점수▽</a></th></tr>";
+                    }
+                    */
 
                     for (let i = (page-1)*size ; i < (page*size < list.length ? page*size : list.length) ; i++) {
                         HTML += "<tr class=\"tableResult\">";
-                        HTML += "<a href=\"\" onclick=\"reloadList(1, '" + sortBy + "', '" + sortDirection + "')\; return false\;\" aria-label=\"First\">";
                         HTML += "<td><a href=\"\" onclick=\"move_map(" + i + ", " + list[i].camp.mapX + ", " + list[i].camp.mapY + ")\; return false\;\">" + list[i].camp.name + "</a></td>";
                         HTML += "<td>" + list[i].addressShort + "</td>";
 
@@ -161,7 +207,7 @@
                         if (page == 1) {
                             HTML += "<span aria-hidden=\"true\">First</span>";
                         } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(1, '" + sortBy + "', '" + sortDirection + "')\; return false\;\" aria-label=\"First\">";
+                            HTML += "<a href=\"\" onclick=\"reloadList(1, '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"First\">";
                             HTML += "<span aria-hidden=\"true\">First</span></a></li>";
                         }
                         HTML += "&nbsp&nbsp";
@@ -169,7 +215,7 @@
                         if (page == 1) {
                             HTML += "<span aria-hidden=\"true\">\&lt;</span>";
                         } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(" + (page-1) + ", '" + sortBy + "', '" + sortDirection + "')\; return false\;\" aria-label=\"Previous\">";
+                            HTML += "<a href=\"\" onclick=\"reloadList(" + (page-1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"Previous\">";
                             HTML += "<span aria-hidden=\"true\">\&lt;</span></a></li>";
                         }
                         HTML += "&nbsp&nbsp";
@@ -181,7 +227,7 @@
                                 HTML += "<span>"+(i+1)+"</span></li>";
                             } else {
                                 HTML += "<li class=\"paging\">";
-                                HTML += "<a href=\"\" onclick=\"reloadList(" + (i+1) + ", '" + sortBy + "', '" + sortDirection + "')\; return false\;\">" + (i+1) + "</a></li>";
+                                HTML += "<a href=\"\" onclick=\"reloadList(" + (i+1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\">" + (i+1) + "</a></li>";
                             }
                             HTML += "&nbsp&nbsp";
                         }
@@ -190,7 +236,7 @@
                         if (page == totalPages) {
                             HTML += "<span aria-hidden=\"true\">\&gt;</span></li>";
                         } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(" + (page+1) + ", '" + sortBy + "', '" + sortDirection + "')\; return false\;\" aria-label=\"Next\">";
+                            HTML += "<a href=\"\" onclick=\"reloadList(" + (page+1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"Next\">";
                             HTML += "<span aria-hidden=\"true\">\&gt;</span></a></li>";
                         }
                         HTML += "&nbsp&nbsp";
@@ -198,7 +244,7 @@
                         if (page == totalPages) {
                             HTML += "<span aria-hidden=\"true\">Last</span></li>";
                         } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(" + totalPages + ", '" + sortBy + "', '" + sortDirection + "')\; return false\;\" aria-label=\"Last\">";
+                            HTML += "<a href=\"\" onclick=\"reloadList(" + totalPages + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"Last\">";
                             HTML += "<span aria-hidden=\"true\">Last</span></a></li>";
                         }
                         HTML += "</ul></div>";
@@ -218,7 +264,7 @@
 
         // 체크박스 배열 가져오기
         let campType = [];
-        $("input[name='campType']:checked").each(function(i) {campType.push($(this).val());});
+        $("input[name='campType']:checked").each(function() {campType.push($(this).val());});
 
         if (campType.length == 0) {
             alert("캠핑장 유형을 하나 이상 선택해야 합니다.");
@@ -238,8 +284,7 @@
                 let page = 1;
                 let sortBy = data.campRecommendVo.sortBy;
                 let sortDirection = data.campRecommendVo.sortDirection;
-                reloadList(page, sortBy, sortDirection);
-                reloadMap();
+                reloadList(page, sortBy, sortDirection, true);
             },
             error: function() {
                 alert("검색 실패");
@@ -267,7 +312,6 @@
                 markers = [];
                 choice = 0;
                 let list = data.campRecommendVo.campRecommendList;
-                let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
                 if (list.length > 0) {
                     // 지도 생성
                     let initX = list[0].camp.mapX;
@@ -355,25 +399,5 @@
 
 
 </script>
-<style>
-    .disabled {
-        display: none;
-    }
-
-    .active {
-        font-weight: 700;
-    }
-
-    .page_area {
-        margin:0 auto;
-    }
-
-    .page_area ul li {
-        list-style: none;
-        display: inline-block;
-    }
-
-</style>
-
 </body>
 </html>

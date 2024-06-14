@@ -1,25 +1,22 @@
 package com.demo.campingnavi.dto;
 
 import com.demo.campingnavi.domain.Camp;
-import com.demo.campingnavi.domain.Member;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.List;
 
 @Getter
 @Setter
 @ToString
 public class CampRecommendVo {
     private List<Camp> campList = new ArrayList<>();
-    private List<CampVo> campRecommendList = new ArrayList<>();;
-    private List<CampVo> campRecommendListVisited = new ArrayList<>();;
-    private List<CampVo> campRecommendListAll = new ArrayList<>();;
+    private List<CampVo> campRecommendList = new ArrayList<>();
+    private List<CampVo> campRecommendListVisited = new ArrayList<>();
+    private List<CampVo> campRecommendListNotVisited = new ArrayList<>();
+    private List<CampVo> campRecommendListAll = new ArrayList<>();
     private String useyn = "";
     private String[][] searchFieldArray = {{"name", "이름"}, {"locationB", "시도"}, {"locationS", "시군구"}};
     private String searchField = "";
@@ -36,7 +33,7 @@ public class CampRecommendVo {
     private Map<String, String> addrMatch = null;
 
     public CampRecommendVo() {
-        addrMatch = new HashMap<String, String>();
+        addrMatch = new HashMap<>();
         addrMatch.put("경기", "경기도");
         addrMatch.put("경기도", "경기");
         addrMatch.put("강원도", "강원");
@@ -54,6 +51,39 @@ public class CampRecommendVo {
         addrMatch.put("경상남도", "경남");
         addrMatch.put("경남", "경상남도");
         addrMatch.put("", "");
+    }
+
+    public List<CampVo> listSortBy(List<CampVo> campRecommendList) {
+        CampVo[] campArray = campRecommendList.toArray(new CampVo[campRecommendList.size()]);
+        int l = campRecommendList.size();
+        for (int i = 0 ; i < l-1 ; i++) {
+            for (int j = i+1 ; j < l ; j++) {
+                List<String> tmp_list = new ArrayList<>();
+                CampVo vo1 = campArray[i];
+                CampVo vo2 = campArray[j];
+                String value1 = vo1.getSortMap().get(sortBy);
+                String value2 = vo2.getSortMap().get(sortBy);
+                tmp_list.add(value1);
+                tmp_list.add(value2);
+
+                if (sortDirection.equals("ASC")) {
+                    Collections.sort(tmp_list, String.CASE_INSENSITIVE_ORDER);
+                    if (!value1.equals(tmp_list.get(0))) {
+                        campArray[i] = vo2;
+                        campArray[j] = vo1;
+                    }
+                } else {
+                    Collections.sort(tmp_list, Collections.reverseOrder(String.CASE_INSENSITIVE_ORDER));
+                    if (!value1.equals(tmp_list.get(0))) {
+                        campArray[i] = vo2;
+                        campArray[j] = vo1;
+                    }
+                }
+            }
+        }
+
+        List<CampVo> list = Arrays.asList(campArray);
+        return list;
     }
 
 }

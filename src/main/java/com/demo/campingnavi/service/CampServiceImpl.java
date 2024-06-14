@@ -102,7 +102,7 @@ public class CampServiceImpl implements CampService {
         dataService.campListOutToCsv(filteredList, csvFile, "");
         csvFile = PathConfig.realPath(csvFile);
 
-        List<CampVo> campRecommendList = new ArrayList<>();
+        List<CampVo> campRecommendListNotVisited = new ArrayList<>();
         List<CampVo> campRecommendListVisited = new ArrayList<>();
         List<CampVo> campRecommendListAll = new ArrayList<>();
 
@@ -156,7 +156,7 @@ public class CampServiceImpl implements CampService {
 
                         campRecommendListAll.add(campVo);
                         if (input[2].equals("y")) {
-                            campRecommendList.add(campVo);
+                            campRecommendListNotVisited.add(campVo);
                         } else {
                             campRecommendListVisited.add(campVo);
                         }
@@ -179,7 +179,7 @@ public class CampServiceImpl implements CampService {
                         System.out.println(recommendFile + " 삭제 실패");
                     }
                 }
-                campRecommendVo.setCampRecommendList(campRecommendList);
+                campRecommendVo.setCampRecommendListNotVisited(campRecommendListNotVisited);
                 campRecommendVo.setCampRecommendListVisited(campRecommendListVisited);
                 campRecommendVo.setCampRecommendListAll(campRecommendListAll);
 

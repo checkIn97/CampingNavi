@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -20,11 +21,14 @@ public class CampVo {
     private String homepage = "";
     private String addressFull = "";
     private String addressShort = "";
+    private Map<String, String> sortMap = new HashMap<>();
 
     public CampVo(Camp camp) {
         this.camp = camp;
         this.addressFull = camp.getAddr1() + " " + camp.getAddr2();
         this.addressShort = camp.getLocationB() + " " + camp.getLocationS();
+        this.sortMap.put("name", camp.getName());
+        this.sortMap.put("addr", this.addressShort);
     }
 
     public CampVo(Camp camp, float score, String predict) {
