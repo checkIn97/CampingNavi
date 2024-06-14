@@ -2,9 +2,7 @@ package com.demo.campingnavi.service;
 
 import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.domain.Role;
-import com.demo.campingnavi.dto.CustomOauth2UserDetails;
-import com.demo.campingnavi.dto.GoogleUserDetails;
-import com.demo.campingnavi.dto.KakaoUserDetails;
+import com.demo.campingnavi.dto.*;
 import com.demo.campingnavi.info.OAuth2UserInfo;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +37,11 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         } else if (provider.equals("kakao")) {
             log.info("카카오 로그인");
             oAuth2UserInfo = new KakaoUserDetails(oAuth2User.getAttributes());
+        } else if (provider.equals("naver")) {
+            log.info("네이버 로그인");
+            oAuth2UserInfo = new NaverUserDetails(oAuth2User.getAttributes());
+        } else if (provider.equals("facebook")) {
+            oAuth2UserInfo = new FacebookUserDetails(oAuth2User.getAttributes());
         }
 
         String providerId = oAuth2UserInfo.getProviderId();
