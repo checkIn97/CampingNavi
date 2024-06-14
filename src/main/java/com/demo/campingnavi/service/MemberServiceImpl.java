@@ -39,7 +39,7 @@ public class MemberServiceImpl implements MemberService{
                     .name(vo.getName())
                     .sex(vo.getSex())
                     .email(vo.getEmail())
-                    .addr1(vo.getAddr())
+                    .addr1(vo.getAddr1())
                     .phone(vo.getPhone())
                     .nickname(vo.getNickname())
                     .birth(vo.getBirth())

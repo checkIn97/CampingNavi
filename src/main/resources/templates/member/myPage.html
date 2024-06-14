@@ -7,7 +7,13 @@
     <link href="/assets/css/bg/mainBG.css" rel="stylesheet"/>
     <title>CampNavi</title>
 </head>
+<script th:inline="javascript">
+    function editMypage() {
+        location.href = '/member/mypage/edit';
+    }
+</script>
 <body>
+<th:block th:insert="insert/header.html"></th:block>
 <div>
     <h3>마이페이지</h3>
     <hr>
@@ -47,6 +53,11 @@
             <td><input type="text" th:value="${member.addr2 != null ? member.addr2 : '상세주소를 입력해주세요.'}" readonly/></td>
         </tr>
     </table>
+        <button type="button" onclick="editMypage()">수정</button>
+        <button type="button"><a href="/main">뒤로가기</a></button>
     </div>
+<footer id="footer">
+    <p class="copyright">&copy; Team Navigation. </p>
+</footer>
 </body>
 </html>

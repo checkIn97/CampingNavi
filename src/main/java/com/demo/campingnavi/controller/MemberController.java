@@ -1,6 +1,7 @@
 package com.demo.campingnavi.controller;
 
 import com.demo.campingnavi.domain.Member;
+import com.demo.campingnavi.dto.CustomOauth2UserDetails;
 import com.demo.campingnavi.dto.CustomSecurityUserDetails;
 import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
@@ -101,14 +102,73 @@ public class MemberController {
     public String mypageP(Model model) {
         // 인증 객체 생성
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = "";
+        CustomSecurityUserDetails securityUserDetails;
+        CustomOauth2UserDetails oauth2UserDetails;
         // 객체의 아이디를 얻기 위해서 타입 변환
-        CustomSecurityUserDetails userDetails = (CustomSecurityUserDetails) authentication.getPrincipal();
-        // 객체 아이디만 추출
-        String username = userDetails.getUsername();
+        if (authentication.getPrincipal() instanceof CustomSecurityUserDetails) { // 사이트 회원
+            securityUserDetails = (CustomSecurityUserDetails) authentication.getPrincipal();
+            username = securityUserDetails.getUsername();
+        } else { // SNS 로그인 회원
+            oauth2UserDetails = (CustomOauth2UserDetails) authentication.getPrincipal();
+            username = oauth2UserDetails.getUsername();
+        }
+
         // 추출된 아이디로 회원 객체 생성
         Member member = memberRepository.findByUsername(username);
         // 뷰에 전송
         model.addAttribute("member", member);
+        return "member/myPage";
+    }
+
+    @GetMapping("/mypage/edit")
+    public String mypageEditP(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = "";
+        CustomSecurityUserDetails securityUserDetails;
+        CustomOauth2UserDetails oauth2UserDetails;
+        // 객체의 아이디를 얻기 위해서 타입 변환
+        if (authentication.getPrincipal() instanceof CustomSecurityUserDetails) { // 사이트 회원
+            securityUserDetails = (CustomSecurityUserDetails) authentication.getPrincipal();
+            username = securityUserDetails.getUsername();
+        } else { // SNS 로그인 회원
+            oauth2UserDetails = (CustomOauth2UserDetails) authentication.getPrincipal();
+            username = oauth2UserDetails.getUsername();
+        }
+        // 추출된 아이디로 회원 객체 생성
+        Member member = memberRepository.findByUsername(username);
+        // 뷰에 전송
+        model.addAttribute("member", member);
+        return "member/editMypage";
+    }
+
+    @PostMapping("/mypage/edit/detail")
+    public String myPageEdit(MemberVo vo, Model model) {
+        // 인증 객체 생성
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = "";
+        CustomSecurityUserDetails securityUserDetails;
+        CustomOauth2UserDetails oauth2UserDetails;
+        // 객체의 아이디를 얻기 위해서 타입 변환
+        if (authentication.getPrincipal() instanceof CustomSecurityUserDetails) { // 사이트 회원
+            securityUserDetails = (CustomSecurityUserDetails) authentication.getPrincipal();
+            username = securityUserDetails.getUsername();
+        } else { // SNS 로그인 회원
+            oauth2UserDetails = (CustomOauth2UserDetails) authentication.getPrincipal();
+            username = oauth2UserDetails.getUsername();
+        }
+        // 추출된 아이디로 회원 객체 생성
+        Member member = memberRepository.findByUsername(username);
+        member.setNickname(vo.getNickname());
+        member.setSex(vo.getSex());
+        member.setBirth(vo.getBirth());
+        member.setPhone(vo.getPhone());
+        member.setAddr1(vo.getAddr1());
+        member.setAddr2(vo.getAddr2());
+
+        memberRepository.save(member);
+        model.addAttribute("member", member);
+
         return "member/myPage";
     }
 }

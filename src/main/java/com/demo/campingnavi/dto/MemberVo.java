@@ -17,7 +17,9 @@ public class MemberVo {
 
     private String email;
 
-    private String addr;
+    private String addr1;
+
+    private String addr2;
 
     private String nickname;
 
