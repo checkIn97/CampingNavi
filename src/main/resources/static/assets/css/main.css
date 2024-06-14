@@ -96,6 +96,7 @@ li {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
+    background-color: #E58B33;
     z-index: 9999; /* 다른 요소들 위에 위치하도록 z-index 값을 높게 설정합니다. */
 }
 
@@ -108,10 +109,16 @@ li {
     width: 180px;
 }
 
+.headerVal {
+    color: whitesmoke;
+}
+
 .headerValBox.box {
     border-radius: 1rem;
     z-index: 9998;
     top: 2rem;
+    background-color: #E58B33;
+    width: 10rem;
 }
 
 #headerCampingBtn {
@@ -136,6 +143,12 @@ li {
 
 .headerBtn {
     padding: 0.5rem;
+    font-size: 0.8rem;
+    transition: line-height 0.3s, letter-spacing 0.3s;
+}
+
+.headerBtn:hover {
+    letter-spacing: 2px; /* 원하는 값으로 변경 */
 }
 
 .headerBtn.mainBtn {
@@ -144,6 +157,7 @@ li {
 
 .headerCategory {
     font-family: fantasy;
+    color: whitesmoke;
 }
 
 .headerName {
@@ -714,10 +728,12 @@ input[name="slide"] {
 #chatBox {
     position: relative;
     width: 50%;
+    overflow: auto;
 }
 
 .buttonContain .form-control {
     flex-grow: 1;
+    width: 30rem;
 }
 
 /* 사용자가 보낸 메시지 */
@@ -729,7 +745,7 @@ input[name="slide"] {
     box-shadow: 0 0 10px rgba(120, 120, 120, 0.5);
     margin: 10px 10px 10px auto;
     padding: 20px;
-    width: max-content;
+    width: fit-content;
 }
 
 /* 상대방이 보낸 메시지 */
@@ -783,6 +799,10 @@ input[name="slide"] {
     position: absolute;
     right: 2rem;
     top: 2rem;
+}
+
+#chatInputGroup {
+    width: 100%;
 }
 
 /*chatRoom*/
@@ -1033,4 +1053,79 @@ input[name="slide"] {
     position: fixed;
     top: 0;
     right: 0;
+}
+
+/*campingEssentials*/
+.esseIcon {
+    width: 1.5rem;
+}
+
+.esseImg {
+    width: 5rem;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+}
+
+h1 {
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.icon {
+    background-color: #fff;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.icon:hover {
+    transform: scale(1.05);
+}
+
+.icon img {
+    max-width: 100px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+.details {
+    background-color: #fff;
+    padding: 20px;
+    margin: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    text-align: center;
+}
+
+.details h3 {
+    margin: 0;
+}
+
+.details p {
+    margin: 5px 0;
+    white-space: pre-line; /* Preserves whitespace and line breaks */
+}
+
+#esseBox {
+    width: 54rem;
 }

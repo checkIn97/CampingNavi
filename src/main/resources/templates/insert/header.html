@@ -1,15 +1,15 @@
 <div class="header" xmlns="http://www.w3.org/1999/html">
     <div class="box" id="headerBox">
 
-        <div><img alt="logo" class="logo" src="/assets/images/logo/typoB.png"></div>
+        <div><img alt="logo" class="logo" src="/assets/images/logo/typo.png"></div>
 
         <div class="headerCategory" id="headerCampingBtn">Camping</div>
         <div class="headerCategory" id="headerCommunityBtn">Community</div>
 
-        <div class="headerLog">
-            <a href="/member/membershipAgree"><button class="headerBtn mainBtn" id="headerMembershipBtn">회원가입</button></a>
-            <a href="#"><button class="headerBtn" id="headerLogoutBtn">로그아웃</button></a>
-            <a href="/member/mypage"><button class="headerBtn" id="headerMyPageBtn">마이페이지</button></a>
+        <div class="headerLog buttonContain">
+            <a href="/member/membershipAgree"><div class="headerBtn" id="headerMembershipBtn">[MemberShip]</div></a>
+            <a href="#"><div class="headerBtn" id="headerLogoutBtn">[Logout]</div></a>
+            <a href="/member/mypage"><div class="headerBtn" id="headerMyPageBtn">[MyPage]</div></a>
         </div>
 
     </div>
@@ -17,7 +17,7 @@
     <div class="headerValBox box" id="headerCamping">
         <ul class="headerName">
             <a href="/camp/search"><li class="headerVal" id="campingVal1">캠핑장 추천</li></a>
-            <a href="#"><li class="headerVal" id="campingVal2">캠핑용품 추천</li></a>
+            <a href="/camp/essentials"><li class="headerVal" id="campingVal2">캠핑용품 추천</li></a>
             <a href="#"><li class="headerVal" id="campingVal3">캠핑장 후기</li></a>
         </ul>
     </div>
@@ -72,6 +72,7 @@
     headerCommunity.addEventListener('mouseleave', function () {
         headerCommunity.style.display = 'none';
     });
+
 
     window.onload = function () {
         var headerCampingBtn = document.getElementById('headerCampingBtn');
