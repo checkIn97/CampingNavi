@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 /*Basic*/
 font {
     color: rgb(27, 31, 34);
@@ -77,8 +79,79 @@ li {
     list-style-type: none;
 }
 
-/*typo*/
+/*header*/
 
+.header {
+    position: relative;
+    display: none;
+}
+
+#headerBox {
+    position: fixed;
+    top: 0;
+    width: -webkit-fill-available;
+    border-radius: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    z-index: 9999; /* 다른 요소들 위에 위치하도록 z-index 값을 높게 설정합니다. */
+}
+
+.headerNavigator {
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo {
+    width: 180px;
+}
+
+.headerValBox.box {
+    border-radius: 1rem;
+    z-index: 9998
+}
+
+#headerCampingBtn {
+    position: relative;
+}
+
+#headerCamping {
+    position: absolute;
+    display: none;
+    top: 100%;
+    left: 50%;
+}
+
+#headerCommunityBtn {
+    position: relative;
+}
+
+#headerCommunity {
+    position: absolute;
+    display: none;
+    top: 100%;
+    left: 50%;
+}
+
+.headerBtn {
+    padding: 0.5rem;
+}
+
+.headerBtn.mainBtn {
+    padding: 0.5rem;
+}
+
+.headerCategory {
+    font-family: fantasy;
+}
+
+.headerName {
+    display: contents;
+}
+
+/*typo*/
 #typo {
     width: 15%;
     margin-top: 10px;

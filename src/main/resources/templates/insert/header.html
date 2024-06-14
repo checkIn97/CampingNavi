@@ -1,0 +1,148 @@
+<div class="header" xmlns="http://www.w3.org/1999/html">
+    <div class="box" id="headerBox">
+
+        <div><img alt="logo" class="logo" src="/assets/images/logo/typoB.png"></div>
+
+        <div class="headerCategory" id="headerCampingBtn">Camping</div>
+        <div class="headerCategory" id="headerCommunityBtn">Community</div>
+
+        <div class="headerLog">
+            <a href="member/membershipAgree"><button class="headerBtn mainBtn" id="headerMembershipBtn">회원가입</button></a>
+            <a href="#"><button class="headerBtn" id="headerLogoutBtn">로그아웃</button></a>
+            <a href="#"><button class="headerBtn" id="headerMyPageBtn">마이페이지</button></a>
+        </div>
+
+    </div>
+
+    <div class="headerValBox box" id="headerCamping">
+        <ul class="headerName">
+            <a href="/camp/search"><li class="headerVal" id="campingVal1">캠핑장 추천</li></a>
+            <a href="#"><li class="headerVal" id="campingVal2">캠핑용품 추천</li></a>
+            <a href="#"><li class="headerVal" id="campingVal3">캠핑장 후기</li></a>
+        </ul>
+    </div>
+    <div class="headerValBox box" id="headerCommunity">
+        <ul class="headerName">
+            <a href="/chat/room"><li class="headerVal" id="communityVal1">채팅방</li></a>
+            <a href="#"><li class="headerVal" id="communityVal2"> 관리자 문의</li></a>
+        </ul>
+    </div>
+</div>
+<script>
+
+    var headerCampingBtn = document.getElementById('headerCampingBtn');
+    var headerCamping = document.getElementById('headerCamping');
+    var headerCommunityBtn = document.getElementById('headerCommunityBtn');
+    var headerCommunity = document.getElementById('headerCommunity');
+
+    // 마우스가 headerCampingBtn 요소 위에 있을 때 headerCamping 요소를 표시합니다.
+    headerCampingBtn.addEventListener('mouseover', function () {
+        headerCamping.style.display = 'block';
+    });
+
+    // 마우스가 headerCampingBtn 요소 또는 headerCamping 요소에서 벗어났을 때 headerCamping 요소를 숨깁니다.
+    headerCampingBtn.addEventListener('mouseout', function () {
+        // setTimeout을 사용하여 마우스가 headerCamping 요소로 바로 이동하는 경우를 처리합니다.
+        setTimeout(function () {
+            if (!headerCamping.matches(':hover')) {
+                headerCamping.style.display = 'none';
+            }
+        }, 300); // 300ms 후에 함수를 실행합니다.
+    });
+
+    headerCamping.addEventListener('mouseleave', function () {
+        headerCamping.style.display = 'none';
+    });
+
+    // 마우스가 headerCommunityBtn 요소 위에 있을 때 headerCommunity 요소를 표시합니다.
+    headerCommunityBtn.addEventListener('mouseover', function () {
+        headerCommunity.style.display = 'block';
+    });
+
+    // 마우스가 headerCommunityBtn 요소 또는 headerCommunity 요소에서 벗어났을 때 headerCommunity 요소를 숨깁니다.
+    headerCommunityBtn.addEventListener('mouseout', function () {
+        // setTimeout을 사용하여 마우스가 headerCommunity 요소로 바로 이동하는 경우를 처리합니다.
+        setTimeout(function () {
+            if (!headerCommunity.matches(':hover')) {
+                headerCommunity.style.display = 'none';
+            }
+        }, 300); // 300ms 후에 함수를 실행합니다.
+    });
+
+    headerCommunity.addEventListener('mouseleave', function () {
+        headerCommunity.style.display = 'none';
+    });
+
+    window.onload = function () {
+        var headerCampingBtn = document.getElementById('headerCampingBtn');
+        var headerCamping = document.getElementById('headerCamping');
+        var headerCommunityBtn = document.getElementById('headerCommunityBtn');
+        var headerCommunity = document.getElementById('headerCommunity');
+
+        // headerCampingBtn 요소의 너비를 계산합니다.
+        var campingBtnWidth = headerCampingBtn.offsetWidth;
+        // headerCommunityBtn 요소의 너비를 계산합니다.
+        var communityBtnWidth = headerCommunityBtn.offsetWidth;
+
+        // headerCamping 요소의 위치를 조정합니다.
+        headerCamping.style.left = '50%';
+        headerCamping.style.transform = 'translateX(-50%)';
+        // headerCommunity 요소의 위치를 조정합니다.
+        headerCommunity.style.left = '50%';
+        headerCommunity.style.transform = 'translateX(-50%)';
+
+        // headerCampingBtn 요소를 클릭했을 때 headerCamping 요소의 위치를 조정합니다.
+        headerCampingBtn.addEventListener('mouseover', function () {
+            // headerCamping 요소가 보이는 경우
+            if (headerCamping.style.display === 'block') {
+                // headerCamping 요소의 위치를 headerCampingBtn 요소의 중앙으로 조정합니다.
+                headerCamping.style.left = (headerCampingBtn.offsetLeft + campingBtnWidth / 2) + 'px';
+                headerCamping.style.transform = 'translateX(-50%)';
+            }
+        });
+
+        // headerCommunityBtn 요소를 클릭했을 때 headerCommunity 요소의 위치를 조정합니다.
+        headerCommunityBtn.addEventListener('mouseover', function () {
+            // headerCommunity 요소가 보이는 경우
+            if (headerCommunity.style.display === 'block') {
+                // headerCommunity 요소의 위치를 headerCommunityBtn 요소의 중앙으로 조정합니다.
+                // headerCamping 요소의 너비를 고려합니다.
+                var leftPosition = headerCommunityBtn.offsetLeft + communityBtnWidth / 2;
+                if (headerCamping.style.display === 'block') {
+                    leftPosition += headerCamping.offsetWidth / 2;
+                }
+                headerCommunity.style.left = leftPosition + 'px';
+                headerCommunity.style.transform = 'translateX(-50%)';
+            }
+        });
+    }
+
+    window.addEventListener('mousemove', function (e) {
+        var header = document.querySelector('.header');
+        // 마우스의 Y 좌표가 50px 이하일 때 header 요소를 표시합니다.
+        if (e.clientY <= 50) {
+            header.style.display = 'block';
+        }
+    });
+
+    var header = document.querySelector('.header');
+
+    header.addEventListener('mouseleave', function () {
+        header.style.display = 'none';
+    });
+
+
+    var headerVals = document.querySelectorAll('.headerVal');
+
+for (var i = 0; i < headerVals.length; i++) {
+    headerVals[i].addEventListener('mouseover', function () {
+        this.style.fontWeight = 'bolder';
+        this.style.fontSize = '1.1rem';
+    });
+
+    headerVals[i].addEventListener('mouseout', function () {
+        this.style.fontWeight = '';
+        this.style.fontSize = '';
+    });
+}
+</script>
