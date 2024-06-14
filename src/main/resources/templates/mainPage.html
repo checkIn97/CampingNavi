@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="kr">
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<a href="/index"><img alt="typo" id="typo" th:src="@{/assets/images/logo/typo.png}"></a>
+<th:block th:insert="insert/header.html"></th:block>
 
 <div id="mainPageBtnz">
     <div class="mainMyPageBox">
@@ -32,12 +32,6 @@
         <img alt="관리자문의" class="mainPageBtn" id="admin" src="/assets/images/button/whistle.png">
         <div class="mainBoxText" id="adminText">관리자 문의</div>
     </div>
-</div>
-
-<div class="box" id="mainToggle">
-    <button class="mainBtn" id="loginBtn" type="button">로그인</button>
-    <button class="mainBtn" id="registerBtn" type="button">회원가입</button>
-    <button class="logoutBtn">로그아웃</button>
 </div>
 
 <footer id="footer">
