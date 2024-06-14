@@ -102,6 +102,6 @@ public class CampingEssentialsController {
     @GetMapping("/camp/essentials")
     public ModelAndView showCampingEssentials(Model model) {
         model.addAttribute("products", products);
-        return new ModelAndView("campingEssentials/campingEssentials");
+        return new ModelAndView("/campingEssentials/campingEssentials");
     }
 }
