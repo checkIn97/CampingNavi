@@ -38,9 +38,7 @@
     </form>
 </article>
 
-<script src="https://code.jquery.com/jquery-3.6.3.min.js"
-        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
-        crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="/assets/summernote/js/summernote-lite.js"></script>
 <script src="/assets/summernote/lang/summernote-ko-KR.js"></script>
 
@@ -76,27 +74,33 @@
     });
 
     function uploadSummernoteImageFile(file, editor) {
-        var data = new FormData();
-        data.append("file", file);
+        var formData = new FormData();
+        formData.append("file", file);
+
         $.ajax({
-            data: data,
-            type: "POST",
             url: "/uploadSummernoteImageFile",
-            contentType: false,
+            type: "POST",
+            data: formData,
             processData: false,
-            success: function (data) {
-                if (data.responseCode === "success") {
-                    $(editor).summernote('editor.insertImage', data.url);
+            contentType: false,
+            success: function(response) {
+                if (response.startsWith("/upload/")) {
+                    // 이미지 업로드 성공 시
+                    console.log(response);
+                    $(editor).summernote('editor.insertImage', response);
                     alert("이미지 업로드 성공");
                 } else {
+                    // 이미지 업로드 실패 시
                     alert("이미지 업로드 실패");
                 }
             },
             error: function() {
+                // AJAX 호출 실패 시
                 alert("이미지 업로드 중 오류 발생");
             }
         });
     }
+
 
     function reloadRating(current, index) {
         $.ajax({
