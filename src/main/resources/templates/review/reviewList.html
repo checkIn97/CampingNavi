@@ -20,37 +20,37 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="review, iterStat : ${reviewBestList}" th:if="${iterStat.index < 3}">
+        <tr th:each="reviewVo, iterStat : ${reviewScanVo.reviewVoBestList}" th:if="${iterStat.index < 3}">
             <td>
-                <div class="popularPosts">[인기] <a th:href="@{'/review_detail/' + ${review.vseq}}">
-                                                            <span th:text="${review.title}"></span>
+                <div class="popularPosts">[인기] <a th:href="@{'/review_detail/' + ${reviewVo.review.vseq}}">
+                                                            <span th:text="${reviewVo.review.title}"></span>
                                                             <img src="/assets/images/reply.png" style="width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);"/>
-                                                            <span>전체댓글수 표시</span>
+                                                            <span th:text="'['+${reviewVo.review.commentCount}+']'"></span>
                 </a></div>
-                <input type="hidden" name="vseq" th:value="${review.vseq}"/></td>
-            <td> <a th:href="@{'/review_memberList/' + ${review.member.mseq}}" th:text="${review.member.username}"></a>
-             <input type="hidden" name="mseq" th:value="${review.member.mseq}" /></td>
-            <td th:text="${#dates.format(review.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-            <td>추천수 표시</td>
-            <td th:text="${review.count}"></td>
+                <input type="hidden" name="vseq" th:value="${reviewVo.review.vseq}"/></td>
+            <td> <a th:href="@{'/review_memberList/' + ${reviewVo.review.member.mseq}}" th:text="${reviewVo.review.member.username}"></a>
+             <input type="hidden" name="mseq" th:value="${reviewVo.review.member.mseq}" /></td>
+            <td th:text="${#dates.format(reviewVo.review.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td>[[${reviewVo.rcdCount}]]</td>
+            <td th:text="${reviewVo.review.count}"></td>
         </tr>
 
-        <tr th:each="review : ${reviewList}">
+        <tr th:each="reviewVo : ${reviewScanVo.reviewVoList}">
             <td>
                 <div class="review_list">
-                    <a th:href="@{'/review_detail/' + ${review.vseq}}">
-                        <span th:text="${review.title}"></span>
+                    <a th:href="@{'/review_detail/' + ${reviewVo.review.vseq}}">
+                        <span th:text="${reviewVo.review.title}"></span>
                         <img src="/assets/images/reply.png" style="width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);"/>
-                        <span>전체댓글수 표시</span></a>
+                        <span th:text="'['+${reviewVo.review.commentCount}+']'"></span></a>
                    </div>
                 <input type="hidden" id="vseq"
-                       name="vseq" th:value="${review.vseq}"/></td>
-            <td> <a th:href="@{'/review_memberList/' + ${review.member.mseq}}" th:text="${review.member.username}"></a>
-                <input type="hidden" name="mseq" th:value="${review.member.mseq}" /></td>
+                       name="vseq" th:value="${reviewVo.review.vseq}"/></td>
+            <td> <a th:href="@{'/review_memberList/' + ${reviewVo.review.member.mseq}}" th:text="${reviewVo.review.member.username}"></a>
+                <input type="hidden" name="mseq" th:value="${reviewVo.review.member.mseq}" /></td>
             <td
-                    th:text="${#dates.format(review.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-            <td>추천수 표시</td>
-            <td th:text="${review.count}"></td>
+                    th:text="${#dates.format(reviewVo.review.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td>[[${reviewVo.rcdCount}]]</td>
+            <td th:text="${reviewVo.review.count}"></td>
         </tr>
         </tbody>
     </table>
@@ -59,7 +59,7 @@
 
 
 
-    <form th:action="@{/review_list_search}" method="get">
+    <form th:action="@{/review_list}" method="get">
         <div class="search-container">
             <select name="searchField" id="search" class="search">
                 <option value="title">제목</option>

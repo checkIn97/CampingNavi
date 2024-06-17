@@ -5,6 +5,7 @@ import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.domain.Recommend;
 import com.demo.campingnavi.domain.Review;
 import com.demo.campingnavi.dto.CampVo;
+import com.demo.campingnavi.dto.ReviewVo;
 import com.demo.campingnavi.model.ApiImageResponse;
 import com.demo.campingnavi.model.ApiResponse;
 import com.demo.campingnavi.service.CampDetailService;
@@ -54,7 +55,7 @@ public class CampDetailController {
 
         List<ApiResponse.Item> itemList = campDetailService.DataFromApi(mapX, mapY);
         List<ApiImageResponse.Item> imageList = campDetailService.DataFromApiImage((contentId));
-        List<Review> reviewList = reviewService.getReviewListByCseq(cseq);
+        List<ReviewVo> reviewVoList = reviewService.getReviewVoListByCseq(cseq);
 
         CampVo campVo = campService.getCampVoByCseq(cseq, member);
         float score = Float.parseFloat(campVo.getScoreView());
@@ -70,7 +71,7 @@ public class CampDetailController {
         model.addAttribute("mapY", mapY);
         model.addAttribute("starScore", score);
         model.addAttribute("jjimChecked", jjimChecked);
-        model.addAttribute("reviewList", reviewList);
+        model.addAttribute("reviewVoList", reviewVoList);
 
         return "/campDetail/campDetail";
     }

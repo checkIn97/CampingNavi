@@ -3,10 +3,13 @@ package com.demo.campingnavi.controller;
 import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.domain.Review;
+import com.demo.campingnavi.domain.ReviewRecommend;
 import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.dto.ReviewScanVo;
+import com.demo.campingnavi.dto.ReviewVo;
 import com.demo.campingnavi.service.CampService;
 import com.demo.campingnavi.service.ReviewCommentService;
+import com.demo.campingnavi.service.ReviewRecommendService;
 import com.demo.campingnavi.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -18,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -28,6 +32,9 @@ public class ReviewController {
 
     @Autowired
     ReviewCommentService reviewCommentService;
+
+    @Autowired
+    ReviewRecommendService reviewRecommendService;
 
     @Autowired
     CampService campService;
@@ -85,9 +92,6 @@ public class ReviewController {
         vo.setContent(content);
         vo.setMember(member); // 사용자 정보 설정
 
-        // 테스트를 위해 cseq 번호 부여
-        cseq = 1;
-
         vo.setCamp(campService.getCampByCseq(cseq));
         vo.setLikes(likes);
         vo.setCount(0);
@@ -124,97 +128,38 @@ public class ReviewController {
         }
 
         if (page == 0) {
-            page = 1;
             reviewScanVo = new ReviewScanVo(); // 새로운 객체로 초기화
             reviewScanVo.setSearchField(searchField);
             reviewScanVo.setSearchWord(searchWord);
+            reviewScanVo.setPage(1);
+            reviewScanVo.setSize(size);
             reviewScanVo.setSortBy(sortBy);
             reviewScanVo.setSortDirection(sortDirection);
             reviewScanVo.setPageMaxDisplay(pageMaxDisplay);
-
+            List<ReviewVo> reviewVoList = reviewService.findReviewVoList(reviewScanVo);
+            reviewScanVo.setReviewVoList(reviewVoList);
+            reviewScanVo.setReviewVoBestList(reviewService.getBestReviewVoList());
+            reviewScanVo.setTotalPages((reviewScanVo.getReviewVoList().size()+ reviewScanVo.getSize()-1)/ reviewScanVo.getSize());
+            session.setAttribute("reviewScanVo", reviewScanVo);
         } else {
             reviewScanVo = (ReviewScanVo) session.getAttribute("reviewScanVo");
+            reviewScanVo.setPage(page);
+            List<ReviewVo> reviewVoList = reviewService.findReviewVoList(reviewScanVo);
+            reviewScanVo.setReviewVoList(reviewVoList);
+            reviewScanVo.setReviewVoBestList(reviewService.getBestReviewVoList());
+            reviewScanVo.setTotalPages((reviewScanVo.getReviewVoList().size()+ reviewScanVo.getSize()-1)/ reviewScanVo.getSize());
+            session.setAttribute("reviewScanVo", reviewScanVo);
         }
-        Page<Review> reviewData = reviewService.findReviewList(reviewScanVo, page, size);
 
-        reviewScanVo.setPageInfo(reviewData);
-        reviewScanVo.setReviewList(reviewData.getContent());
-
-        session.setAttribute("reviewScanVo", reviewScanVo);
+        reviewScanVo = (ReviewScanVo) session.getAttribute("reviewScanVo");
         model.addAttribute("reviewScanVo", reviewScanVo);
-        model.addAttribute("reviewList", reviewScanVo.getReviewList());
-        model.addAttribute("pageInfo", reviewScanVo.getPageInfo());
-        model.addAttribute("reviewBestList", reviewService.getBestReviewList());
-        // model.addAttribute("memberVo", memberVo);
+
         return "review/reviewList";
     }
 
-
-    // 게시글 검색 보기
-    @GetMapping("/review_list_search")
-    public String searchReviewList(Model model,
-                                  @RequestParam(value = "page", defaultValue = "0") int page,
-                                  @RequestParam(value = "size", defaultValue = "5") int size,
-                                  @RequestParam(value = "sortBy", defaultValue = "vseq") String sortBy,
-                                  @RequestParam(value = "sortDirection", defaultValue = "DESC") String sortDirection,
-                                  @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
-                                  @RequestParam(value = "searchField", defaultValue = "") String searchField,
-                                  @RequestParam(value = "searchWord", defaultValue = "") String searchWord,
-                                  ReviewScanVo reviewScanVo,
-                                  HttpSession session, HttpServletRequest request) {
-
-        // 세션에서 사용자 정보 가져오기
-        Member member = (Member) session.getAttribute("loginUser");
-        // MemberVo memberVo = new MemberVo(member);
-        // 세션에 로그인 정보가 없는 경우
-        if (member == null) {
-            // 로그인 알림을 포함한 경고 메시지를 설정합니다.
-            model.addAttribute("msg","로그인 후 이용해주세요.");
-            model.addAttribute("redirectTo","/");
-            return "review/review_alert";
-        }
-
-        if (page == 0) {
-            page = 1;
-            reviewScanVo = new ReviewScanVo(); // 새로운 객체로 초기화
-            reviewScanVo.setSearchField(searchField);
-            reviewScanVo.setSearchWord(searchWord);
-            reviewScanVo.setSortBy(sortBy);
-            reviewScanVo.setSortDirection(sortDirection);
-            reviewScanVo.setPageMaxDisplay(pageMaxDisplay);
-
-
-        } else {
-            reviewScanVo = (ReviewScanVo) session.getAttribute("reviewScanVo");
-
-        }
-
-        Page<Review> reviewData = reviewService.findReviewList(reviewScanVo, page, size);
-
-        if (reviewData.isEmpty()) {
-            model.addAttribute("msg", "검색 결과가 없습니다.");
-            model.addAttribute("redirectTo", "/review_list");
-            return "review/review_alert";
-        } else {
-
-            reviewScanVo.setPageInfo(reviewData);
-            reviewScanVo.setReviewList(reviewData.getContent());
-            session.setAttribute("reviewScanVo", reviewScanVo);
-            model.addAttribute("reviewScanVo", reviewScanVo);
-            model.addAttribute("reviewList", reviewScanVo.getReviewList());
-            model.addAttribute("pageInfo", reviewScanVo.getPageInfo());
-            model.addAttribute("reviewBestList", reviewService.getBestReviewList());
-            // model.addAttribute("memberVo", memberVo);
-
-            return "review/reviewList";
-        }
-    }
-
-
-
     // 게시글 상세보기
     @GetMapping("/review_detail/{vseq}")
-    public String reviewDetail(@PathVariable("vseq") int vseq, Model model, HttpSession session, HttpServletRequest request) {
+    public String reviewDetail(@PathVariable("vseq") int vseq, Model model, HttpSession session) {
 
         // 세션에서 사용자 정보 가져오기
         Member member = (Member) session.getAttribute("loginUser");
@@ -229,20 +174,19 @@ public class ReviewController {
 
         // 게시글 번호를 통해 해당 게시글 가져오기
         Review review = reviewService.getReview(vseq);
+        ReviewVo reviewVo = new ReviewVo(review, reviewRecommendService.getRcdCountByReview(review));
         reviewService.updateCnt(vseq);
-        int useq = review.getMember().getMseq();
+        int mseq = review.getMember().getMseq();
         // 모델에 게시글 추가
-        model.addAttribute("review", review);
-        model.addAttribute("authorList", reviewService.getAuthorReviewList(useq));
+        model.addAttribute("reviewVo", reviewVo);
+        model.addAttribute("authorList", reviewService.getAuthorReviewVoList(mseq));
 
         // 게시글의 작성자와 현재 사용자가 같은지 확인하여 모델에 추가
         model.addAttribute("isAuthor", review.getMember().getMseq() == member.getMseq());
 
         ReviewScanVo reviewScanVo = (ReviewScanVo) session.getAttribute("reviewScanVo");
         model.addAttribute("reviewScanVo", reviewScanVo);
-        model.addAttribute("reviewList", reviewScanVo.getReviewList());
-        model.addAttribute("pageInfo", reviewScanVo.getPageInfo());
-        // model.addAttribute("memberVo", memberVo);
+
         // 게시글 상세보기 페이지로 이동
         return "review/reviewDetail";
     }
@@ -346,7 +290,7 @@ public class ReviewController {
             return "review/review_alert";
         }
 
-        model.addAttribute("authorList", reviewService.getAuthorReviewList(mseq));
+        model.addAttribute("authorList", reviewService.getAuthorReviewVoList(mseq));
         model.addAttribute("commentList", reviewCommentService.getCommentMemberList(mseq));
         // model.addAttribute("memberVo", memberVo);
         return "reviewMemberList";

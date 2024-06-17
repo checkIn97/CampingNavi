@@ -29,7 +29,6 @@ public class ReviewCommentsController {
 	MemberService memberService;
 
 	@GetMapping(value = "/list")
-	@ResponseBody
 	public Map<String, Object> getComments(@RequestParam(value = "vseq") int vseq, HttpSession session) {
 		Map<String, Object> result = new HashMap<>();
 		System.out.println(1);
