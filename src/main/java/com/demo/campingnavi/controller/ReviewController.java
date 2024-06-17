@@ -4,6 +4,7 @@ import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.domain.Review;
 import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.dto.ReviewScanVo;
+import com.demo.campingnavi.service.CampService;
 import com.demo.campingnavi.service.ReviewCommentService;
 import com.demo.campingnavi.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,18 +25,21 @@ public class ReviewController {
     @Autowired
     ReviewCommentService reviewCommentService;
 
+    @Autowired
+    CampService campService;
+
 
     //게시글 작성으로 이동
     @GetMapping("/review_insert_form")
     public String showWriteForm(HttpSession session, Model model) {
         // 세션에서 사용자 정보 가져오기
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
        // MemberVo memberVo = new MemberVo();
         // 세션에 로그인 정보가 없는 경우
         if (member == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             model.addAttribute("msg","로그인 후 이용해주세요.");
-            model.addAttribute("redirectTo","/user_login_form");
+            model.addAttribute("redirectTo","/");
             return "review/review_alert";
         } else {
            // model.addAttribute("memberVo", memberVo);
@@ -46,20 +50,22 @@ public class ReviewController {
 
     // 게시글 작성
     @PostMapping("/review_insert")
-    public String saveReview(@RequestParam("title") String title,
-                            @RequestParam("content") String content,
-                            HttpSession session,
-                            HttpServletRequest request,
-                            Model model) {
+    public String saveReview(@RequestParam(value = "title") String title,
+                             @RequestParam(value = "content") String content,
+                             @RequestParam(value = "cseq", defaultValue = "0") int cseq,
+                             @RequestParam(value = "likes", defaultValue = "5.0") float likes,
+                             HttpSession session,
+                             HttpServletRequest request,
+                             Model model) {
 
         // 세션에서 사용자 정보 가져오기
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
         MemberVo memberVo = new MemberVo();
         // 세션에 로그인 정보가 없는 경우
         if (member == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             model.addAttribute("msg","로그인 후 이용해주세요.");
-            model.addAttribute("redirectTo","/user_login_form");
+            model.addAttribute("redirectTo","/");
             return "review/review_alert";
         }
 
@@ -72,6 +78,14 @@ public class ReviewController {
         }
         vo.setContent(content);
         vo.setMember(member); // 사용자 정보 설정
+
+        // 테스트를 위해 cseq 번호 부여
+        cseq = 1;
+
+        vo.setCamp(campService.getCampByCseq(cseq));
+        vo.setLikes(likes);
+        vo.setCount(0);
+
         model.addAttribute("memberVo", memberVo);
         reviewService.insertReview(vo);
 
@@ -93,13 +107,13 @@ public class ReviewController {
                                 HttpSession session) {
 
         // 세션에서 사용자 정보 가져오기
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
         // MemberVo memberVo = new MemberVo(member);
         // 세션에 로그인 정보가 없는 경우
         if (member == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             model.addAttribute("msg","로그인 후 이용해주세요.");
-            model.addAttribute("redirectTo","/user_login_form");
+            model.addAttribute("redirectTo","/");
             return "review/review_alert";
         }
 
@@ -144,13 +158,13 @@ public class ReviewController {
                                   HttpSession session, HttpServletRequest request) {
 
         // 세션에서 사용자 정보 가져오기
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
         // MemberVo memberVo = new MemberVo(member);
         // 세션에 로그인 정보가 없는 경우
         if (member == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             model.addAttribute("msg","로그인 후 이용해주세요.");
-            model.addAttribute("redirectTo","/user_login_form");
+            model.addAttribute("redirectTo","/");
             return "review/review_alert";
         }
 
@@ -197,13 +211,13 @@ public class ReviewController {
     public String reviewDetail(@PathVariable("vseq") int vseq, Model model, HttpSession session, HttpServletRequest request) {
 
         // 세션에서 사용자 정보 가져오기
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
         // MemberVo memberVo = new MemberVo(member);
         // 세션에 로그인 정보가 없는 경우
         if (member == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             model.addAttribute("msg","로그인 후 이용해주세요.");
-            model.addAttribute("redirectTo","/user_login_form");
+            model.addAttribute("redirectTo","/");
             return "review/review_alert";
         }
 
@@ -234,13 +248,13 @@ public class ReviewController {
                               Model model) {
 
         // 세션에서 사용자 정보 가져오기
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
         // MemberVo memberVo = new MemberVo(member);
         // 세션에 로그인 정보가 없는 경우
         if (member == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             model.addAttribute("msg","로그인 후 이용해주세요.");
-            model.addAttribute("redirectTo","/user_login_form");
+            model.addAttribute("redirectTo","/");
             return "review/review_alert";
         }
         // model.addAttribute("memberVo", memberVo);
@@ -257,13 +271,13 @@ public class ReviewController {
     public String reviewEditGo(@PathVariable("vseq") int vseq, Model model, HttpSession session, HttpServletRequest request) {
 
         // 세션에서 사용자 정보 가져오기
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
         // MemberVo memberVo = new MemberVo(member);
         // 세션에 로그인 정보가 없는 경우
         if (member == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             model.addAttribute("msg","로그인 후 이용해주세요.");
-            model.addAttribute("redirectTo","/user_login_form");
+            model.addAttribute("redirectTo","/");
             return "review/review_alert";
         }
 
@@ -286,13 +300,13 @@ public class ReviewController {
                             HttpSession session, HttpServletRequest request, Model model) {
 
         // 세션에서 사용자 정보 가져오기
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
         // MemberVo memberVo = new MemberVo(member);
         // 세션에 로그인 정보가 없는 경우
         if (member == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             model.addAttribute("msg","로그인 후 이용해주세요.");
-            model.addAttribute("redirectTo","/user_login_form");
+            model.addAttribute("redirectTo","/");
             return "review/review_alert";
         }
 
@@ -316,13 +330,13 @@ public class ReviewController {
                                 HttpSession session) {
 
         // 세션에서 사용자 정보 가져오기
-        Member member = (Member) session.getAttribute("loginMember");
+        Member member = (Member) session.getAttribute("loginUser");
         // MemberVo memberVo = new MemberVo(member);
         // 세션에 로그인 정보가 없는 경우
         if (member == null) {
             // 로그인 알림을 포함한 경고 메시지를 설정합니다.
             model.addAttribute("msg","로그인 후 이용해주세요.");
-            model.addAttribute("redirectTo","/user_login_form");
+            model.addAttribute("redirectTo","/");
             return "review/review_alert";
         }
 

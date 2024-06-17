@@ -34,20 +34,20 @@ public class ReviewCommentsController {
 		Map<String, Object> result = new HashMap<>();
 		System.out.println(1);
 		// 세션에서 사용자 정보 가져오기
-		Member member = (Member) session.getAttribute("loginMember");
+		Member member = (Member) session.getAttribute("loginUser");
 		int currentMember = member.getMseq();
 
 		// 댓글 목록 가져오기
 		List<ReviewComment> parentComments = reviewCommentService.getCommentList(vseq);
-		int[] parentCommentCseqArray = new int[parentComments.size()];
-		int[] parentCommentUseqArray = new int[parentComments.size()];
+		int[] parentCommentCmseqArray = new int[parentComments.size()];
+		int[] parentCommentMseqArray = new int[parentComments.size()];
 		String[] parentCommentMemberArray = new String[parentComments.size()];
 		String[] parentCommentContentArray = new String[parentComments.size()];
 		String[] parentCommentDateArray = new String[parentComments.size()];
 		
 		for (int i = 0 ; i < parentComments.size() ; i++) {
-			parentCommentCseqArray[i] = parentComments.get(i).getCmseq();
-			parentCommentUseqArray[i] = parentComments.get(i).getMember().getMseq();
+			parentCommentCmseqArray[i] = parentComments.get(i).getCmseq();
+			parentCommentMseqArray[i] = parentComments.get(i).getMember().getMseq();
 
 			// tmp_member 임시 땜빵
 			Member tmp_member = member;
@@ -61,8 +61,8 @@ public class ReviewCommentsController {
 		}
 		
 		
-		int[][] childComentCseqArray = new int[parentComments.size()][];
-		int[][] childCommentUseqArray = new int[parentComments.size()][];
+		int[][] childComentCmseqArray = new int[parentComments.size()][];
+		int[][] childCommentMseqArray = new int[parentComments.size()][];
 		String[][] childCommentMemberArray = new String[parentComments.size()][];
 		String[][] childCommentContentArray = new String[parentComments.size()][];
 		String[][] childCommentDateArray = new String[parentComments.size()][];
@@ -70,22 +70,22 @@ public class ReviewCommentsController {
 				
 		Map<Integer, List<ReviewComment>> commentsMap = new HashMap<>();
 		
-		int[] tmp_CseqArray = null;
-		int[] tmp_UseqArray = null;
+		int[] tmp_CmseqArray = null;
+		int[] tmp_MseqArray = null;
 		String[] tmp_MemberArray = null;
 		String[] tmp_ContentArray = null;
 		String[] tmp_DateArray = null;		
 		// 부모 댓글마다 대댓글 목록 가져오기
 		for (int i = 0 ; i < parentComments.size() ; i++) {
 			List<ReviewComment> replies = reviewCommentService.getReplyCommentList(parentComments.get(i).getCmseq());
-			tmp_CseqArray = new int[replies.size()];
-			tmp_UseqArray = new int[replies.size()];
+			tmp_CmseqArray = new int[replies.size()];
+			tmp_MseqArray = new int[replies.size()];
 			tmp_MemberArray = new String[replies.size()];
 			tmp_ContentArray = new String[replies.size()];
 			tmp_DateArray = new String[replies.size()];
 			for (int j = 0 ; j < replies.size(); j++) {
-				tmp_CseqArray[j] = replies.get(j).getCmseq();
-				tmp_UseqArray[j] = replies.get(j).getMember().getMseq();
+				tmp_CmseqArray[j] = replies.get(j).getCmseq();
+				tmp_MseqArray[j] = replies.get(j).getMember().getMseq();
 
 				// tmp_member 임시 땜빵
 				Member tmp_member = member;
@@ -97,8 +97,8 @@ public class ReviewCommentsController {
 				// date = date.substring(0, date.length()-4);
 				tmp_DateArray[j] = date;
 			}
-			childComentCseqArray[i] = tmp_CseqArray;
-			childCommentUseqArray[i] = tmp_UseqArray;
+			childComentCmseqArray[i] = tmp_CmseqArray;
+			childCommentMseqArray[i] = tmp_MseqArray;
 			childCommentMemberArray[i] = tmp_MemberArray;
 			childCommentContentArray[i] = tmp_ContentArray;
 			childCommentDateArray[i] = tmp_DateArray;			
@@ -112,13 +112,13 @@ public class ReviewCommentsController {
 
 		result.put("currentMember", currentMember);
 		result.put("commentCount", totalCommentCount); // 대댓글을 포함한 총 댓글 수를 전달
-		result.put("parentCommentCseqArray", parentCommentCseqArray);
-		result.put("parentCommentUseqArray", parentCommentUseqArray);
+		result.put("parentCommentCmseqArray", parentCommentCmseqArray);
+		result.put("parentCommentMseqArray", parentCommentMseqArray);
 		result.put("parentCommentMemberArray", parentCommentMemberArray);
 		result.put("parentCommentContentArray", parentCommentContentArray);
 		result.put("parentCommentDateArray", parentCommentDateArray);
-		result.put("childCommentCseqArray", childComentCseqArray);
-		result.put("childCommentUseqArray", childCommentUseqArray);
+		result.put("childCommentCmseqArray", childComentCmseqArray);
+		result.put("childCommentMseqArray", childCommentMseqArray);
 		result.put("childCommentMemberArray", childCommentMemberArray);
 		result.put("childCommentContentArray", childCommentContentArray);
 		result.put("childCommentDateArray", childCommentDateArray);
@@ -134,7 +134,7 @@ public class ReviewCommentsController {
 												 @RequestParam(value = "CommentContent", required = false) String content,
 												 HttpSession session) {
 		Map<String, Object> map = new HashMap<>();
-		Member member = (Member) session.getAttribute("loginMember");
+		Member member = (Member) session.getAttribute("loginUser");
 
 		if (member == null) { // 로그인 되어 있지 않음.
 			map.put("result", "not_logedin");
@@ -173,7 +173,7 @@ public class ReviewCommentsController {
 											   HttpSession session) {
 
 		Map<String, Object> map = new HashMap<>();
-		Member member = (Member) session.getAttribute("loginMember");
+		Member member = (Member) session.getAttribute("loginUser");
 
 		if (member == null) { // 로그인 되어 있지 않음.
 			map.put("result", "not_logedin");
