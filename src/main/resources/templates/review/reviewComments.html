@@ -20,7 +20,7 @@
                 </table>
             </div>
         </div>
-        <input type="hidden" id="vseq" name="vseq" th:value="${review.vseq}"/>
+        <input type="hidden" id="vseq" name="vseq" th:value="${reviewVo.review.vseq}"/>
     </form>
 </div>
 <div class="container">
@@ -41,7 +41,7 @@
 
 <script type="text/javascript">
 $(document).ready(function () {
-	 getCommentsAndCurrentMember();
+	getCommentsAndCurrentMember();
 });
 
     // getCommentsAndCurrentMember 함수 정의
