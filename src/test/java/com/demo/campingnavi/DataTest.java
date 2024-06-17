@@ -38,7 +38,7 @@ public class DataTest {
         memberRepository.save(m);
     }
 
-    @Disabled
+
     @Test
     public void CampInput () {
         String csvFile = "campingData.csv";
