@@ -62,7 +62,8 @@ public class SecurityConfig {
                         .failureHandler(
                                 (request, response, exception) -> {
                                     System.out.println("exception : " + exception.getMessage());
-                                    response.sendRedirect("/oauth-login/member/login");
+                                    request.setAttribute("msg", "로그인에 실패했습니다.");
+                                    request.getRequestDispatcher("/").forward(request, response);
                                 }
                         )
                         .permitAll()
