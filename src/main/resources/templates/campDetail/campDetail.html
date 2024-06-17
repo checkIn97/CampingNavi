@@ -264,11 +264,11 @@
                         </th:block>
                     </div>
                     <div class="userContent">
-                        <a th:href="@{'/review_detail/' + ${reviewVo.review.vseq}}"><span th:text="${reviewVo.review.title}"></span></a>
+                        <a th:href="@{'/review/detail/' + ${reviewVo.review.vseq}}"><span th:text="${reviewVo.review.title}"></span></a>
                     </div>
                 </div>
             </th:block>
-            <a th:href="@{/review_insert_form(cseq=${cseq})}"> <button>
+            <a th:href="@{/review/insert_form(cseq=${cseq})}"> <button>
                 <input name="reviewCseq" th:value="${cseq}" type="hidden"/>
                 리뷰작성하기
             </button></a>
