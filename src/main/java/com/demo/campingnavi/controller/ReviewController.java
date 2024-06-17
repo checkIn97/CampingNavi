@@ -1,5 +1,6 @@
 package com.demo.campingnavi.controller;
 
+import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.domain.Review;
 import com.demo.campingnavi.dto.MemberVo;
@@ -16,6 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 public class ReviewController {
 
@@ -31,7 +35,8 @@ public class ReviewController {
 
     //게시글 작성으로 이동
     @GetMapping("/review_insert_form")
-    public String showWriteForm(HttpSession session, Model model) {
+    public String showWriteForm(HttpSession session, Model model,
+                                @RequestParam(value="cseq", defaultValue="1") int cseq) {
         // 세션에서 사용자 정보 가져오기
         Member member = (Member) session.getAttribute("loginUser");
        // MemberVo memberVo = new MemberVo();
@@ -42,7 +47,8 @@ public class ReviewController {
             model.addAttribute("redirectTo","/");
             return "review/review_alert";
         } else {
-           // model.addAttribute("memberVo", memberVo);
+            Camp camp = campService.getCampByCseq(cseq);
+            model.addAttribute("camp", camp);
             return "review/reviewInsert"; //게시글 작성페이지로 이동.
         }
 
@@ -359,5 +365,71 @@ public class ReviewController {
     public ResponseEntity<String> unlikePost(@PathVariable("vseq") int vseq){
         reviewService.unlikePost(vseq);
         return ResponseEntity.ok("Liked");
+    }
+
+    @PostMapping("review_reloadRating")
+    @ResponseBody
+    public Map<String, Object> reloadRating(HttpSession session,
+                                            @RequestParam(value="current") float current,
+                                            @RequestParam(value="index") int index) {
+        Map<String, Object> result = new HashMap<>();
+        Member member = (Member) session.getAttribute("loginUser");
+        if (member != null) {
+            if (index == 1) {
+                if (current <= 0.0f) {
+                    current = 0.5f;
+                } else if (current == 0.5f) {
+                    current = 1.0f;
+                } else if (current == 1.0f) {
+                    current = 0.5f;
+                } else if (current > 1.0f) {
+                    current = 1.0f;
+                }
+            } else if (index == 2) {
+                if (current <= 1.0f) {
+                    current = 1.5f;
+                } else if (current == 1.5f) {
+                    current = 2.0f;
+                } else if (current == 2.0f) {
+                    current = 1.5f;
+                } else if (current > 2.0f) {
+                    current = 2.0f;
+                }
+            } else if (index == 3) {
+                if (current <= 2.0f) {
+                    current = 2.5f;
+                } else if (current == 2.5f) {
+                    current = 3.0f;
+                } else if (current == 3.0f) {
+                    current = 2.5f;
+                } else if (current > 3.0f) {
+                    current = 3.0f;
+                }
+            } else if (index == 4) {
+                if (current <= 3.0f) {
+                    current = 3.5f;
+                } else if (current == 3.5f) {
+                    current = 4.0f;
+                } else if (current == 4.0f) {
+                    current = 3.5f;
+                } else if (current > 4.0f) {
+                    current = 4.0f;
+                }
+            } else if (index == 5) {
+                if (current <= 4.0f) {
+                    current = 4.5f;
+                } else if (current == 4.5f) {
+                    current = 5.0f;
+                } else if (current == 5.0f) {
+                    current = 4.5f;
+                }
+            }
+            result.put("starScore", current);
+            result.put("result", "success");
+        } else {
+            result.put("result", "fail");
+        }
+
+        return result;
     }
 }
