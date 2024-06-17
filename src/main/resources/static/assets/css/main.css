@@ -542,7 +542,6 @@ table#searchList td {
 .saveLabel {
     width: fit-content;
     border: none;
-    background: none;
     height: fit-content;
     justify-content: center;
     display: flex;
@@ -550,6 +549,10 @@ table#searchList td {
     padding: 1px;
     margin-top: 2rem;
     margin-left: 1rem;
+}
+
+#saveLabel {
+    background-color: transparent;
 }
 
 .saveLabel:hover {
@@ -1179,4 +1182,14 @@ h1 {
 
 #esseBox {
     width: 54rem;
+}
+
+/*mtPage*/
+
+#myPageContainer {
+    width: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

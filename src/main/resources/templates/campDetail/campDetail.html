@@ -47,7 +47,7 @@
             <h1 class="campingName" th:text="${camp.facltNm}">캠핑장 이름이 들어가는 곳</h1>
             <!--찜하기 버튼-->
             <input class="saveInput" th:id="'saveBtn-' + ${cseq}" th:name="'saveBtn-' + ${cseq}" type="checkbox" th:checked="${jjimChecked}">
-            <label th:for="'saveBtn-' + ${cseq}" th:data-cseq="${cseq}" class="saveLabel">
+            <label th:for="'saveBtn-' + ${cseq}" th:data-cseq="${cseq}" class="saveLabel" id="saveLabel">
                 <img class="saveBtn saveBtnImg" th:src="${jjimChecked ? '/assets/images/icon/like-full.png' : '/assets/images/icon/like-empty.png'}">
             </label>
             <input id="campName" th:value="${camp.facltNm}" type="hidden"/>
