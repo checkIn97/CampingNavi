@@ -4,9 +4,7 @@ import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.domain.Review;
 import com.demo.campingnavi.domain.ReviewRecommend;
-import com.demo.campingnavi.dto.MemberVo;
-import com.demo.campingnavi.dto.ReviewScanVo;
-import com.demo.campingnavi.dto.ReviewVo;
+import com.demo.campingnavi.dto.*;
 import com.demo.campingnavi.service.CampService;
 import com.demo.campingnavi.service.ReviewCommentService;
 import com.demo.campingnavi.service.ReviewRecommendService;
@@ -20,11 +18,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/review")
 public class ReviewController {
 
     @Autowired
@@ -41,7 +41,7 @@ public class ReviewController {
 
 
     //게시글 작성으로 이동
-    @GetMapping("/review_insert_form")
+    @GetMapping("/insert_form")
     public String showWriteForm(HttpSession session, Model model,
                                 @RequestParam(value="cseq", defaultValue="1") int cseq) {
         // 세션에서 사용자 정보 가져오기
@@ -62,7 +62,7 @@ public class ReviewController {
     }
 
     // 게시글 작성
-    @PostMapping("/review_insert")
+    @PostMapping("/insert")
     public String saveReview(@RequestParam(value = "title") String title,
                              @RequestParam(value = "content") String content,
                              @RequestParam(value = "cseq", defaultValue = "0") int cseq,
@@ -104,7 +104,7 @@ public class ReviewController {
 
 
     // 게시글 리스트 보기
-    @GetMapping("/review_list")
+    @GetMapping("/list")
     public String showReviewList(Model model,
                                 @RequestParam(value = "page", defaultValue = "0") int page,
                                 @RequestParam(value = "size", defaultValue = "5") int size,
@@ -158,7 +158,7 @@ public class ReviewController {
     }
 
     // 게시글 상세보기
-    @GetMapping("/review_detail/{vseq}")
+    @GetMapping("/detail/{vseq}")
     public String reviewDetail(@PathVariable("vseq") int vseq, Model model, HttpSession session) {
 
         // 세션에서 사용자 정보 가져오기
@@ -193,7 +193,7 @@ public class ReviewController {
 
 
     // 게시글 삭제하기
-    @PostMapping("/review_delete/{vseq}")
+    @PostMapping("/delete/{vseq}")
     public String reviewDelete(@PathVariable("vseq") int vseq, HttpSession session, HttpServletRequest request,
                               Model model) {
 
@@ -217,7 +217,7 @@ public class ReviewController {
 
 
     // 게시글 수정화면으로 이동하기
-    @GetMapping("/review_edit_form/{vseq}")
+    @GetMapping("/edit_form/{vseq}")
     public String reviewEditGo(@PathVariable("vseq") int vseq, Model model, HttpSession session, HttpServletRequest request) {
 
         // 세션에서 사용자 정보 가져오기
@@ -241,7 +241,7 @@ public class ReviewController {
     }
 
     //게시글 수정하기
-    @PostMapping("/review_edit")
+    @PostMapping("/edit")
     public String reviewEdit(@RequestParam("title") String title,
                             @RequestParam("content") String content,
                             @RequestParam("vseq") int vseq,
@@ -274,7 +274,7 @@ public class ReviewController {
         return "redirect:/review_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
 
-    @GetMapping("/review_memberList/{mseq}")
+    @GetMapping("/memberList/{mseq}")
     public String showReviewList(Model model,
                                 @PathVariable(value = "mseq") int mseq,
                                 HttpSession session) {
@@ -293,25 +293,25 @@ public class ReviewController {
         model.addAttribute("authorList", reviewService.getAuthorReviewVoList(mseq));
         model.addAttribute("commentList", reviewCommentService.getCommentMemberList(mseq));
         // model.addAttribute("memberVo", memberVo);
-        return "reviewMemberList";
+        return "review/reviewMemberList";
     }
 
 
-    @PostMapping("review_like/{vseq}")
+    @PostMapping("/like/{vseq}")
     @ResponseBody
     public ResponseEntity<String> likePost(@PathVariable("vseq") int vseq) {
         reviewService.likePost(vseq);
         return ResponseEntity.ok("Liked");
     }
 
-    @PostMapping("review_unlike/{vseq}")
+    @PostMapping("/unlike/{vseq}")
     @ResponseBody
     public ResponseEntity<String> unlikePost(@PathVariable("vseq") int vseq){
         reviewService.unlikePost(vseq);
         return ResponseEntity.ok("Liked");
     }
 
-    @PostMapping("review_reloadRating")
+    @PostMapping("/reloadRating")
     @ResponseBody
     public Map<String, Object> reloadRating(HttpSession session,
                                             @RequestParam(value="current") float current,
@@ -369,6 +369,36 @@ public class ReviewController {
                 }
             }
             result.put("starScore", current);
+            result.put("result", "success");
+        } else {
+            result.put("result", "fail");
+        }
+
+        return result;
+    }
+
+    @PostMapping("/reloadList")
+    @ResponseBody
+    public Map<String, Object> reloadList(HttpSession session,
+                                          @RequestParam(value="page") int page,
+                                          @RequestParam(value="sortBy") String sortBy,
+                                          @RequestParam(value="sortDirection") String sortDirection) {
+        Map<String, Object> result = new HashMap<>();
+        Member member = (Member) session.getAttribute("loginUser");
+        if (member != null) {
+            ReviewScanVo reviewScanVo = (ReviewScanVo) session.getAttribute("reviewScanVo");
+            if (reviewScanVo.getPage() != page) {
+                reviewScanVo.setPage(page);
+                reviewScanVo.setSortBy(sortBy);
+                reviewScanVo.setSortDirection(sortDirection);
+            }
+
+            result.put("reviewVoList", reviewScanVo.getReviewVoList());
+            result.put("reviewVoBestList", reviewScanVo.getReviewVoBestList());
+            result.put("totalPages", reviewScanVo.getTotalPages());
+            result.put("page", reviewScanVo.getPage());
+            result.put("size", reviewScanVo.getSize());
+            result.put("pageMaxDisplay", reviewScanVo.getPageMaxDisplay());
             result.put("result", "success");
         } else {
             result.put("result", "fail");
