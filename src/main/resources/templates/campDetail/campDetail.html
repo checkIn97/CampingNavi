@@ -112,11 +112,15 @@
     </p>
 
     <div class="buttonContain" id="reviewGrade">
+        <th:block th:with="starScore=${starScore}">
         <img class="humanIcon" src="/assets/images/icon/human.png">
-        <span>평점이 들어가는곳(소수점 1자리까지)</span><span>리뷰수(000개의 후기)</span>
+        <span th:text="${starScore}"></span><span>리뷰수(000개의 후기)</span>
+        </th:block>
     </div>
     <div class="buttonContain" th:each="camp : ${camps}">
-        <button class="mainBtn" th:data-url="${camp.homepage}" id="reservationBtn" type="button" target="_blank">예약하기</button>
+        <span th:if="${not #strings.isEmpty(camp.resveUrl)}">
+        <button class="mainBtn" th:data-url="${camp.resveUrl}" id="reservationBtn" type="button" target="_blank">예약하기</button>
+        </span>
         <button id="goingBtn" type="button">커뮤니티</button>
     </div>
     <div class="buttonContain" id="detailContain">
@@ -127,25 +131,31 @@
     </div>
 
     <div id="campDetail" th:each="camp : ${camps}">
-        <h2 class="major">소개</h2>
-        <span class="detailContent">
-        <span th:text="${camp.intro}"></span>
+        <span th:if="${not #strings.isEmpty(camp.intro)}">
+            <h2 class="major">소개</h2>
+            <span class="detailContent">
+            <span th:text="${camp.intro}"></span>
+            </span>
         </span>
 
         <h2 class="major">위치</h2>
         <span class="detailContent"></span>
         <span th:text="${camp.addr1} + ${camp.addr2}"/>
+
         <div id="staticMap" style="width:800px;height:500px;margin: 10px"></div>
 
+
+        <span th:if="${not #strings.isEmpty(camp.tel)}">
         <h2 class="major">전화번호</h2>
         <span class="detailContent">
         <span th:text="${camp.tel}"></span>
-    </span>
+        </span></span>
 
+        <span th:if="${not #strings.isEmpty(camp.homepage)}">
         <h2 class="major">홈페이지</h2>
         <span class="detailContent">
         <a target="_blank" th:href="${camp.homepage}" th:text="${camp.homepage}"></a>
-    </span>
+        </span></span>
 
         <h2 class="major">편의시설</h2>
         <div id="detailIcon">
@@ -190,27 +200,83 @@
     </div>
 
     <div id="review">
-        <div class="userReview">
-            <div class="userName">
-                <!--                <img alt="userIcon" class="userIcon" src="/assets/images/icon/user.png">-->
-                <span>사용자 이름 들어가는 곳</span>
-                <span class="userDate">작성일자 들어가는 곳 (2024년 6월) 월 까지만</span>
-            </div>
-            <div class="userGrade">
-                <span>평점 들어가는 곳(별로 표시)</span>
-            </div>
-            <div class="userContent">
-                <span>리뷰 내용 들어가는 곳</span>
-            </div>
-            <!-- 서버로부터 전달된 mapX, mapY 값을 받을 수 있는 공간 (화면에 보이지 않음) -->
-            <div style="display: none;">
-                <input id="LoMapX" th:value="${mapX}" type="hidden"/>
-                <input id="LoMapY" th:value="${mapY}" type="hidden"/>
+        <div th:if="${!#lists.isEmpty(reviewList)}">
+            <th:block th:each="review : ${reviewList}">
+                <div class="userReview">
+                    <div class="userName">
+                        <!--                <img alt="userIcon" class="userIcon" src="/assets/images/icon/user.png">-->
+                        <span th:text="${review.member.nickname}"></span>
+                        <span class="userDate" th:text="${#dates.format(review.createdAt, 'yyyy-MM-dd')}"></span>
+                    </div>
 
-            </div>
+                    <div class="userGrade">
+                        <th:block th:if="${review.likes < 0.5}">
+                            <img class="star" src="/assets/images/icon/star-empty.png" alt="star-empty">
+                        </th:block>
+                        <th:block th:if="${review.likes >= 0.5 and review.likes < 1.0}">
+                            <img class="star" src="/assets/images/icon/star-half.png" alt="star-half">
+                        </th:block>
+                        <th:block th:if="${review.likes >= 1.0}">
+                            <img class="star" src="/assets/images/icon/star-full.png" alt="star-full">
+                        </th:block>
+
+                        <th:block th:if="${review.likes < 1.5}">
+                            <img class="star" src="/assets/images/icon/star-empty.png" alt="star-empty">
+                        </th:block>
+                        <th:block th:if="${review.likes >= 1.5 and review.likes < 2.0}">
+                            <img class="star" src="/assets/images/icon/star-half.png" alt="star-half">
+                        </th:block>
+                        <th:block th:if="${review.likes >= 2.0}">
+                            <img class="star" src="/assets/images/icon/star-full.png" alt="star-full">
+                        </th:block>
+
+                        <th:block th:if="${review.likes < 2.5}">
+                            <img class="star" src="/assets/images/icon/star-empty.png" alt="star-empty">
+                        </th:block>
+                        <th:block th:if="${review.likes >= 2.5 and review.likes < 3.0}">
+                            <img class="star" src="/assets/images/icon/star-half.png" alt="star-half">
+                        </th:block>
+                        <th:block th:if="${review.likes >= 3.0}">
+                            <img class="star" src="/assets/images/icon/star-full.png" alt="star-full">
+                        </th:block>
+
+                        <th:block th:if="${review.likes < 3.5}">
+                            <img class="star" src="/assets/images/icon/star-empty.png" alt="star-empty">
+                        </th:block>
+                        <th:block th:if="${review.likes >= 3.5 and review.likes < 4.0}">
+                            <img class="star" src="/assets/images/icon/star-half.png" alt="star-half">
+                        </th:block>
+                        <th:block th:if="${review.likes >= 4.0}">
+                            <img class="star" src="/assets/images/icon/star-full.png" alt="star-full">
+                        </th:block>
+
+                        <th:block th:if="${review.likes < 4.5}">
+                            <img class="star" src="/assets/images/icon/star-empty.png" alt="star-empty">
+                        </th:block>
+                        <th:block th:if="${review.likes >= 4.5 and review.likes < 5.0}">
+                            <img class="star" src="/assets/images/icon/star-half.png" alt="star-half">
+                        </th:block>
+                        <th:block th:if="${review.likes >= 5.0}">
+                            <img class="star" src="/assets/images/icon/star-full.png" alt="star-full">
+                        </th:block>
+                    </div>
+                    <div class="userContent">
+                        <a th:href="@{'/review_detail/' + ${review.vseq}}"><span th:text="${review.title}"></span></a>
+                    </div>
+                    <!-- 서버로부터 전달된 mapX, mapY 값을 받을 수 있는 공간 (화면에 보이지 않음) -->
+                   <a href="/review_insert_form"> <button>
+                        <input id="LoMapX" th:value="${mapX}" type="hidden"/>
+                        <input id="LoMapY" th:value="${mapY}" type="hidden"/>
+                        <input id="reviewCseq" th:value="${cseq}" type="hidden"/>
+                        리뷰작성하기
+                    </button></a>
+                </div>
+            </th:block>
+        </div>
+        <div th:if="${#lists.isEmpty(reviewList)}">
+            <p>등록된 리뷰가 없습니다.</p>
         </div>
     </div>
-</div>
 
 <th:block th:insert="insert/footer.html"></th:block>
 <!-- 찜하기 기능 스크립트 -->
