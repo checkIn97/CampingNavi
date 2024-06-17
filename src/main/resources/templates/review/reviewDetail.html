@@ -59,10 +59,10 @@
                 <div class="btn-group">
                     <!-- 작성자만 수정 및 삭제 버튼을 볼 수 있도록 -->
                     <a th:if="${isAuthor}"
-                       th:href="@{'/review_edit_form/' + ${reviewVo.review.vseq}}"
+                       th:href="@{'/review/edit_form/' + ${reviewVo.review.vseq}}"
                        class="button">수정하기</a>
                     <form th:if="${isAuthor}"
-                          th:action="@{'/review_delete/' + ${reviewVo.review.vseq}}" method="post">
+                          th:action="@{'/review/delete/' + ${reviewVo.review.vseq}}" method="post">
                         <button type="submit" class="button" onclick="return confirmDelete()">삭제하기</button>
                     </form>
 
@@ -89,7 +89,7 @@
 
 
             <div th:each="author, iterStat : ${authorList}" th:if="${iterStat.index < 3}">
-                    <a class="nextContent" th:href="@{'/review_detail/' + ${author.review.vseq}}" th:text="${author.review.title}"></a>
+                    <a class="nextContent" th:href="@{'/review/detail/' + ${author.review.vseq}}" th:text="${author.review.title}"></a>
                     <input type="hidden" id="vseq" name="vseq" th:value="${author.review.vseq}" />
             </div>
     </div>
@@ -108,7 +108,7 @@
             // 추천을 추가합니다.
             $.ajax({
                 type: "POST",
-                url: "/review_like/" + vseq,
+                url: "/review/like/" + vseq,
                 success: function (response) {
                     likeCount++;
                     $("#likeCount").text(likeCount);

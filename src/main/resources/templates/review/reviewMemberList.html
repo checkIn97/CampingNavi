@@ -7,7 +7,7 @@
 
 <article id="box">
 
-    <h3><span th:text="${authorList[0].member.nickname}"></span>님의 게시글 목록</h3>
+    <h3><span th:text="${authorList[0].review.member.nickname}"></span>님의 게시글 목록</h3>
     <table>
         <thead>
         <tr>
@@ -18,25 +18,25 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="review : ${authorList}">
+        <tr th:each="reviewVo : ${authorList}">
             <td>
                 <div class="review_list">
-                    <a th:href="@{'/review_detail/' + ${review.vseq}}"
-                       th:text="${review.title + ' ' + '[' + '전체 댓글수 표시' + ']'}"></a><!-- 댓글 수 출력 -->
+                    <a th:href="@{'/review/detail/' + ${reviewVo.review.vseq}}"
+                       th:text="${reviewVo.review.title + ' ' + '[' + '전체 댓글수 표시' + ']'}"></a><!-- 댓글 수 출력 -->
                 </div>
                 <input type="hidden" id="vseq"
-                       name="vseq" th:value="${review.vseq}"/></td>
-            <td th:text="${review.member.username}"></td>
+                       name="vseq" th:value="${reviewVo.review.vseq}"/></td>
+            <td th:text="${reviewVo.review.member.username}"></td>
             <td
-                    th:text="${#dates.format(review.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-            <td th:text="${review.count}"></td>
+                    th:text="${#dates.format(reviewVo.review.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${reviewVo.review.count}"></td>
         </tr>
 
 
         </tbody>
     </table>
 
-    <h3><span th:text="${authorList[0].member.nickname}"></span>님의 댓글 목록</h3>
+    <h3><span th:text="${authorList[0].review.member.nickname}"></span>님의 댓글 목록</h3>
     <table>
         <thead>
         <tr>
@@ -48,7 +48,7 @@
         <tr th:each="comment : ${commentList}">
             <td>
                 <div class="review_list">
-                    <a th:href="@{'/review_detail/' + ${comment.review.vseq}}" th:text="${comment.content}"></a>
+                    <a th:href="@{'/review/detail/' + ${comment.review.vseq}}" th:text="${comment.content}"></a>
                 </div>
             <td th:text="${#dates.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
@@ -57,10 +57,10 @@
         </tbody>
     </table>
 
-    <button onclick="window.location.href='/review_insert_form'" class="button">새로운
+    <button onclick="window.location.href='/review/insert_form'" class="button">새로운
         글 작성
     </button>
-    <button onclick="window.location.href='/review_list'" class="button">리스트로 돌아가기
+    <button onclick="window.location.href='/review/list'" class="button">리스트로 돌아가기
     </button>
 
 </article>

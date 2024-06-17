@@ -50,7 +50,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'GET',
-            url: '/review_detail/list',
+            url: '/review/comment/list',
             dataType: 'json',
             data: {vseq: vseq},
             success: function (data) {
@@ -181,7 +181,7 @@ function showHTML(loginMember, vseq, commentCount, parentCommentCmseqArray, pare
     	    // 댓글 등록 요청
     	    $.ajax({
     	        type: 'POST',
-    	        url: '/review_detail/save',
+    	        url: '/review/comment/save',
     	        dataType: 'json',
     	        data: $("#commentForm").serialize(),
     	        success: function(data) {
@@ -216,7 +216,7 @@ function save_reply(cmseq, vseq) {
     // 대댓글 등록 요청
     $.ajax({
         type: 'POST',
-        url: '/review_detail/rplSave',
+        url: '/review/comment/rplSave',
         dataType: 'json',
         data: formData, // 데이터 전송
         success: function(data) {
@@ -242,7 +242,7 @@ function deleteComment(cmseq, loginMember) {
     if (confirm("댓글을 삭제하시겠습니까?")) {
         $.ajax({
             type: 'POST',
-            url: '/review_detail/delete',
+            url: '/review/comment/delete',
             dataType: 'json',
             data: {
                 cmseq: cmseq,
