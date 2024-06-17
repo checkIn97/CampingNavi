@@ -91,10 +91,10 @@
     var imageSize = new kakao.maps.Size(24, 35);
     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
+
     $(document).ready(function() {
         reloadList(1, "score", "DESC", true);
     });
-
 
     function reloadList(page, sortBy, sortDirection, mapRefresh) {
         $.ajax({

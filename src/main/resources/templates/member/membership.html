@@ -57,87 +57,127 @@
     function validatePW() {
         var op = $("#originpw").val();
         var cp = $("#pwcheck").val();
-        if(op===cp) {
-            alert("비밀번호가 일치합니다.");
-            $('#submitBtn').prop('disabled', false);
+        var hp = $("#hiddenPw").val();
+        const pwPattern = /^.{2,}$/;
+        if (pwPattern.test(op)) {
+            if(op===cp) {
+                $("#hiddenPw").val(op);
+                alert("비밀번호가 일치합니다.");
+                $('#submitBtn').prop('disabled', false);
+            } else {
+                alert("비밀번호가 일치하지 않습니다.");
+                $("#pwcheck").val("");
+                $('#submitBtn').prop('disabled', true);
+                $("#originpw").focus();
+            }
         } else {
-            alert("비밀번호가 일치하지 않습니다.");
-            $("#pwcheck").val("");
-            $('#submitBtn').prop('disabled', true);
-            op.focus();
+            alert("비밀번호는 8자 이상이어야 합니다.");
+            $("#originpw").focus();
         }
+
     }
 
     function validateId() {
         var username = $("#userId").val();
+        var hi = $("#hiddenId").val();
+        const usernamePattern = /^.{2,}$/;
 
-        $.ajax({
-            type: 'POST',
-            url: '/member/validateUser',
-            data: {
-                username: username
-            },
-            success: function(data) {
-                var result = data.result;
-                if(result === "success") {
-                    alert("사용 가능한 아이디 입니다.")
-                    $('#submitBtn').prop('disabled', false);
-                } else {
-                    alert("이미 존재하는 아이디 입니다.")
-                    $('#submitBtn').prop('disabled', true);
-                    $("#userId").focus()
+        if (usernamePattern.test(username)) {
+            $.ajax({
+                type: 'POST',
+                url: '/member/validateUser',
+                data: {
+                    username: username
+                },
+                success: function(data) {
+                    $("#hiddenId").val(username);
+                    var result = data.result;
+                    if(result === "success") {
+                        alert("사용 가능한 아이디 입니다.")
+                        $('#submitBtn').prop('disabled', false);
+                    } else {
+                        alert("이미 존재하는 아이디 입니다.")
+                        $('#submitBtn').prop('disabled', true);
+                        $("#userId").focus()
+                    }
+
+                },
+                error: function (error) {
+                    alert("전송 실패")
                 }
+            });
+        } else {
+            alert("아이디는 6글자 이상 입력해주세요.");
+            $("#userId").focus();
+        }
 
-            },
-            error: function (error) {
-                alert("전송 실패")
-            }
-        })
     }
 
     function validateNickname() {
         var nickname = $("#nickname").val();
+        var hn = $("#hiddenNickname").val();
+        const nicknamePattern = /^.{2,}$/;
 
-        $.ajax({
-            type: 'POST',
-            url: '/member/validateNickname',
-            data: {
-                nickname: nickname
-            },
-            success: function(data) {
-                var result = data.result;
-                if(result === "success") {
-                    alert("사용 가능한 닉네임 입니다.")
-                    $('#submitBtn').prop('disabled', false);
-                } else {
-                    alert("이미 존재하는 닉네임 입니다.")
-                    $('#submitBtn').prop('disabled', true);
-                    $("#nickname").focus()
+        if (nicknamePattern.test(nickname)) {
+            $.ajax({
+                type: 'POST',
+                url: '/member/validateNickname',
+                data: {
+                    nickname: nickname
+                },
+                success: function(data) {
+                    var result = data.result;
+                    if(result === "success") {
+                        $("#hiddenNickname").val(nickname);
+                        alert("사용 가능한 닉네임 입니다.")
+                        $('#submitBtn').prop('disabled', false);
+                    } else {
+                        alert("이미 존재하는 닉네임 입니다.")
+                        $('#submitBtn').prop('disabled', true);
+                        $("#nickname").focus()
+                    }
+
+                },
+                error: function (error) {
+                    alert("전송 실패")
                 }
+            });
+        } else {
+            alert("닉네임은 2글자 이상만 가능합니다.");
+            $("#nickname").focus();
+        }
 
-            },
-            error: function (error) {
-                alert("전송 실패")
-            }
-        })
+
+    }
+
+    function validateEmail(email) {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
     }
 
     function sendNumber() {
-        $.ajax({
-            url: "/mailSend",
-            type: "POST",
-            dataType: "json",
-            data: {
-                mail : $("#email").val()
-            },
-            success: function (data) {
-                alert("인증번호 발송");
-                openModal(); // 모달 창 열기
-            },
-            error: function (error) {
-                alert("인증번호 전송실패");
-            }
-        });
+        var email = $("#email").val();
+        if (validateEmail(email)) {
+            $.ajax({
+                url: "/mailSend",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    mail : $("#email").val()
+                },
+                success: function (data) {
+                    $("#hiddenEmail").val(email);
+                    alert("인증번호 발송");
+                    openModal(); // 모달 창 열기
+                },
+                error: function (error) {
+                    alert("인증번호 전송실패");
+                }
+            });
+        } else {
+            alert("존재하지 않는 이메일 형식입니다.");
+        }
+
     }
 
     // 모달 열기
@@ -221,28 +261,41 @@
         var phone = $("#phone").val();
         var email = $("#email").val();
         var addr = $("#addr").val();
+        const phonePattern = /^(01[016789])-(\d{3,4})-(\d{4})$/;
 
         if (username == "") {
             alert("아이디를 입력해주세요!");
             $("#userId").focus();
+        } else if ($("#hiddenId").val() != username) {
+            alert("아이디 중복확인을 진행해주세요!");
+            $("#userId").focus();
         } else if (password == "") {
             alert("비밀번호를 입력해주세요!");
             $("#originpw").focus();
-        } else if (name == "") {
+        } else if ($("#hiddenPw").val() != password) {
+            alert("비밀번호 일치 여부를 확인해주세요!");
+            $("#originpw").focus();
+        }else if (name == "") {
             alert("이름을 입력해주세요!");
-            $("#name").focus()
+            $("#name").focus();
         } else if (nickname == "") {
             alert("사이트에서 사용할 닉네임을 입력해주세요!");
-            $("#nickname").focus()
+            $("#nickname").focus();
+        } else if ($("#hiddenNickname").val() != nickname) {
+            alert("닉네임 중복확인을 해주세요!");
+            $("#nickname").focus();
         } else if (birth == "") {
             alert("생일을 입력해주세요!");
-        } else if (phone == "") {
-            alert("전화번호를 입력해주세요!");
-            $("#phone").focus()
+        } else if (!phonePattern.test(phone)) {
+            alert("유효하지 않은 휴대전화번호입니다!");
+            $("#phone").focus();
         } else if (email == "") {
             alert("이메일을 입력해주세요!");
-            $("#email").focus()
-        } else if (addr == ""){
+            $("#email").focus();
+        } else if ($("#hiddenEmail").val() != email) {
+            alert("이메일 인증을 진행해주세요!");
+            $("#email").focus();
+        } else if (addr == "" || addr.length < 10){
             alert("주소를 입력해주세요!");
             $("#addr").focus();
         } else {
@@ -259,6 +312,7 @@
         <form action="/member/joinProc" method="post" name="joinForm" id="joinForm">
             <div class="memberContain">
                 <input placeholder="아이디" type="text" name="username" id="userId">
+                <input type="hidden" id="hiddenId">
                 <button type="button" onclick="validateId()">id 중복 확인</button>
             </div>
 
@@ -266,8 +320,9 @@
                 <div class="buttonContain">
                     <input placeholder="비밀번호" type="password" name="pw" id="originpw">
                     <input placeholder="비밀번호 확인" type="password" id="pwcheck">
+                    <input type="hidden" id="hiddenPw">
                 </div>
-                <button type="button" onclick="validatePW()">비밀번호 중복 확인</button>
+                <button type="button" onclick="validatePW()">비밀번호 일치 확인</button>
             </div>
 
             <div class="memberContain">
@@ -281,6 +336,7 @@
 
             <div class="memberContain">
                 <input placeholder="닉네임" type="text" name="nickname" id="nickname">
+                <input type="hidden" id="hiddenNickname">
                 <button type="button" onclick="validateNickname()">닉네임 중복 확인</button>
             </div>
 
@@ -289,12 +345,13 @@
             </div>
 
             <div class="memberContain">
-                <input placeholder="전화번호" type="tel" name="phone" id="phone">
+                <input placeholder="휴대전화번호 예) 010-1234-5678" type="tel" name="phone" id="phone">
                 <!--<button type="button">핸드폰 번호 인증</button>-->
             </div>
 
             <div class="memberContain">
-                <input placeholder="이메일" type="email" name="email" id="email">
+                <input placeholder="이메일 예) email@email.com" type="email" name="email" id="email">
+                <input type="hidden" id="hiddenEmail">
                 <button type="button" onclick="sendNumber()">이메일 인증</button>
             </div>
 
@@ -314,7 +371,7 @@
 <!-- 모달 창 -->
 <div id="verificationModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
+        <span class="close" onclick="closeModal()">&times;</span>
         <p>인증번호를 입력하세요:</p>
         <input type="text" id="verificationCodeInput">
         <button onclick="checkVerificationCode()">확인</button>

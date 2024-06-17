@@ -1,7 +1,7 @@
 <div class="header" xmlns="http://www.w3.org/1999/html">
     <div class="box" id="headerBox">
 
-        <div><img alt="logo" class="logo" src="/assets/images/logo/typo.png"></div>
+        <div><img alt="logo" class="logo" src="/assets/images/logo/typo.png" onclick="goMain()"></div>
 
         <div class="headerCategory" id="headerCampingBtn">Camping</div>
         <div class="headerCategory" id="headerCommunityBtn">Community</div>
@@ -145,5 +145,9 @@ for (var i = 0; i < headerVals.length; i++) {
         this.style.fontWeight = '';
         this.style.fontSize = '';
     });
+}
+
+function goMain() {
+    location.href = "/main"
 }
 </script>
