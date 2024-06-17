@@ -34,5 +34,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     @Query("SELECT r FROM Review r WHERE r.member.mseq = ?1 ORDER BY r.createdAt DESC")
     List<Review> findAuthorList(int mseq);
 
+    @Query("SELECT r From Review r WHERE r.camp.cseq = ?1 ORDER BY r.createdAt DESC")
+    List<Review> findCampReviewList(int cseq);
 
 }

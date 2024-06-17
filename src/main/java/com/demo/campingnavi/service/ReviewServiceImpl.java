@@ -71,6 +71,11 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewRepo.save(review);
 	}
 
+	@Override
+	public List<Review> getReviewListByCseq(int cseq) {
+		return reviewRepo.findCampReviewList(cseq);
+	}
+
 
 	@Override
 	public Page<Review> findReviewList(ReviewScanVo reviewScanVo, int page, int size) {

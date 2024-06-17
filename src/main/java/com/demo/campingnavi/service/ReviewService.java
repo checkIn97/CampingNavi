@@ -29,4 +29,5 @@ public interface ReviewService {
 
 	void unlikePost(int vseq);
 
+	List<Review> getReviewListByCseq(int cseq);
 }
