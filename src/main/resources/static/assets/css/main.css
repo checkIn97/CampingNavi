@@ -77,6 +77,10 @@ li {
     list-style-type: none;
 }
 
+.webkit {
+    width: -webkit-fill-available;
+}
+
 /*header*/
 
 .header {
@@ -1380,4 +1384,20 @@ h1 {
 
 #nickname {
     width: 7rem !important;
+}
+
+#reviewCseq {
+    padding: 0.5rem !important;
+}
+
+.userReview .userName {
+    float: right;
+}
+
+.userReview {
+    margin: 3rem;
+}
+
+.userName {
+    margin-bottom: 1rem;
 }

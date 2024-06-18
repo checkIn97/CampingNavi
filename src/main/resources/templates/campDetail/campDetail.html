@@ -117,10 +117,8 @@
         <span th:text="${starScore}"></span><span>리뷰수(000개의 후기)</span>
         </th:block>
     </div>
-    <div class="buttonContain" th:each="camp : ${camps}">
-        <span th:if="${not #strings.isEmpty(camp.resveUrl)}">
+    <div class="buttonContain" th:each="camp : ${camps}" th:if="${not #strings.isEmpty(camp.resveUrl)}" >
         <button class="mainBtn" th:data-url="${camp.resveUrl}" id="reservationBtn" type="button" target="_blank">예약하기</button>
-        </span>
         <button id="goingBtn" type="button">커뮤니티</button>
     </div>
     <div class="buttonContain" id="detailContain">
@@ -203,6 +201,10 @@
     <input id="LoMapY" th:value="${mapY}" type="hidden"/>
 
     <div id="review">
+        <a th:href="@{/review/insert_form(cseq=${cseq})}"> <button class="webkit" id="reviewCseq">
+            <input name="reviewCseq" th:value="${cseq}" type="hidden"/>
+            리뷰작성하기
+        </button></a>
         <div th:if="${!#lists.isEmpty(reviewVoList)}">
             <th:block th:each="reviewVo : ${reviewVoList}">
                 <div class="userReview">
@@ -264,21 +266,18 @@
                         </th:block>
                     </div>
                     <div class="userContent">
-                        <a th:href="@{'/review/detail/' + ${reviewVo.review.vseq}}"><span th:text="${reviewVo.review.title}"></span></a>
+                        <a th:href="@{'/review/detail/' + ${reviewVo.review.vseq}}"><span th:text="${#strings.abbreviate(reviewVo.review.title, 100)}"></span></a>
                     </div>
+                    <hr class="userReviewBlock">
                 </div>
             </th:block>
-            <a th:href="@{/review/insert_form(cseq=${cseq})}"> <button>
-                <input name="reviewCseq" th:value="${cseq}" type="hidden"/>
-                리뷰작성하기
-            </button></a>
         </div>
         <div th:if="${#lists.isEmpty(reviewVoList)}">
-            <p>등록된 리뷰가 없습니다.</p>
             <a th:href="@{/review/insert_form(cseq=${cseq})}"> <button>
                 <input name="reviewCseq" th:value="${cseq}" type="hidden"/>
                 리뷰작성하기
             </button></a>
+            <p>등록된 리뷰가 없습니다.</p>
 
         </div>
     </div>
