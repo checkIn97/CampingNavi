@@ -1,50 +1,39 @@
 package com.demo.campingnavi.controller;
 
-import com.google.gson.JsonObject;
-import org.apache.commons.io.FileUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Objects;
 import java.util.UUID;
-
 
 @RestController
 public class FileManageController {
 
-    @PostMapping(value="/uploadSummernoteImageFile", produces = "application/json")
-    @ResponseBody
-    public JsonObject uploadSummernoteImageFile(@RequestParam("file") MultipartFile multipartFile) {
+    //본인 프로젝트 절대경로 입력
+    private static final String FILE_UPLOAD_PATH = "C:\\Users\\602-01\\IdeaProjects\\CampingNavi\\src\\main\\resources\\static\\upload\\";
 
-        JsonObject jsonObject = new JsonObject();
-
-        String fileRoot = "/uploadImages/";	//각자 프로젝트내의 저장될 파일 경로
-        String originalFileName = multipartFile.getOriginalFilename();	//오리지날 파일명
-        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));	//파일 확장자
-
-        // 랜덤 UUID+확장자로 저장될 savedFileName
+    @PostMapping("/uploadSummernoteImageFile")
+    public ResponseEntity<?> uploadSummernoteImageFile(@RequestParam("file") MultipartFile multipartFile) {
+        String originalFileName = multipartFile.getOriginalFilename();
+        String extension = Objects.requireNonNull(originalFileName).substring(originalFileName.lastIndexOf("."));
         String savedFileName = UUID.randomUUID() + extension;
 
-        File targetFile = new File(fileRoot + savedFileName);
-
         try {
-            InputStream fileStream = multipartFile.getInputStream();
-            FileUtils.copyInputStreamToFile(fileStream, targetFile);	//파일 저장
-            jsonObject.addProperty("url", "/uploadImages/"+savedFileName);
-            jsonObject.addProperty("responseCode", "success");
+            File file = new File(FILE_UPLOAD_PATH + savedFileName);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(multipartFile.getBytes());
+            fos.close();
 
+            String fileUrl = "/upload/" + savedFileName;
+            return ResponseEntity.ok().body(fileUrl);
         } catch (IOException e) {
-            FileUtils.deleteQuietly(targetFile);	// 실패시 저장된 파일 삭제
-            jsonObject.addProperty("responseCode", "error");
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image");
         }
-
-        return jsonObject;
     }
-
 }

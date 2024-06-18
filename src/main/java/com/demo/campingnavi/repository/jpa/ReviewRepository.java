@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
-    Page<Review> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    List<Review> findAllByOrderByCreatedAtDesc();
 
     @Modifying
     @Query("update Review r set r.count = r.count+1 where r.vseq = :vseq")
@@ -20,13 +20,13 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     @Query("SELECT r FROM Review r "
             + "WHERE r.title LIKE %:title% "
             + "or r.content LIKE %:content% OR r.content IS NULL ")
-    Page<Review> findReviewList(String title, String content, Pageable pageable);
+    List<Review> findReviewList(String title, String content);
 
-    Page<Review> findByTitleContaining(String title, Pageable pageable);
+    List<Review> findByTitleContaining(String title);
 
-    Page<Review> findByMemberUsername(String username, Pageable pageable);
+    List<Review> findByMemberUsername(String username);
 
-    Page<Review> findByContentContaining(String writer, Pageable pageable);
+    List<Review> findByContentContaining(String writer);
 
     @Query("SELECT r FROM Review r ORDER BY r.count DESC")
     List<Review> findBestList();
@@ -34,5 +34,9 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     @Query("SELECT r FROM Review r WHERE r.member.mseq = ?1 ORDER BY r.createdAt DESC")
     List<Review> findAuthorList(int mseq);
 
+    @Query("SELECT r From Review r WHERE r.camp.cseq = ?1 ORDER BY r.createdAt DESC")
+    List<Review> findCampReviewList(int cseq);
+
+    Review findFirstByOrderByVseqDesc();
 
 }

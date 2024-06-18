@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="/assets/css/main.css" rel="stylesheet"/>
     <link href="/assets/css/bg/mainBG.css" rel="stylesheet"/>
     <title>CampNavi</title>
@@ -149,6 +150,48 @@
     <div class="buttonContain">
         <button class="mainBtn" id="myPageChange" type="button">수정하기</button>
         <button class="mainBtn" id="myPageRead" type="button">수정완료</button>
+<div>
+    <h3>마이페이지</h3>
+    <hr>
+</div>
+    <div>
+    <table>
+        <tr>
+            <th>이름</th>
+            <th>아이디</th>
+            <th>닉네임</th>
+            <th>로그인 구분</th>
+        </tr>
+        <tr>
+            <td><input type="text" th:value="${member.name}" readonly/></td>
+            <td><input type="text" th:value="${member.username}" readonly/></td>
+            <td><input type="text" th:value="${member.nickname}" readonly/></td>
+            <td><input type="text" th:value="${member.provider != null ? member.provider : 'campingnavi'}"  readonly/></td>
+        </tr>
+        <tr>
+            <th>성별</th>
+            <th>생년월일</th>
+            <th>전화번호</th>
+            <th>이메일</th>
+        </tr>
+        <tr>
+            <td><input type="text" th:value="${member.sex == 'm' ? '남' : (member.sex == 'f' ? '여' : '성별을 입력해주세요.')}" readonly/></td>
+            <td><input type="text" th:value="${member.birth != null ? member.birth : '생년월일을 입력해주세요.'}" readonly/></td>
+            <td><input type="text" th:value="${member.phone != null ? member.phone : '전화번호를 입력해주세요.'}" readonly/></td>
+            <td><input type="text" th:value="${member.email}" readonly/></td>
+        </tr>
+        <tr>
+            <th>도로명주소</th>
+            <th>상세주소</th>
+        </tr>
+        <tr>
+            <td><input type="text" th:value="${member.addr1 != null ? member.addr1 : '도로명주소를 입력해주세요.'}" readonly/></td>
+            <td><input type="text" th:value="${member.addr2 != null ? member.addr2 : '상세주소를 입력해주세요.'}" readonly/></td>
+        </tr>
+    </table>
+        <!-- 페이징처리 끝 -->
+        <button type="button" onclick="editMypage()">수정</button>
+        <button type="button">내가 남긴 후기</button>
         <button type="button"><a href="/main">뒤로가기</a></button>
     </div>
 </div>

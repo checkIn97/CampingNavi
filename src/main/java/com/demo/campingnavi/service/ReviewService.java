@@ -2,6 +2,7 @@ package com.demo.campingnavi.service;
 
 import java.util.List;
 
+import com.demo.campingnavi.dto.ReviewVo;
 import org.springframework.data.domain.Page;
 
 import com.demo.campingnavi.domain.Review;
@@ -13,7 +14,7 @@ public interface ReviewService {
 	
 	Review getReview(int vseq);
 	
-	Page<Review> findReviewList(ReviewScanVo reviewScanVo, int page, int size);
+	List<ReviewVo> findReviewVoList(ReviewScanVo reviewScanVo);
 
 	void editReview(Review vo);
 	
@@ -21,12 +22,15 @@ public interface ReviewService {
 	
 	int updateCnt(int vseq);
 
-	List<Review> getBestReviewList();
+	List<ReviewVo> getBestReviewVoList();
 	
-	List<Review> getAuthorReviewList(int mseq);
+	List<ReviewVo> getAuthorReviewVoList(int mseq);
 
 	void likePost(int vseq);
 
 	void unlikePost(int vseq);
 
+	List<ReviewVo> getReviewVoListByCseq(int cseq);
+
+	Review getLastReview();
 }

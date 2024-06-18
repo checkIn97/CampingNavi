@@ -1,7 +1,10 @@
 package com.demo.campingnavi.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.demo.campingnavi.dto.ReviewVo;
+import com.demo.campingnavi.repository.jpa.ReviewRecommendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +23,8 @@ public class ReviewServiceImpl implements ReviewService {
 	
 	@Autowired
 	private ReviewRepository reviewRepo;
+    @Autowired
+    private ReviewRecommendService reviewRecommendService;
 
 	@Override
 	public void insertReview(Review vo) {
@@ -48,13 +53,27 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public List<Review> getBestReviewList() {
-		return reviewRepo.findBestList();
+	public List<ReviewVo> getBestReviewVoList() {
+		List<Review> reviewList = reviewRepo.findBestList();
+		List<ReviewVo> reviewVoList = new ArrayList<>();
+		for (Review vo : reviewList) {
+			int rcdCount = reviewRecommendService.getRcdCountByReview(vo);
+			ReviewVo reviewVo = new ReviewVo(vo, rcdCount);
+			reviewVoList.add(reviewVo);
+		}
+		return reviewVoList;
 	}
 
 	@Override
-	public List<Review> getAuthorReviewList(int mseq) {
-		return reviewRepo.findAuthorList(mseq);
+	public List<ReviewVo> getAuthorReviewVoList(int mseq) {
+		List<Review> reviewList = reviewRepo.findAuthorList(mseq);
+		List<ReviewVo> reviewVoList = new ArrayList<>();
+		for (Review vo : reviewList) {
+			int rcdCount = reviewRecommendService.getRcdCountByReview(vo);
+			ReviewVo reviewVo = new ReviewVo(vo, rcdCount);
+			reviewVoList.add(reviewVo);
+		}
+		return reviewVoList;
 	}
 
 	@Override
@@ -71,40 +90,56 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewRepo.save(review);
 	}
 
+	@Override
+	public List<ReviewVo> getReviewVoListByCseq(int cseq) {
+		List<Review> reviewList = reviewRepo.findCampReviewList(cseq);
+		List<ReviewVo> reviewVoList = new ArrayList<>();
+		for (Review vo : reviewList) {
+			int rcdCount = reviewRecommendService.getRcdCountByReview(vo);
+			ReviewVo reviewVo = new ReviewVo(vo, rcdCount);
+			reviewVoList.add(reviewVo);
+		}
+		return reviewVoList;
+	}
 
 	@Override
-	public Page<Review> findReviewList(ReviewScanVo reviewScanVo, int page, int size) {
-	    Pageable pageable = null;
-	    if (reviewScanVo.getSortDirection().equals("ASC")) {
-	        pageable = PageRequest.of(page - 1, size, Direction.ASC, reviewScanVo.getSortBy());
-	    } else {
-	        pageable = PageRequest.of(page - 1, size, Direction.DESC, reviewScanVo.getSortBy());
-	    }
+	public Review getLastReview() {
+		return reviewRepo.findFirstByOrderByVseqDesc();
+	}
 
+
+	@Override
+	public List<ReviewVo> findReviewVoList(ReviewScanVo reviewScanVo) {
 	    String searchField = reviewScanVo.getSearchField();
 	    String searchWord = reviewScanVo.getSearchWord();
 
-	    Page<Review> resultPage = null;
+	    List<Review> reviewList = null;
 	    switch (searchField) {
 	        case "title":
-	            resultPage = reviewRepo.findByTitleContaining(searchWord, pageable);
+				reviewList = reviewRepo.findByTitleContaining(searchWord);
 	            break;
 	        case "content":
-	            resultPage = reviewRepo.findByContentContaining(searchWord, pageable);
+				reviewList = reviewRepo.findByContentContaining(searchWord);
 	            break;
 	        case "writer":
-	            resultPage = reviewRepo.findByMemberUsername(searchWord, pageable);
+				reviewList = reviewRepo.findByMemberUsername(searchWord);
 	            break;
 	        case "titleContent":
-	            resultPage = reviewRepo.findReviewList(searchWord, searchWord, pageable);
+				reviewList = reviewRepo.findReviewList(searchWord, searchWord);
 	            break;
 	        default:
-	            resultPage = reviewRepo.findAllByOrderByCreatedAtDesc(pageable);
+				reviewList = reviewRepo.findAllByOrderByCreatedAtDesc();
 	            break;
 	    }
 
+		List<ReviewVo> reviewVoList = new ArrayList<>();
+		for (Review vo : reviewList) {
+			int rcdCount = reviewRecommendService.getRcdCountByReview(vo);
+			ReviewVo reviewVo = new ReviewVo(vo, rcdCount);
+			reviewVoList.add(reviewVo);
+		}
 
-	    return resultPage;
+	    return reviewVoList;
 	}
 
 }

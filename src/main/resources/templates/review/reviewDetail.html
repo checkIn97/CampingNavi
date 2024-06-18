@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
         integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
         crossorigin="anonymous"></script>
 <style>
@@ -33,95 +33,139 @@
         <h2 class="mb-4">게시글 상세보기</h2>
         <div class="card">
             <div class="card-header">
-                <h3 th:text="${review.title}">제목</h3>
+                <h3 th:text="${reviewVo.review.title}">제목</h3>
             </div>
             <div class="card-body">
                 <div class="info">
                     <div>
-                        <input type="hidden" name="vseq" th:value="${review.vseq}"><br>
-                        작성자: <span th:text="${review.member.nickname + '(' + review.member.username + ')'}">작성자명</span>
+                        캠핑장 : <span th:text="${reviewVo.review.camp.getName()}">캠핑장명</span>
+                    </div>
+                    <div>
+                        <input type="hidden" name="vseq" th:value="${reviewVo.review.vseq}"><br>
+                        작성자: <span th:text="${reviewVo.review.member.nickname + '(' + reviewVo.review.member.username + ')'}">작성자명</span>
 
                     </div>
                     <div>
                         작성일시: <span
-                            th:text="${#dates.format(review.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
+                            th:text="${#dates.format(reviewVo.review.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
                     </div>
                     <div>
-                        조회수: <span th:text="${review.count}+1">조회수</span>
-
+                        조회수: <span th:text="${reviewVo.review.count}+1">조회수</span>
                     </div>
                 </div>
 
-                				<p class="content" id="content" th:utext="${review.content}">내용</p>
+                				<p class="content" id="content" th:utext="${reviewVo.review.content}">내용</p>
 
 
 
                 <div class="btn-group">
                     <!-- 작성자만 수정 및 삭제 버튼을 볼 수 있도록 -->
                     <a th:if="${isAuthor}"
-                       th:href="@{'/review_edit_form/' + ${review.vseq}}"
+                       th:href="@{'/review/edit_form/' + ${reviewVo.review.vseq}}"
                        class="button">수정하기</a>
                     <form th:if="${isAuthor}"
-                          th:action="@{'/review_delete/' + ${review.vseq}}" method="post">
+                          th:action="@{'/review/delete/' + ${reviewVo.review.vseq}}" method="post">
                         <button type="submit" class="button" onclick="return confirmDelete()">삭제하기</button>
                     </form>
 
                     <!-- 목록으로 돌아가기 -->
-                    <a th:href="@{/review_list(page=${pageInfo.number +1})}" class="button">목록으로 돌아가기</a>
+                    <a href="" onclick="history.go(-1); return false;" class="button">뒤로가기</a>
                 </div>
 
                 <div class="like-button-container">
                     <a class="fa fa-thumbs-up like-button" onclick="likePost()">
-                        <span id="likeCount">0</span>
+                        <span id="likeCount">[[${reviewVo.rcdCount}]]</span>
                     </a>
                 </div>
             </div>
         </div>
     </div>
-
+    <!--찜하기 버튼-->
+        <input class="saveInput" th:id="'saveBtn-' + ${reviewVo.review.vseq}" th:name="'saveBtn-' + ${reviewVo.review.vseq}" type="hidden" th:checked="${recommendChecked}"/>
+    <label th:for="'saveBtn-' + ${reviewVo.review.vseq}" th:data-vseq="${reviewVo.review.vseq}" class="saveLabel" id="saveLabel">
+        <img class="saveBtn saveBtnImg" th:src="${recommendChecked ? '/assets/images/icon/like-full.png' : '/assets/images/icon/like-empty.png'}" alt="">
+    </label>
 
     <th:block th:insert="~{/review/reviewComments}"></th:block>
 
     <hr>
     <!--작성자의 최신글 목록 -->
     <div th:if="${authorList}">
-        <h3><span th:text="${review.member.nickname}"></span>님의 최신글 더보기</h3>
+        <h3><span th:text="${reviewVo.review.member.nickname}"></span>님의 최신글 더보기</h3>
 
 
             <div th:each="author, iterStat : ${authorList}" th:if="${iterStat.index < 3}">
-                    <a class="nextContent" th:href="@{'/review_detail/' + ${author.vseq}}" th:text="${author.title}"></a>
-                    <input type="hidden" id="vseq" name="vseq" th:value="${review.vseq}" />
+                    <a class="nextContent" th:href="@{'/review/detail/' + ${author.review.vseq}}" th:text="${author.review.title}"></a>
+                    <input type="hidden" id="vseq" name="vseq" th:value="${author.review.vseq}" />
             </div>
     </div>
 
 </article>
+<!-- 찜하기 기능 스크립트 -->
+<script>
+    document.querySelectorAll('.saveLabel').forEach(label => {
+        label.addEventListener('click', function (event) {
+            event.preventDefault(); // 기본 동작 방지
+
+            const vseq = document.getElementById('vseq').value;
+            const checkbox = document.getElementById('saveBtn-' + vseq);
+            let isChecked = checkbox.checked;
+
+            // isChecked 변수는 checkbox의 현재 상태를 나타냅니다.
+            // 예시로, isChecked가 true인 경우는 찜 상태를 나타내며, false인 경우는 찜 해제 상태를 나타냅니다.
+
+            if (isChecked === false) { // 현재 체크가 되지 않은 상태인 경우
+                if (confirm("캠핑장리뷰를 추천하시겠습니까?")) {
+                    fetch('/review/recommend/' + vseq, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            checkbox.checked = true; // checkbox를 체크 상태로 변경
+                            this.querySelector('.saveBtnImg').src = '/assets/images/icon/like-full.png'; // 이미지 변경
+                            alert("캠핑장리뷰가 추천되었습니다.")
+                        } else {
+                            alert("캠핑장리뷰 추천하기에 실패했습니다.");
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        alert("캠핑장리뷰 추천하기에 실패했습니다.");
+                    });
+                }
+            } else if (isChecked === true) { // 현재 체크된 상태인 경우
+                if (confirm("캠핑장리뷰 추천하기를 취소하시겠습니까?")) {
+                    fetch('/review/recommend/delete/' + vseq, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            checkbox.checked = false; // checkbox를 체크 해제 상태로 변경
+                            this.querySelector('.saveBtnImg').src = '/assets/images/icon/like-empty.png'; // 이미지 변경
+                            alert("캠핑장리뷰 추천이 취소되었습니다.")
+                        } else {
+                            response.text().then(text => {
+                                console.error('Failed to remove from jjim list:', text);
+                                alert("캠핑장리뷰 추천 취소에 실패하였습니다." + text);
+                            });
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        alert("캠핑장리뷰 추천 취소에 실패하였습니다.");
+                    });
+                }
+            }
+        });
+    });
+</script>
+
 <script>
     function confirmDelete() {
-        var result = confirm("게시글을 삭제하시겠습니까?");
-        return result;
+        return confirm("게시글을 삭제하시겠습니까?");
     }
-
-    function likePost() {
-        var vseq = $("input[name='vseq']").val();
-        var likeCount = $("#likeCount").text();
-
-            // 추천을 추가합니다.
-            $.ajax({
-                type: "POST",
-                url: "/review_like/" + vseq,
-                success: function (response) {
-                    likeCount++;
-                    $("#likeCount").text(likeCount);
-                    localStorage.setItem("liked_" + vseq, true); // 추천 기록 추가
-                },
-                error: function (error) {
-                    alert("추천에 실패하였습니다.");
-                }
-            });
-
-    }
-
-
 </script>
 
 <script type="text/javascript"

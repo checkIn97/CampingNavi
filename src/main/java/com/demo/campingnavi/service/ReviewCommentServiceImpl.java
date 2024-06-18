@@ -57,7 +57,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 	public void updateCommentCount(int vseq) {
 		Review review = reviewRepo.findById(vseq).orElse(null);
 		if (review != null) {
-			review.setCount(ReviewCommentRepo.countByReviewVseq(vseq));
+			review.setCommentCount(ReviewCommentRepo.countByReviewVseq(vseq));
 			reviewRepo.save(review);
 		}
 

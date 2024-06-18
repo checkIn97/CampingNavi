@@ -62,7 +62,8 @@ public class SecurityConfig {
                         .failureHandler(
                                 (request, response, exception) -> {
                                     System.out.println("exception : " + exception.getMessage());
-                                    response.sendRedirect("/oauth-login/member/login");
+                                    request.setAttribute("msg", "로그인에 실패했습니다.");
+                                    request.getRequestDispatcher("/").forward(request, response);
                                 }
                         )
                         .permitAll()
@@ -78,7 +79,14 @@ public class SecurityConfig {
                 .headers((headerConfig) -> headerConfig.frameOptions(
                         frameOptionsConfig -> frameOptionsConfig.disable()
                 ))
-                .logout((logoutConfig) -> logoutConfig.logoutSuccessUrl("/"))
+                .logout(
+                        (logoutConfig) -> logoutConfig
+                                .logoutSuccessUrl("/")
+                                .logoutUrl("/oauth-login/member/logoutProc")
+                                .logoutSuccessHandler(
+                                        (request, response, authentication) -> {response.sendRedirect("/");}
+                                )
+                )
                 .oauth2Login((oauth) -> oauth.loginPage("/oauth-login/member/login")
                         .defaultSuccessUrl("/main")
                         .failureUrl("/oauth-login/member/login")
@@ -87,7 +95,12 @@ public class SecurityConfig {
                                     System.out.println("authentication : " + authentication.getName());
                                     Member member = memberRepository.findByUsername(authentication.getName());
                                     session.setAttribute("loginUser", member);
-                                    response.sendRedirect("/main");
+                                    if(member.getSex().equals("n") || member.getBirth().equals("n") || member.getPhone().equals("n") || member.getAddr1().equals("n")) {
+                                        request.setAttribute("msg", "정보를 입력해주세요.");
+                                        request.getRequestDispatcher("/member/mypage/edit").forward(request, response);
+                                    } else {
+                                        response.sendRedirect("/main");
+                                    }
                                 }
                         )
                         .failureHandler(

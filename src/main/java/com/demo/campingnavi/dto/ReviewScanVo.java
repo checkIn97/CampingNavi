@@ -22,8 +22,11 @@ public class ReviewScanVo {
 	private String[][] searchType = {{"title", "제목"}, {"content", "내용"}};
 	private String searchField = "";
 	private String searchWord = "";
-	private Page<Review> pageInfo = null;
-	private List<Review> reviewList = null;
+	private List<ReviewVo> reviewVoList = null;
+	private List<ReviewVo> reviewVoBestList = null;
+	private int totalPages = 0;
+	private int page = 0;
+	private int size = 0;
 	private String sortBy = "";
 	private String sortDirection = "";
 	private int pageMaxDisplay = 0;

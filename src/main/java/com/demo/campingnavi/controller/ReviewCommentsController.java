@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.demo.campingnavi.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,16 +21,17 @@ import com.demo.campingnavi.service.MemberService;
 
 import jakarta.servlet.http.HttpSession;
 @RestController
-@RequestMapping("/review_detail/")
+@RequestMapping("/review/comment/")
 public class ReviewCommentsController {
 
 	@Autowired
 	ReviewCommentService reviewCommentService;
 	@Autowired
+	ReviewService reviewService;
+	@Autowired
 	MemberService memberService;
 
 	@GetMapping(value = "/list")
-	@ResponseBody
 	public Map<String, Object> getComments(@RequestParam(value = "vseq") int vseq, HttpSession session) {
 		Map<String, Object> result = new HashMap<>();
 		System.out.println(1);
@@ -50,8 +52,8 @@ public class ReviewCommentsController {
 			parentCommentMseqArray[i] = parentComments.get(i).getMember().getMseq();
 
 			// tmp_member 임시 땜빵
-			Member tmp_member = member;
-			//Member tmp_member = memberService.getMember(replies.get(j).getMember().getMseq());
+			// Member tmp_member = member;
+			Member tmp_member = parentComments.get(i).getMember();
 
 			parentCommentMemberArray[i] = tmp_member.getName()+"("+tmp_member.getUsername()+")";
 			parentCommentContentArray[i] = parentComments.get(i).getContent();
@@ -66,10 +68,7 @@ public class ReviewCommentsController {
 		String[][] childCommentMemberArray = new String[parentComments.size()][];
 		String[][] childCommentContentArray = new String[parentComments.size()][];
 		String[][] childCommentDateArray = new String[parentComments.size()][];
-		
-				
-		Map<Integer, List<ReviewComment>> commentsMap = new HashMap<>();
-		
+
 		int[] tmp_CmseqArray = null;
 		int[] tmp_MseqArray = null;
 		String[] tmp_MemberArray = null;
@@ -88,8 +87,8 @@ public class ReviewCommentsController {
 				tmp_MseqArray[j] = replies.get(j).getMember().getMseq();
 
 				// tmp_member 임시 땜빵
-				Member tmp_member = member;
-				//Member tmp_member = memberService.getMember(replies.get(j).getMember().getMseq());
+				// Member tmp_member = member;
+				Member tmp_member = replies.get(j).getMember();
 
 				tmp_MemberArray[j] = tmp_member.getName()+"("+tmp_member.getUsername()+")";
 				tmp_ContentArray[j] = replies.get(j).getContent();
@@ -105,10 +104,7 @@ public class ReviewCommentsController {
 		}
 		
 		// 대댓글을 포함한 댓글 수 계산
-		int totalCommentCount = parentComments.size(); // 부모 댓글 수를 초기화
-		for (List<ReviewComment> replies : commentsMap.values()) {
-			totalCommentCount += replies.size(); // 각 부모 댓글에 대한 대댓글 수를 더함
-		}
+		int totalCommentCount = reviewService.getReview(vseq).getCommentCount();
 
 		result.put("currentMember", currentMember);
 		result.put("commentCount", totalCommentCount); // 대댓글을 포함한 총 댓글 수를 전달

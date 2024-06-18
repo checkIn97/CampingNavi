@@ -14,7 +14,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @AllArgsConstructor
 @Builder
 @Entity
-public class ReviewRecommned {
+public class ReviewRecommend {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

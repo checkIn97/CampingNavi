@@ -54,4 +54,7 @@ public class Review {
 
     @ColumnDefault("0")
     private int count; // 조회수
+
+    @ColumnDefault("0")
+    private int commentCount; // 댓글수
 }
