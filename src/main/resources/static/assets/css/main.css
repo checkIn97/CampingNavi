@@ -1401,3 +1401,33 @@ h1 {
 .userName {
     margin-bottom: 1rem;
 }
+
+.review-topMargin {
+    margin-top: 2rem;
+}
+
+.review-insert-title {
+    margin-bottom: 1rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #E58B33;
+}
+
+.review-insert-input {
+    border-radius: 0.5rem !important;
+}
+
+.review-insert-margin-right {
+    margin-right: 1rem;
+}
+
+.review-title {
+    text-align: center;
+}
+.review-insert-margin-bottom {
+    margin-bottom: 1rem;
+}
+
+.review-insert-rating-title {
+    margin-bottom: 0;
+}
