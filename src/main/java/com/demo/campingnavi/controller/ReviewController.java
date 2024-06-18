@@ -2,10 +2,7 @@ package com.demo.campingnavi.controller;
 
 import com.demo.campingnavi.domain.*;
 import com.demo.campingnavi.dto.*;
-import com.demo.campingnavi.service.CampService;
-import com.demo.campingnavi.service.ReviewCommentService;
-import com.demo.campingnavi.service.ReviewRecommendService;
-import com.demo.campingnavi.service.ReviewService;
+import com.demo.campingnavi.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +33,9 @@ public class ReviewController {
 
     @Autowired
     CampService campService;
+
+    @Autowired
+    DataService dataService;
 
 
     //게시글 작성으로 이동
@@ -96,6 +96,10 @@ public class ReviewController {
 
         model.addAttribute("memberVo", memberVo);
         reviewService.insertReview(vo);
+        vo = reviewService.getLastReview();
+        List<Review> reviewList = new ArrayList<>();
+        reviewList.add(vo);
+        dataService.reviewListOutToCsv(reviewList);
 
         return "redirect:/review/list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
