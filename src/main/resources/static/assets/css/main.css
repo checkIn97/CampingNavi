@@ -1073,19 +1073,20 @@ input[name="slide"] {
 }
 
 #chat {
-    transform: rotate(0deg) translate(200px) rotate(0deg);
+    transform: rotate(-90deg) translate(280px) rotate(90deg);
 }
 
 #myPage {
-    transform: rotate(72deg) translate(200px) rotate(-72deg);
+    transform: rotate(-28deg) translate(330px) rotate(28deg);
+    width: 10rem;
 }
 
 #admin {
-    transform: rotate(144deg) translate(200px) rotate(-144deg);
+    transform: rotate(34deg) translate(250px) rotate(-44deg);
 }
 
 #mainSearch {
-    transform: rotate(216deg) translate(200px) rotate(-216deg);
+    transform: rotate(210deg) translate(330px) rotate(-210deg);
 }
 
 #product {
