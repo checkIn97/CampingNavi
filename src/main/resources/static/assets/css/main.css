@@ -1073,7 +1073,7 @@ input[name="slide"] {
 }
 
 #chat {
-    transform: rotate(-90deg) translate(280px) rotate(90deg);
+    transform: rotate(-95deg) translate(254px) rotate(94deg);
 }
 
 #myPage {
@@ -1082,15 +1082,15 @@ input[name="slide"] {
 }
 
 #admin {
-    transform: rotate(34deg) translate(250px) rotate(-44deg);
+    transform: rotate(34deg) translate(279px) rotate(-44deg);
 }
 
 #mainSearch {
-    transform: rotate(210deg) translate(330px) rotate(-210deg);
+    transform: rotate(150deg) translate(299px) rotate(-150deg);
 }
 
 #product {
-    transform: rotate(288deg) translate(200px) rotate(-288deg);
+    transform: rotate(202deg) translate(341px) rotate(-206deg);
 }
 
 .mainBoxText {
