@@ -95,7 +95,12 @@ public class SecurityConfig {
                                     System.out.println("authentication : " + authentication.getName());
                                     Member member = memberRepository.findByUsername(authentication.getName());
                                     session.setAttribute("loginUser", member);
-                                    response.sendRedirect("/main");
+                                    if(member.getSex().equals("n") || member.getBirth().equals("n") || member.getPhone().equals("n") || member.getAddr1().equals("n")) {
+                                        request.setAttribute("msg", "정보를 입력해주세요.");
+                                        request.getRequestDispatcher("/member/mypage/edit").forward(request, response);
+                                    } else {
+                                        response.sendRedirect("/main");
+                                    }
                                 }
                         )
                         .failureHandler(

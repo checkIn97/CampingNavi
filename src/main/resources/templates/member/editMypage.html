@@ -10,6 +10,13 @@
     <title>CampNavi</title>
 </head>
 <script th:inline="javascript">
+    /*<![CDATA[*/
+    var message = /*[[${msg}]]*/ '';
+    if (message != null) {
+        alert(message);
+    }
+    /*]]>*/
+
     function validateNickname() {
         var nickname = $("#nickname").val();
 
