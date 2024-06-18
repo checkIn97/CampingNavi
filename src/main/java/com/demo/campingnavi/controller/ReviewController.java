@@ -112,7 +112,7 @@ public class ReviewController {
                                 @RequestParam(value = "size", defaultValue = "5") int size,
                                 @RequestParam(value = "sortBy", defaultValue = "vseq") String sortBy,
                                 @RequestParam(value = "sortDirection", defaultValue = "DESC") String sortDirection,
-                                @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
+                                @RequestParam(value = "pageMaxDisplay", defaultValue = "10") int pageMaxDisplay,
                                 @RequestParam(value = "searchField", defaultValue = "") String searchField,
                                 @RequestParam(value = "searchWord", defaultValue = "") String searchWord,
                                 ReviewScanVo reviewScanVo,

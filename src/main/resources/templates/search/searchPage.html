@@ -110,6 +110,7 @@
                 let totalPages = data.totalPages;
                 let page = data.page;
                 let size = data.size;
+                let pageMaxDisaply = data.pageMaxDisplay;
                 let result = data.result;
                 if (result === "success") {
                     if (mapRefresh) {
@@ -219,15 +220,15 @@
                             HTML += "<span aria-hidden=\"true\">\&lt;</span></a></li>";
                         }
                         HTML += "&nbsp&nbsp";
-                        let start = parseInt((page-1)/size)*size;
-                        let end = start + size < totalPages ? start + size : totalPages;
+                        let start = parseInt((page-1)/pageMaxDisaply)*pageMaxDisaply + 1;
+                        let end = start + pageMaxDisaply < totalPages ? start + pageMaxDisaply : totalPages + 1;
                         for (let i = start ; i < end ; i++) {
-                            if (i == page-1) {
+                            if (i == page) {
                                 HTML += "<li class=\"active\" class=\"paging\">";
-                                HTML += "<span>"+(i+1)+"</span></li>";
+                                HTML += "<span>"+ i +"</span></li>";
                             } else {
                                 HTML += "<li class=\"paging\">";
-                                HTML += "<a href=\"\" onclick=\"reloadList(" + (i+1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\">" + (i+1) + "</a></li>";
+                                HTML += "<a href=\"\" onclick=\"reloadList(" + i + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\">" + i + "</a></li>";
                             }
                             HTML += "&nbsp&nbsp";
                         }
