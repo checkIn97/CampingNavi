@@ -1051,46 +1051,45 @@ input[name="slide"] {
 
 /*mainPage*/
 
+#mainPageBtnzBody {
+    width: 100%;  /* 너비를 100%로 설정 */
+    height: 100%;  /* 높이를 100%로 설정 */
+}
+
 .mainPageBtn {
     width: 9rem;
 }
 
-#chat {
-    position: fixed;
-    top: 2rem;
+#mainPageBtnz {
+    margin: auto;  /* 가운데 정렬 위해 마진을 자동으로 설정합니다. */
+}
+
+.mainPageBtn {
+    position: absolute;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    width: 7rem;
+    margin: -25px 0 0 -25px;  /* 버튼을 중앙에 위치시키기 위해 마진을 설정합니다. */
+}
+
+#chat {
+    transform: rotate(0deg) translate(200px) rotate(0deg);
 }
 
 #myPage {
-    width: 12rem;
-    position: fixed;
-    top: 150px;
-    right: 0;
-    transform: translateX(-190%);
+    transform: rotate(72deg) translate(200px) rotate(-72deg);
 }
 
 #admin {
-    position: fixed;
-    top: 490px;
-    right: 0;
-    transform: translateX(-350%);
+    transform: rotate(144deg) translate(200px) rotate(-144deg);
 }
 
 #mainSearch {
-    position: fixed;
-    top: 505px;
-    right: 0;
-    transform: translateX(-810%);
-    width: 7rem;
+    transform: rotate(216deg) translate(200px) rotate(-216deg);
 }
 
 #product {
-    position: fixed;
-    top: 200px;
-    right: 0;
-    transform: translateX(-870%);
-    width: 7rem;
+    transform: rotate(288deg) translate(200px) rotate(-288deg);
 }
 
 .mainBoxText {
