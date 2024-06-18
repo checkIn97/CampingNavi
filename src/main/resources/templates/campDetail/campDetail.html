@@ -114,7 +114,7 @@
     <div class="buttonContain" id="reviewGrade">
         <th:block th:with="starScore=${starScore}">
         <img class="humanIcon" src="/assets/images/icon/human.png">
-        <span th:text="${starScore}"></span><span>리뷰수(000개의 후기)</span>
+        <span th:text="${starScore}"></span><span th:text="'리뷰수'+ '(' + ${reviewCnt} +'개의 후기)'"></span>
         </th:block>
     </div>
     <div class="buttonContain" th:each="camp : ${camps}" th:if="${not #strings.isEmpty(camp.resveUrl)}" >
