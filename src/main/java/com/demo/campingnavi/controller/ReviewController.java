@@ -97,7 +97,7 @@ public class ReviewController {
         model.addAttribute("memberVo", memberVo);
         reviewService.insertReview(vo);
 
-        return "redirect:/review_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
+        return "redirect:/review/list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
 
 
@@ -214,7 +214,7 @@ public class ReviewController {
         reviewCommentService.deletAllComment(vseq);
         reviewService.deleteReview(vseq);
 
-        return "redirect:/review_list";
+        return "redirect:/review/list";
 
     }
 
@@ -274,7 +274,7 @@ public class ReviewController {
 
         reviewService.editReview(vo);
         reviewCommentService.updateCommentCount(vseq);
-        return "redirect:/review_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
+        return "redirect:/review/list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
 
     @GetMapping("/memberList/{mseq}")
