@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="/assets/css/main.css" rel="stylesheet"/>
     <link href="/assets/css/bg/mainBG.css" rel="stylesheet"/>
     <title>CampNavi</title>
@@ -15,52 +14,342 @@
 </script>
 <body>
 <th:block th:insert="insert/header.html"></th:block>
-<div>
-    <h3>마이페이지</h3>
-    <hr>
-</div>
-    <div>
-    <table>
-        <tr>
-            <th>이름</th>
-            <th>아이디</th>
-            <th>닉네임</th>
-            <th>로그인 구분</th>
-        </tr>
-        <tr>
-            <td><input type="text" th:value="${member.name}" readonly/></td>
-            <td><input type="text" th:value="${member.username}" readonly/></td>
-            <td><input type="text" th:value="${member.nickname}" readonly/></td>
-            <td><input type="text" th:value="${member.provider != null ? member.provider : 'campingnavi'}"  readonly/></td>
-        </tr>
-        <tr>
-            <th>성별</th>
-            <th>생년월일</th>
-            <th>전화번호</th>
-            <th>이메일</th>
-        </tr>
-        <tr>
-            <td><input type="text" th:value="${member.sex == 'm' ? '남' : (member.sex == 'f' ? '여' : '성별을 입력해주세요.')}" readonly/></td>
-            <td><input type="text" th:value="${member.birth != null ? member.birth : '생년월일을 입력해주세요.'}" readonly/></td>
-            <td><input type="text" th:value="${member.phone != null ? member.phone : '전화번호를 입력해주세요.'}" readonly/></td>
-            <td><input type="text" th:value="${member.email}" readonly/></td>
-        </tr>
-        <tr>
-            <th>도로명주소</th>
-            <th>상세주소</th>
-        </tr>
-        <tr>
-            <td><input type="text" th:value="${member.addr1 != null ? member.addr1 : '도로명주소를 입력해주세요.'}" readonly/></td>
-            <td><input type="text" th:value="${member.addr2 != null ? member.addr2 : '상세주소를 입력해주세요.'}" readonly/></td>
-        </tr>
-    </table>
-        <!-- 페이징처리 끝 -->
-        <button type="button" onclick="editMypage()">수정</button>
-        <button type="button">내가 남긴 후기</button>
-        <button type="button"><a href="/main">뒤로가기</a></button>
+
+<div class="box" id="myPageContainer">
+
+    <div class="myPageSpace">
+        <div class="myPageUserIdImg">
+            <div>
+                <!--프로필 사진-->
+                <div class="box" id="profileImg">
+                    <div class="myPageProPicture">
+                        <input hidden="hidden" id="myPagePictureUploadInput" type="file">
+                        <img alt="수정아이콘" class="correctionImg" id="correctionImg" src="/assets/images/icon/pen.png">
+                    </div>
+                </div>
+            </div>
+
+            <div id="memberNickNameRead"><h1>[[${member.nickname}]]</h1></div>
+            <div class="buttonContain" id="memberNickNameChange">
+                <input class="myPageInput" id="nickname" name="nickname" th:value="${member.nickname}" type="text"/>
+                <button class="myPageBtn mainBtn" onclick="validateNickname()" type="button">닉네임 중복 확인</button>
+            </div>
+            <div class="buttonContain" id="myPageDetailContain">
+                <input checked class="detailBtn" id="myPageInfoBtn" name="btn" type="radio">
+                <label for="myPageInfoBtn">내 정보</label>
+                <input class="detailBtn" id="myPageReviewBtn" name="btn" type="radio">
+                <label for="myPageReviewBtn">내가 남긴 후기</label>
+                <input class="detailBtn" id="myPageSaveBtn" name="btn" type="radio">
+                <label for="myPageSaveBtn">찜한 목록 보기</label>
+            </div>
+        </div>
+
+        <!--내 정보-->
+        <div class="myPageArea" id="myPageInfo">
+            <div class="myPageBox">
+                <h3 class="myPage-info-title">기본정보</h3>
+                <hr>
+                <div class="myPageTitle">아이디</div>
+                <div>[[${member.username}]]</div>
+                <hr>
+                <div class="myPageTitle">이름</div>
+                <div>[[${member.name}]]</div>
+                <hr>
+                <div class="myPageTitle">성별</div>
+                <div id="memberSexRead">[[${member.sex == 'm' ? '남' : (member.sex == 'f' ? '여' : '성별을 입력해주세요.')}]]</div>
+                <div id="memberSexChange">
+                    남<input checked id="male" name="sex" th:value="m" type="radio"/>
+                    여<input id="female" name="sex" th:value="f" type="radio"/>
+                </div>
+                <hr>
+                <div class="myPageTitle">생년월일</div>
+                <div id="memberBirthRead">[[${member.birth != null ? member.birth : '생년월일을 입력해주세요.'}]]</div>
+                <div class="myPageInput" id="memberBirthChange">
+                    <input id="birth" name="birth" th:value="${member.birth != null ? member.birth : ''}" type="date"/>
+                </div>
+                <hr>
+            </div>
+
+            <div class="myPageBox">
+                <h3 class="myPage-info-title">연락처</h3>
+                <hr>
+                <div class="myPageTitle">전화번호</div>
+                <div id="memberPhoneRead">[[${member.phone != null ? member.phone : '전화번호를 입력해주세요.'}]]</div>
+                <div id="memberPhoneChange">
+                    <input class="myPageInput" id="phone" name="phone"
+                           th:value="${member.phone != null ? member.phone : ''}" type="text"/>
+                </div>
+                <hr>
+                <div class="myPageTitle">이메일</div>
+                <div>[[${member.email}]]</div>
+                <hr>
+            </div>
+
+            <div class="myPageBox">
+                <h3 class="myPage-info-title">주소</h3>
+                <hr>
+                <div class="myPageTitle">도로명주소</div>
+                <div id="memberAddr1Read">[[${member.addr1 != null ? member.addr1 : '도로명주소를 입력해주세요.'}]]</div>
+                <div id="memberAddr1Change">
+                    <input class="myPageInput" id="addr1" name="addr1" readonly
+                           th:value="${member.addr1 != null ? member.addr1 : ''}" type="text"/>
+                    <button class="myPageBtn mainBtn" onclick="searchAddress()" type="button">주소 검색</button>
+                </div>
+                <hr>
+                <div class="myPageTitle">상세주소</div>
+                <div id="memberAddr2Read">[[${member.addr2 != null ? member.addr2 : ' '}]]</div>
+                <div id="memberAddr2Change">
+                    <input class="myPageInput" id="addr2" name="addr2"
+                           th:value="${member.addr2 != null ? member.addr2 : ''}" type="text"/>
+                </div>
+                <hr>
+            </div>
+
+
+            <div class="myPageBox">
+                <h3 class="myPage-info-title">SNS 로그인 여부</h3>
+                <hr>
+                <div>[[${member.provider != null ? member.provider : '홈페이지'}]]</div>
+            </div>
+        </div>
+
+        <!--내가 남긴 후기-->
+        <div class="myPageArea" id="myPageReview">
+            <div class="myPageBox">
+                <div>
+                    <h3>리뷰 제목 좀 길어지면 어떻게 보이는지 확인하는 부분 어떻게 보이려나</h3>
+                    <p>리뷰 요약 내용 (1줄 혹은 2줄)</p>
+                    <p>리뷰 날짜</p>
+                </div>
+            </div>
+            <div class="myPageBox">
+                <div>
+                    <h3>리뷰 제목</h3>
+                    <p>리뷰 요약 내용</p>
+                    <p>리뷰 날짜</p>
+                </div>
+            </div>
+        </div>
+
+        <!--찜 목록-->
+        <div class="myPageArea" id="myPageSave">
+            <div class="myPageBox">
+                <!--찜 목록 나오는 페이지-->
+                <div>
+                    <div class="buttonContain">
+                        <h3 class="myPageSaveTitle">캠핑장 이름</h3>
+                        <a class="myPageSavaLink">상세보기</a>
+                    </div>
+                    <hr>
+                    <div class="buttonContain">
+                        <h3 class="myPageSaveTitle">캠핑장 이름</h3>
+                        <a class="myPageSavaLink">상세보기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+    <div class="buttonContain">
+        <button class="mainBtn" id="myPageChange" type="button">수정하기</button>
+        <button class="mainBtn" id="myPageRead" type="button">수정완료</button>
+        <button onclick="goBack()" type="button">뒤로가기</button>
+    </div>
+</div>
+
+
 <footer id="footer">
     <p class="copyright">&copy; Team Navigation. </p>
 </footer>
+
+<script>
+    window.onload = function () {
+        // 각 버튼과 내용 요소를 가져옵니다.
+        var myPageInfoBtn = document.getElementById('myPageInfoBtn');
+        var myPageReviewBtn = document.getElementById('myPageReviewBtn');
+        var myPageSaveBtn = document.getElementById('myPageSaveBtn');
+
+        var myPageInfo = document.getElementById('myPageInfo');
+        var myPageReview = document.getElementById('myPageReview');
+        var myPageSave = document.getElementById('myPageSave');
+
+        // myPageInfoBtn을 클릭하면 myPageInfo를 보이게 하고, 나머지는 숨깁니다.
+        myPageInfoBtn.addEventListener('click', function () {
+            myPageInfo.style.display = 'block';
+            myPageReview.style.display = 'none';
+            myPageSave.style.display = 'none';
+        });
+
+        // myPageReviewBtn을 클릭하면 myPageReview를 보이게 하고, 나머지는 숨깁니다.
+        myPageReviewBtn.addEventListener('click', function () {
+            myPageInfo.style.display = 'none';
+            myPageReview.style.display = 'block';
+            myPageSave.style.display = 'none';
+        });
+
+        // myPageSaveBtn을 클릭하면 myPageSave를 보이게 하고, 나머지는 숨깁니다.
+        myPageSaveBtn.addEventListener('click', function () {
+            myPageInfo.style.display = 'none';
+            myPageReview.style.display = 'none';
+            myPageSave.style.display = 'block';
+        });
+    }
+</script>
+
+<script th:inline="javascript">
+    function validateNickname() {
+        var nickname = $("#nickname").val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/member/validateNickname',
+            data: {
+                nickname: nickname
+            },
+            success: function (data) {
+                var result = data.result;
+                if (result === "success") {
+                    alert("사용 가능한 닉네임 입니다.")
+                    $('#editBtn').prop('disabled', false);
+                } else {
+                    alert("이미 존재하는 닉네임 입니다.")
+                    $('#editBtn').prop('disabled', true);
+                    $("#nickname").focus()
+                }
+
+            },
+            error: function (error) {
+                alert("전송 실패")
+            }
+        })
+    }
+
+    function searchAddress() {
+        var postcodePopup = new daum.Postcode({
+            oncomplete: function (data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var roadAddr = data.roadAddress; // 도로명 주소 변수
+                var extraRoadAddr = ''; // 참고 항목 변수
+
+                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                    extraRoadAddr += data.bname;
+                }
+                // 건물명이 있고, 공동주택일 경우 추가한다.
+                if (data.buildingName !== '' && data.apartment === 'Y') {
+                    extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                if (extraRoadAddr !== '') {
+                    extraRoadAddr = ' (' + extraRoadAddr + ')';
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById("addr1").value = roadAddr;
+                setTimeout(function () {
+                    postcodePopup.close();
+                }, 0);
+            }
+        });
+        postcodePopup.open();
+
+    }
+
+    function editMypageDetail() {
+        var nickname = $("#nickname").val();
+        var birth = $("#birth").val();
+        var phone = $("#phone").val();
+        var addr1 = $("#addr1").val();
+        var addr2 = $("#addr2").val();
+
+        if (nickname == "") {
+            alert("사이트에서 사용할 닉네임을 입력해주세요!");
+            $("#nickname").focus()
+        } else if (birth == "") {
+            alert("생일을 입력해주세요!");
+            $("#birth").focus()
+        } else if (phone == "") {
+            alert("전화번호를 입력해주세요!");
+            $("#phone").focus()
+        } else if (addr1 == "") {
+            alert("도로명주소를 입력해주세요!");
+            $("#addr1").focus()
+        } else if (addr2 == "") {
+            alert("상세주소를 입력해주세요!");
+            $("#addr2").focus();
+        } else {
+            $("#editMypageForm").attr("action", "/member/mypage/edit/detail").submit();
+        }
+    }
+
+    function goBack() {
+        history.go(-1);
+    }
+
+    document.getElementById('myPageChange').addEventListener('click', function () {
+        // Change가 붙은 요소들을 block으로 설정
+        document.getElementById('memberSexChange').style.display = 'block';
+        document.getElementById('memberBirthChange').style.display = 'block';
+        document.getElementById('memberPhoneChange').style.display = 'block';
+        document.getElementById('memberAddr1Change').style.display = 'block';
+        document.getElementById('memberAddr2Change').style.display = 'block';
+        document.getElementById('memberNickNameChange').style.display = 'block';
+        document.getElementById('myPageRead').style.display = 'block';
+
+        // Read가 붙은 요소들을 none으로 설정
+        document.getElementById('memberSexRead').style.display = 'none';
+        document.getElementById('memberBirthRead').style.display = 'none';
+        document.getElementById('memberPhoneRead').style.display = 'none';
+        document.getElementById('memberAddr1Read').style.display = 'none';
+        document.getElementById('memberAddr2Read').style.display = 'none';
+        document.getElementById('memberNickNameRead').style.display = 'none';
+        document.getElementById('myPageChange').style.display = 'none';
+    });
+
+    document.getElementById('myPageRead').addEventListener('click', function () {
+        // Change가 붙은 요소들을 block으로 설정
+        document.getElementById('memberSexChange').style.display = 'none';
+        document.getElementById('memberBirthChange').style.display = 'none';
+        document.getElementById('memberPhoneChange').style.display = 'none';
+        document.getElementById('memberAddr1Change').style.display = 'none';
+        document.getElementById('memberAddr2Change').style.display = 'none';
+        document.getElementById('memberNickNameChange').style.display = 'none';
+        document.getElementById('myPageRead').style.display = 'none';
+
+        // Read가 붙은 요소들을 none으로 설정
+        document.getElementById('memberSexRead').style.display = 'block';
+        document.getElementById('memberBirthRead').style.display = 'block';
+        document.getElementById('memberPhoneRead').style.display = 'block';
+        document.getElementById('memberAddr1Read').style.display = 'block';
+        document.getElementById('memberAddr2Read').style.display = 'block';
+        document.getElementById('memberNickNameRead').style.display = 'block';
+        document.getElementById('myPageChange').style.display = 'block';
+    });
+
+    document.getElementById('myPagePictureUploadInput').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    var reader = new FileReader();
+
+    reader.onloadend = function() {
+        document.getElementById('profileImg').style.backgroundImage = 'url("' + reader.result + '")';
+    }
+
+    if (file) {
+        reader.readAsDataURL(file);
+    } else {
+        document.getElementById('profileImg').style.backgroundImage = '';
+    }
+    });
+
+    document.getElementById('correctionImg').addEventListener('click', function () {
+        document.getElementById('myPagePictureUploadInput').click();
+    });
+</script>
+
+<div id="bg"></div>
 </body>
 </html>
