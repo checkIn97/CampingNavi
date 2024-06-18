@@ -182,9 +182,8 @@ public class ReviewController {
         int mseq = review.getMember().getMseq();
         boolean recommendChecked = reviewRecommendService.checkReviewRecommend(mseq, vseq);
 
-        int cseq = review.getCamp().getCseq();
-        CampVo campVo = campService.getCampVoByCseq(cseq, member);
-        float score = Float.parseFloat(campVo.getScoreView());
+
+        float score = review.getLikes();
 
         // 모델에 게시글 추가
         model.addAttribute("reviewVo", reviewVo);
