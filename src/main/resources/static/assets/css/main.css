@@ -1495,3 +1495,8 @@ h1 {
 .popularPosts {
     color: whitesmoke !important;
 }
+
+.active {
+    font-weight: bolder;
+    font-size: 1.1rem;
+}
