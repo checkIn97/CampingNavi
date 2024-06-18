@@ -1479,6 +1479,7 @@ h1 {
 
 #review-list {
     position: relative;
+    width: 60rem;
 }
 
 .review-list-create-button {
@@ -1495,4 +1496,9 @@ h1 {
 
 .popularPosts {
     color: whitesmoke !important;
+}
+
+.active {
+    font-weight: bolder;
+    font-size: 1.1rem;
 }

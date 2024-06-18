@@ -59,6 +59,26 @@ public class ReviewController {
 
     }
 
+    @GetMapping("/insert_search_form")
+    public String showWriteSearchForm(HttpSession session, Model model
+                                ) {
+        // 세션에서 사용자 정보 가져오기
+        Member member = (Member) session.getAttribute("loginUser");
+        // MemberVo memberVo = new MemberVo();
+        // 세션에 로그인 정보가 없는 경우
+        if (member == null) {
+            // 로그인 알림을 포함한 경고 메시지를 설정합니다.
+            model.addAttribute("msg","로그인 후 이용해주세요.");
+            model.addAttribute("redirectTo","/");
+            return "review/review_alert";
+        } else {
+
+            return "review/reviewSearchInsert"; //게시글 작성페이지로 이동.
+        }
+
+    }
+
+
     // 게시글 작성
     @PostMapping("/insert")
     public String saveReview(@RequestParam(value = "title") String title,
@@ -112,7 +132,7 @@ public class ReviewController {
                                 @RequestParam(value = "size", defaultValue = "5") int size,
                                 @RequestParam(value = "sortBy", defaultValue = "vseq") String sortBy,
                                 @RequestParam(value = "sortDirection", defaultValue = "DESC") String sortDirection,
-                                @RequestParam(value = "pageMaxDisplay", defaultValue = "5") int pageMaxDisplay,
+                                @RequestParam(value = "pageMaxDisplay", defaultValue = "10") int pageMaxDisplay,
                                 @RequestParam(value = "searchField", defaultValue = "") String searchField,
                                 @RequestParam(value = "searchWord", defaultValue = "") String searchWord,
                                 ReviewScanVo reviewScanVo,

@@ -9,25 +9,7 @@
     <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
     <title>Search</title>
 </head>
-<style>
-    .disabled {
-        display: none;
-    }
 
-    .active {
-        font-weight: 700;
-    }
-
-    .page_area {
-        margin:0 auto;
-    }
-
-    .page_area ul li {
-        list-style: none;
-        display: inline-block;
-    }
-
-</style>
 <body>
 
 <th:block th:insert="insert/header.html"></th:block>
@@ -54,7 +36,7 @@
             </th:block>
         </div>
         <div id="list_area"></div>
-        <div id="page_area"></div>
+        <div class="page-box" id="page_area"></div>
     </div>
     <div class="box" id="contentSearchArea">
         <div id="kakaoMap"></div>
@@ -110,6 +92,7 @@
                 let totalPages = data.totalPages;
                 let page = data.page;
                 let size = data.size;
+                let pageMaxDisplay = data.pageMaxDisplay;
                 let result = data.result;
                 if (result === "success") {
                     if (mapRefresh) {
@@ -199,57 +182,46 @@
                     HTML += "</table>";
                     $("#list_area").html(HTML);
 
-                    HTML = "";
-                    if (totalPages !== 0) {
-                        HTML = "<div class=\"page_area\">";
-                        HTML += "<ul class=\"pagination\">";
-                        HTML += "<li class=\"paging\">";
-                        if (page == 1) {
-                            HTML += "<span aria-hidden=\"true\">First</span>";
-                        } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(1, '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"First\">";
-                            HTML += "<span aria-hidden=\"true\">First</span></a></li>";
-                        }
-                        HTML += "&nbsp&nbsp";
-                        HTML += "<li class=\"paging\">";
-                        if (page == 1) {
-                            HTML += "<span aria-hidden=\"true\">\&lt;</span>";
-                        } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(" + (page-1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"Previous\">";
-                            HTML += "<span aria-hidden=\"true\">\&lt;</span></a></li>";
-                        }
-                        HTML += "&nbsp&nbsp";
-                        let start = parseInt((page-1)/size)*size;
-                        let end = start + size < totalPages ? start + size : totalPages;
-                        for (let i = start ; i < end ; i++) {
-                            if (i == page-1) {
-                                HTML += "<li class=\"active\" class=\"paging\">";
-                                HTML += "<span>"+(i+1)+"</span></li>";
-                            } else {
-                                HTML += "<li class=\"paging\">";
-                                HTML += "<a href=\"\" onclick=\"reloadList(" + (i+1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\">" + (i+1) + "</a></li>";
-                            }
-                            HTML += "&nbsp&nbsp";
-                        }
 
-                        HTML += "<li class=\"paging\">";
-                        if (page == totalPages) {
-                            HTML += "<span aria-hidden=\"true\">\&gt;</span></li>";
-                        } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(" + (page+1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"Next\">";
-                            HTML += "<span aria-hidden=\"true\">\&gt;</span></a></li>";
-                        }
-                        HTML += "&nbsp&nbsp";
-                        HTML += "<li class=\"paging\">";
-                        if (page == totalPages) {
-                            HTML += "<span aria-hidden=\"true\">Last</span></li>";
-                        } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(" + totalPages + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"Last\">";
-                            HTML += "<span aria-hidden=\"true\">Last</span></a></li>";
-                        }
-                        HTML += "</ul></div>";
+
+
+                    // 페이지 번호 요소를 동적으로 생성합니다.
+                    let pageHTML = "";
+                    if (page == 1) {
+                        pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\">";
+                    } else {
+                        pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page-1) + ", 'vseq', 'DESC'); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\"></a>";
                     }
-                    $("#page_area").html(HTML);
+
+                    let start = parseInt((page-1)/pageMaxDisplay)*pageMaxDisplay + 1;
+                    let end = start + pageMaxDisplay < totalPages ? start + pageMaxDisplay : totalPages + 1;
+                    for (let i = start; i < end; i++) {
+                        if (i == page) {
+                            pageHTML += "<span class=\"page-num active\">" + i + "</span>";
+                        } else {
+                            pageHTML += "<a href='#' class=\"page-num\">" + i + "</a>";
+                        }
+                    }
+                    if (page == totalPages) {
+                        pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\">";
+                    } else {
+                        pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page+1) + ", 'vseq', 'DESC'); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\"></a>";
+                    }
+                    document.getElementById('page_area').innerHTML = pageHTML;
+
+                    // 페이지 번호를 클릭하면 해당 페이지의 내용을 불러오는 함수
+                    function handlePageClick(event) {
+                        const pageNumber = parseInt(event.target.textContent);
+                        reloadList(pageNumber, 'vseq', 'DESC');
+                    }
+
+                    // 페이지 번호 요소들을 가져옵니다.
+                    const pageNumElements = document.querySelectorAll('.page-num');
+
+                    // 각 페이지 번호 요소에 클릭 이벤트 리스너를 추가합니다.
+                    pageNumElements.forEach((pageNumElement) => {
+                        pageNumElement.addEventListener('click', handlePageClick);
+                    });
                 }
             },
             error: function () {
