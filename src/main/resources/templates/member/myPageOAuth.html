@@ -18,17 +18,16 @@
     /*]]>*/
 </script>
 <body>
-<th:block th:insert="insert/header.html"></th:block>
 
 <div class="box" id="myPageContainer">
+
     <div class="myPageSpace">
         <div class="myPageUserIdImg">
             <div>
                 <!--프로필 사진-->
                 <div class="box" id="profileImg">
-                    <div class="myPageProPicture" id="myPageProPicture">
+                    <div class="myPageProPicture">
                         <input hidden="hidden" id="myPagePictureUploadInput" type="file">
-                        <input type="hidden" id="backURL" th:value="${img}">
                         <img alt="수정아이콘" class="correctionImg" id="correctionImg" src="/assets/images/icon/pen.png">
                     </div>
                 </div>
@@ -50,15 +49,18 @@
                 <label for="myPageSaveBtn">찜한 목록 보기</label>
             </div>
         </div>
+
         <!--내 정보-->
         <div class="myPageArea" id="myPageInfo">
             <form id="editMypageForm" action="/member/mypage/edit/detail" method="post">
                 <div class="myPageBox">
                     <h3 class="myPage-info-title">기본정보</h3>
                     <hr>
+                    <!--
                     <div class="myPageTitle">아이디</div>
                     <div th:text="${member.username}"></div>
                     <hr>
+                    -->
                     <div class="myPageTitle">이름</div>
                     <div th:text="${member.name}"></div>
                     <hr>
@@ -88,7 +90,7 @@
                     </div>
                     <hr>
                     <div class="myPageTitle">이메일</div>
-                    <div>[[${member.email}]]</div>
+                    <div th:text="${member.email}"></div>
                     <hr>
                 </div>
 
@@ -170,13 +172,26 @@
 </footer>
 
 <script>
-    $(document).ready(function () {
-        document.getElementById('myPageProPicture').style.display = 'none';
-        var img = $("#backURL").val();
-        if (img != null) {
-            document.getElementById('profileImg').style.backgroundImage = img;
-        }
-    })
+    $(document).ready(function() {
+        // Change가 붙은 요소들을 block으로 설정
+        document.getElementById('memberSexChange').style.display = 'block';
+        document.getElementById('memberBirthChange').style.display = 'block';
+        document.getElementById('memberPhoneChange').style.display = 'block';
+        document.getElementById('memberAddr1Change').style.display = 'block';
+        document.getElementById('memberAddr2Change').style.display = 'block';
+        document.getElementById('memberNickNameChange').style.display = 'block';
+        document.getElementById('myPageRead').style.display = 'block';
+
+        // Read가 붙은 요소들을 none으로 설정
+        document.getElementById('memberSexRead').style.display = 'none';
+        document.getElementById('memberBirthRead').style.display = 'none';
+        document.getElementById('memberPhoneRead').style.display = 'none';
+        document.getElementById('memberAddr1Read').style.display = 'none';
+        document.getElementById('memberAddr2Read').style.display = 'none';
+        document.getElementById('memberNickNameRead').style.display = 'none';
+        document.getElementById('myPageChange').style.display = 'none';
+    });
+
     window.onload = function () {
         // 각 버튼과 내용 요소를 가져옵니다.
         var myPageInfoBtn = document.getElementById('myPageInfoBtn');
@@ -287,7 +302,6 @@
         document.getElementById('memberAddr2Change').style.display = 'block';
         document.getElementById('memberNickNameChange').style.display = 'block';
         document.getElementById('myPageRead').style.display = 'block';
-        document.getElementById('myPageProPicture').style.display = 'block';
 
         // Read가 붙은 요소들을 none으로 설정
         document.getElementById('memberSexRead').style.display = 'none';
@@ -305,7 +319,6 @@
         var phone = $("#phone").val();
         var addr1 = $("#addr1").val();
         var addr2 = $("#addr2").val();
-        var img = $("#backURL").val();
         const getValue = () => {
             let curr_value;
             const radioValue = document.getElementsByName("sex");
@@ -346,17 +359,15 @@
                     phone : phone,
                     addr1 : addr1,
                     addr2 : addr2,
-                    sex : getValue(),
-                    img : img
+                    sex : getValue()
                 },
                 success: function (response) {
-                    document.getElementById('memberAddr2Read').textContent = response.addr2;
-                    document.getElementById('memberSexRead').textContent = response.sex;
-                    document.getElementById('memberAddr1Read').textContent = response.addr1;
-                    document.getElementById('memberNickNameRead').textContent = response.nickname;
-                    document.getElementById('memberPhoneRead').textContent = response.phone;
-                    document.getElementById('memberBirthRead').textContent = response.birth;
-                    document.getElementById('profileImg').style.backgroundImage = img;
+                    document.getElementById('memberAddr2Read').textContent = response.addr2
+                    document.getElementById('memberSexRead').textContent = response.sex
+                    document.getElementById('memberAddr1Read').textContent = response.addr1
+                    document.getElementById('memberNickNameRead').textContent = response.nickname
+                    document.getElementById('memberPhoneRead').textContent = response.phone
+                    document.getElementById('memberBirthRead').textContent = response.birth
 
                     // Change가 붙은 요소들을 block으로 설정
                     document.getElementById('memberSexChange').style.display = 'none';
@@ -366,7 +377,6 @@
                     document.getElementById('memberAddr2Change').style.display = 'none';
                     document.getElementById('memberNickNameChange').style.display = 'none';
                     document.getElementById('myPageRead').style.display = 'none';
-                    document.getElementById('myPageProPicture').style.display = 'none';
 
                     // Read가 붙은 요소들을 none으로 설정
                     document.getElementById('memberSexRead').style.display = 'block';
@@ -391,7 +401,6 @@
 
     reader.onloadend = function() {
         document.getElementById('profileImg').style.backgroundImage = 'url("' + reader.result + '")';
-        $("#backURL").val('url("' + reader.result + '")');
     }
 
     if (file) {
@@ -399,7 +408,6 @@
     } else {
         document.getElementById('profileImg').style.backgroundImage = '';
     }
-
     });
 
     document.getElementById('correctionImg').addEventListener('click', function () {
