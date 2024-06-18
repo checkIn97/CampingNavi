@@ -53,7 +53,6 @@ public class SecurityConfig {
                         .loginProcessingUrl("/oauth-login/member/loginProc")
                         .successHandler(
                                 (request, response, authentication) -> {
-                                    System.out.println("authentication : " + authentication.getName());
                                     Member member = memberRepository.findByUsername(authentication.getName());
                                     session.setAttribute("loginUser", member);
                                     response.sendRedirect("/main");
@@ -92,12 +91,11 @@ public class SecurityConfig {
                         .failureUrl("/oauth-login/member/login")
                         .successHandler(
                                 (request, response, authentication) -> {
-                                    System.out.println("authentication : " + authentication.getName());
                                     Member member = memberRepository.findByUsername(authentication.getName());
                                     session.setAttribute("loginUser", member);
                                     if(member.getSex().equals("n") || member.getBirth().equals("n") || member.getPhone().equals("n") || member.getAddr1().equals("n")) {
                                         request.setAttribute("msg", "정보를 입력해주세요.");
-                                        request.getRequestDispatcher("/member/mypage/edit").forward(request, response);
+                                        request.getRequestDispatcher("/member/mypage/oauth").forward(request, response);
                                     } else {
                                         response.sendRedirect("/main");
                                     }

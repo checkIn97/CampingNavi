@@ -56,7 +56,8 @@ public class Member {
     @Column
     private String role; // 일반회원: USER, 관리자: ADMIN
 
-    @Column(length = 2000)
+    @Lob
+    @Column
     private String img;
 
     private String provider;
