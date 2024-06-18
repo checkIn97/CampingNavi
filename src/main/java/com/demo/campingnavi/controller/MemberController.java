@@ -1,12 +1,15 @@
 package com.demo.campingnavi.controller;
 
 import com.demo.campingnavi.domain.Member;
+import com.demo.campingnavi.domain.Recommend;
 import com.demo.campingnavi.dto.CustomOauth2UserDetails;
 import com.demo.campingnavi.dto.CustomSecurityUserDetails;
 import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
+import com.demo.campingnavi.repository.jpa.RecommendRepository;
 import com.demo.campingnavi.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -25,6 +29,8 @@ public class MemberController {
     MemberService memberService;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    RecommendRepository recommendRepository;
 
     @GetMapping("/login")
     public String loginP(Model model) {
@@ -99,7 +105,7 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
-    public String mypageP(Model model) {
+    public String mypageP(Model model, @RequestParam(defaultValue = "0") int page) {
         // 인증 객체 생성
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = "";
@@ -116,8 +122,14 @@ public class MemberController {
 
         // 추출된 아이디로 회원 객체 생성
         Member member = memberRepository.findByUsername(username);
+        // 찜목록 객체 생성
+        Page<Recommend> paging = this.memberService.getList(page, member);
+        List<Recommend> recommList = recommendRepository.getAllListByMember(member.getMseq());
+        System.out.println("마이페이지: " + recommList);
         // 뷰에 전송
         model.addAttribute("member", member);
+        model.addAttribute("recommList", recommList);
+        model.addAttribute("paging", paging);
         return "member/myPage";
     }
 
