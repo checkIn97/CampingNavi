@@ -1,64 +1,62 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="ko" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 
-<meta charset="UTF-8">
-<title>Review List</title>
-<style>
-    .disabled {
-        display: none;
-    }
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <link href="/assets/css/main.css" rel="stylesheet"/>
+    <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
+    <title>CampNavi</title>
+</head>
 
-    .active {
-        font-weight: 700;
-    }
+<th:block th:insert="/insert/header"></th:block>
 
-    .page_area {
-        margin:0 auto;
-    }
-
-    .page_area ul li {
-        list-style: none;
-        display: inline-block;
-    }
-
-</style>
-
-
-<article id="box">
+<body>
+<article class="box" id="review-list">
 
     <h2>캠핑장 리뷰 리스트</h2>
-    <!-- 리스트 영역 -->
-    <div id="list_area"></div>
-    <!-- 페이지 영역 -->
-    <div id="page_area"></div>
+    <div class="page-index">
+        <!-- 리스트 영역 -->
+        <div id="list_area"></div>
+        <!-- 페이지 영역 -->
+        <div class="page-box" id="page_area">
+            <img class="icon width-rem1" src="/assets/images/icon/arrowL.png">
+            <a class="page-num"></a>
+            <img class="icon width-rem1" src="/assets/images/icon/arrowR.png">
+        </div>
+    </div>
 
 
-
-    <form th:action="@{/review/list}" method="get">
-        <div class="search-container">
-            <select name="searchField" id="search" class="search">
+    <form method="get" th:action="@{/review/list}">
+        <div class="search-container review-list-search-index">
+            <select class="search" id="search" name="searchField">
                 <option value="title">제목</option>
                 <option value="content">내용</option>
                 <option value="titleContent">제목 / 내용</option>
                 <option value="writer">작성자</option>
             </select>
-            <label> <input type="text" name="searchWord" class="searchWord">
-            </label>
 
-            <button type="submit" class="searchButton">검색</button>
+            <input class="searchWord" name="searchWord" type="text">
+            <button class="searchButton" type="submit">검색</button>
+
+            <a href="/review/insert_form">
+                <button class="review-list-create-button mainBtn" type="button">새로운 글 작성</button>
+            </a>
+
         </div>
+
     </form>
 
-
-    <a href="/review/insert_form"><button class="button" type="button">새로운 글 작성</button></a>
-
-
 </article>
+
+<footer id="footer">
+    <p class="copyright">&copy; Team Navigation. </p>
+</footer>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         reloadList(1, "vseq", "DESC");
     });
 
@@ -78,26 +76,42 @@
                 let page = data.page;
                 let size = data.size;
                 let result = data.result;
+
+
                 if (result === "success") {
                     let HTML = "";
                     HTML += "<table><thead><tr><th>제목</th><th>작성자</th><th>작성일시</th><th>추천수</th><th>조회수</th></tr></thead><tbody>";
                     for (let i = 0; i < (bestList.length < 3 ? bestList.length : 3); i++) {
-                        HTML += "<tr><td><div class=\"popularPosts\">[인기] <a href=\"/review/detail/" + bestList[i].review.vseq + "\">";
-                        HTML += "<span>" + bestList[i].review.title + "&nbsp</span>";
+
+                        var bestTitle = bestList[i].review.title;
+
+                        if (bestTitle.length > 50) {
+                            bestTitle = bestTitle.substring(0, 50) + "...";
+                        }
+
+                        HTML += "<tr class='review-list-pop-back'><td><div class=\"popularPosts\">[인기] <a class=\"popularPosts\" href=\"/review/detail/" + bestList[i].review.vseq + "\">";
+                        HTML += "<span class=\"popularPosts\" >" + bestTitle + "&nbsp</span>";
                         HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);\"/>";
                         HTML += "<span> [" + bestList[i].review.commentCount + "]</span></a></div>";
                         HTML += "<input type=\"hidden\" name=\"vseq\" value=\"" + bestList[i].review.vseq + "\"/></td>";
-                        HTML += "<td><a href=\"/review/memberList/" + bestList[i].review.member.mseq + "\">" + bestList[i].review.member.username + "</a>";
+                        HTML += "<td><a class=\"popularPosts\" href=\"/review/memberList/" + bestList[i].review.member.mseq + "\">" + bestList[i].review.member.username + "</a>";
                         HTML += "<input type=\"hidden\" name=\"mseq\" value=\"" + bestList[i].review.member.mseq + "\"/></td>";
-                        HTML += "<td>" + bestList[i].createdAt + "</td>";
-                        HTML += "<td>" + bestList[i].rcdCount + "</td>";
-                        HTML += "<td>" + bestList[i].review.count + "</td></tr>";
+                        HTML += "<td class=\"popularPosts\">" + bestList[i].createdAt + "</td>";
+                        HTML += "<td class=\"popularPosts\">" + bestList[i].rcdCount + "</td>";
+                        HTML += "<td class=\"popularPosts\">" + bestList[i].review.count + "</td></tr>";
                     }
 
                     for (let i = (page - 1) * size; i < (page * size < list.length ? page * size : list.length); i++) {
+
+                        var title = list[i].review.title
+
+                        if (title.length > 50) {
+                            title = title.substring(0, 50) + "...";
+                        }
+
                         HTML += "<tr><td><div class=\"review_list\"><a href=\"/review/detail/" + list[i].review.vseq + "\">";
-                        HTML += "<span>" + list[i].review.title + "&nbsp</span>";
-                        HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);\"/>";
+                        HTML += "<span>" + title + "&nbsp</span>";
+                        HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle;\"/>";
                         HTML += "<span> [" + list[i].review.commentCount + "]</span></a></div>";
                         HTML += "<input type=\"hidden\" name=\"vseq\" value=\"" + list[i].review.vseq + "\"/></td>";
                         HTML += "<td><a href=\"/review/memberList/" + list[i].review.member.mseq + "\">" + list[i].review.member.username + "</a>";
@@ -109,59 +123,34 @@
 
                     HTML += "</tbody></table>";
                     $("#list_area").html(HTML);
-
-                    HTML = "";
-                    if (totalPages !== 0) {
-                        HTML = "<div class=\"page_area\">";
-                        HTML += "<ul class=\"pagination\">";
-                        HTML += "<li class=\"paging\">";
-                        if (page == 1) {
-                            HTML += "<span aria-hidden=\"true\">First</span>";
-                        } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(1, '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"First\">";
-                            HTML += "<span aria-hidden=\"true\">First</span></a></li>";
-                        }
-                        HTML += "&nbsp&nbsp";
-                        HTML += "<li class=\"paging\">";
-                        if (page == 1) {
-                            HTML += "<span aria-hidden=\"true\">\&lt;</span>";
-                        } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(" + (page - 1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"Previous\">";
-                            HTML += "<span aria-hidden=\"true\">\&lt;</span></a></li>";
-                        }
-                        HTML += "&nbsp&nbsp";
-                        let start = parseInt((page - 1) / size) * size;
-                        let end = start + size < totalPages ? start + size : totalPages;
-                        for (let i = start; i < end; i++) {
-                            if (i == page - 1) {
-                                HTML += "<li class=\"active\" class=\"paging\">";
-                                HTML += "<span>" + (i + 1) + "</span></li>";
-                            } else {
-                                HTML += "<li class=\"paging\">";
-                                HTML += "<a href=\"\" onclick=\"reloadList(" + (i + 1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\">" + (i + 1) + "</a></li>";
-                            }
-                            HTML += "&nbsp&nbsp";
-                        }
-
-                        HTML += "<li class=\"paging\">";
-                        if (page == totalPages) {
-                            HTML += "<span aria-hidden=\"true\">\&gt;</span></li>";
-                        } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(" + (page + 1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"Next\">";
-                            HTML += "<span aria-hidden=\"true\">\&gt;</span></a></li>";
-                        }
-                        HTML += "&nbsp&nbsp";
-                        HTML += "<li class=\"paging\">";
-                        if (page == totalPages) {
-                            HTML += "<span aria-hidden=\"true\">Last</span></li>";
-                        } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(" + totalPages + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"Last\">";
-                            HTML += "<span aria-hidden=\"true\">Last</span></a></li>";
-                        }
-                        HTML += "</ul></div>";
-                    }
-                    $("#page_area").html(HTML);
                 }
+
+                // 페이지 번호 요소를 동적으로 생성합니다.
+                let pageHTML = "";
+                pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\">";
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i == page) {
+                        pageHTML += "<span class=\"page-num active\">" + i + "</span>";
+                    } else {
+                        pageHTML += "<a href='#' class=\"page-num\">" + i + "</a>";
+                    }
+                }
+                pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\">";
+                document.getElementById('page_area').innerHTML = pageHTML;
+
+                // 페이지 번호를 클릭하면 해당 페이지의 내용을 불러오는 함수
+                function handlePageClick(event) {
+                    const pageNumber = parseInt(event.target.textContent);
+                    reloadList(pageNumber, 'vseq', 'DESC');
+                }
+
+                // 페이지 번호 요소들을 가져옵니다.
+                const pageNumElements = document.querySelectorAll('.page-num');
+
+                // 각 페이지 번호 요소에 클릭 이벤트 리스너를 추가합니다.
+                pageNumElements.forEach((pageNumElement) => {
+                    pageNumElement.addEventListener('click', handlePageClick);
+                });
             },
             error: function () {
                 alert("리스트 갱신 실패!");
@@ -169,3 +158,7 @@
         });
     }
 </script>
+
+<div id="bg"></div>
+</body>
+</html>

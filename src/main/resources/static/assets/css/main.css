@@ -280,7 +280,7 @@ h2.major {
 /*Table*/
 
 table {
-    margin: 0 0 2rem 0;
+    margin: 0 0 1rem 0;
     width: 100%;
     font-size: 15px;
 }
@@ -1386,6 +1386,8 @@ h1 {
     width: 7rem !important;
 }
 
+/*review*/
+
 #reviewCseq {
     padding: 0.5rem !important;
 }
@@ -1430,4 +1432,66 @@ h1 {
 
 .review-insert-rating-title {
     margin-bottom: 0;
+}
+
+/*list Page*/
+
+.page-box {
+    width: max-content;
+    display: flex;
+    flex-direction: row;
+    padding: 0 0.3rem;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 2rem;
+    align-items: center;
+    margin: auto auto 1rem;
+}
+
+.page-num {
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+
+.width-rem1 {
+    width: 1rem;
+}
+
+.page-index {
+    position: relative;  // 부모 요소에 relative를 설정
+}
+
+#page_area {
+    position: relative;  // page_area에 absolute를 설정
+    bottom: 0;  // 하단에 고정
+}
+
+.review-list-search-index {
+    width: max-content;
+    display: flex;
+    flex-direction: row;
+    padding: 0 0.3rem;
+    border-radius: 2rem;
+    align-items: center;
+    margin: auto auto 1rem;
+}
+
+#review-list {
+    position: relative;
+}
+
+.review-list-create-button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin-right: 2rem;
+    margin-bottom: 4rem;
+}
+
+.review-list-pop-back {
+    background-color: #e58b33db !important;
+}
+
+.popularPosts {
+    color: whitesmoke !important;
 }
