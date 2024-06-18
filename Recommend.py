@@ -12,6 +12,7 @@ import warnings; warnings.filterwarnings('ignore')
 model_file = 'model.pkl'
 svd = joblib.load(model_file)
 
+
 def recomm_camp_by_surprise(svd, member, camp_list, top_n):
     # svd 객체에 unseen_movies 를 입력하여 예측평점 계산
     predictions = [svd.predict(str(member), str(camp)) for camp in camp_list]
@@ -35,7 +36,7 @@ def recomm_camp_by_surprise(svd, member, camp_list, top_n):
     return top_camp_preds
 
 
-member = sys.argv[1]
+member = int(sys.argv[1])
 
 target_camp_file = 'tmp_filtered.csv'
 camp_list_raw = pd.read_csv(target_camp_file, encoding='utf-8')
@@ -50,11 +51,12 @@ review_data_raw.rename(columns={'member':'mseq', 'camp':'cseq'}, inplace=True)
 review_data = review_data_raw.copy()
 review_data.set_index(['mseq', 'cseq'], inplace=True)
 
+
 # 기록된 평점이 있을 경우 가장 최신 평점을 가져온다.
 predict = []
 for i in result.index:
     try:
-        result.loc[i]['rate'] = review_data.loc[member, i].iloc[-i]
+        result.loc[i]['rate'] = review_data.loc[member, i].iloc[-1]['rate']
         predict.append('n')
     except:
         predict.append('y')
@@ -63,7 +65,7 @@ result['predict'] = predict
 result.sort_values(by='rate', ascending=False, inplace=True)
 
 result_file = 'recommend.csv'
-result.to_csv(result_file, sep=',', encoding='utf-8')
+result.to_csv(result_file, sep=',', encoding='utf-8-sig')
 
 while True:
     if os.path.exists(result_file):
