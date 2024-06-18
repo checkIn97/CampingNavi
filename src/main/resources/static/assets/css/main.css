@@ -1478,6 +1478,7 @@ h1 {
 
 #review-list {
     position: relative;
+    width: 60rem;
 }
 
 .review-list-create-button {
