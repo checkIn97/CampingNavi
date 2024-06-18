@@ -259,6 +259,7 @@ public class ReviewController {
     public String reviewEdit(@RequestParam("title") String title,
                             @RequestParam("content") String content,
                             @RequestParam("vseq") int vseq,
+                            @RequestParam("cseq") int cseq,
                             @RequestParam("likes") int likes,
                             @RequestParam("cnt") int cnt,
                             HttpSession session, HttpServletRequest request, Model model) {
@@ -273,7 +274,8 @@ public class ReviewController {
             model.addAttribute("redirectTo","/");
             return "review/review_alert";
         }
-
+        Camp camp = new Camp();
+        camp.setCseq(cseq);
         Review vo = new Review();
         vo.setVseq(vseq);
         vo.setTitle(title);
@@ -281,6 +283,7 @@ public class ReviewController {
         vo.setMember(member);
         vo.setLikes(likes);
         vo.setCount(cnt);
+        vo.setCamp(camp);
         // model.addAttribute("memberVo", memberVo);
 
         reviewService.editReview(vo);
@@ -310,21 +313,6 @@ public class ReviewController {
         return "review/reviewMemberList";
     }
 
-
-
-    @PostMapping("/like/{vseq}")
-    @ResponseBody
-    public ResponseEntity<String> likePost(@PathVariable("vseq") int vseq) {
-        reviewService.likePost(vseq);
-        return ResponseEntity.ok("Liked");
-    }
-
-    @PostMapping("/unlike/{vseq}")
-    @ResponseBody
-    public ResponseEntity<String> unlikePost(@PathVariable("vseq") int vseq){
-        reviewService.unlikePost(vseq);
-        return ResponseEntity.ok("Liked");
-    }
 
     @PostMapping("/reloadRating")
     @ResponseBody
