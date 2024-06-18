@@ -84,7 +84,7 @@
                     for (let i = 0; i < (bestList.length < 3 ? bestList.length : 3); i++) {
                         HTML += "<tr><td><div class=\"popularPosts\">[인기] <a href=\"/review/detail/" + bestList[i].review.vseq + "\">";
                         HTML += "<span>" + bestList[i].review.title + "&nbsp</span>";
-                        HTML += "<img src=\"/assets/images/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);\"/>";
+                        HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);\"/>";
                         HTML += "<span> [" + bestList[i].review.commentCount + "]</span></a></div>";
                         HTML += "<input type=\"hidden\" name=\"vseq\" value=\"" + bestList[i].review.vseq + "\"/></td>";
                         HTML += "<td><a href=\"/review/memberList/" + bestList[i].review.member.mseq + "\">" + bestList[i].review.member.username + "</a>";
@@ -97,7 +97,7 @@
                     for (let i = (page - 1) * size; i < (page * size < list.length ? page * size : list.length); i++) {
                         HTML += "<tr><td><div class=\"review_list\"><a href=\"/review/detail/" + list[i].review.vseq + "\">";
                         HTML += "<span>" + list[i].review.title + "&nbsp</span>";
-                        HTML += "<img src=\"/assets/images/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);\"/>";
+                        HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);\"/>";
                         HTML += "<span> [" + list[i].review.commentCount + "]</span></a></div>";
                         HTML += "<input type=\"hidden\" name=\"vseq\" value=\"" + list[i].review.vseq + "\"/></td>";
                         HTML += "<td><a href=\"/review/memberList/" + list[i].review.member.mseq + "\">" + list[i].review.member.username + "</a>";
