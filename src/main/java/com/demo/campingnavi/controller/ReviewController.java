@@ -178,8 +178,13 @@ public class ReviewController {
         Review review = reviewService.getReview(vseq);
         ReviewVo reviewVo = new ReviewVo(review, reviewRecommendService.getRcdCountByReview(review));
         reviewService.updateCnt(vseq);
+
         int mseq = review.getMember().getMseq();
         boolean recommendChecked = reviewRecommendService.checkReviewRecommend(mseq, vseq);
+
+        int cseq = review.getCamp().getCseq();
+        CampVo campVo = campService.getCampVoByCseq(cseq, member);
+        float score = Float.parseFloat(campVo.getScoreView());
 
         // 모델에 게시글 추가
         model.addAttribute("reviewVo", reviewVo);
@@ -193,6 +198,9 @@ public class ReviewController {
 
         //추천게시글인지 확인
         model.addAttribute("recommendChecked",recommendChecked);
+
+        //평점 추가
+        model.addAttribute("starScore", score);
 
         // 게시글 상세보기 페이지로 이동
         return "review/reviewDetail";
