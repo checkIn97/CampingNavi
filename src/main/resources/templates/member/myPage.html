@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <link href="/assets/css/main.css" rel="stylesheet"/>
     <link href="/assets/css/bg/mainBG.css" rel="stylesheet"/>
     <title>CampNavi</title>
@@ -46,70 +48,71 @@
 
         <!--내 정보-->
         <div class="myPageArea" id="myPageInfo">
-            <div class="myPageBox">
-                <h3 class="myPage-info-title">기본정보</h3>
-                <hr>
-                <div class="myPageTitle">아이디</div>
-                <div>[[${member.username}]]</div>
-                <hr>
-                <div class="myPageTitle">이름</div>
-                <div>[[${member.name}]]</div>
-                <hr>
-                <div class="myPageTitle">성별</div>
-                <div id="memberSexRead">[[${member.sex == 'm' ? '남' : (member.sex == 'f' ? '여' : '성별을 입력해주세요.')}]]</div>
-                <div id="memberSexChange">
-                    남<input checked id="male" name="sex" th:value="m" type="radio"/>
-                    여<input id="female" name="sex" th:value="f" type="radio"/>
+            <form id="editMypageForm" action="/member/mypage/edit/detail" method="post">
+                <div class="myPageBox">
+                    <h3 class="myPage-info-title">기본정보</h3>
+                    <hr>
+                    <div class="myPageTitle">아이디</div>
+                    <div>[[${member.username}]]</div>
+                    <hr>
+                    <div class="myPageTitle">이름</div>
+                    <div>[[${member.name}]]</div>
+                    <hr>
+                    <div class="myPageTitle">성별</div>
+                    <div id="memberSexRead">[[${member.sex == 'm' ? '남' : (member.sex == 'f' ? '여' : '성별을 입력해주세요.')}]]</div>
+                    <div id="memberSexChange">
+                        남<input checked id="male" name="sex" th:value="m" type="radio"/>
+                        여<input id="female" name="sex" th:value="f" type="radio"/>
+                    </div>
+                    <hr>
+                    <div class="myPageTitle">생년월일</div>
+                    <div id="memberBirthRead">[[${member.birth != null ? member.birth : '생년월일을 입력해주세요.'}]]</div>
+                    <div class="myPageInput" id="memberBirthChange">
+                        <input id="birth" name="birth" th:value="${member.birth != null ? member.birth : ''}" type="date"/>
+                    </div>
+                    <hr>
                 </div>
-                <hr>
-                <div class="myPageTitle">생년월일</div>
-                <div id="memberBirthRead">[[${member.birth != null ? member.birth : '생년월일을 입력해주세요.'}]]</div>
-                <div class="myPageInput" id="memberBirthChange">
-                    <input id="birth" name="birth" th:value="${member.birth != null ? member.birth : ''}" type="date"/>
-                </div>
-                <hr>
-            </div>
 
-            <div class="myPageBox">
-                <h3 class="myPage-info-title">연락처</h3>
-                <hr>
-                <div class="myPageTitle">전화번호</div>
-                <div id="memberPhoneRead">[[${member.phone != null ? member.phone : '전화번호를 입력해주세요.'}]]</div>
-                <div id="memberPhoneChange">
-                    <input class="myPageInput" id="phone" name="phone"
-                           th:value="${member.phone != null ? member.phone : ''}" type="text"/>
+                <div class="myPageBox">
+                    <h3 class="myPage-info-title">연락처</h3>
+                    <hr>
+                    <div class="myPageTitle">전화번호</div>
+                    <div id="memberPhoneRead">[[${member.phone != null ? member.phone : '전화번호를 입력해주세요.'}]]</div>
+                    <div id="memberPhoneChange">
+                        <input class="myPageInput" id="phone" name="phone"
+                               th:value="${member.phone != null ? member.phone : ''}" type="text"/>
+                    </div>
+                    <hr>
+                    <div class="myPageTitle">이메일</div>
+                    <div>[[${member.email}]]</div>
+                    <hr>
                 </div>
-                <hr>
-                <div class="myPageTitle">이메일</div>
-                <div>[[${member.email}]]</div>
-                <hr>
-            </div>
 
-            <div class="myPageBox">
-                <h3 class="myPage-info-title">주소</h3>
-                <hr>
-                <div class="myPageTitle">도로명주소</div>
-                <div id="memberAddr1Read">[[${member.addr1 != null ? member.addr1 : '도로명주소를 입력해주세요.'}]]</div>
-                <div id="memberAddr1Change">
-                    <input class="myPageInput" id="addr1" name="addr1" readonly
-                           th:value="${member.addr1 != null ? member.addr1 : ''}" type="text"/>
-                    <button class="myPageBtn mainBtn" onclick="searchAddress()" type="button">주소 검색</button>
+                <div class="myPageBox">
+                    <h3 class="myPage-info-title">주소</h3>
+                    <hr>
+                    <div class="myPageTitle">도로명주소</div>
+                    <div id="memberAddr1Read">[[${member.addr1 != null ? member.addr1 : '도로명주소를 입력해주세요.'}]]</div>
+                    <div id="memberAddr1Change">
+                        <input class="myPageInput" id="addr1" name="addr1" readonly
+                               th:value="${member.addr1 != null ? member.addr1 : ''}" type="text"/>
+                        <button class="myPageBtn mainBtn" onclick="searchAddress()" type="button">주소 검색</button>
+                    </div>
+                    <hr>
+                    <div class="myPageTitle">상세주소</div>
+                    <div id="memberAddr2Read">[[${member.addr2 != null ? member.addr2 : ' '}]]</div>
+                    <div id="memberAddr2Change">
+                        <input class="myPageInput" id="addr2" name="addr2"
+                               th:value="${member.addr2 != null ? member.addr2 : ''}" type="text"/>
+                    </div>
+                    <hr>
                 </div>
-                <hr>
-                <div class="myPageTitle">상세주소</div>
-                <div id="memberAddr2Read">[[${member.addr2 != null ? member.addr2 : ' '}]]</div>
-                <div id="memberAddr2Change">
-                    <input class="myPageInput" id="addr2" name="addr2"
-                           th:value="${member.addr2 != null ? member.addr2 : ''}" type="text"/>
-                </div>
-                <hr>
-            </div>
-
+            </form>
 
             <div class="myPageBox">
                 <h3 class="myPage-info-title">SNS 로그인 여부</h3>
                 <hr>
-                <div>[[${member.provider != null ? member.provider : '홈페이지'}]]</div>
+                <div>[[${member.provider != 'campingnavi' ? member.provider : '홈페이지'}]]</div>
             </div>
         </div>
 
@@ -152,7 +155,7 @@
     </div>
     <div class="buttonContain">
         <button class="mainBtn" id="myPageChange" type="button">수정하기</button>
-        <button class="mainBtn" id="myPageRead" type="button">수정완료</button>
+        <button class="mainBtn" id="myPageRead" type="button" onclick="editMypageDetail()">수정완료</button>
         <button onclick="goBack()" type="button">뒤로가기</button>
     </div>
 </div>
