@@ -41,6 +41,63 @@
                         캠핑장 : <span th:text="${reviewVo.review.camp.getName()}">캠핑장명</span>
                     </div>
                     <div>
+                        리뷰 평점 : <p class="campingGrade">
+                                            <th:block th:with="starScore=${starScore}">
+                            <span class="satisfaction" th:title="${starScore}" th:alt="${starScore}">
+                                <th:block th:if="${starScore < 0.5}">
+                                    <img class="star" src="/assets/images/icon/star-empty.png" alt="star-empty">
+                                </th:block>
+                                <th:block th:if="${starScore >= 0.5 and starScore < 1.0}">
+                                    <img class="star" src="/assets/images/icon/star-half.png" alt="star-half">
+                                </th:block>
+                                <th:block th:if="${starScore >= 1.0}">
+                                    <img class="star" src="/assets/images/icon/star-full.png" alt="star-full">
+                                </th:block>
+
+                                <th:block th:if="${starScore < 1.5}">
+                                    <img class="star" src="/assets/images/icon/star-empty.png" alt="star-empty">
+                                </th:block>
+                                <th:block th:if="${starScore >= 1.5 and starScore < 2.0}">
+                                    <img class="star" src="/assets/images/icon/star-half.png" alt="star-half">
+                                </th:block>
+                                <th:block th:if="${starScore >= 2.0}">
+                                    <img class="star" src="/assets/images/icon/star-full.png" alt="star-full">
+                                </th:block>
+
+                                <th:block th:if="${starScore < 2.5}">
+                                    <img class="star" src="/assets/images/icon/star-empty.png" alt="star-empty">
+                                </th:block>
+                                <th:block th:if="${starScore >= 2.5 and starScore < 3.0}">
+                                    <img class="star" src="/assets/images/icon/star-half.png" alt="star-half">
+                                </th:block>
+                                <th:block th:if="${starScore >= 3.0}">
+                                    <img class="star" src="/assets/images/icon/star-full.png" alt="star-full">
+                                </th:block>
+
+                                <th:block th:if="${starScore < 3.5}">
+                                    <img class="star" src="/assets/images/icon/star-empty.png" alt="star-empty">
+                                </th:block>
+                                <th:block th:if="${starScore >= 3.5 and starScore < 4.0}">
+                                    <img class="star" src="/assets/images/icon/star-half.png" alt="star-half">
+                                </th:block>
+                                <th:block th:if="${starScore >= 4.0}">
+                                    <img class="star" src="/assets/images/icon/star-full.png" alt="star-full">
+                                </th:block>
+
+                                <th:block th:if="${starScore < 4.5}">
+                                    <img class="star" src="/assets/images/icon/star-empty.png" alt="star-empty">
+                                </th:block>
+                                <th:block th:if="${starScore >= 4.5 and starScore < 5.0}">
+                                    <img class="star" src="/assets/images/icon/star-half.png" alt="star-half">
+                                </th:block>
+                                <th:block th:if="${starScore >= 5.0}">
+                                    <img class="star" src="/assets/images/icon/star-full.png" alt="star-full">
+                                </th:block>
+                            </span>
+                        </th:block>
+                    </p>
+                    </div>
+                    <div>
                         <input type="hidden" name="vseq" th:value="${reviewVo.review.vseq}"><br>
                         작성자: <span th:text="${reviewVo.review.member.nickname + '(' + reviewVo.review.member.username + ')'}">작성자명</span>
 
@@ -173,4 +230,3 @@
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/xml/xml.min.js"></script>
 
-<script src="/assets/js/review.js"></script>

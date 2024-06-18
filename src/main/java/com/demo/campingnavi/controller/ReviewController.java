@@ -97,7 +97,7 @@ public class ReviewController {
         model.addAttribute("memberVo", memberVo);
         reviewService.insertReview(vo);
 
-        return "redirect:/review_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
+        return "redirect:/review/list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
 
 
@@ -174,8 +174,13 @@ public class ReviewController {
         Review review = reviewService.getReview(vseq);
         ReviewVo reviewVo = new ReviewVo(review, reviewRecommendService.getRcdCountByReview(review));
         reviewService.updateCnt(vseq);
+
         int mseq = review.getMember().getMseq();
         boolean recommendChecked = reviewRecommendService.checkReviewRecommend(mseq, vseq);
+
+        int cseq = review.getCamp().getCseq();
+        CampVo campVo = campService.getCampVoByCseq(cseq, member);
+        float score = Float.parseFloat(campVo.getScoreView());
 
         // 모델에 게시글 추가
         model.addAttribute("reviewVo", reviewVo);
@@ -189,6 +194,9 @@ public class ReviewController {
 
         //추천게시글인지 확인
         model.addAttribute("recommendChecked",recommendChecked);
+
+        //평점 추가
+        model.addAttribute("starScore", score);
 
         // 게시글 상세보기 페이지로 이동
         return "review/reviewDetail";
@@ -214,7 +222,7 @@ public class ReviewController {
         reviewCommentService.deletAllComment(vseq);
         reviewService.deleteReview(vseq);
 
-        return "redirect:/review_list";
+        return "redirect:/review/list";
 
     }
 
@@ -274,7 +282,7 @@ public class ReviewController {
 
         reviewService.editReview(vo);
         reviewCommentService.updateCommentCount(vseq);
-        return "redirect:/review_list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
+        return "redirect:/review/list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
 
     @GetMapping("/memberList/{mseq}")
