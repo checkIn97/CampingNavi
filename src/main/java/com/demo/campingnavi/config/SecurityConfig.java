@@ -79,7 +79,14 @@ public class SecurityConfig {
                 .headers((headerConfig) -> headerConfig.frameOptions(
                         frameOptionsConfig -> frameOptionsConfig.disable()
                 ))
-                .logout((logoutConfig) -> logoutConfig.logoutSuccessUrl("/"))
+                .logout(
+                        (logoutConfig) -> logoutConfig
+                                .logoutSuccessUrl("/")
+                                .logoutUrl("/oauth-login/member/logoutProc")
+                                .logoutSuccessHandler(
+                                        (request, response, authentication) -> {response.sendRedirect("/");}
+                                )
+                )
                 .oauth2Login((oauth) -> oauth.loginPage("/oauth-login/member/login")
                         .defaultSuccessUrl("/main")
                         .failureUrl("/oauth-login/member/login")
