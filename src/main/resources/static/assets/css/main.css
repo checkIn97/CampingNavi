@@ -1310,6 +1310,7 @@ h1 {
     height: 100px;
     background-color: #cccccc;
     border-radius: 50%;
+    background-image: none;
 }
 
 #memberSexRead {
