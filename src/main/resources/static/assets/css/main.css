@@ -168,6 +168,7 @@ li {
 .headerCategory {
     font-family: fantasy;
     color: whitesmoke;
+    font-size: 1.3rem;
 }
 
 .headerName {
