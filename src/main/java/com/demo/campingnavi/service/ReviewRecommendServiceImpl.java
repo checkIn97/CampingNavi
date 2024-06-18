@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Service
 public class ReviewRecommendServiceImpl implements ReviewRecommendService {
+
     @Autowired
     ReviewRecommendRepository reviewRecommendRepo;
 
@@ -52,4 +53,21 @@ public class ReviewRecommendServiceImpl implements ReviewRecommendService {
     public List<Review> getRcdReviewListByMember(Member member) {
         return reviewRecommendRepo.getRcdReviewListByMember(member);
     }
+
+    @Override
+    public void addReviewRecommend(ReviewRecommend reviewRecommend) {
+        reviewRecommendRepo.save(reviewRecommend);
+    }
+
+    @Override
+    public void removeReviewRecommend(int mseq, int vseq) {
+        reviewRecommendRepo.deleteByMemberAndReview(mseq, vseq);
+    }
+
+    @Override
+    public boolean checkReviewRecommend(int mseq, int vseq) {
+        return reviewRecommendRepo.existsByMember_MseqAndReview_Vseq(mseq, vseq);
+    }
+
+
 }

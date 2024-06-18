@@ -38,6 +38,9 @@
             <div class="card-body">
                 <div class="info">
                     <div>
+                        캠핑장 : <span th:text="${reviewVo.review.camp.getName()}">캠핑장명</span>
+                    </div>
+                    <div>
                         <input type="hidden" name="vseq" th:value="${reviewVo.review.vseq}"><br>
                         작성자: <span th:text="${reviewVo.review.member.nickname + '(' + reviewVo.review.member.username + ')'}">작성자명</span>
 
@@ -48,7 +51,6 @@
                     </div>
                     <div>
                         조회수: <span th:text="${reviewVo.review.count}+1">조회수</span>
-
                     </div>
                 </div>
 
@@ -78,7 +80,11 @@
             </div>
         </div>
     </div>
-
+    <!--찜하기 버튼-->
+        <input class="saveInput" th:id="'saveBtn-' + ${reviewVo.review.vseq}" th:name="'saveBtn-' + ${reviewVo.review.vseq}" type="hidden" th:checked="${recommendChecked}"/>
+    <label th:for="'saveBtn-' + ${reviewVo.review.vseq}" th:data-vseq="${reviewVo.review.vseq}" class="saveLabel" id="saveLabel">
+        <img class="saveBtn saveBtnImg" th:src="${recommendChecked ? '/assets/images/icon/like-full.png' : '/assets/images/icon/like-empty.png'}" alt="">
+    </label>
 
     <th:block th:insert="~{/review/reviewComments}"></th:block>
 
@@ -95,33 +101,71 @@
     </div>
 
 </article>
+<!-- 찜하기 기능 스크립트 -->
+<script>
+    document.querySelectorAll('.saveLabel').forEach(label => {
+        label.addEventListener('click', function (event) {
+            event.preventDefault(); // 기본 동작 방지
+
+            const vseq = document.getElementById('vseq').value;
+            const checkbox = document.getElementById('saveBtn-' + vseq);
+            let isChecked = checkbox.checked;
+
+            // isChecked 변수는 checkbox의 현재 상태를 나타냅니다.
+            // 예시로, isChecked가 true인 경우는 찜 상태를 나타내며, false인 경우는 찜 해제 상태를 나타냅니다.
+
+            if (isChecked === false) { // 현재 체크가 되지 않은 상태인 경우
+                if (confirm("캠핑장리뷰를 추천하시겠습니까?")) {
+                    fetch('/review/recommend/' + vseq, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            checkbox.checked = true; // checkbox를 체크 상태로 변경
+                            this.querySelector('.saveBtnImg').src = '/assets/images/icon/like-full.png'; // 이미지 변경
+                            alert("캠핑장리뷰가 추천되었습니다.")
+                        } else {
+                            alert("캠핑장리뷰 추천하기에 실패했습니다.");
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        alert("캠핑장리뷰 추천하기에 실패했습니다.");
+                    });
+                }
+            } else if (isChecked === true) { // 현재 체크된 상태인 경우
+                if (confirm("캠핑장리뷰 추천하기를 취소하시겠습니까?")) {
+                    fetch('/review/recommend/delete/' + vseq, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            checkbox.checked = false; // checkbox를 체크 해제 상태로 변경
+                            this.querySelector('.saveBtnImg').src = '/assets/images/icon/like-empty.png'; // 이미지 변경
+                            alert("캠핑장리뷰 추천이 취소되었습니다.")
+                        } else {
+                            response.text().then(text => {
+                                console.error('Failed to remove from jjim list:', text);
+                                alert("캠핑장리뷰 추천 취소에 실패하였습니다." + text);
+                            });
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        alert("캠핑장리뷰 추천 취소에 실패하였습니다.");
+                    });
+                }
+            }
+        });
+    });
+</script>
+
 <script>
     function confirmDelete() {
-        var result = confirm("게시글을 삭제하시겠습니까?");
-        return result;
+        return confirm("게시글을 삭제하시겠습니까?");
     }
-
-    function likePost() {
-        var vseq = $("input[name='vseq']").val();
-        var likeCount = $("#likeCount").text();
-
-            // 추천을 추가합니다.
-            $.ajax({
-                type: "POST",
-                url: "/review/like/" + vseq,
-                success: function (response) {
-                    likeCount++;
-                    $("#likeCount").text(likeCount);
-                    localStorage.setItem("liked_" + vseq, true); // 추천 기록 추가
-                },
-                error: function (error) {
-                    alert("추천에 실패하였습니다.");
-                }
-            });
-
-    }
-
-
 </script>
 
 <script type="text/javascript"

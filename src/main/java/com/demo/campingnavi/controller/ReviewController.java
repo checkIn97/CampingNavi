@@ -1,9 +1,6 @@
 package com.demo.campingnavi.controller;
 
-import com.demo.campingnavi.domain.Camp;
-import com.demo.campingnavi.domain.Member;
-import com.demo.campingnavi.domain.Review;
-import com.demo.campingnavi.domain.ReviewRecommend;
+import com.demo.campingnavi.domain.*;
 import com.demo.campingnavi.dto.*;
 import com.demo.campingnavi.service.CampService;
 import com.demo.campingnavi.service.ReviewCommentService;
@@ -13,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -177,6 +175,8 @@ public class ReviewController {
         ReviewVo reviewVo = new ReviewVo(review, reviewRecommendService.getRcdCountByReview(review));
         reviewService.updateCnt(vseq);
         int mseq = review.getMember().getMseq();
+        boolean recommendChecked = reviewRecommendService.checkReviewRecommend(mseq, vseq);
+
         // 모델에 게시글 추가
         model.addAttribute("reviewVo", reviewVo);
         model.addAttribute("authorList", reviewService.getAuthorReviewVoList(mseq));
@@ -186,6 +186,9 @@ public class ReviewController {
 
         ReviewScanVo reviewScanVo = (ReviewScanVo) session.getAttribute("reviewScanVo");
         model.addAttribute("reviewScanVo", reviewScanVo);
+
+        //추천게시글인지 확인
+        model.addAttribute("recommendChecked",recommendChecked);
 
         // 게시글 상세보기 페이지로 이동
         return "review/reviewDetail";
@@ -297,6 +300,7 @@ public class ReviewController {
     }
 
 
+
     @PostMapping("/like/{vseq}")
     @ResponseBody
     public ResponseEntity<String> likePost(@PathVariable("vseq") int vseq) {
@@ -406,4 +410,53 @@ public class ReviewController {
 
         return result;
     }
+
+    @PostMapping("/recommend/{vseq}")
+    @ResponseBody
+    public ResponseEntity<?> addToJjimlist(@PathVariable("vseq") int vseq, HttpSession session){
+
+        Member member = (Member) session.getAttribute("loginUser");
+        if (member == null) {
+            // Return a response entity with a message indicating that the user needs to log in
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 이용해주세요.");
+        } else {
+            try {
+                // Create a new Camp and Recommend object
+                Review review = new Review();
+                review.setVseq(vseq);
+
+                ReviewRecommend reviewRecommend = new ReviewRecommend();
+                reviewRecommend.setReview(review);
+                reviewRecommend.setMember(member);
+
+                // 리뷰 추천하기 저장
+                reviewRecommendService.addReviewRecommend(reviewRecommend);
+
+                // Return success response
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                // Return error response in case of an exception
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("찜하기에 실패했습니다.");
+            }
+        }
+    }
+
+    @PostMapping("/recommend/delete/{vseq}")
+    @ResponseBody
+    public ResponseEntity<Void> removeReviewRecommend(@PathVariable("vseq") int vseq, HttpSession session) {
+
+        try {
+
+            Member member = (Member) session.getAttribute("loginUser");
+            int mseq = member.getMseq();
+            reviewRecommendService.removeReviewRecommend(mseq, vseq);
+
+            return ResponseEntity.ok().build();
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }
+
