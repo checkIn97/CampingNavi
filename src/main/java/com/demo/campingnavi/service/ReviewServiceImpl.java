@@ -102,6 +102,11 @@ public class ReviewServiceImpl implements ReviewService {
 		return reviewVoList;
 	}
 
+	@Override
+	public Review getLastReview() {
+		return reviewRepo.findFirstByOrderByVseqDesc();
+	}
+
 
 	@Override
 	public List<ReviewVo> findReviewVoList(ReviewScanVo reviewScanVo) {

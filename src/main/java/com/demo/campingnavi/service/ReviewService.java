@@ -31,4 +31,6 @@ public interface ReviewService {
 	void unlikePost(int vseq);
 
 	List<ReviewVo> getReviewVoListByCseq(int cseq);
+
+	Review getLastReview();
 }

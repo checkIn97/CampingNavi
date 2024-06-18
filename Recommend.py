@@ -46,22 +46,21 @@ result.set_index('cseq', inplace=True)
 
 review_file = 'Review.csv'
 review_data_raw = pd.read_csv(review_file, encoding='utf-8', sep=',')
-review_data_raw
+review_data_raw.rename(columns={'member':'mseq', 'camp':'cseq'}, inplace=True)
 review_data = review_data_raw.copy()
-review_data.set_index(['member', 'camp'], inplace=True)
+review_data.set_index(['mseq', 'cseq'], inplace=True)
 
 # 기록된 평점이 있을 경우 가장 최신 평점을 가져온다.
 predict = []
 for i in result.index:
     try:
-        result.loc[i]['rate'] = review_data.loc[member, i].iloc[-i]['rate']
+        result.loc[i]['rate'] = review_data.loc[member, i].iloc[-i]
         predict.append('n')
     except:
         predict.append('y')
 
 result['predict'] = predict
 result.sort_values(by='rate', ascending=False, inplace=True)
-
 
 result_file = 'recommend.csv'
 result.to_csv(result_file, sep=',', encoding='utf-8')
