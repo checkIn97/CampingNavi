@@ -100,6 +100,7 @@ li {
     padding: 1rem;
     background-color: #E58B33;
     z-index: 9999; /* 다른 요소들 위에 위치하도록 z-index 값을 높게 설정합니다. */
+    margin: 0 !important;
 }
 
 .headerNavigator {
@@ -1123,7 +1124,8 @@ input[name="slide"] {
 
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    /*margin: 20px;*/
+    margin: 0;
     background-color: #f4f4f4;
 }
 
