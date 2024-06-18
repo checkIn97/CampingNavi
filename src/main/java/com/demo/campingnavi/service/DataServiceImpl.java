@@ -126,12 +126,14 @@ public class DataServiceImpl implements DataService {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
+                .append("vseq,")
                 .append("member,")
                 .append("camp,")
                 .append("rate\n");
 
         for (Review review : reviewList) {
             stringBuilder
+                    .append(review.getVseq()).append(",")
                     .append(review.getMember().getMseq()).append(",")
                     .append(review.getCamp().getCseq()).append(",")
                     .append(review.getLikes()).append("\n");

@@ -50,13 +50,14 @@ review_data_raw = pd.read_csv(review_file, encoding='utf-8', sep=',')
 review_data_raw.rename(columns={'member':'mseq', 'camp':'cseq'}, inplace=True)
 review_data = review_data_raw.copy()
 review_data.set_index(['mseq', 'cseq'], inplace=True)
+review_data.sort_values(by='vseq', ascending=True, inplace=True)
 
 
 # 기록된 평점이 있을 경우 가장 최신 평점을 가져온다.
 predict = []
 for i in result.index:
     try:
-        result.loc[i]['rate'] = review_data.loc[member, i].iloc[-1]['rate']
+        result.loc[i]['rate'] = review_data.loc[member, i]['rate'].iloc[-1]
         predict.append('n')
     except:
         predict.append('y')

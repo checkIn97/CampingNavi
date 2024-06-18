@@ -4,12 +4,12 @@ import os
 
 file_name = 'Review.csv'
 new_data = pd.read_csv(sys.argv[1], encoding='utf-8')
-new_data.set_index('member', inplace=True)
+new_data.set_index('vseq', inplace=True)
 data = pd.DataFrame()
 
 if os.path.exists(file_name):
     original_data = pd.read_csv(file_name, encoding='utf-8')
-    original_data.set_index('member', inplace=True)
+    original_data.set_index('vseq', inplace=True)
     data = pd.concat([original_data, new_data])
 else:
     data = new_data
