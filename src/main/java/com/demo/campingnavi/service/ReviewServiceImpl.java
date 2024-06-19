@@ -127,6 +127,9 @@ public class ReviewServiceImpl implements ReviewService {
 	        case "titleContent":
 				reviewList = reviewRepo.findReviewList(searchWord, searchWord);
 	            break;
+			case "campName" :
+				reviewList = reviewRepo.findByCampNameContaining(searchWord);
+				break;
 	        default:
 				reviewList = reviewRepo.findAllByOrderByCreatedAtDesc();
 	            break;
