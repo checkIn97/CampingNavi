@@ -272,6 +272,7 @@
         let key = event.key || event.keyCode;
         if (key === 'Enter' || key === 13) {
             camp_search();
+            event.preventDefault();
         }
     }
 
