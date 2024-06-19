@@ -61,7 +61,7 @@
 
         </div>
         <div id="list_area"></div>
-        <div class="page-box" id="page_area"></div>
+        <div class="page-box" id="search-page_area"></div>
     </div>
     <div class="box" id="contentSearchArea">
         <div id="kakaoMap"></div>
@@ -230,7 +230,7 @@
                     } else {
                         pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page + 1) + ", 'score', 'DESC', false); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\"></a>";
                     }
-                    document.getElementById('page_area').innerHTML = pageHTML;
+                    document.getElementById('search-page_area').innerHTML = pageHTML;
 
                     // 페이지 번호를 클릭하면 해당 페이지의 내용을 불러오는 함수
                     function handlePageClick(event) {

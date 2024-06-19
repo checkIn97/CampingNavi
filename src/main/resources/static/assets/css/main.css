@@ -490,13 +490,14 @@ table.alt tfoot {
 }
 
 #search-box {
+    position: relative;
     display: none;
     width: 27%;
     height: 90vh;
     margin: 0; /* 요소를 화면 중앙에 배치합니다. */
     padding: 2rem;
     border-radius: 50px;
-    background-color: #fdfada
+    background-color: #fdfada;
 }
 
 table#searchList td {
@@ -1476,12 +1477,17 @@ h1 {
 }
 
 .page-index {
-    position: relative;  // 부모 요소에 relative를 설정
+    position: relative;
 }
 
-#page_area {
-    position: relative;  // page_area에 absolute를 설정
-    bottom: 0;  // 하단에 고정
+#search-page_area {
+    position: absolute;
+    bottom: 2rem;
+    left: 0;
+    right: 0;
+    display: inline-flex;
+    justify-content: center;
+    margin: auto;
 }
 
 .review-list-search-index {
