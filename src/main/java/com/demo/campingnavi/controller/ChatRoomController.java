@@ -1,13 +1,16 @@
 package com.demo.campingnavi.controller;
 
+import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.ChatRoom;
 import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.dto.CampRecommendVo;
 import com.demo.campingnavi.dto.ChatMessage;
 import com.demo.campingnavi.dto.CustomOauth2UserDetails;
 import com.demo.campingnavi.dto.CustomSecurityUserDetails;
+import com.demo.campingnavi.repository.jpa.CampRepository;
 import com.demo.campingnavi.repository.jpa.ChatRoomRepository;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
+import com.demo.campingnavi.repository.jpa.ReviewRepository;
 import com.demo.campingnavi.repository.mongo.MongoChatMessageRepository;
 import com.demo.campingnavi.service.CampService;
 import com.demo.campingnavi.service.ChatRoomService;
@@ -34,6 +37,9 @@ public class ChatRoomController {
     private final MongoChatMessageRepository mongoChatMessageRepository;
     private final MemberRepository memberRepository;
     private final CampService campService;
+    private final ChatRoomRepository chatRoomRepository;
+    private final CampRepository campRepository;
+    private final ReviewRepository reviewRepository;
 
     // 채팅 리스트 화면
     @GetMapping("/room")
@@ -88,6 +94,8 @@ public class ChatRoomController {
                                @RequestParam int maxMem,
                                @RequestParam String[] purpose,
                                @RequestParam String campName) {
+
+        Camp camp = campRepository.findByName(campName);
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setRoomId(UUID.randomUUID().toString());
         chatRoom.setName(name);
@@ -96,8 +104,12 @@ public class ChatRoomController {
         chatRoom.setMaxMem(maxMem);
         chatRoom.setPurpose(List.of(purpose));
         chatRoom.setCampName(campName);
+        chatRoom.setCamp(camp);
         System.out.println(campName);
+        long reviewCount = reviewRepository.countByCampCseq(camp.getCseq());
+        chatRoom.setReviewCount(reviewCount);
         chatRoomService.createChatRoom(chatRoom);
+
         return chatRoomService.createChatRoom(chatRoom);
     }
 
