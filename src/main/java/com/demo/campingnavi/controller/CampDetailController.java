@@ -56,6 +56,7 @@ public class CampDetailController {
         List<ApiResponse.Item> itemList = campDetailService.DataFromApi(mapX, mapY);
         List<ApiImageResponse.Item> imageList = campDetailService.DataFromApiImage((contentId));
         List<ReviewVo> reviewVoList = reviewService.getReviewVoListByCseq(cseq);
+        int reviewCnt = reviewVoList.size();
 
         CampVo campVo = campService.getCampVoByCseq(cseq, member);
         float score = Float.parseFloat(campVo.getScoreView());
@@ -72,6 +73,7 @@ public class CampDetailController {
         model.addAttribute("starScore", score);
         model.addAttribute("jjimChecked", jjimChecked);
         model.addAttribute("reviewVoList", reviewVoList);
+        model.addAttribute("reviewCnt", reviewCnt);
 
         return "/campDetail/campDetail";
     }
