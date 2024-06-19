@@ -119,8 +119,9 @@
     </div>
     <div class="buttonContain" th:each="camp : ${camps}" th:if="${not #strings.isEmpty(camp.resveUrl)}" >
         <button class="mainBtn" th:data-url="${camp.resveUrl}" id="reservationBtn" type="button" target="_blank">예약하기</button>
-        <button id="goingBtn" type="button">커뮤니티</button>
     </div>
+        <button id="goingBtn" type="button">커뮤니티</button>
+
     <div class="buttonContain" id="detailContain">
         <input class="detailBtn" id="viewDetailBtn" name="btn" type="radio">
         <label for="viewDetailBtn">상세보기</label>
