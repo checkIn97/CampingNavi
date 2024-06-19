@@ -1089,8 +1089,9 @@ input[name="slide"] {
     width: 16rem;
 }
 
-#admin {
-    transform: rotate(34deg) translate(279px) rotate(-44deg);
+#book {
+    transform: rotate(45deg) translate(218px) rotate(-44deg);
+    width: 13rem;
 }
 
 #mainSearch {
