@@ -25,4 +25,12 @@ public interface CampRepository extends JpaRepository<Camp, Integer> {
             "OR camp.campType LIKE %:campType4% ")
     public List<Camp> getCampList(String useyn, String name, String locationB, String locationS,
                                   String campType1, String campType2, String campType3, String campType4);
+
+    @Query("SELECT c FROM Camp c WHERE c.name LIKE %:keyword%")
+    List<Camp> searchCamps(String keyword);
+
+    @Query("SELECT c FROM Camp c WHERE c.name=?1")
+    Camp findCampByName(String name);
+
+
 }
