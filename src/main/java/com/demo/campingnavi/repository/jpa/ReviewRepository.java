@@ -42,7 +42,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     Review findFirstByOrderByVseqDesc();
 
     // 특정 cseq를 가진 리뷰를 페이지네이션하여 조회
-    @Query("SELECT r FROM Review r WHERE r.camp.cseq = ?1")
+    @Query("SELECT r FROM Review r WHERE r.camp.cseq = ?1 ORDER BY r.createdAt DESC")
     Page<Review> findByCampCseq(int cseq, Pageable pageable);
 
     // 특정 cseq를 가진 리뷰의 총 개수

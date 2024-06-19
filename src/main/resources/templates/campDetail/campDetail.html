@@ -8,7 +8,16 @@
     <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
     <title>CampNavi</title>
 </head>
+<style>
+    .page-number {
+        margin: 0 5px; /* 좌우 여백 조정 */
+        cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경 */
+    }
 
+    .page-number.current {
+        font-weight: bold; /* 현재 페이지 숫자는 볼드체로 표시 */
+    }
+</style>
 <body>
 
 <th:block th:insert="~{insert/header.html}"></th:block>
@@ -203,15 +212,25 @@
                 리뷰작성하기
             </button>
         </a>
-        <div id="reviewList">
-            <!-- 리뷰 목록 출력 -->
 
+        <div class="reviewList">
+        <!-- 리스트 영역 -->
+        <div id="reviewList"></div>
+
+        <!-- 페이지 영역 -->
+        <div class="page-box">
+            <img class="icon width-rem1" id="prevBtn" src="/assets/images/icon/arrowL.png">
+            <div id="pagination" class="page-numbers"></div> <!-- 페이지 숫자가 들어갈 영역 -->
+            <img class="icon width-rem1" id="nextBtn" src="/assets/images/icon/arrowR.png">
+            <!-- hidden inputs -->
+            <input type="hidden" id="currentPage" name="currentPage" value="1">
+            <input type="hidden" id="maxPage" name="maxPage" value="1">
         </div>
-               <!-- 페이징 처리를 위한 버튼 -->
-        <div id="pagination">
-            <button id="prevBtn">이전</button>
-            <button id="nextBtn">다음</button>
-        </div>
+    </div>
+
+
+
+    </div>
     </div>
 
 </div>
@@ -219,49 +238,77 @@
 <th:block th:insert="~{insert/footer.html}"></th:block>
 <!-- 페이징 처리 -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-// 초기 데이터 로딩
-loadReviewPage(1); // 초기에 첫 페이지 로딩
+    document.addEventListener('DOMContentLoaded', function () {
+        // 초기 데이터 로딩
+        loadReviewPage(1); // 초기에 첫 페이지 로딩
 
-// 이전 페이지로 이동
-document.getElementById('prevBtn').addEventListener('click', function () {
-const currentPage = parseInt(document.getElementById('currentPage').value);
-if (currentPage > 1) {
-loadReviewPage(currentPage - 1);
-}
-});
+        // 이전 페이지로 이동
+        document.getElementById('prevBtn').addEventListener('click', function () {
+            const currentPage = parseInt(document.getElementById('currentPage').value);
+            if (currentPage > 1) {
+                loadReviewPage(currentPage - 1);
+            }
+        });
 
-// 다음 페이지로 이동
-document.getElementById('nextBtn').addEventListener('click', function () {
-const currentPage = parseInt(document.getElementById('currentPage').value);
-const maxPage = parseInt(document.getElementById('maxPage').value);
-if (currentPage < maxPage) {
-loadReviewPage(currentPage + 1);
-}
-});
-});
+        // 다음 페이지로 이동
+        document.getElementById('nextBtn').addEventListener('click', function () {
+            const currentPage = parseInt(document.getElementById('currentPage').value);
+            const maxPage = parseInt(document.getElementById('maxPage').value);
+            if (currentPage < maxPage) {
+                loadReviewPage(currentPage + 1);
+            }
+        });
+    });
 
-// 리뷰 데이터를 비동기로 로딩하는 함수
-function loadReviewPage(pageNumber) {
-const cseq = document.getElementById('cseq').value;
-fetch(`/camp/detail/reviews/${cseq}?page=${pageNumber}`, {
-method: 'GET',
-headers: {
-'Content-Type': 'application/json'
-}
-})
-.then(response => response.json())
-.then(data => {
-// 서버로부터 받은 데이터를 이용하여 리뷰 목록을 업데이트
-document.getElementById('reviewList').innerHTML = data.reviewListHtml; // 리뷰 목록을 서버에서 받은 HTML로 업데이트
-document.getElementById('currentPage').value = data.currentPage; // 현재 페이지 업데이트
-document.getElementById('maxPage').value = data.maxPage; // 최대 페이지 업데이트
-})
-.catch(error => {
-console.error('Error:', error);
-alert("리뷰 목록을 불러오는 데 실패했습니다.");
-});
-}
+    // 리뷰 데이터를 비동기로 로딩하는 함수
+    function loadReviewPage(pageNumber) {
+        const cseq = document.getElementById('cseq').value;
+        fetch(`/camp/detail/reviews/${cseq}?page=${pageNumber}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 서버로부터 받은 데이터를 이용하여 리뷰 목록을 업데이트
+                document.getElementById('reviewList').innerHTML = data.reviewListHtml; // 리뷰 목록을 서버에서 받은 HTML로 업데이트
+                document.getElementById('currentPage').value = data.currentPage; // 현재 페이지 업데이트
+                document.getElementById('maxPage').value = data.maxPage; // 최대 페이지 업데이트
+
+                // 페이지 숫자 업데이트
+                updatePagination(data.currentPage, data.maxPage);
+            })
+
+    }
+
+    // 페이지 숫자를 업데이트하는 함수
+    function updatePagination(currentPage, maxPage) {
+        const paginationDiv = document.getElementById('pagination');
+        paginationDiv.innerHTML = ''; // 이전에 추가된 페이지 번호 초기화
+
+        // 최대 페이지 수만큼 페이지 버튼 생성
+        for (let i = 1; i <= maxPage; i++) {
+            const pageButton = document.createElement('span');
+            pageButton.textContent = i;
+            pageButton.classList.add('page-number');
+
+            if (i === currentPage) {
+                pageButton.classList.add('current');
+            }
+
+            pageButton.addEventListener('click', function () {
+                loadReviewPage(i);
+            });
+
+            paginationDiv.appendChild(pageButton);
+        }
+    }
 </script>
 
 <!-- 찜하기 기능 스크립트 -->

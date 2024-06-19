@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,29 +139,53 @@ public class CampDetailController {
     }
 
     @GetMapping("/reviews/{cseq}")
+    @ResponseBody
     public ResponseEntity<Map<String, Object>> getReviews(@PathVariable("cseq") int cseq,
-                                                          @RequestParam(name = "page", defaultValue = "1") int page, Model model) {
-        // 한 페이지에 표시할 리뷰 개수
-        int pageSize = 10;
+                                                          @RequestParam(name = "page", defaultValue = "1") int page) {
+        int pageSize = 5;
 
         // cseq를 이용하여 해당 캠핑장의 리뷰 목록을 가져옴
         List<Review> reviewList = reviewService.getReviewListByCseq(cseq, page, pageSize);
-
         System.out.println(reviewList);
-
-        // 리뷰 목록을 Thymeleaf로 렌더링하여 HTML 문자열로 변환
-        Context context = new Context();
-        context.setVariable("reviewVoList", reviewList);
-
-        String reviewListHtml = springTemplateEngine.process("campD  etail/reviewList", context);
-
-        // 전체 페이지 수 계산
+        // 전체 리뷰 수를 가져와서 전체 페이지 수 계산
         long totalReviews = reviewService.getTotalReviewsByCampId(cseq);
         int maxPage = (int) Math.ceil((double) totalReviews / pageSize);
 
+        // HTML 문자열 생성
+        StringBuilder reviewListHtml = new StringBuilder();
+        if (reviewList.isEmpty()) {
+            reviewListHtml.append("<p>등록된 리뷰가 없습니다.</p>");
+        } else {
+            for (Review review : reviewList) {
+                reviewListHtml.append("<div class=\"userReview\">")
+                        .append("<div class=\"userName\">")
+                        .append("<span>").append(review.getMember().getNickname()).append("</span>")
+                        .append("<span class=\"userDate\">").append(new SimpleDateFormat("yyyy-MM-dd").format(review.getCreatedAt())).append("</span>")
+                        .append("</div>")
+                        .append("<div class=\"userGrade\">");
+                for (int i = 0; i < 5; i++) {
+                    if (review.getLikes() > i + 0.5) {
+                        reviewListHtml.append("<img alt=\"star-full\" class=\"star\" src=\"/assets/images/icon/star-full.png\">");
+                    } else if (review.getLikes() > i) {
+                        reviewListHtml.append("<img alt=\"star-half\" class=\"star\" src=\"/assets/images/icon/star-half.png\">");
+                    } else {
+                        reviewListHtml.append("<img alt=\"star-empty\" class=\"star\" src=\"/assets/images/icon/star-empty.png\">");
+                    }
+                }
+                reviewListHtml.append("</div>")
+                        .append("<div class=\"userContent\">")
+                        .append("<a href=\"/review/detail/").append(review.getVseq()).append("\"><span>")
+                        .append(review.getTitle().length() > 100 ? review.getTitle().substring(0, 100) + "..." : review.getTitle())
+                        .append("</span></a>")
+                        .append("</div>")
+                        .append("<hr class=\"userReviewBlock\">")
+                        .append("</div>");
+            }
+        }
+
         // JSON 응답으로 리뷰 목록과 페이징 정보를 클라이언트에 전달
         Map<String, Object> response = new HashMap<>();
-        response.put("reviewListHtml", reviewListHtml);
+        response.put("reviewListHtml", reviewListHtml.toString());
         response.put("currentPage", page);
         response.put("maxPage", maxPage);
 

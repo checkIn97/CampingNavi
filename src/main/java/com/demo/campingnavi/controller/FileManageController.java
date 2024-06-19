@@ -15,7 +15,7 @@ import java.util.UUID;
 public class FileManageController {
 
     //본인 프로젝트 절대경로 입력
-    private static final String FILE_UPLOAD_PATH = "C:\\Users\\602-01\\IdeaProjects\\CampingNavi\\src\\main\\resources\\static\\upload\\";
+    private static final String FILE_UPLOAD_PATH = "C:\\Users\\user\\IdeaProjects\\CampingNavi\\src\\main\\resources\\static\\upload\\";
 
     @PostMapping("/uploadSummernoteImageFile")
     public ResponseEntity<?> uploadSummernoteImageFile(@RequestParam("file") MultipartFile multipartFile) {
