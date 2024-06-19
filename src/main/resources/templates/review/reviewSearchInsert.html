@@ -128,26 +128,13 @@
             }
         });
 
-        $(document).ready(function() {
-            // 폼 제출 이벤트
-            $('form[name="form"]').submit(function(event) {
-                console.log("폼 제출 이벤트 발생");
-
-                // 캠핑장 입력값 확인
-                var campInput = $('#camp').val().trim();
-
-                // 유효성 검사
-                if (!isValidCamp(campInput)) {
-                    alert("유효한 캠핑장 이름을 입력해주세요.");
-                    event.preventDefault(); // 폼 제출 방지
-                    $('#camp').focus(); // 입력창으로 포커스 이동
-                }
-            });
-
-            // 캠핑장 이름 유효성 검사 함수 (예시)
-            function isValidCamp(name) {
-                // 간단하게 예시를 들기 위해 첫 글자가 영문자로 시작하는지 확인하는 예시
-                return /^[A-Za-z]/.test(name);
+        // 게시글 등록 버튼 클릭 시 폼 제출 전 유효성 검사
+        $('form[name="form"]').submit(function(event) {
+            var campInput = $('#camp').val().trim();
+            if (!isValidCamp(campInput)) {
+                alert("유효한 캠핑장 이름을 입력해주세요.");
+                event.preventDefault(); // 폼 제출 방지
+                $('#camp').focus();
             }
         });
 
