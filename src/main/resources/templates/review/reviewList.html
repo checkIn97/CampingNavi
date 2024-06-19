@@ -81,7 +81,7 @@
 
                 if (result === "success") {
                     let HTML = "";
-                    HTML += "<table><thead><tr><th>제목</th><th>작성자</th><th>작성일시</th><th>추천수</th><th>조회수</th></tr></thead><tbody>";
+                    HTML += "<table><thead><tr><th>캠핑장명</th><th>제목</th><th>작성자</th><th>작성일시</th><th>추천수</th><th>조회수</th></tr></thead><tbody>";
                     for (let i = 0; i < (bestList.length < 3 ? bestList.length : 3); i++) {
 
                         var bestTitle = bestList[i].review.title;
@@ -90,7 +90,8 @@
                             bestTitle = bestTitle.substring(0, 50) + "...";
                         }
 
-                        HTML += "<tr class='review-list-pop-back'><td><div class=\"popularPosts\">[인기] <a class=\"popularPosts\" href=\"/review/detail/" + bestList[i].review.vseq + "\">";
+                        HTML += "<tr class='review-list-pop-back'><td class=\"popularPosts\">" + bestList[i].review.camp.name + "</td>"
+                        HTML += "<td><div class=\"popularPosts\">[인기] <a class=\"popularPosts\" href=\"/review/detail/" + bestList[i].review.vseq + "\">";
                         HTML += "<span class=\"popularPosts\" >" + bestTitle + "&nbsp</span>";
                         HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);\"/>";
                         HTML += "<span> [" + bestList[i].review.commentCount + "]</span></a></div>";
@@ -110,7 +111,8 @@
                             title = title.substring(0, 50) + "...";
                         }
 
-                        HTML += "<tr><td><div class=\"review_list\"><a href=\"/review/detail/" + list[i].review.vseq + "\">";
+                        HTML += "<tr><td class=\"review_list\">" + list[i].review.camp.name + "</td>"
+                        HTML += "<td><div class=\"review_list\"><a href=\"/review/detail/" + list[i].review.vseq + "\">";
                         HTML += "<span>" + title + "&nbsp</span>";
                         HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle;\"/>";
                         HTML += "<span> [" + list[i].review.commentCount + "]</span></a></div>";
