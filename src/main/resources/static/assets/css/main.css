@@ -1485,6 +1485,12 @@ h1 {
     overflow-y: auto;
 }
 
+@media (min-width: 601px) {
+    #search-list_area {
+        max-height: 500px; /* 화면 너비가 601px 이상일 때의 max-height 값 */
+    }
+}
+
 #search-page_area {
     position: absolute;
     bottom: 2rem;
