@@ -78,7 +78,7 @@ li {
 }
 
 .webkit {
-    width: -webkit-fill-available;
+    width: -webkit-fill-available !important;
 }
 
 /*header*/
@@ -349,6 +349,12 @@ table.alt tfoot {
 }
 
 /*membership*/
+
+.membership-sex{
+    justify-content: center;
+    align-items: center;
+    padding: 0.3rem !important;
+}
 
 #submitBtn {
     width: -webkit-fill-available;
@@ -1385,10 +1391,6 @@ h1 {
     padding: 0.5rem !important;
 }
 
-#nickname {
-    width: 7rem !important;
-}
-
 /*review*/
 
 #reviewCseq {
@@ -1503,4 +1505,10 @@ h1 {
 .active {
     font-weight: bolder;
     font-size: 1.1rem;
+}
+
+/*reviewDetail*/
+
+#review-detail-box {
+    width: 50rem;
 }

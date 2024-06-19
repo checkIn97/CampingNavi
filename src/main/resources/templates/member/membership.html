@@ -326,37 +326,37 @@
             </div>
 
             <div class="memberContain">
-                <input placeholder="이름" type="text" name="name" id="name">
+                <input class="webkit" placeholder="이름" type="text" name="name" id="name">
             </div>
 
-            <div class="memberContain">
+            <div class="memberContain page-box webkit membership-sex">
                 <input type="radio" id="male" name="sex" th:value="m" checked>남
                 <input type="radio" id="female" name="sex" th:value="f">여
             </div>
 
             <div class="memberContain">
-                <input placeholder="닉네임" type="text" name="nickname" id="nickname">
+                <input placeholder="닉네임" type="text" class="webkit" name="nickname" id="nickname">
                 <input type="hidden" id="hiddenNickname">
                 <button type="button" onclick="validateNickname()">닉네임 중복 확인</button>
             </div>
 
             <div class="memberContain">
-                <input placeholder="생년월일" type="date" name="birth" id="birth">
+                <input placeholder="생년월일" type="date" class="webkit" name="birth" id="birth">
             </div>
 
             <div class="memberContain">
-                <input placeholder="휴대전화번호 예) 010-1234-5678" type="tel" name="phone" id="phone">
+                <input placeholder="휴대전화번호 예) 010-1234-5678" type="tel" class="webkit" name="phone" id="phone">
                 <!--<button type="button">핸드폰 번호 인증</button>-->
             </div>
 
             <div class="memberContain">
-                <input placeholder="이메일 예) email@email.com" type="email" name="email" id="email">
+                <input placeholder="이메일 예) email@email.com" type="email" class="webkit" name="email" id="email">
                 <input type="hidden" id="hiddenEmail">
                 <button type="button" onclick="sendNumber()">이메일 인증</button>
             </div>
 
             <div class="memberContain">
-                <input placeholder="주소" type="text" name="addr1" id="addr" readonly>
+                <input placeholder="주소" type="text" class="webkit" name="addr1" id="addr" readonly>
                 <button type="button" onclick="searchAddress()">주소 검색</button>
             </div>
 
