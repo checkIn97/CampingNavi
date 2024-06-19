@@ -16,23 +16,15 @@ rating_init.rename(columns={'회원':'member', '캠핑장ID':'camp', '평점':'r
 rating_init.dropna(inplace=True)
 rating_init['member'] = rating_init['member'].apply(lambda x: 'm'+str(hash(x)))
 
-
-# 새로 축적된 리뷰 데이터 (평점 포함)
-rating_new_file = 'Review.csv'
-rating_new = pd.read_csv(rating_new_file, encoding='utf-8', sep=',')
-
-# 평점 데이터 통합
-rating = pd.concat([rating_init, rating_new])
-rating.reset_index(inplace=True)
-rating.drop('index', axis=1, inplace=True)
-
 # camp번호 규격 정리
 def refine_camp(x):
     try:
         x = str(x)[:-2]
     except:
         pass
-    return x
+    return int(x)
+
+rating_init['camp'] = rating_init['camp'].apply(refine_camp)
 
 # 평점 규격 정리
 def refine_rate(x):
@@ -45,11 +37,41 @@ def refine_rate(x):
         x = x[:index]
     return float(x)
 
-
-rating['camp'] = rating['camp'].apply(refine_camp)
-rating['rate'] = rating['rate'].apply(refine_rate)
+rating_init['rate'] = rating_init['rate'].apply(refine_rate)
 
 
+# 새로 축적된 리뷰 데이터 (평점 포함)
+rating_new_file = 'Review.csv'
+rating_new = pd.read_csv(rating_new_file, encoding='utf-8', sep=',')
+rating_new.set_index(['member', 'camp'], inplace=True)
+rating_new.sort_values(by='vseq', ascending=True, inplace=True)
+
+indexes = []
+for i in rating_new.index:
+    if i not in indexes:
+        indexes.append(i)
+
+member_new = []
+camp_new = []
+rate_new = []
+
+for (i, j) in indexes:
+    member_new.append(str(i))
+    camp_new.append(j)
+    rate_new.append(rating_new.loc[(i, j)]['rate'].iloc[-1])
+
+rating_renewal = pd.DataFrame({'member':member_new, 'camp':camp_new, 'rate':rate_new})
+
+
+
+# 평점 데이터 통합
+rating = pd.concat([rating_init, rating_renewal])
+rating.reset_index(inplace=True)
+rating.drop('index', axis=1, inplace=True)
+
+
+
+# 최적화
 reader = Reader(rating_scale=(0.0, 5.0))
 data = Dataset.load_from_df(rating[['member', 'camp', 'rate']], reader)
 
@@ -60,10 +82,12 @@ param_grid = {'n_epochs':[20, 40, 60, 80, 100], 'n_factors':[50, 100, 150, 200]}
 gs = GridSearchCV(SVD, param_grid, measures=['rmse', 'mse'], cv=3)
 gs.fit(data)
 
+# 최고의 RMSE 평가점수 매개변수 입력
 best_epochs = gs.best_params['rmse']['n_epochs']
 best_factors = gs.best_params['rmse']['n_factors']
 
-# 최적화 파라미터로 학습 수행
+
+# 모델 학습
 rating_noh = rating.copy()
 rating_noh_file = 'rating_noh.csv'
 rating_noh.to_csv(rating_noh_file, sep=';', encoding='utf-8-sig', index=False, header=False)
@@ -77,7 +101,8 @@ trainset = data_folds.build_full_trainset()
 svd = SVD(n_epochs=best_epochs, n_factors=best_factors, random_state=0)
 svd.fit(trainset)
 
-# 학습 결과를 저장하고 임시파일 삭제
+
+# 결과 저장
 model_file = 'model.pkl'
 joblib.dump(svd, model_file)
 
