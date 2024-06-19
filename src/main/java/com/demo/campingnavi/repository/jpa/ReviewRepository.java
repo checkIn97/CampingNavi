@@ -28,6 +28,8 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
     List<Review> findByContentContaining(String writer);
 
+    List<Review> findByCampNameContaining(String campName);
+
     @Query("SELECT r FROM Review r ORDER BY r.count DESC")
     List<Review> findBestList();
 
