@@ -1,5 +1,6 @@
 package com.demo.campingnavi.controller;
 
+import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.dto.CampRecommendVo;
 import com.demo.campingnavi.dto.CampVo;
@@ -185,6 +186,12 @@ public class CampController {
         }
 
         return result;
+    }
+
+    @GetMapping("/api/search")
+    @ResponseBody
+    public List<Camp> searchCamps(@RequestParam String keyword) {
+        return campService.searchCamps(keyword);
     }
 
 }

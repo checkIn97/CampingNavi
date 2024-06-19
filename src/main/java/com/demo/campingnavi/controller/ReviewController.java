@@ -124,6 +124,51 @@ public class ReviewController {
         return "redirect:/review/list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
 
+    // 게시글 작성
+    @PostMapping("/search/insert")
+    public String saveReview(@RequestParam(value = "title") String title,
+                             @RequestParam(value = "content") String content,
+                             @RequestParam(value = "camp", defaultValue = "0") String name,
+                             @RequestParam(value = "likes", defaultValue = "5.0") float likes,
+                             HttpSession session,
+                             HttpServletRequest request,
+                             Model model) {
+
+        // 세션에서 사용자 정보 가져오기
+        Member member = (Member) session.getAttribute("loginUser");
+        MemberVo memberVo = new MemberVo();
+        // 세션에 로그인 정보가 없는 경우
+        if (member == null) {
+            // 로그인 알림을 포함한 경고 메시지를 설정합니다.
+            model.addAttribute("msg","로그인 후 이용해주세요.");
+            model.addAttribute("redirectTo","/");
+            return "review/review_alert";
+        }
+        Review vo = new Review();
+
+        if (title.isEmpty()) {
+            vo.setTitle("제목 없음");
+        }else {
+            vo.setTitle(title);
+        }
+
+        vo.setContent(content);
+        vo.setMember(member); // 사용자 정보 설정
+
+        vo.setCamp(campService.getCampByName(name));
+        vo.setLikes(likes);
+        vo.setCount(0);
+
+        model.addAttribute("memberVo", memberVo);
+        reviewService.insertReview(vo);
+        vo = reviewService.getLastReview();
+        List<Review> reviewList = new ArrayList<>();
+        reviewList.add(vo);
+        dataService.reviewListOutToCsv(reviewList);
+
+        return "redirect:/review/list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
+    }
+
 
     // 게시글 리스트 보기
     @GetMapping("/list")
