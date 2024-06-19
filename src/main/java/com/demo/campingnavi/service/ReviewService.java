@@ -26,11 +26,11 @@ public interface ReviewService {
 	
 	List<ReviewVo> getAuthorReviewVoList(int mseq);
 
-	void likePost(int vseq);
-
-	void unlikePost(int vseq);
-
 	List<ReviewVo> getReviewVoListByCseq(int cseq);
 
 	Review getLastReview();
+
+	List<Review> getReviewListByCseq(int cseq, int page, int pageSize);
+
+	long getTotalReviewsByCampId(int cseq);
 }
