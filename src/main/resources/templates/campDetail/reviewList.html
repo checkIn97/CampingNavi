@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<body>
+<div th:fragment="reviewVoList">
+    <div id="reviewList">
+        <!-- 리뷰 목록 출력 -->
+        <th:block th:if="${!#lists.isEmpty(reviewVoList)}">
+            <th:block th:each="reviewVo : ${reviewVoList}">
+                <div class="userReview">
+                    <div class="userName">
+                        <span th:text="${reviewVo.member.nickname}"></span>
+                        <span class="userDate" th:text="${#dates.format(reviewVo.createdAt, 'yyyy-MM-dd')}"></span>
+                    </div>
+
+                    <div class="userGrade">
+                        <th:block th:if="${reviewVo.likes < 0.5}">
+                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                        </th:block>
+                        <th:block th:if="${reviewVo.likes >= 0.5 and reviewVo.likes < 1.0}">
+                            <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
+                        </th:block>
+                        <th:block th:if="${reviewVo.likes >= 1.0}">
+                            <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
+                        </th:block>
+
+                        <th:block th:if="${reviewVo.likes < 1.5}">
+                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                        </th:block>
+                        <th:block th:if="${reviewVo.likes >= 1.5 and reviewVo.likes < 2.0}">
+                            <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
+                        </th:block>
+                        <th:block th:if="${reviewVo.likes >= 2.0}">
+                            <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
+                        </th:block>
+
+                        <th:block th:if="${reviewVo.likes < 2.5}">
+                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                        </th:block>
+                        <th:block th:if="${reviewVo.likes >= 2.5 and reviewVo.likes < 3.0}">
+                            <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
+                        </th:block>
+                        <th:block th:if="${reviewVo.likes >= 3.0}">
+                            <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
+                        </th:block>
+
+                        <th:block th:if="${reviewVo.likes < 3.5}">
+                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                        </th:block>
+                        <th:block th:if="${reviewVo.likes >= 3.5 and reviewVo.likes< 4.0}">
+                            <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
+                        </th:block>
+                        <th:block th:if="${reviewVo.likes >= 4.0}">
+                            <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
+                        </th:block>
+
+                        <th:block th:if="${reviewVo.likes < 4.5}">
+                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                        </th:block>
+                        <th:block th:if="${reviewVo.likes >= 4.5 and reviewVo.likes < 5.0}">
+                            <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
+                        </th:block>
+                        <th:block th:if="${reviewVo.likes >= 5.0}">
+                            <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
+                        </th:block>
+                    </div>
+                    <div class="userContent">
+                        <a th:href="@{'/review/detail/' + ${reviewVo.vseq}}"><span
+                                th:text="${#strings.abbreviate(reviewVo.title, 100)}"></span></a>
+                    </div>
+                    <hr class="userReviewBlock">
+
+                </div>
+            </th:block>
+            <div th:if="${#lists.isEmpty(reviewVoList)}">
+                <p>등록된 리뷰가 없습니다.</p>
+            </div>
+        </th:block>
+    </div>
+</div>
+</body>
+</html>

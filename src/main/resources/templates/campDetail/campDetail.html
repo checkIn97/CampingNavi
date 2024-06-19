@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<html lang="kr" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset="utf-8"/>
@@ -203,81 +203,67 @@
                 리뷰작성하기
             </button>
         </a>
-        <div th:if="${!#lists.isEmpty(reviewVoList)}">
-            <th:block th:each="reviewVo : ${reviewVoList}">
-                <div class="userReview">
-                    <div class="userName">
-                        <!--                <img alt="userIcon" class="userIcon" src="/assets/images/icon/user.png">-->
-                        <span th:text="${reviewVo.review.member.nickname}"></span>
-                        <span class="userDate"
-                              th:text="${#dates.format(reviewVo.review.createdAt, 'yyyy-MM-dd')}"></span>
-                    </div>
+        <div id="reviewList">
+            <!-- 리뷰 목록 출력 -->
 
-                    <div class="userGrade">
-                        <th:block th:if="${reviewVo.review.likes < 0.5}">
-                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
-                        </th:block>
-                        <th:block th:if="${reviewVo.review.likes >= 0.5 and reviewVo.review.likes < 1.0}">
-                            <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
-                        </th:block>
-                        <th:block th:if="${reviewVo.review.likes >= 1.0}">
-                            <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
-                        </th:block>
-
-                        <th:block th:if="${reviewVo.review.likes < 1.5}">
-                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
-                        </th:block>
-                        <th:block th:if="${reviewVo.review.likes >= 1.5 and reviewVo.review.likes < 2.0}">
-                            <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
-                        </th:block>
-                        <th:block th:if="${reviewVo.review.likes >= 2.0}">
-                            <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
-                        </th:block>
-
-                        <th:block th:if="${reviewVo.review.likes < 2.5}">
-                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
-                        </th:block>
-                        <th:block th:if="${reviewVo.review.likes >= 2.5 and reviewVo.review.likes < 3.0}">
-                            <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
-                        </th:block>
-                        <th:block th:if="${reviewVo.review.likes >= 3.0}">
-                            <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
-                        </th:block>
-
-                        <th:block th:if="${reviewVo.review.likes < 3.5}">
-                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
-                        </th:block>
-                        <th:block th:if="${reviewVo.review.likes >= 3.5 and reviewVo.review.likes < 4.0}">
-                            <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
-                        </th:block>
-                        <th:block th:if="${reviewVo.review.likes >= 4.0}">
-                            <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
-                        </th:block>
-
-                        <th:block th:if="${reviewVo.review.likes < 4.5}">
-                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
-                        </th:block>
-                        <th:block th:if="${reviewVo.review.likes >= 4.5 and reviewVo.review.likes < 5.0}">
-                            <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
-                        </th:block>
-                        <th:block th:if="${reviewVo.review.likes >= 5.0}">
-                            <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
-                        </th:block>
-                    </div>
-                    <div class="userContent">
-                        <a th:href="@{'/review/detail/' + ${reviewVo.review.vseq}}"><span
-                                th:text="${#strings.abbreviate(reviewVo.review.title, 100)}"></span></a>
-                    </div>
-                    <hr class="userReviewBlock">
-                </div>
-            </th:block>
         </div>
-        <div th:if="${#lists.isEmpty(reviewVoList)}">
-            <p>등록된 리뷰가 없습니다.</p>
+               <!-- 페이징 처리를 위한 버튼 -->
+        <div id="pagination">
+            <button id="prevBtn">이전</button>
+            <button id="nextBtn">다음</button>
         </div>
     </div>
+
 </div>
+
 <th:block th:insert="~{insert/footer.html}"></th:block>
+<!-- 페이징 처리 -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+// 초기 데이터 로딩
+loadReviewPage(1); // 초기에 첫 페이지 로딩
+
+// 이전 페이지로 이동
+document.getElementById('prevBtn').addEventListener('click', function () {
+const currentPage = parseInt(document.getElementById('currentPage').value);
+if (currentPage > 1) {
+loadReviewPage(currentPage - 1);
+}
+});
+
+// 다음 페이지로 이동
+document.getElementById('nextBtn').addEventListener('click', function () {
+const currentPage = parseInt(document.getElementById('currentPage').value);
+const maxPage = parseInt(document.getElementById('maxPage').value);
+if (currentPage < maxPage) {
+loadReviewPage(currentPage + 1);
+}
+});
+});
+
+// 리뷰 데이터를 비동기로 로딩하는 함수
+function loadReviewPage(pageNumber) {
+const cseq = document.getElementById('cseq').value;
+fetch(`/camp/detail/reviews/${cseq}?page=${pageNumber}`, {
+method: 'GET',
+headers: {
+'Content-Type': 'application/json'
+}
+})
+.then(response => response.json())
+.then(data => {
+// 서버로부터 받은 데이터를 이용하여 리뷰 목록을 업데이트
+document.getElementById('reviewList').innerHTML = data.reviewListHtml; // 리뷰 목록을 서버에서 받은 HTML로 업데이트
+document.getElementById('currentPage').value = data.currentPage; // 현재 페이지 업데이트
+document.getElementById('maxPage').value = data.maxPage; // 최대 페이지 업데이트
+})
+.catch(error => {
+console.error('Error:', error);
+alert("리뷰 목록을 불러오는 데 실패했습니다.");
+});
+}
+</script>
+
 <!-- 찜하기 기능 스크립트 -->
 <script>
     document.querySelectorAll('.saveLabel').forEach(label => {

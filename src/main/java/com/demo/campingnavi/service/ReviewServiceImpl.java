@@ -77,20 +77,6 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public void likePost(int vseq) {
-		Review review = reviewRepo.findById(vseq).orElseThrow(() -> new RuntimeException("Review not found"));
-		review.setLikes(review.getLikes() + 1);
-		reviewRepo.save(review);
-	}
-
-	@Override
-	public void unlikePost(int vseq) {
-		Review review = reviewRepo.findById(vseq).orElseThrow(() -> new RuntimeException("Review not found"));
-		review.setLikes(review.getLikes() - 1);
-		reviewRepo.save(review);
-	}
-
-	@Override
 	public List<ReviewVo> getReviewVoListByCseq(int cseq) {
 		List<Review> reviewList = reviewRepo.findCampReviewList(cseq);
 		List<ReviewVo> reviewVoList = new ArrayList<>();
@@ -105,6 +91,18 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public Review getLastReview() {
 		return reviewRepo.findFirstByOrderByVseqDesc();
+	}
+
+	@Override
+	public List<Review> getReviewListByCseq(int cseq, int page, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+		Page<Review> reviewPage = reviewRepo.findByCampCseq(cseq, pageRequest);
+		return reviewPage.getContent();
+	}
+
+	@Override
+	public long getTotalReviewsByCampId(int cseq) {
+		return reviewRepo.countByCampCseq(cseq);
 	}
 
 

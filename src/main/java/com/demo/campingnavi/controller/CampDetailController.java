@@ -18,17 +18,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/camp/detail")
 public class CampDetailController {
 
+    private final TemplateEngine springTemplateEngine;
+
+    @Autowired
+    public CampDetailController(TemplateEngine templateEngine) {
+        this.springTemplateEngine = templateEngine;
+    }
+
     @Autowired
     private CampDetailService campDetailService;
     @Autowired
     private CampService campService;
+
 
     @Autowired
     private ReviewService reviewService;
@@ -125,5 +137,34 @@ public class CampDetailController {
         }
     }
 
+    @GetMapping("/reviews/{cseq}")
+    public ResponseEntity<Map<String, Object>> getReviews(@PathVariable("cseq") int cseq,
+                                                          @RequestParam(name = "page", defaultValue = "1") int page, Model model) {
+        // 한 페이지에 표시할 리뷰 개수
+        int pageSize = 10;
+
+        // cseq를 이용하여 해당 캠핑장의 리뷰 목록을 가져옴
+        List<Review> reviewList = reviewService.getReviewListByCseq(cseq, page, pageSize);
+
+        System.out.println(reviewList);
+
+        // 리뷰 목록을 Thymeleaf로 렌더링하여 HTML 문자열로 변환
+        Context context = new Context();
+        context.setVariable("reviewVoList", reviewList);
+
+        String reviewListHtml = springTemplateEngine.process("campD  etail/reviewList", context);
+
+        // 전체 페이지 수 계산
+        long totalReviews = reviewService.getTotalReviewsByCampId(cseq);
+        int maxPage = (int) Math.ceil((double) totalReviews / pageSize);
+
+        // JSON 응답으로 리뷰 목록과 페이징 정보를 클라이언트에 전달
+        Map<String, Object> response = new HashMap<>();
+        response.put("reviewListHtml", reviewListHtml);
+        response.put("currentPage", page);
+        response.put("maxPage", maxPage);
+
+        return ResponseEntity.ok().body(response);
+    }
 
 }
