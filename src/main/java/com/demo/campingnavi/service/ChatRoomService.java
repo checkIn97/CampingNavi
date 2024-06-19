@@ -11,4 +11,8 @@ public interface ChatRoomService {
     public ChatRoom findRoomById(String roomId);
     public ChatRoom createChatRoom(ChatRoom chatRoom);
 
+    // 이름에 특정 문자열이 포함된 채팅방 찾기
+    public List<ChatRoom> findByCampNameContaining(String campName);
+
+
 }

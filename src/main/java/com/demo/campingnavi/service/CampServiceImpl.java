@@ -194,6 +194,10 @@ public class CampServiceImpl implements CampService {
     }
 
     @Override
+    public List<Camp> searchItems(String keyword) {
+        return campRepo.findByNameContaining(keyword);
+    }
+    @Override
     public List<Camp> searchCamps(String keyword) {
         return campRepo.searchCamps(keyword);
     }
@@ -208,6 +212,7 @@ public class CampServiceImpl implements CampService {
         Camp camp = campRepo.findCampByName(campName);
         return camp != null;
     }
+
 
 
 }

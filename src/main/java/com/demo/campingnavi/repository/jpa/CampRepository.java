@@ -26,6 +26,8 @@ public interface CampRepository extends JpaRepository<Camp, Integer> {
     public List<Camp> getCampList(String useyn, String name, String locationB, String locationS,
                                   String campType1, String campType2, String campType3, String campType4);
 
+    public List<Camp> findByNameContaining(String name);
+
     @Query("SELECT c FROM Camp c WHERE c.name LIKE %:keyword%")
     List<Camp> searchCamps(String keyword);
 

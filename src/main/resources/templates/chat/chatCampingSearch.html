@@ -1,252 +1,56 @@
 <!DOCTYPE html>
-<html lang="kr" xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
-    <link href="/assets/css/main.css" rel="stylesheet"/>
-    <link href="/assets/css/bg/noPaintBG.css" rel="stylesheet"/>
-    <title>CampNavi</title>
+    <title>Search Popup</title>
+    <style>
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
-
 <body>
+<h1>Search</h1>
+<input type="text" id="keyword">
+<button onclick="searchItems()">Search</button>
+<ul id="results"></ul>
 
-<th:block th:insert="insert/header.html"></th:block>
-
-<div id="search-box">
-    <button class="close" id="searchExit" type="button"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
-    <h1 class="major">검색</h1>
-    <div id="searchContain">
-        <select name="searchField" id="searchField">
-            <th:block th:each="field : ${campRecommendVo.searchFieldArray}">
-                <option th:if="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}" selected>[[${field[1]}]]</option>
-                <option th:unless="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}">[[${field[1]}]]</option>
-            </th:block>
-        </select>
-        <input type="text" id="searchBar" name="searchWord" placeholder="검색어를 입력하세요" spellcheck="false" th:value="${campRecommendVo.searchWord}">
-        <button id="searchBtn" type="button" class="mainBtn" onclick="camp_search(); return false;">검색</button>
-    </div>
-    <div id="searchRequirement">
-        <th:block th:each="campType, iterStat : ${campRecommendVo.campTypeArray}">
-            <input type="checkbox" name="campType" th:id="${campType[0]}" th:value="${campType[0]}" th:if="${campRecommendVo.campType[iterStat.index] == campType[0]}" checked/>
-            <input type="checkbox" name="campType" th:id="${campType[0]}" th:value="${campType[0]}" th:unless="${campRecommendVo.campType[iterStat.index] == campType[0]}"/>
-            <label class="checkboxLabel" th:for="${campType[0]}">[[${campType[1]}]]</label>
-        </th:block>
-    </div>
-    <div id="list_area"></div>
-    <div id="page_area"></div>
-</div>
-
-<th:block th:insert="insert/footer.html"></th:block>
-
-<!-- JavaScript -->
 <script>
-    function reloadList(page, sortBy, sortDirection, mapRefresh) {
-        $.ajax({
-            type: 'POST',
-            url: '/camp/reloadList',
-            data: {
-                page: page,
-                sortBy: sortBy,
-                sortDirection: sortDirection
-            },
-            success: function (data) {
-                let list = data.campRecommendList;
-                let totalPages = data.totalPages;
-                let page = data.page;
-                let size = data.size;
-                let result = data.result;
-                if (result === "success") {
-                    if (mapRefresh) {
-                        reloadMap();
-                    }
-                    let HTML = "";
-                    HTML += "<table id=\"searchList\"><tr>";
-                    HTML += "<th>이름</th><th>지역</th><th>추천점수</th>"
-
-                    /*
-                    if (sortBy == "name" && sortDirection == 'ASC') {
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'name', 'DESC', true); return false;\">△이름△</a></th>";
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'addr', 'ASC', true); return false;\">지역</a></th>";
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'score', 'DESC', true); return false;\">추천점수</a></th></tr>";
-                    } else if (sortBy == "name" && sortDirection == 'DESC') {
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'name', 'ASC', true); return false;\">▽이름▽</a></th>";
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'addr', 'ASC', true); return false;\">지역</a></th>";
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'score', 'DESC', true); return false;\">추천점수</a></th></tr>";
-                    } else if (sortBy == "addr" && sortDirection == 'ASC') {
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'name', 'ASC', true); return false;\">이름</a></th>";
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'addr', 'DESC', true); return false;\">△지역△</a></th>";
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'score', 'DESC', true); return false;\">추천점수</a></th></tr>";
-                    } else if (sortBy == "addr" && sortDirection == 'DESC') {
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'name', 'ASC', true); return false;\">이름</a></th>";
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'addr', 'ASC', true); return false;\">▽지역▽</a></th>";
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'score', 'DESC', true); return false;\">추천점수</a></th></tr>";
-                    } else if (sortBy == "score" && sortDirection == 'ASC') {
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'name', 'ASC', true); return false;\">이름</a></th>";
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'addr', 'ASC', true); return false;\">지역</a></th>";
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'score', 'DESC', true); return false;\">△추천점수△</a></th></tr>";
-                    } else if (sortBy == "score" && sortDirection == 'DESC') {
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'name', 'ASC', true); return false;\">이름</a></th>";
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'addr', 'ASC', true); return false;\">지역</a></th>";
-                        HTML += "<th><a href=\"\" onclick=\"reloadList(1, 'score', 'ASC', true); return false;\">▽추천점수▽</a></th></tr>";
-                    }
-                    */
-
-                    for (let i = (page-1)*size ; i < (page*size < list.length ? page*size : list.length) ; i++) {
-                        HTML += "<tr class=\"tableResult\">";
-                        HTML += "<td><a href=\"\" onclick=\"move_map(" + i + ", " + list[i].camp.mapX + ", " + list[i].camp.mapY + ")\; return false\;\">" + list[i].camp.name + "</a></td>";
-                        HTML += "<td>" + list[i].addressShort + "</td>";
-
-                        let starScore = parseFloat(list[i].scoreView);
-
-                        HTML += "<td><span class=\"satisfaction\" title=\""+starScore+"\" alt=\""+starScore+"\">";
-                        if (starScore < 0.5) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-empty.png\">";
-                        } else if (starScore < 1.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-half.png\">";
-                        } else if (starScore >= 1.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-full.png\">";
-                        }
-
-                        if (starScore < 1.5) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-empty.png\">";
-                        } else if (starScore < 2.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-half.png\">";
-                        } else if (starScore >= 2.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-full.png\">";
-                        }
-
-                        if (starScore < 2.5) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-empty.png\">";
-                        } else if (starScore < 3.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-half.png\">";
-                        } else if (starScore >= 3.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-full.png\">";
-                        }
-
-                        if (starScore < 3.5) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-empty.png\">";
-                        } else if (starScore < 4.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-half.png\">";
-                        } else if (starScore >= 4.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-full.png\">";
-                        }
-
-                        if (starScore < 4.5) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-empty.png\">";
-                        } else if (starScore < 5.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-half.png\">";
-                        } else if (starScore >= 5.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-full.png\">";
-                        }
-                        HTML += "</span></td></tr>";
-                    }
-                    HTML += "</table>";
-                    $("#list_area").html(HTML);
-
-                    HTML = "";
-                    if (totalPages !== 0) {
-                        HTML = "<div class=\"page_area\">";
-                        HTML += "<ul class=\"pagination\">";
-                        HTML += "<li class=\"paging\">";
-                        if (page == 1) {
-                            HTML += "<span aria-hidden=\"true\">First</span>";
-                        } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(1, '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"First\">";
-                            HTML += "<span aria-hidden=\"true\">First</span></a></li>";
-                        }
-                        HTML += "&nbsp&nbsp";
-                        HTML += "<li class=\"paging\">";
-                        if (page == 1) {
-                            HTML += "<span aria-hidden=\"true\">\&lt;</span>";
-                        } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(" + (page-1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"Previous\">";
-                            HTML += "<span aria-hidden=\"true\">\&lt;</span></a></li>";
-                        }
-                        HTML += "&nbsp&nbsp";
-                        let start = parseInt((page-1)/size)*size;
-                        let end = start + size < totalPages ? start + size : totalPages;
-                        for (let i = start ; i < end ; i++) {
-                            if (i == page-1) {
-                                HTML += "<li class=\"active\" class=\"paging\">";
-                                HTML += "<span>"+(i+1)+"</span></li>";
-                            } else {
-                                HTML += "<li class=\"paging\">";
-                                HTML += "<a href=\"\" onclick=\"reloadList(" + (i+1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\">" + (i+1) + "</a></li>";
-                            }
-                            HTML += "&nbsp&nbsp";
-                        }
-
-                        HTML += "<li class=\"paging\">";
-                        if (page == totalPages) {
-                            HTML += "<span aria-hidden=\"true\">\&gt;</span></li>";
-                        } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(" + (page+1) + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"Next\">";
-                            HTML += "<span aria-hidden=\"true\">\&gt;</span></a></li>";
-                        }
-                        HTML += "&nbsp&nbsp";
-                        HTML += "<li class=\"paging\">";
-                        if (page == totalPages) {
-                            HTML += "<span aria-hidden=\"true\">Last</span></li>";
-                        } else {
-                            HTML += "<a href=\"\" onclick=\"reloadList(" + totalPages + ", '" + sortBy + "', '" + sortDirection + "', false)\; return false\;\" aria-label=\"Last\">";
-                            HTML += "<span aria-hidden=\"true\">Last</span></a></li>";
-                        }
-                        HTML += "</ul></div>";
-                    }
-                    $("#page_area").html(HTML);
-                }
-            },
-            error: function () {
-                alert("리스트 갱신 실패!");
-            }
-        });
-    }
-
-    function camp_search() {
-        let searchField = $("#searchField").val();
-        let searchWord = $("#searchBar").val();
-
-        // 체크박스 배열 가져오기
-        let campType = [];
-        $("input[name='campType']:checked").each(function() {campType.push($(this).val());});
-
-        if (campType.length == 0) {
-            alert("캠핑장 유형을 하나 이상 선택해야 합니다.");
-            return false;
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: '/camp/re_search',
-            dataType: 'json',
-            data: {
-                searchField: searchField,
-                searchWord: searchWord,
-                campType: campType
-            },
-            success: function(data) {
-                let page = 1;
-                let sortBy = data.campRecommendVo.sortBy;
-                let sortDirection = data.campRecommendVo.sortDirection;
-                reloadList(page, sortBy, sortDirection, true);
-            },
-            error: function() {
-                alert("검색 실패");
-            }
-        });
-    }
-
-    let searchBox = document.getElementById('searchBar');
-    searchBox.addEventListener('keyup', event => press_enter_in_searchBox(event));
-
-    function press_enter_in_searchBox(event) {
-        let key = event.key || event.keyCode;
-        if (key === 'Enter' || key === 13) {
-            camp_search();
-        }
+    function searchItems() {
+        var keyword = document.getElementById("keyword").value;
+        fetch("/camp/chatSearch?keyword=" + encodeURIComponent(keyword))
+            .then(response => response.json())
+            .then(data => {
+                var results = document.getElementById("results");
+                results.innerHTML = "";
+                data.forEach(item => {
+                    var li = document.createElement("li");
+                    li.innerHTML = `
+                        <strong>${item.name}</strong><br>
+                        <span>${item.addr1}</span><br>
+                        <span>${item.locationB}</span>
+                    `;
+                    li.onclick = function() {
+                        console.log("Item clicked:", item);
+                        window.opener.postMessage({ selectedItem: item }, window.location.origin);
+                        window.close();
+                    };
+                    results.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching search results:', error);
+            });
     }
 </script>
-
 </body>
 </html>

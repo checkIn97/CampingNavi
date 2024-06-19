@@ -189,6 +189,14 @@ public class CampController {
         return result;
     }
 
+    @GetMapping("/chatSearch")
+    @ResponseBody
+    public List<Camp> searchItems(@RequestParam String keyword) {
+        return campService.searchItems(keyword);
+
+    }
+
+
     @GetMapping("/api/search")
     @ResponseBody
     public ResponseEntity<List<Camp>> searchCamps(@RequestParam("keyword") String keyword) {

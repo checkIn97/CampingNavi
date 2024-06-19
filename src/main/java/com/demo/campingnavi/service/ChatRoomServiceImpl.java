@@ -38,4 +38,10 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         chatRoomRepository.save(chatRoom);
         return chatRoom;
     }
+
+    // 이름에 특정 문자열이 포함된 채팅방 찾기
+    @Override
+    public List<ChatRoom> findByCampNameContaining(String campName) {
+        return chatRoomRepository.findByCampNameContaining(campName);
+    }
 }

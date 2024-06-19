@@ -464,7 +464,15 @@
             document.querySelector('.saveBtnImg').src = '/assets/images/icon/like-empty.png';
         }
     });
-</script>
 
+</script>
+<script>
+    document.getElementById('goingBtn').addEventListener('click', function () {
+        const cseq = document.getElementById('cseq').value;
+        const campName = document.getElementById('campName').value;
+        const url = `/chat/room?cseq=${cseq}&campName=${encodeURIComponent(campName)}`;
+        window.location.href = url;
+    });
+</script>
 </body>
 </html>

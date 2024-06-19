@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="kr" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
@@ -8,11 +7,9 @@
     <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
     <title>CampNavi</title>
 </head>
-
 <body>
-
 <th:block th:insert="insert/header.html"></th:block>
-
+<input type="hidden" th:value="${member.name}" name="memberName"/>
 <article class="box" id="chatCreateBox">
     <div id="app" class="lengthContain">
         <!--채팅방 이름-->
@@ -61,18 +58,30 @@
         </div>
         <div class="buttonContain">
             <!--상세보기로 들어온 경우 보이지 않음-->
-            <button type="button">캠핑장 검색</button>
-
+            <button type="button" id="openSearch">캠핑장 검색</button>
             <button @click="createRoom" class="mainBtn" type="button">방 생성</button>
+            <div id="search" style="display:none;">
+                <button class="close" id="searchExit" type="button"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
+                <input type="text" id="selectedItem" readonly v-model="selectedItemName">
+                <button onclick="openSearch()">검색하기</button>
+            </div>
         </div>
     </div>
 </article>
+
 <th:block th:insert="insert/footer.html"></th:block>
 
 <!-- JavaScript -->
 <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
 <script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
 <script>
+    var memberName = $('input[name=memberName]').val();
+</script>
+<script>
+    function openSearch() {
+        var searchWindow = window.open("/chat/chatCampingSearch", "Search", "width=600,height=400");
+    }
+
     var vm = new Vue({
         el: '#app',
         data: {
@@ -81,10 +90,14 @@
             start_date: '',
             end_date: '',
             max_mem: '',
-            purpose: []
+            purpose: [],
+            selectedItemName: '',
+            memberName: memberName,
+            camp_name: ''
         },
         created() {
-            this.findAllRoom();
+
+            window.addEventListener("message", this.receiveMessage, false);
         },
         methods: {
             findAllRoom: function () {
@@ -103,6 +116,7 @@
                     params.append("endDate", this.end_date);
                     params.append("maxMem", this.max_mem);
                     params.append("purpose", this.purpose);
+                    params.append("campName",this.selectedItemName)
                     axios.post('/chat/room', params)
                         .then(
                             response => {
@@ -116,11 +130,28 @@
                 }
             },
             enterRoom: function (roomId) {
-                var sender = prompt('대화명을 입력해 주세요.');
+                var sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + memberName + ' ) 으로 입장합니다.');
                 if (sender != "") {
                     localStorage.setItem('wschat.sender', sender);
                     localStorage.setItem('wschat.roomId', roomId);
                     location.href = "/chat/room/enter/" + roomId;
+                } else {
+                    sender = memberName;
+                    localStorage.setItem('wschat.sender', sender);
+                    localStorage.setItem('wschat.roomId', roomId);
+                    location.href = "/chat/room/enter/" + roomId;
+                }
+                if (sender == null) {
+                    alert('대화명을 입력해 주세요.');
+                    return this.enterRoom(roomId);
+                }
+            },
+            receiveMessage: function(event) {
+                if (event.origin !== window.location.origin) {
+                    return;
+                }
+                if (event.data.selectedItem) {
+                    this.selectedItemName = event.data.selectedItem.name;
                 }
             }
         }
@@ -135,12 +166,13 @@
             chatDateEnd.min = chatDateStart.value;
         });
     }
-
-    /*chatCampingSearch로 가도록 만듦*/
-    document.querySelector('.buttonContain button').addEventListener('click', function () {
-        window.open('/chatCampingSearch.html', '_blank', 'width=600,height=600');
+    document.getElementById('openSearch').addEventListener('click', function () {
+        document.getElementById('search').style.display = 'block';
     });
-</script>
+    document.getElementById('searchExit').addEventListener('click', function () {
+        document.getElementById('search').style.display = 'none';
+    });
 
+</script>
 </body>
 </html>
