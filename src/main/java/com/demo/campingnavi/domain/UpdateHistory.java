@@ -17,14 +17,14 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Entity
-public class UpdateLog {
+public class UpdateHistory {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int lseq; // 로그 번호
+    private int useq; // 업데이트 번호
 
     @Column(length = 100, nullable = false)
-    private String update;
+    private String kind;
 
     @Temporal(value=TemporalType.TIMESTAMP)
     @ColumnDefault("sysdate")

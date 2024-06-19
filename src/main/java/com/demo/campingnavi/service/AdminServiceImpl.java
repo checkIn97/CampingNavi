@@ -1,21 +1,19 @@
 package com.demo.campingnavi.service;
 
 import com.demo.campingnavi.config.PathConfig;
-import com.demo.campingnavi.domain.UpdateLog;
-import com.demo.campingnavi.repository.jpa.UpdateLogRepository;
-import jakarta.servlet.http.HttpServletResponse;
+import com.demo.campingnavi.domain.UpdateHistory;
+import com.demo.campingnavi.repository.jpa.UpdateHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 @Service
 public class AdminServiceImpl implements AdminService {
 
     @Autowired
-    private UpdateLogRepository updateLogRepo;
+    private UpdateHistoryRepository updateHistoryRepo;
 
     @Override
     public String recommendModelUpdate() {
@@ -57,13 +55,13 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void saveUpdateLog(UpdateLog updateLog) {
-        updateLogRepo.save(updateLog);
+    public void saveUpdateHistory(UpdateHistory updateHistory) {
+        updateHistoryRepo.save(updateHistory);
     }
 
     @Override
-    public List<UpdateLog> getUpdateLogList(String update) {
-        return updateLogRepo.findByUpdateOrderByUpdateTimeDesc(update);
+    public List<UpdateHistory> getUpdateHistoryList(String kind) {
+        return updateHistoryRepo.findByKindOrderByUpdateTimeDesc(kind);
     }
 
 }
