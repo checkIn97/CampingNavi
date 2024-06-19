@@ -477,12 +477,20 @@ table.alt tfoot {
 
 /*searchPage*/
 
+.search-icon-area {
+    width: 2rem;
+}
+
+.search-icon {
+    width: 2rem;
+}
+
 #searchContain {
     margin-bottom: 20px;
 }
 
 #search-box {
-    display: block;
+    display: none;
     width: 27%;
     height: 90vh;
     margin: 0; /* 요소를 화면 중앙에 배치합니다. */
@@ -499,7 +507,7 @@ table#searchList td {
 
 #searchRequirement {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
 }
 
@@ -698,6 +706,10 @@ input[name="slide"] {
 
 #detailContain input[type="radio"]:checked + label {
     border-bottom: 2px solid rgb(27, 31, 34);
+}
+
+.search-star {
+    width: 10px
 }
 
 .star {
@@ -1109,7 +1121,7 @@ input[name="slide"] {
     padding: 1rem;
     margin: auto;
     background-color: #fdfada;
-    border-radius: 27px;
+    border-radius: 1rem;
     position: absolute;
     transition: left 0.3s, top 0.3s;
 }

@@ -16,31 +16,56 @@
 
 <div id="search-area">
     <div id="search-box">
-        <button class="close" id="searchExit" type="button"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
+        <button class="close" id="searchExit" type="button"><img alt="closeIcon" id="closeImg"
+                                                                 src="/assets/images/icon/close.png"></button>
         <h1 class="major">검색</h1>
         <div id="searchContain">
-            <select name="searchField" id="searchField">
+            <select id="searchField" name="searchField">
                 <th:block th:each="field : ${campRecommendVo.searchFieldArray}">
-                    <option th:if="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}" selected>[[${field[1]}]]</option>
-                    <option th:unless="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}">[[${field[1]}]]</option>
+                    <option selected th:if="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}">
+                        [[${field[1]}]]
+                    </option>
+                    <option th:unless="${field[0] == campRecommendVo.searchField}" th:value="${field[0]}">
+                        [[${field[1]}]]
+                    </option>
                 </th:block>
             </select>
-            <input type="text" id="searchBar" name="searchWord" placeholder="검색어를 입력하세요" spellcheck="false" th:value="${campRecommendVo.searchWord}">
-            <button id="searchBtn" type="button" class="mainBtn" onclick="camp_search(); return false;">검색</button>
+            <input id="searchBar" name="searchWord" placeholder="검색어를 입력하세요" spellcheck="false"
+                   th:value="${campRecommendVo.searchWord}"
+                   type="text">
+            <button class="mainBtn" id="searchBtn" onclick="camp_search(); return false;" type="button">검색</button>
         </div>
         <div id="searchRequirement">
+            <input class="search-checked" id="camping" name="campType" type="checkbox">
+            <label class="search-icon-area" for="camping" title="일반캠핑장"><img class="search-icon"
+                                                                             src="/assets/images/icon/camping.png"></label>
+            <input class="search-checked" id="glamping" name="campType" type="checkbox">
+            <label class="search-icon-area" for="glamping" title="글램핑"><img class="search-icon"
+                                                                            src="/assets/images/icon/glamping.png"></label>
+            <input class="search-checked" id="caravan" name="campType" type="checkbox">
+            <label class="search-icon-area" for="caravan" title="카라반"><img class="search-icon"
+                                                                           src="/assets/images/icon/caravan.png"></label>
+            <input class="search-checked" id="car" name="campType" type="checkbox">
+            <label class="search-icon-area" for="car" title="자동차야영장"><img class="search-icon"
+                                                                          src="/assets/images/icon/car.png"></label>
+
             <th:block th:each="campType, iterStat : ${campRecommendVo.campTypeArray}">
-                <input type="checkbox" name="campType" th:id="${campType[0]}" th:value="${campType[0]}" th:if="${campRecommendVo.campType[iterStat.index] == campType[0]}" checked/>
-                <input type="checkbox" name="campType" th:id="${campType[0]}" th:value="${campType[0]}" th:unless="${campRecommendVo.campType[iterStat.index] == campType[0]}"/>
+                <input checked name="campType" th:id="${campType[0]}"
+                       th:if="${campRecommendVo.campType[iterStat.index] == campType[0]}"
+                       th:value="${campType[0]}" type="checkbox"/>
+                <input name="campType" th:id="${campType[0]}"
+                       th:unless="${campRecommendVo.campType[iterStat.index] == campType[0]}" th:value="${campType[0]}"
+                       type="checkbox"/>
                 <label class="checkboxLabel" th:for="${campType[0]}">[[${campType[1]}]]</label>
             </th:block>
+
         </div>
         <div id="list_area"></div>
         <div class="page-box" id="page_area"></div>
     </div>
     <div class="box" id="contentSearchArea">
         <div id="kakaoMap"></div>
-        <button id="search-box-toggle" class="mainBtn">검색하기</button>
+        <button class="mainBtn" id="search-box-toggle">검색하기</button>
     </div>
 </div>
 
@@ -61,7 +86,7 @@
     });
 </script>
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0f99991591de7a581b0817b2c20056f0"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0f99991591de7a581b0817b2c20056f0" type="text/javascript"></script>
 
 <script type="text/javascript">
     var map = null;
@@ -74,7 +99,7 @@
     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         reloadList(1, "score", "DESC", true);
     });
 
@@ -130,52 +155,52 @@
                     }
                     */
 
-                    for (let i = (page-1)*size ; i < (page*size < list.length ? page*size : list.length) ; i++) {
+                    for (let i = (page - 1) * size; i < (page * size < list.length ? page * size : list.length); i++) {
                         HTML += "<tr class=\"tableResult\">";
                         HTML += "<td><a href=\"\" onclick=\"move_map(" + i + ", " + list[i].camp.mapX + ", " + list[i].camp.mapY + ")\; return false\;\">" + list[i].camp.name + "</a></td>";
                         HTML += "<td>" + list[i].addressShort + "</td>";
 
                         let starScore = parseFloat(list[i].scoreView);
 
-                        HTML += "<td><span class=\"satisfaction\" title=\""+starScore+"\" alt=\""+starScore+"\">";
+                        HTML += "<td><span class=\"satisfaction\" title=\"" + starScore + "\" alt=\"" + starScore + "\">";
                         if (starScore < 0.5) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-empty.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-empty.png\">";
                         } else if (starScore < 1.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-half.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-half.png\">";
                         } else if (starScore >= 1.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-full.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-full.png\">";
                         }
 
                         if (starScore < 1.5) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-empty.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-empty.png\">";
                         } else if (starScore < 2.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-half.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-half.png\">";
                         } else if (starScore >= 2.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-full.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-full.png\">";
                         }
 
                         if (starScore < 2.5) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-empty.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-empty.png\">";
                         } else if (starScore < 3.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-half.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-half.png\">";
                         } else if (starScore >= 3.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-full.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-full.png\">";
                         }
 
                         if (starScore < 3.5) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-empty.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-empty.png\">";
                         } else if (starScore < 4.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-half.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-half.png\">";
                         } else if (starScore >= 4.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-full.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-full.png\">";
                         }
 
                         if (starScore < 4.5) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-empty.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-empty.png\">";
                         } else if (starScore < 5.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-half.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-half.png\">";
                         } else if (starScore >= 5.0) {
-                            HTML += "<img class=\"star\" src=\"/assets/images/icon/star-full.png\">";
+                            HTML += "<img class=\"search-star\" src=\"/assets/images/icon/star-full.png\">";
                         }
                         HTML += "</span></td></tr>";
                     }
@@ -183,17 +208,15 @@
                     $("#list_area").html(HTML);
 
 
-
-
                     // 페이지 번호 요소를 동적으로 생성합니다.
                     let pageHTML = "";
                     if (page == 1) {
                         pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\">";
                     } else {
-                        pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page-1) + ", 'score', 'DESC', false); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\"></a>";
+                        pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page - 1) + ", 'score', 'DESC', false); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\"></a>";
                     }
 
-                    let start = parseInt((page-1)/pageMaxDisplay)*pageMaxDisplay + 1;
+                    let start = parseInt((page - 1) / pageMaxDisplay) * pageMaxDisplay + 1;
                     let end = start + pageMaxDisplay < totalPages ? start + pageMaxDisplay : totalPages + 1;
                     for (let i = start; i < end; i++) {
                         if (i == page) {
@@ -205,7 +228,7 @@
                     if (page == totalPages) {
                         pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\">";
                     } else {
-                        pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page+1) + ", 'score', 'DESC', false); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\"></a>";
+                        pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page + 1) + ", 'score', 'DESC', false); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\"></a>";
                     }
                     document.getElementById('page_area').innerHTML = pageHTML;
 
@@ -237,7 +260,9 @@
 
         // 체크박스 배열 가져오기
         let campType = [];
-        $("input[name='campType']:checked").each(function() {campType.push($(this).val());});
+        $("input[name='campType']:checked").each(function () {
+            campType.push($(this).val());
+        });
 
         if (campType.length == 0) {
             alert("캠핑장 유형을 하나 이상 선택해야 합니다.");
@@ -253,13 +278,13 @@
                 searchWord: searchWord,
                 campType: campType
             },
-            success: function(data) {
+            success: function (data) {
                 let page = 1;
                 let sortBy = data.campRecommendVo.sortBy;
                 let sortDirection = data.campRecommendVo.sortDirection;
                 reloadList(page, sortBy, sortDirection, true);
             },
-            error: function() {
+            error: function () {
                 alert("검색 실패");
             }
         });
@@ -277,12 +302,11 @@
     }
 
 
-
     function reloadMap() {
         $.ajax({
             type: 'POST',
             url: '/camp/reloadMap',
-            success: function(data) {
+            success: function (data) {
                 markers = [];
                 choice = 0;
                 let list = data.campRecommendVo.campRecommendList;
@@ -291,7 +315,7 @@
                     let initX = list[0].camp.mapX;
                     let initY = list[0].camp.mapY;
                     let mapContainer = document.getElementById('kakaoMap'); // 지도를 표시할 div
-                        let mapOption = {
+                    let mapOption = {
                         center: new kakao.maps.LatLng(initY, initX), // 지도의 중심좌표
                         level: 5 // 지도의 확대 레벨
                     };
@@ -299,15 +323,15 @@
 
                     // 마커 위치 설정
                     let positions = []
-                    for (let i = 0 ; i < list.length ; i++) {
+                    for (let i = 0; i < list.length; i++) {
                         let x = list[i].camp.mapX;
                         let y = list[i].camp.mapY;
                         let name = list[i].camp.name;
-                        positions.push({title:name, latlng: new kakao.maps.LatLng(y, x), rating: list[i].scoreView});
+                        positions.push({title: name, latlng: new kakao.maps.LatLng(y, x), rating: list[i].scoreView});
                     }
 
                     // 마커 출력
-                    for (let i = 0; i < positions.length; i ++) {
+                    for (let i = 0; i < positions.length; i++) {
 
                         // 마커를 생성합니다
                         let marker = null;
@@ -315,7 +339,7 @@
                             marker = new kakao.maps.Marker({
                                 map: map, // 마커를 표시할 지도
                                 position: positions[i].latlng, // 마커를 표시할 위치
-                                image : markerImage // 마커 이미지
+                                image: markerImage // 마커 이미지
                             });
                         } else {
                             marker = new kakao.maps.Marker({
@@ -325,8 +349,8 @@
                         }
                         markers.push(marker);
 
-                        kakao.maps.event.addListener(marker, 'click', function() {
-                            location.href="/camp/detail/?mapX="+list[i].camp.mapX+"&mapY="+list[i].camp.mapY+"&contentId="+list[i].camp.contentId+"&cseq="+list[i].camp.cseq;
+                        kakao.maps.event.addListener(marker, 'click', function () {
+                            location.href = "/camp/detail/?mapX=" + list[i].camp.mapX + "&mapY=" + list[i].camp.mapY + "&contentId=" + list[i].camp.contentId + "&cseq=" + list[i].camp.cseq;
                         });
 
                         // 마커에 표시할 인포윈도우를 생성합니다
@@ -339,7 +363,7 @@
                     }
                 }
             },
-            error: function() {
+            error: function () {
                 alert("지도 갱신 실패!");
             }
         });
@@ -347,14 +371,14 @@
 
     // 인포윈도우를 표시하는 클로저를 만드는 함수입니다
     function makeOverListener(map, marker, infowindow) {
-        return function() {
+        return function () {
             infowindow.open(map, marker);
         };
     }
 
     // 인포윈도우를 닫는 클로저를 만드는 함수입니다
     function makeOutListener(infowindow) {
-        return function() {
+        return function () {
             infowindow.close();
         };
     }
@@ -367,10 +391,26 @@
         map.panTo(moveLatLon);
     }
 
+    // 모든 'search-checked' 클래스를 가진 체크박스를 선택합니다.
+    let checkboxes = document.querySelectorAll('.search-checked');
 
+    // 각 체크박스에 대해 이벤트 리스너를 추가합니다.
+    checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener('change', function () {
+            // 체크박스의 'id'를 가져와서 이를 사용하여 연결된 레이블을 선택합니다.
+            let label = document.querySelector('label[for="' + checkbox.id + '"]');
 
+            // 레이블 내부의 'search-icon' 클래스를 가진 이미지를 선택합니다.
+            let icon = label.querySelector('.search-icon');
 
-
+            // 체크박스가 체크되었는지 확인하고, 이미지의 스타일을 변경합니다.
+            if (checkbox.checked) {
+                icon.style.filter = 'invert(100%)';
+            } else {
+                icon.style.filter = '';
+            }
+        });
+    });
 
 </script>
 </body>
