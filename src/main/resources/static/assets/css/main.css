@@ -1076,17 +1076,17 @@ input[name="slide"] {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 7rem;
+    width: 10rem;
     margin: -25px 0 0 -25px;  /* 버튼을 중앙에 위치시키기 위해 마진을 설정합니다. */
 }
 
 #chat {
-    transform: rotate(-95deg) translate(290px) rotate(94deg);
+    transform: rotate(-100deg) translate(306px) rotate(100deg)
 }
 
 #myPage {
     transform: rotate(-28deg) translate(330px) rotate(28deg);
-    width: 10rem;
+    width: 16rem;
 }
 
 #admin {
@@ -1094,11 +1094,11 @@ input[name="slide"] {
 }
 
 #mainSearch {
-    transform: rotate(150deg) translate(299px) rotate(-150deg);
+    transform: rotate(150deg) translate(337px) rotate(-149deg);
 }
 
 #product {
-    transform: rotate(202deg) translate(341px) rotate(-206deg);
+    transform: rotate(199deg) translate(377px) rotate(-202deg);
 }
 
 .mainBoxText {
