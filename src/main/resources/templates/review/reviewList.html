@@ -156,6 +156,7 @@
                 function handlePageClick(event) {
                     const pageNumber = parseInt(event.target.textContent);
                     reloadList(pageNumber, 'vseq', 'DESC');
+                    event.preventDefault();
                 }
 
                 // 페이지 번호 요소들을 가져옵니다.
