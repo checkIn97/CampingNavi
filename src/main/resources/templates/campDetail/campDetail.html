@@ -287,13 +287,19 @@
 
     }
 
-    // 페이지 숫자를 업데이트하는 함수
     function updatePagination(currentPage, maxPage) {
         const paginationDiv = document.getElementById('pagination');
         paginationDiv.innerHTML = ''; // 이전에 추가된 페이지 번호 초기화
 
-        // 최대 페이지 수만큼 페이지 버튼 생성
-        for (let i = 1; i <= maxPage; i++) {
+        // 페이지 숫자를 표시할 최대 범위 설정
+        const displayRange = 3; // 현재 페이지를 중심으로 좌우에 몇 개의 페이지 숫자를 표시할 것인지 지정
+
+        // 시작 페이지와 끝 페이지 계산
+        let startPage = Math.max(1, currentPage - displayRange);
+        let endPage = Math.min(maxPage, currentPage + displayRange);
+
+        // 시작 페이지와 끝 페이지 사이에 페이지 버튼 생성
+        for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('span');
             pageButton.textContent = i;
             pageButton.classList.add('page-number');
