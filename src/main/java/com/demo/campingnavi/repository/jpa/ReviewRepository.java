@@ -41,4 +41,6 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
     Review findFirstByOrderByVseqDesc();
 
+    @Query("SELECT COUNT(r) FROM Review r WHERE r.camp.cseq = :cseq")
+    long countByCampCseq(@Param("cseq") int cseq);
 }

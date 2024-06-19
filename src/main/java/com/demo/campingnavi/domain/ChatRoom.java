@@ -30,6 +30,7 @@ public class ChatRoom {
     private String endDate;
     private Integer maxMem;
     private String campName;
+    private Long reviewCount;
 
     @ElementCollection
     private List<String> purpose;
