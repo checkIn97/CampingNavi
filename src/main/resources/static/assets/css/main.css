@@ -1480,6 +1480,11 @@ h1 {
     position: relative;
 }
 
+#list_area {
+    max-height: 300px; /* 화면 너비가 600px 이하일 때의 max-height 값 */
+    overflow-y: auto;
+}
+
 #search-page_area {
     position: absolute;
     bottom: 2rem;
