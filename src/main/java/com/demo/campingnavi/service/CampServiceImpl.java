@@ -203,5 +203,11 @@ public class CampServiceImpl implements CampService {
         return campRepo.findCampByName(campName);
     }
 
+    @Override
+    public boolean isValidCampName(String campName) {
+        Camp camp = campRepo.findCampByName(campName);
+        return camp != null;
+    }
+
 
 }

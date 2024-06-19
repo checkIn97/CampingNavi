@@ -15,4 +15,6 @@ public interface CampService {
 
     List<Camp> searchCamps(String keyword);
     public Camp getCampByName(String campName);
+
+    boolean isValidCampName(String campName);
 }

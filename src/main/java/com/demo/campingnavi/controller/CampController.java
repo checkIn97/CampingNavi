@@ -6,6 +6,7 @@ import com.demo.campingnavi.dto.CampRecommendVo;
 import com.demo.campingnavi.dto.CampVo;
 import com.demo.campingnavi.service.CampService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -190,8 +191,21 @@ public class CampController {
 
     @GetMapping("/api/search")
     @ResponseBody
-    public List<Camp> searchCamps(@RequestParam String keyword) {
-        return campService.searchCamps(keyword);
+    public ResponseEntity<List<Camp>> searchCamps(@RequestParam("keyword") String keyword) {
+
+       List<Camp> camps = campService.searchCamps(keyword);
+        return ResponseEntity.ok(camps);
     }
+
+    @GetMapping("/api/validate")
+    @ResponseBody
+    public ResponseEntity<Map<String, Boolean>> validateCampName(@RequestParam("campName") String campName){
+        boolean isValid = campService.isValidCampName(campName);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("valid", isValid);
+        return ResponseEntity.ok(response);
+    }
+
+
 
 }

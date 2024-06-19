@@ -31,4 +31,6 @@ public interface CampRepository extends JpaRepository<Camp, Integer> {
 
     @Query("SELECT c FROM Camp c WHERE c.name=?1")
     Camp findCampByName(String name);
+
+
 }

@@ -24,7 +24,7 @@
         <hr>
 
         <div class="review-insert-title">캠핑장 이름</div>
-        <input class="webkit review-insert-input" type="text" id="camp" name="camp">
+        <input class="webkit review-insert-input" type="text" id="camp" name="camp" required>
 
         <!-- 후보 캠핑장 이름 표시를 위한 영역 -->
         <div id="campCandidates" style="margin-top: 10px; max-height: 200px; overflow-y: auto;"></div>
@@ -89,83 +89,96 @@
             }
         });
 
-        // 캠핑장 입력 시 후보 목록 업데이트
-        $('#camp').on('input', function() {
-            var keyword = $(this).val();
-            if (keyword.length >= 1) {
-                updateCampCandidates(keyword);
-            } else {
-                $('#campCandidates').empty(); // 입력이 없으면 후보 목록 비우기
-            }
-        });
 
-        // 후보 캠핑장 클릭 시 입력창에 채우기
-        $(document).on('click', '#campCandidates div', function() {
-            var campName = $(this).text().trim();
-            $('#camp').val(campName);
-            $('#campCandidates').empty(); // 후보 목록 비우기
-        });
-
-        // 캠핑장 입력창에서 포커스를 잃었을 때 유효성 검사
-        $('#camp').blur(function() {
-            var campInput = $(this).val().trim();
-            if (campInput.length > 0 && !isValidCamp(campInput)) {
-                alert("유효한 캠핑장 이름을 입력해주세요.");
-                $(this).focus(); // 다시 입력창에 포커스 주기
-            }
-        });
-
-        // 다른 곳으로 포커스 이동 시 후보 목록 비우기
-        $('body').on('click', function(event) {
-            var $target = $(event.target);
-            if (!$target.closest('#campCandidates').length && !$target.is('#camp')) {
-                $('#campCandidates').empty();
-                var campInput = $('#camp').val().trim();
-                if (campInput.length > 0 && !isValidCamp(campInput)) {
-                    alert("유효한 캠핑장 이름을 입력해주세요.");
-                    $('#camp').focus(); // 다시 입력창에 포커스 주기
-                }
-            }
-        });
-
-        // 게시글 등록 버튼 클릭 시 폼 제출 전 유효성 검사
-        $('form[name="form"]').submit(function(event) {
-            var campInput = $('#camp').val().trim();
-            if (!isValidCamp(campInput)) {
-                alert("유효한 캠핑장 이름을 입력해주세요.");
-                event.preventDefault(); // 폼 제출 방지
-                $('#camp').focus();
-            }
-        });
-
-
-        function updateCampCandidates(keyword) {
-            $.ajax({
-                url: "/camp/api/search",
-                type: "GET",
-                data: {
-                    keyword: keyword
-                },
-                success: function(data) {
-                    displayCampCandidates(data);
-                },
-                error: function() {
-                    alert("캠핑장 후보 목록을 가져오는 데 실패했습니다.");
+            // 캠핑장 입력 시 후보 목록 업데이트
+            $('#camp').on('input', function() {
+                var keyword = $(this).val().trim();
+                if (keyword.length >= 1) {
+                    updateCampCandidates(keyword);
+                } else {
+                    $('#campCandidates').empty(); // 입력이 없으면 후보 목록 비우기
                 }
             });
-        }
 
-        function displayCampCandidates(camps) {
-            var html = '';
-            camps.forEach(function(camp) {
-                html += '<div>' + camp.name + '</div>';
+            // 후보 캠핑장 클릭 시 입력창에 채우기
+            $(document).on('click', '#campCandidates div', function() {
+                var campName = $(this).text().trim();
+                $('#camp').val(campName);
+                $('#campCandidates').empty(); // 후보 목록 비우기
             });
-            $('#campCandidates').html(html);
-        }
 
-    });
+            // 캠핑장 입력창에서 포커스를 잃었을 때 유효성 검사
+            $('#camp').blur(function() {
+                var campInput = $(this).val().trim();
+                if (campInput.length > 0) {
+                    checkCampValidity(campInput);
+                }
+            });
 
-    function uploadSummernoteImageFile(file, editor) {
+            // 다른 곳으로 포커스 이동 시 후보 목록 비우고 유효성 검사
+            $('body').on('click', function(event) {
+                var $target = $(event.target);
+                if (!$target.closest('#campCandidates').length && !$target.is('#camp')) {
+                    var campInput = $('#camp').val().trim();
+                    if (campInput.length > 0) {
+                        checkCampValidity(campInput);
+                    }
+                    $('#campCandidates').empty(); // 후보 목록 비우기
+                }
+            });
+
+            // 유효성 검사 함수
+            function checkCampValidity(campName) {
+                $.ajax({
+                    url: "/camp/api/validate", // 서버 측 API 엔드포인트
+                    type: "GET",
+                    data: {
+                        campName: campName
+                    },
+                    success: function(response) {
+                        if (response.valid) {
+                            // 유효한 캠핑장 이름일 때의 처리
+                        } else {
+                            alert("캠핑장이 존재하지 않습니다.");
+                            $('#camp').val('');
+                            $('#camp').focus(); // 다시 입력창에 포커스 주기
+                        }
+                    },
+                    error: function() {
+                        alert("서버와의 통신 중 문제가 발생했습니다.");
+                    }
+                });
+            }
+
+            // 캠핑장 후보 목록 업데이트 함수
+            function updateCampCandidates(keyword) {
+                $.ajax({
+                    url: "/camp/api/search", // 서버 측 API 엔드포인트
+                    type: "GET",
+                    data: {
+                        keyword: keyword
+                    },
+                    success: function(data) {
+                        displayCampCandidates(data);
+                    },
+                    error: function() {
+                        alert("캠핑장 후보 목록을 가져오는 데 실패했습니다.");
+                    }
+                });
+            }
+
+            // 캠핑장 후보 목록 표시 함수
+            function displayCampCandidates(camps) {
+                var html = '';
+                camps.forEach(function(camp) {
+                    html += '<div>' + camp.name + '</div>';
+                });
+                $('#campCandidates').html(html);
+            }
+        });
+
+
+        function uploadSummernoteImageFile(file, editor) {
         var formData = new FormData();
         formData.append("file", file);
 
