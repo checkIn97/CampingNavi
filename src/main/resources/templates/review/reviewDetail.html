@@ -38,7 +38,8 @@
             <div class="card-body">
                 <div class="info">
                     <div>
-                        캠핑장 : <span th:text="${reviewVo.review.camp.getName()}">캠핑장명</span>
+                        캠핑장 : <a th:href="'/camp/detail/?mapX=' + ${reviewVo.review.camp.mapX} +'&mapY='+ ${reviewVo.review.camp.mapY}+'&contentId='+${reviewVo.review.camp.contentId}+ '&cseq='+${reviewVo.review.camp.cseq}">
+                        <span th:text="${reviewVo.review.camp.getName()}">캠핑장명</span></a>
                     </div>
                     <div>
                         리뷰 평점 : <p class="campingGrade">
