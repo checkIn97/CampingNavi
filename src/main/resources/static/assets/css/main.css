@@ -1511,4 +1511,52 @@ h1 {
 
 #review-detail-box {
     width: 50rem;
+    overflow-wrap: anywhere ;
+}
+
+#likeCount {
+    display: none;
+}
+
+hr.vertical {
+    transform: rotate(0deg);
+    width: -webkit-fill-available !important;
+}
+
+.button-full {
+    display: flex;  /* flexbox 레이아웃을 사용 */
+    justify-content: space-between;  /* 아이템들 사이에 동일한 간격을 두어 꽉 차게 만듭니다 */
+}
+
+.space-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.space-between-flex {
+    flex: 1;
+    justify-content: center;
+    display: inline-flex;
+    align-items: center;
+}
+
+.margin0 {
+    margin: 0 !important;
+}
+
+.width-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.reviewDetail-save-img {
+    width: 3rem;
+}
+
+.reviewDetail-box {
+    background-color: whitesmoke;
+    padding: 1rem;
+    border-radius: 1rem;
+    border: 1px solid #ccc;
 }
