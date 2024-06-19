@@ -31,7 +31,7 @@
         <hr>
         <div>
             <div class="review-insert-title">Title</div>
-            <input class="webkit review-insert-input" type="text" id="title" name="title">
+            <input class="webkit review-insert-input" type="text" id="title" name="title" th:value="${review.title}">
         </div>
         <hr>
         <div class="buttonContain">
@@ -40,7 +40,7 @@
         </div>
         <hr>
         <div class="post-form">
-            <textarea id="summernote" name="content"></textarea>
+            <textarea id="summernote" name="content" th:utext="${review.content}"></textarea>
         </div>
         <div class="buttonContain review-topMargin">
             <button type="submit" class="mainBtn">게시글 등록</button>

@@ -190,7 +190,7 @@
                     if (page == 1) {
                         pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\">";
                     } else {
-                        pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page-1) + ", 'vseq', 'DESC'); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\"></a>";
+                        pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page-1) + ", 'score', 'DESC', false); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\"></a>";
                     }
 
                     let start = parseInt((page-1)/pageMaxDisplay)*pageMaxDisplay + 1;
@@ -205,14 +205,15 @@
                     if (page == totalPages) {
                         pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\">";
                     } else {
-                        pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page+1) + ", 'vseq', 'DESC'); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\"></a>";
+                        pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page+1) + ", 'score', 'DESC', false); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\"></a>";
                     }
                     document.getElementById('page_area').innerHTML = pageHTML;
 
                     // 페이지 번호를 클릭하면 해당 페이지의 내용을 불러오는 함수
                     function handlePageClick(event) {
                         const pageNumber = parseInt(event.target.textContent);
-                        reloadList(pageNumber, 'vseq', 'DESC');
+                        reloadList(pageNumber, 'score', 'DESC', false);
+                        event.preventDefault();
                     }
 
                     // 페이지 번호 요소들을 가져옵니다.
@@ -271,6 +272,7 @@
         let key = event.key || event.keyCode;
         if (key === 'Enter' || key === 13) {
             camp_search();
+            event.preventDefault();
         }
     }
 
