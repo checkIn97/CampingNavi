@@ -107,13 +107,6 @@
                 $('#campCandidates').empty(); // 후보 목록 비우기
             });
 
-            // 캠핑장 입력창에서 포커스를 잃었을 때 유효성 검사
-            $('#camp').blur(function() {
-                var campInput = $(this).val().trim();
-                if (campInput.length > 0) {
-                    checkCampValidity(campInput);
-                }
-            });
 
             // 다른 곳으로 포커스 이동 시 후보 목록 비우고 유효성 검사
             $('body').on('click', function(event) {
