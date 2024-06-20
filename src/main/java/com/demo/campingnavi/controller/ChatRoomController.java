@@ -20,10 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @RequiredArgsConstructor
@@ -84,14 +81,18 @@ public class ChatRoomController {
         List<ChatRoomVo> chatRoomVoList = new ArrayList<>();
         Member member = (Member) session.getAttribute("loginUser");
         CampRecommendVo campRecommendVo = new CampRecommendVo();
-        for (ChatRoom chatRoom : chatRoomList) {
-            List<Camp> campList = new ArrayList<>();
-            Camp camp = chatRoom.getCamp();
-            campList.add(camp);
-            campService.saveCampRecommendList(campList, member, campRecommendVo);
-            long reviewCount = reviewRepository.countByCampCseq(camp.getCseq());
-            chatRoomVoList.add(new ChatRoomVo(chatRoom, campRecommendVo.getCampRecommendListAll().get(0).getScore(), reviewCount));
+        List<Camp> campList = chatRoomService.getCampListExistingChatRoom();
+        campService.saveCampRecommendList(campList, member, campRecommendVo);
+        Map<Integer, Float> scoreList = new HashMap<>();
+        for (CampVo campVo : campRecommendVo.getCampRecommendListAll()) {
+            scoreList.put(campVo.getCamp().getCseq(), campVo.getScore());
         }
+
+        for (ChatRoom chatRoom : chatRoomList) {
+            long reviewCount = reviewRepository.countByCampCseq(chatRoom.getCamp().getCseq());
+            chatRoomVoList.add(new ChatRoomVo(chatRoom, scoreList.get(chatRoom.getCamp().getCseq()), reviewCount));
+        }
+
 
         return chatRoomVoList;
     }

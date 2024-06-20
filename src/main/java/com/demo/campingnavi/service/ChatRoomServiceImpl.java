@@ -1,5 +1,6 @@
 package com.demo.campingnavi.service;
 
+import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.ChatRoom;
 import com.demo.campingnavi.repository.jpa.ChatRoomRepository;
 import jakarta.annotation.PostConstruct;
@@ -43,5 +44,10 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     @Override
     public List<ChatRoom> findByCampNameContaining(String campName) {
         return chatRoomRepository.findByCampNameContaining(campName);
+    }
+
+    @Override
+    public List<Camp> getCampListExistingChatRoom() {
+        return chatRoomRepository.getCampListExistingChatRoom();
     }
 }
