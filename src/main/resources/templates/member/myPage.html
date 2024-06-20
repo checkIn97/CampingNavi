@@ -145,18 +145,13 @@
             <div class="myPageBox">
                 <!--찜 목록 나오는 페이지-->
                 <div>
-                    <div class="buttonContain">
-                        <h3 class="myPageSaveTitle">캠핑장 이름</h3>
-                        <a class="myPageSavaLink">상세보기</a>
-                    </div>
-                    <hr>
-                    <div class="buttonContain">
-                        <h3 class="myPageSaveTitle">캠핑장 이름</h3>
-                        <a class="myPageSavaLink">상세보기</a>
-                    </div>
+                    <div id="list_area"></div>
+                    <!-- 페이징 처리 시작 -->
+                    <div class="page-box" id="page_area"></div>
+                    <!-- 페이징 처리 끝 -->
                 </div>
-            </div>
         </div>
+
 
     </div>
     <div class="buttonContain">
@@ -179,6 +174,49 @@
             document.getElementById('profileImg').style.backgroundImage = img;
         }
     })
+
+    $(document).ready(function () {
+        function reloadList(page) {
+            $.ajax({
+                type: 'GET',
+                url: '/member/mypage/paging',
+                data: {
+                    page : page,
+                    size : 10
+                },
+                success: function (data) {
+                    var listArea = $("#list_area");
+                    listArea.empty();
+                    var list = data.content;
+                    list.forEach(function (recommend) {
+                        listArea.append('<div>');
+                        listArea.append('<div class="buttonContain">');
+                        listArea.append('<h3 class="myPageSaveTitle">' + recommend.camp.name + '</h3>');
+                        listArea.append('<a class="myPageSavaLink" href="#">상세보기</a>');
+                        listArea.append('</div>');
+                        listArea.append('<hr>');
+                        listArea.append('</div>');
+                    });
+
+                    var pagination = $("#page_area");
+                    pagination.empty();
+                    for (var i = 0; i < data.page.totalPages; i++) {
+                        pagination.append('<button class="page-btn" data-page="' + i + '">' + (i + 1) + '</button>');
+                    }
+                }
+            });
+        }
+
+        $(document).on('click', '.page-btn', function () {
+            var page = $(this).data('page');
+            reloadList(page);
+        });
+
+        reloadList(0);
+    });
+
+
+
     window.onload = function () {
         // 각 버튼과 내용 요소를 가져옵니다.
         var myPageInfoBtn = document.getElementById('myPageInfoBtn');

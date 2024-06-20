@@ -1,32 +1,25 @@
 package com.demo.campingnavi.controller;
 
-import com.demo.campingnavi.config.PathConfig;
 import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.domain.Recommend;
 import com.demo.campingnavi.dto.CustomOauth2UserDetails;
 import com.demo.campingnavi.dto.CustomSecurityUserDetails;
 import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
-import com.demo.campingnavi.repository.jpa.RecommendRepository;
 import com.demo.campingnavi.service.MemberService;
+import com.demo.campingnavi.service.RecommendService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/member")
@@ -37,7 +30,7 @@ public class MemberController {
     @Autowired
     MemberRepository memberRepository;
     @Autowired
-    RecommendRepository recommendRepository;
+    RecommendService recommendService;
 
     @GetMapping("/login")
     public String loginP(Model model) {
@@ -111,7 +104,9 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
-    public String mypageP(Model model, @RequestParam(defaultValue = "0") int page) {
+    public String mypageP(Model model,
+                          @RequestParam(value = "page", defaultValue = "0") int page,
+                          @RequestParam(value = "pageMaxDisplay", defaultValue = "10") int pageMaxDisplay) {
         // 인증 객체 생성
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = "";
@@ -130,11 +125,8 @@ public class MemberController {
         Member member = memberRepository.findByUsername(username);
         // 찜목록 객체 생성
         Page<Recommend> paging = this.memberService.getList(page, member);
-        List<Recommend> recommList = recommendRepository.getAllListByMember(member.getMseq());
         // 뷰에 전송
         model.addAttribute("member", member);
-        model.addAttribute("recommList", recommList);
-        model.addAttribute("paging", paging);
         model.addAttribute("img", member.getImg());
         return "member/myPage";
     }
@@ -159,10 +151,8 @@ public class MemberController {
         Member member = memberRepository.findByUsername(username);
         // 찜목록 객체 생성
         Page<Recommend> paging = this.memberService.getList(page, member);
-        List<Recommend> recommList = recommendRepository.getAllListByMember(member.getMseq());
         // 뷰에 전송
         model.addAttribute("member", member);
-        model.addAttribute("recommList", recommList);
         model.addAttribute("paging", paging);
         return "member/myPageOAuth";
     }
@@ -211,5 +201,15 @@ public class MemberController {
         data.put("addr2", addr2);
         data.put("img", img);
         return data;
+    }
+
+    @GetMapping("/mypage/paging")
+    @ResponseBody
+    public Page<Recommend> reloadList(HttpSession session, Pageable pageable) {
+
+        Member member = (Member) session.getAttribute("loginUser");
+        System.out.println("페이징 테스트 totalPages: " + recommendService.findAll(member, pageable).getTotalPages());
+
+        return recommendService.findAll(member, pageable);
     }
 }
