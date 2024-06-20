@@ -17,7 +17,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public String recommendModelUpdate() {
-        String pyFile = "ModelTraining";
+        String pyFile = "ModelTraining.py";
         pyFile = PathConfig.realPath(pyFile);
 
         ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile);

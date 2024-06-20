@@ -32,9 +32,10 @@ public class AdminController {
     ReviewCommentService reviewCommentService;
 
     @ResponseBody
-    @GetMapping("/recommend_update")
+    @PostMapping("/update")
     public Map<String, String> recommendModelUpdate(@RequestParam("kind") String kind) {
         Map<String, String> result = new HashMap<>();
+
         if (kind.equals("model")) {
             result.put("result", adminService.recommendModelUpdate());
         } else {
@@ -44,19 +45,61 @@ public class AdminController {
         UpdateHistory updateHistory = new UpdateHistory();
         updateHistory.setKind(kind);
         updateHistory.setResult(result.get("result"));
-        Date date = new Date();
-        updateHistory.setUpdateTime(date);
         adminService.saveUpdateHistory(updateHistory);
-        List<UpdateHistory> updateHistoryList = adminService.getUpdateHistoryList(kind);
-        System.out.println(kind);
-        System.out.println(updateHistoryList.size());
-        if (!updateHistoryList.isEmpty()) {
-            String updateTime = String.format(updateHistoryList.get(1).getUpdateTime().toString(), "yyyy-MM-dd HH:mm:ss").substring(0, 19);
-            result.put("updateTime", updateTime);
-        }
-
 
         return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/load_update_history")
+    public Map<String, Object> loadUpdateHistory(@RequestParam(value="kind") String kind) {
+        Map<String, Object> result = new HashMap<>();
+        List<UpdateHistory> updateHistoryList = adminService.getUpdateHistoryList(kind);
+        String defaultText = "내역 없음";
+        String updateTime = new String(defaultText);
+        String updateTry = new String(defaultText);
+        String text = "";
+        for (UpdateHistory updateHistory : updateHistoryList) {
+            if (!updateTime.equals(defaultText) && !updateTry.equals(defaultText)) {
+                break;
+            } else {
+                if (updateHistory.getResult().equals("success")) {
+                    if (updateTime.equals(defaultText)) {
+                        updateTime = updateHistory.getUpdateTime().toString().substring(0, 19);
+                    }
+                    if (updateTry.equals(defaultText)) {
+                        updateTry = updateHistory.getUpdateTime().toString().substring(0, 19);
+                        text = updateHistory.getResult();
+                    }
+                } else {
+                    if (updateTry.equals(defaultText)) {
+                        updateTry = updateHistory.getUpdateTime().toString().substring(0, 19);
+                        text = updateHistory.getResult();
+                    }
+                }
+            }
+        }
+
+        if (text.equals("")) {
+            text = " ";
+        } else if (text.equals("success")) {
+            text = "성공";
+        } else {
+            text = "실패";
+        }
+
+        System.out.println(updateTime);
+        System.out.println(updateTry);
+        System.out.println(text);
+        result.put("updateTime", updateTime);
+        result.put("updateTry", updateTry);
+        result.put("result", text);
+        return result;
+    }
+
+    @GetMapping("update_page")
+    public String updatePage() {
+        return "admin/update";
     }
 
     // 리뷰관리 리스트 보기

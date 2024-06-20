@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="/assets/css/main.css" rel="stylesheet"/>
+    <link href="/assets/css/bg/mainBG.css" rel="stylesheet"/>
+    <title>CampNavi</title>
+</head>
+<body>
+<h2>캠핑장데이터</h2>
+<div id="camp_ver"></div>
+<button type="button" name="update_camp" id="update_camp">캠핑장데이터 업데이트</button>
+<h2>추천모델</h2>
+<div id="model_ver"></div>
+<button type="button" name="update_model" id="update_model">추천모델 업데이트</button>
+</body>
+<script>
+    $(document).ready(function() {
+        document.getElementById("update_camp").addEventListener("click", event => update_camp(event));
+        document.getElementById("update_model").addEventListener("click", event => update_model(event));
+        load_update_history("camp");
+        load_update_history("model");
+    });
+
+    function update_camp(event) {
+        update("camp");
+        event.preventDefault();
+    }
+
+    function update_model(event) {
+        update("model");
+        event.preventDefault();
+    }
+
+    function update(kind) {
+        if (kind == "camp") {
+            alert("캠핑장데이터 업데이트 시작");
+        } else {
+            alert("추천모델 업데이트 시작");
+        }
+        $.ajax({
+           type: "POST",
+           url: "/admin/update",
+           data: {
+               kind: kind
+           },
+           success: function(data) {
+               load_update_history(kind);
+               if (data.result == 'success') {
+                   if (kind == "camp") {
+                       alert("작업 완료");
+                   } else {
+                       alert("작업 완료");
+                   }
+               } else {
+                   if (kind == "camp") {
+                       alert("작업 실패");
+                   } else {
+                       alert("작업 실패");
+                   }
+               }
+           },
+           error: function() {
+               alert(kind + " 업데이트 중 오류 발생");
+           }
+        });
+    }
+
+    function load_update_history(kind) {
+        $.ajax({
+            type: 'POST',
+            url: '/admin/load_update_history',
+            data: {
+                kind: kind
+            },
+            success: function(data) {
+                let updateTime = data.updateTime;
+                let updateTry = data.updateTry;
+                let result = data.result;
+                HTML = "";
+                HTML += "<h3>현재 버전 : " + updateTime + "</h3>";
+                HTML += "<h3>갱신 시도 : " + updateTry + " " + result + "</h3>";
+                if (kind == 'camp') {
+                    $("#camp_ver").html(HTML);
+                } else {
+                    $("#model_ver").html(HTML);
+                }
+            },
+            error: function() {
+                alert(kind + " 로그 데이터 가져오기 실패");
+            }
+        });
+    }
+
+
+
+</script>
+</html>
