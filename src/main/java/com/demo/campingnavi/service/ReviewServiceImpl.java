@@ -3,6 +3,7 @@ package com.demo.campingnavi.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.dto.ReviewVo;
 import com.demo.campingnavi.repository.jpa.ReviewRecommendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +104,12 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public long getTotalReviewsByCampId(int cseq) {
 		return reviewRepo.countByCampCseq(cseq);
+	}
+
+	@Override
+	public Page<Review> findAllByMember(Member member, Pageable pageable) {
+
+		return reviewRepo.findAllByMember(member, pageable);
 	}
 
 

@@ -60,6 +60,9 @@ public class Member {
     @Column
     private String img;
 
+    @Column
+    private String img2;
+
     private String provider;
 
     private String providerId;

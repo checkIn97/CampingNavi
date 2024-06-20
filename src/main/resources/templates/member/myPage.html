@@ -5,6 +5,7 @@
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <link href="/assets/css/main.css" rel="stylesheet"/>
     <link href="/assets/css/bg/mainBG.css" rel="stylesheet"/>
     <title>CampNavi</title>
@@ -27,9 +28,12 @@
                 <!--프로필 사진-->
                 <div class="box" id="profileImg">
                     <div class="myPageProPicture" id="myPageProPicture">
+                        <form id="uploadForm">
                         <input id="backURL" th:value="${img}" type="hidden">
+                        <input id="img" type="hidden">
                         <input hidden="hidden" id="myPagePictureUploadInput" type="file">
                         <img alt="수정아이콘" class="correctionImg" id="correctionImg" src="/assets/images/icon/pen.png">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -127,7 +131,13 @@
         <!--내가 남긴 후기-->
         <div class="myPageArea" id="myPageReview">
             <div class="myPageBox">
+                <!-- 리뷰 목록 나오는 페이지 -->
                 <div>
+                    <div id="review_area"></div>
+                    <!-- 페이징 처리 시작 -->
+                    <div class="page-box" id="review_page-area"></div>
+                    <!-- 페이징 처리 끝 -->
+                    <!--
                     <h3>리뷰 제목 좀 길어지면 어떻게 보이는지 확인하는 부분 어떻게 보이려나</h3>
                     <p>리뷰 요약 내용 (1줄 혹은 2줄)</p>
                     <p>리뷰 날짜</p>
@@ -138,9 +148,11 @@
                     <h3>리뷰 제목</h3>
                     <p>리뷰 요약 내용</p>
                     <p>리뷰 날짜</p>
+                    -->
                 </div>
             </div>
         </div>
+
 
         <!--찜 목록-->
         <div class="myPageArea" id="myPageSave">
@@ -178,6 +190,55 @@
         }
     })
 
+    // 리뷰 페이징
+    $(document).ready(function () {
+        function reviewList(page2) {
+            $.ajax({
+                type: 'GET',
+                url: '/member/mypage/review',
+                data: {
+                    page : page2,
+                    size : 10
+                },
+                success: function (data) {
+                    var reviewArea = $("#review_area");
+                    reviewArea.empty();
+                    var reviews = data.content;
+                    reviews.forEach(function (review) {
+                        var titleLen = review.title.length;
+                        if (titleLen <= 10) {
+                            reviewArea.append('<h3>' + review.title + '</h3>');
+                        } else {
+                            reviewArea.append('<h3>' + review.title.substring(0, 10) + '...</h3>');
+                        }
+                        var contentLen = review.content.length;
+                        if (contentLen <= 20) {
+                            reviewArea.append('<p>' + review.content + '</p>');
+                        } else {
+                            reviewArea.append('<p>' + review.content.substring(0, 20) + '...</p>');
+                        }
+                        var formattedDate = moment(review.createdAt).format('YYYY-MM-DD HH:mm:ss');
+                        reviewArea.append('<p>' + formattedDate + '</p>');
+                    });
+
+                    var pagination2 = $("#review_page_area");
+                    pagination2.empty();
+                    for (var i = 0; i < data.page.totalPages; i++) {
+                        pagination2.append('<button class="page-btn" id="review-page-btn" data-page="' + i + '">' + (i + 1) + '</button>');
+                    }
+                }
+            });
+        }
+
+        $(document).on('click', '#review-page-btn', function () {
+            var page2 = $(this).data('page');
+            reviewList(page2);
+        });
+
+        reviewList(0);
+    });
+
+    // 찜목록 페이징
     $(document).ready(function () {
         function reloadList(page) {
             $.ajax({
@@ -348,6 +409,16 @@
         var addr1 = $("#addr1").val();
         var addr2 = $("#addr2").val();
         var img = $("#backURL").val();
+        var formData = new FormData();
+        formData.append('nickname', nickname);
+        formData.append('birth', birth);
+        formData.append('phone', phone);
+        formData.append('addr1', addr1);
+        formData.append('addr2', addr2);
+        var fileInput = $('#myPagePictureUploadInput')[0];
+        if (fileInput.files.length > 0) {
+            formData.append('file', fileInput.files[0]);
+        }
         const getValue = () => {
             let curr_value;
             const radioValue = document.getElementsByName("sex");
@@ -358,7 +429,8 @@
             });
             return curr_value;
         };
-
+        formData.append('sex', getValue());
+        formData.append('img', $("#backURL").val());
 
         if (nickname == "") {
             alert("사이트에서 사용할 닉네임을 입력해주세요!");
@@ -382,15 +454,9 @@
             $.ajax({
                 url: "/member/mypage/edit/detail",
                 method: "POST",
-                data: {
-                    nickname: nickname,
-                    birth: birth,
-                    phone: phone,
-                    addr1: addr1,
-                    addr2: addr2,
-                    sex: getValue(),
-                    img: img
-                },
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function (response) {
                     document.getElementById('memberAddr2Read').textContent = response.addr2;
                     document.getElementById('memberSexRead').textContent = response.sex;

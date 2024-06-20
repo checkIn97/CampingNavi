@@ -1,13 +1,16 @@
 package com.demo.campingnavi.controller;
 
+import com.demo.campingnavi.config.PathConfig;
 import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.domain.Recommend;
+import com.demo.campingnavi.domain.Review;
 import com.demo.campingnavi.dto.CustomOauth2UserDetails;
 import com.demo.campingnavi.dto.CustomSecurityUserDetails;
 import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
 import com.demo.campingnavi.service.MemberService;
 import com.demo.campingnavi.service.RecommendService;
+import com.demo.campingnavi.service.ReviewService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,9 +20,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/member")
@@ -31,23 +38,13 @@ public class MemberController {
     MemberRepository memberRepository;
     @Autowired
     RecommendService recommendService;
+    @Autowired
+    ReviewService reviewService;
 
     @GetMapping("/login")
     public String loginP(Model model) {
         return "member/loginPage";
     }
-
-//    @PostMapping("/loginProc")
-//    public String loginProcess(MemberVo vo) {
-//        boolean login = memberService.loginProcess(vo);
-//        if (login) {
-//            System.out.println("로그인 성공");
-//            return "search/searchPage";
-//        } else {
-//            System.out.println("로그인 실패");
-//            return "member/loginPage";
-//        }
-//    }
 
     @GetMapping("/join")
     public String joinP() {
@@ -166,7 +163,8 @@ public class MemberController {
                                           @RequestParam("phone") String phone,
                                           @RequestParam("addr1") String addr1,
                                           @RequestParam("addr2") String addr2,
-                                          @RequestParam("img") String img) {
+                                          @RequestParam("img") String img,
+                                          @RequestParam("file") MultipartFile file) {
         // 인증 객체 생성
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = "";
@@ -180,9 +178,28 @@ public class MemberController {
             oauth2UserDetails = (CustomOauth2UserDetails) authentication.getPrincipal();
             username = oauth2UserDetails.getUsername();
         }
+
         // 추출된 아이디로 회원 객체 생성
         Map<String, Object> data = new HashMap<>();
         Member member = memberRepository.findByUsername(username);
+        if (!file.isEmpty()) {
+            String fileName = file.getOriginalFilename();
+            String uuid = UUID.randomUUID().toString();
+            String saveName = uuid + "_" + fileName;
+            member.setImg2(saveName);
+            try {
+                String uploadPath = PathConfig.intelliJPath + saveName;
+                boolean exists = PathConfig.isExistsPath();
+                if(exists) {
+                    file.transferTo(new File(PathConfig.realPath(uploadPath)));
+                } else {
+                    uploadPath = PathConfig.eclipsePath + saveName;
+                    file.transferTo(new File(PathConfig.realPath(uploadPath)));
+                }
+            } catch (IllegalStateException | IOException e) {
+                e.printStackTrace();
+            }
+        }
         member.setImg(img);
         member.setNickname(nickname);
         member.setSex(sex);
@@ -208,8 +225,16 @@ public class MemberController {
     public Page<Recommend> reloadList(HttpSession session, Pageable pageable) {
 
         Member member = (Member) session.getAttribute("loginUser");
-        System.out.println("페이징 테스트 totalPages: " + recommendService.findAll(member, pageable).getTotalPages());
 
         return recommendService.findAll(member, pageable);
+    }
+
+    @GetMapping("/mypage/review")
+    @ResponseBody
+    public Page<Review> reviewPaging(HttpSession session, Pageable pageable) {
+
+        Member member = (Member) session.getAttribute("loginUser");
+
+        return reviewService.findAllByMember(member, pageable);
     }
 }

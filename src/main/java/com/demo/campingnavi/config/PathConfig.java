@@ -9,9 +9,9 @@ public class PathConfig {
         return path + file;
     }
 
-    public static String intelliJPath = "FoodNavi\\src\\main\\resources\\static\\assets\\foodimages\\";
+    public static String intelliJPath = "FoodNavi\\src\\main\\resources\\static\\assets\\memberimages\\";
 
-    public static String eclipsePath = "src\\main\\resources\\static\\assets\\foodimages\\";
+    public static String eclipsePath = "src\\main\\resources\\static\\assets\\memberimages\\";
 
     public static String existsPath = realPath(intelliJPath.substring(0, intelliJPath.length() - 1));
 
