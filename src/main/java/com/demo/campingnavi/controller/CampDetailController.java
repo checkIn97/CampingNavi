@@ -152,7 +152,7 @@ public class CampDetailController {
             for (Review review : reviewList) {
                 reviewListHtml.append("<div class=\"userReview\">")
                         .append("<div class=\"userName\">")
-                        .append("<span>").append(review.getMember().getNickname()).append("</span>")
+                        .append("<span>").append(review.getMember().getNickname()).append("　　</span>")
                         .append("<span class=\"userDate\">").append(new SimpleDateFormat("yyyy-MM-dd").format(review.getCreatedAt())).append("</span>")
                         .append("</div>")
                         .append("<div class=\"userGrade\">");
