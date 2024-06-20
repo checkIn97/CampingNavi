@@ -112,6 +112,11 @@ public class ReviewServiceImpl implements ReviewService {
 		return reviewRepo.findAllByMember(member, pageable);
 	}
 
+	@Override
+	public List<Review> getAuthorReviewVoList(int mseq, int page, int pageSize) {
+		return reviewRepo.findAuthorList(mseq, page, pageSize);
+	}
+
 
 	@Override
 	public List<ReviewVo> findReviewVoList(ReviewScanVo reviewScanVo) {

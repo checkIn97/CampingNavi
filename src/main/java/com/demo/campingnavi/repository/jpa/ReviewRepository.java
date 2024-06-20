@@ -52,4 +52,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
     @Query("SELECT COUNT(r) FROM Review r WHERE r.camp.cseq = :cseq")
     long countByCampCseq(@Param("cseq") int cseq);
+
+    @Query("SELECT r FROM Review r WHERE r.member.mseq = ?1 ORDER BY r.createdAt DESC")
+    List<Review> findAuthorList(int mseq, int page, int pageSize);
 }
