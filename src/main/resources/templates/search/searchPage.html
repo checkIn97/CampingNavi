@@ -34,16 +34,16 @@
             <button class="mainBtn" id="searchBtn" onclick="camp_search(); return false;" type="button">검색</button>
         </div>
         <div id="searchRequirement">
-            <input class="search-checked" id="camping" name="campType" type="checkbox" value="generalCamping" checked>
+            <input checked class="search-checked" id="camping" name="campType" type="checkbox" value="generalCamping">
             <label class="search-icon-area" for="camping" title="일반캠핑장"><img class="search-icon"
-                                                                             src="/assets/images/icon/camping.png" ></label>
-            <input class="search-checked" id="glamping" name="campType" type="checkbox" value="glamping" checked>
+                                                                             src="/assets/images/icon/camping.png"></label>
+            <input checked class="search-checked" id="glamping" name="campType" type="checkbox" value="glamping">
             <label class="search-icon-area" for="glamping" title="글램핑"><img class="search-icon"
                                                                             src="/assets/images/icon/glamping.png"></label>
-            <input class="search-checked" id="caravan" name="campType" type="checkbox" value="caravan" checked>
+            <input checked class="search-checked" id="caravan" name="campType" type="checkbox" value="caravan">
             <label class="search-icon-area" for="caravan" title="카라반"><img class="search-icon"
                                                                            src="/assets/images/icon/caravan.png"></label>
-            <input class="search-checked" id="car" name="campType" type="checkbox" value="autoCamping" checked>
+            <input checked class="search-checked" id="car" name="campType" type="checkbox" value="autoCamping">
             <label class="search-icon-area" for="car" title="자동차야영장"><img class="search-icon"
                                                                           src="/assets/images/icon/car.png"></label>
         </div>
@@ -51,6 +51,7 @@
         <div class="page-box" id="search-page_area"></div>
     </div>
     <div class="box" id="contentSearchArea">
+        <h2>캠핑장 추천</h2>
         <div id="kakaoMap"></div>
         <button class="mainBtn" id="search-box-toggle">검색하기</button>
     </div>
@@ -383,22 +384,21 @@
 
     // 각 체크박스에 대해 이벤트 리스너를 추가합니다.
     checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener('change', function () {
+        checkbox.addEventListener('click', function () {
             // 체크박스의 'id'를 가져와서 이를 사용하여 연결된 레이블을 선택합니다.
             let label = document.querySelector('label[for="' + checkbox.id + '"]');
 
             // 레이블 내부의 'search-icon' 클래스를 가진 이미지를 선택합니다.
             let icon = label.querySelector('.search-icon');
 
-            // 체크박스가 체크되었는지 확인하고, 이미지의 스타일을 변경합니다.
+            // 이미지의 스타일을 확인하고, 이미지의 스타일을 변경합니다.
             if (checkbox.checked) {
                 icon.style.filter = 'invert(100%)';
             } else {
-                icon.style.filter = '';
+                icon.style.filter = 'invert(0%)';
             }
         });
     });
-
 </script>
 </body>
 </html>
