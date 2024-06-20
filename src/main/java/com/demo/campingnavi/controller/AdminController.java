@@ -113,7 +113,7 @@ public class AdminController {
     }
 
     // 리뷰 상세보기
-    @GetMapping("/review/detail/{vseq}")
+    @GetMapping("/review/view/{vseq}")
     public String reviewDetail(@PathVariable("vseq") int vseq, Model model, HttpSession session) {
 
         // 세션에서 어드민 정보 가져오기
@@ -200,12 +200,9 @@ public class AdminController {
     }
 
     @GetMapping(value = "/review/comment/list")
+    @ResponseBody
     public Map<String, Object> getComments(@RequestParam(value = "vseq") int vseq, HttpSession session) {
         Map<String, Object> result = new HashMap<>();
-        System.out.println(1);
-        // 세션에서 사용자 정보 가져오기
-        Member member = (Member) session.getAttribute("loginUser");
-        int currentMember = member.getMseq();
 
         // 댓글 목록 가져오기
         List<ReviewComment> parentComments = reviewCommentService.getCommentList(vseq);
@@ -225,7 +222,6 @@ public class AdminController {
             parentCommentMemberArray[i] = tmp_member.getName()+"("+tmp_member.getUsername()+")";
             parentCommentContentArray[i] = parentComments.get(i).getContent();
             String date = parentComments.get(i).getCreatedAt().toString();
-            // date = date.substring(0, date.length()-4);
             parentCommentDateArray[i] = date;
         }
 
@@ -271,7 +267,6 @@ public class AdminController {
         // 대댓글을 포함한 댓글 수 계산
         int totalCommentCount = reviewService.getReview(vseq).getCommentCount();
 
-        result.put("currentMember", currentMember);
         result.put("commentCount", totalCommentCount); // 대댓글을 포함한 총 댓글 수를 전달
         result.put("parentCommentCmseqArray", parentCommentCmseqArray);
         result.put("parentCommentMseqArray", parentCommentMseqArray);
@@ -288,6 +283,7 @@ public class AdminController {
     }
     // 댓글 삭제
     @PostMapping(value = "/review/comment/delete")
+    @ResponseBody
     public Map<String, Object> deleteCommentAction(@RequestParam(value = "cmseq") int cmseq) {
 
         Map<String, Object> map = new HashMap<>();

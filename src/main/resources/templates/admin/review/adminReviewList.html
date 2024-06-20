@@ -38,13 +38,6 @@
         </div>
     </form>
 
-
-</article>
-
-<footer id="footer">
-    <p class="copyright">&copy; Team Navigation. </p>
-</footer>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
@@ -83,7 +76,7 @@
                         }
 
                         HTML += "<tr class='review-list-pop-back'><td class=\"popularPosts\">" + bestList[i].review.camp.name + "</td>"
-                        HTML += "<td><div class=\"popularPosts\">[인기] <a class=\"popularPosts\" href=\"/admin/review/detail/" + bestList[i].review.vseq + "\">";
+                        HTML += "<td><div class=\"popularPosts\">[인기] <a class=\"popularPosts\" href=\"/admin/review/view/" + bestList[i].review.vseq + "\">";
                         HTML += "<span class=\"popularPosts\" >" + bestTitle + "&nbsp</span>";
                         HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);\"/>";
                         HTML += "<span> [" + bestList[i].review.commentCount + "]</span></a></div>";
@@ -103,7 +96,7 @@
                         }
 
                         HTML += "<tr><td class=\"review_list\">" + list[i].review.camp.name + "</td>"
-                        HTML += "<td><div class=\"review_list\"><a href=\"/admin/review/detail/" + list[i].review.vseq + "\">";
+                        HTML += "<td><div class=\"review_list\"><a href=\"/admin/review/view/" + list[i].review.vseq + "\">";
                         HTML += "<span>" + title + "&nbsp</span>";
                         HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle;\"/>";
                         HTML += "<span> [" + list[i].review.commentCount + "]</span></a></div>";
