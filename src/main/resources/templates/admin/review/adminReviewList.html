@@ -3,31 +3,26 @@
 
 <head>
     <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
-    <link href="/assets/css/main.css" rel="stylesheet"/>
-    <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
-    <title>CampNavi</title>
+
+    <title>관리자 페이지</title>
 </head>
 
-<th:block th:insert="/insert/header"></th:block>
-
 <body>
-<article class="box" id="review-list">
 
-    <h2>캠핑장 리뷰 리스트</h2>
+    <h2>리뷰 리스트 관리자 페이지</h2>
     <div class="page-index">
         <!-- 리스트 영역 -->
         <div id="list_area"></div>
         <!-- 페이지 영역 -->
         <div class="page-box" id="page_area">
-            <img class="icon width-rem1" src="/assets/images/icon/arrowL.png">
             <a class="page-num"></a>
-            <img class="icon width-rem1" src="/assets/images/icon/arrowR.png">
         </div>
+
+
     </div>
 
 
-    <form method="get" th:action="@{/review/list}">
+    <form method="get" th:action="@{/admin/review/list}">
         <div class="search-container review-list-search-index">
             <select class="search" id="search" name="searchField">
                 <option value="campName">캠핑장명</option>
@@ -43,16 +38,6 @@
         </div>
     </form>
 
-    <button class="review-list-create-button mainBtn" onclick="window.location.href='/review/insert_search_form'">
-        새로운 글 작성
-    </button>
-
-</article>
-
-<footer id="footer">
-    <p class="copyright">&copy; Team Navigation. </p>
-</footer>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
@@ -63,7 +48,7 @@
     function reloadList(page, sortBy, sortDirection) {
         $.ajax({
             type: 'POST',
-            url: '/review/reloadList',
+            url: '/admin/review/reloadList',
             data: {
                 page: page,
                 sortBy: sortBy,
@@ -76,7 +61,6 @@
                 let page = data.page;
                 let size = data.size;
                 let pageMaxDisplay = data.pageMaxDisplay;
-                let pageWidth = parseInt(pageMaxDisplay/2);
                 let result = data.result;
 
 
@@ -92,12 +76,11 @@
                         }
 
                         HTML += "<tr class='review-list-pop-back'><td class=\"popularPosts\">" + bestList[i].review.camp.name + "</td>"
-                        HTML += "<td><div class=\"popularPosts\">[인기] <a class=\"popularPosts\" href=\"/review/detail/" + bestList[i].review.vseq + "\">";
+                        HTML += "<td><div class=\"popularPosts\">[인기] <a class=\"popularPosts\" href=\"/admin/review/view/" + bestList[i].review.vseq + "\">";
                         HTML += "<span class=\"popularPosts\" >" + bestTitle + "&nbsp</span>";
                         HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);\"/>";
                         HTML += "<span> [" + bestList[i].review.commentCount + "]</span></a></div>";
                         HTML += "<input type=\"hidden\" name=\"vseq\" value=\"" + bestList[i].review.vseq + "\"/></td>";
-                        HTML += "<td><a class=\"popularPosts\" href=\"/review/memberList/" + bestList[i].review.member.mseq + "\">" + bestList[i].review.member.username + "</a>";
                         HTML += "<input type=\"hidden\" name=\"mseq\" value=\"" + bestList[i].review.member.mseq + "\"/></td>";
                         HTML += "<td class=\"popularPosts\">" + bestList[i].createdAt + "</td>";
                         HTML += "<td class=\"popularPosts\">" + bestList[i].rcdCount + "</td>";
@@ -113,12 +96,11 @@
                         }
 
                         HTML += "<tr><td class=\"review_list\">" + list[i].review.camp.name + "</td>"
-                        HTML += "<td><div class=\"review_list\"><a href=\"/review/detail/" + list[i].review.vseq + "\">";
+                        HTML += "<td><div class=\"review_list\"><a href=\"/admin/review/view/" + list[i].review.vseq + "\">";
                         HTML += "<span>" + title + "&nbsp</span>";
                         HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle;\"/>";
                         HTML += "<span> [" + list[i].review.commentCount + "]</span></a></div>";
                         HTML += "<input type=\"hidden\" name=\"vseq\" value=\"" + list[i].review.vseq + "\"/></td>";
-                        HTML += "<td><a href=\"/review/memberList/" + list[i].review.member.mseq + "\">" + list[i].review.member.username + "</a>";
                         HTML += "<input type=\"hidden\" name=\"mseq\" value=\"" + list[i].review.member.mseq + "\"/></td>";
                         HTML += "<td>" + list[i].createdAt + "</td>";
                         HTML += "<td>" + list[i].rcdCount + "</td>";
@@ -137,17 +119,9 @@
                     pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page-1) + ", 'vseq', 'DESC'); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\"></a>";
                 }
 
-                let start = page - pageWidth;
-                let end = page + pageWidth;
-                if (start < 1) {
-                    start = 1;
-                    end = Math.min(start + pageWidth*2, totalPages);
-                }
-                if (end > totalPages) {
-                    end = totalPages;
-                    start = Math.max(end - pageWidth*2, 1);
-                }
-                for (let i = start; i <= end; i++) {
+                let start = parseInt((page-1)/pageMaxDisplay)*pageMaxDisplay + 1;
+                let end = start + pageMaxDisplay < totalPages ? start + pageMaxDisplay : totalPages + 1;
+                for (let i = start; i < end; i++) {
                     if (i == page) {
                         pageHTML += "<span class=\"page-num active\">" + i + "</span>";
                     } else {
@@ -155,7 +129,7 @@
                     }
                 }
                 if (page == totalPages) {
-                    pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\">";
+                    pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\" >";
                 } else {
                     pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page+1) + ", 'vseq', 'DESC'); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\"></a>";
                 }
@@ -183,6 +157,5 @@
     }
 </script>
 
-<div id="bg"></div>
 </body>
 </html>

@@ -79,6 +79,8 @@
 <script type="text/javascript">
     var map = null;
     var markers = null;
+    var list = null;
+    var infowindow_always = null;
     var choice = 0;
 
     // 선택한 마커 이미지 정보
@@ -106,6 +108,7 @@
                 let page = data.page;
                 let size = data.size;
                 let pageMaxDisplay = data.pageMaxDisplay;
+                let pageWidth = parseInt(pageMaxDisplay/2);
                 let result = data.result;
                 if (result === "success") {
                     if (mapRefresh) {
@@ -204,9 +207,17 @@
                         pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page - 1) + ", 'score', 'DESC', false); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\"></a>";
                     }
 
-                    let start = parseInt((page - 1) / pageMaxDisplay) * pageMaxDisplay + 1;
-                    let end = start + pageMaxDisplay < totalPages ? start + pageMaxDisplay : totalPages + 1;
-                    for (let i = start; i < end; i++) {
+                    let start = page - pageWidth;
+                    let end = page + pageWidth;
+                    if (start < 1) {
+                        start = 1;
+                        end = Math.min(start + pageWidth*2, totalPages);
+                    }
+                    if (end > totalPages) {
+                        end = totalPages;
+                        start = Math.max(end - pageWidth*2, 1);
+                    }
+                    for (let i = start; i <= end; i++) {
                         if (i == page) {
                             pageHTML += "<span class=\"page-num active\">" + i + "</span>";
                         } else {
@@ -297,7 +308,7 @@
             success: function (data) {
                 markers = [];
                 choice = 0;
-                let list = data.campRecommendVo.campRecommendList;
+                list = data.campRecommendVo.campRecommendList;
                 if (list.length > 0) {
                     // 지도 생성
                     let initX = list[0].camp.mapX;
@@ -346,8 +357,21 @@
                             // 인포윈도우에 표시할 내용
                             content: "<div style=\"padding:5px; font-weight:bold; white-space:nowrap;\">" + list[i].camp.name + " (★ : " + list[i].scoreView + ")</div>"
                         });
-                        kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
-                        kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+
+                        if (i != choice) {
+                            kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+                            kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+                        }
+
+                        if (i == list.length - 1) {
+                            infowindow_always = new kakao.maps.InfoWindow({
+                                // 인포윈도우에 표시할 내용
+                                content: "<div style=\"padding:5px; font-weight:bold; white-space:nowrap;\">" + list[choice].camp.name + " (★ : " + list[choice].scoreView + ")</div>"
+                            });
+                            infowindow_always.open(map, markers[choice]);
+                        }
+
+
                     }
                 }
             },
@@ -374,9 +398,31 @@
     function move_map(index, mapX, mapY) {
         markers[choice].setImage(null);
         markers[index].setImage(markerImage);
+        infowindow_always.close();
+
+        infowindow = new kakao.maps.InfoWindow({
+            // 인포윈도우에 표시할 내용
+            content: "<div style=\"padding:5px; font-weight:bold; white-space:nowrap;\">" + list[choice].camp.name + " (★ : " + list[choice].scoreView + ")</div>"
+        });
+
+        kakao.maps.event.addListener(markers[choice], 'mouseover', makeOverListener(map, markers[choice], infowindow));
+        kakao.maps.event.addListener(markers[choice], 'mouseout', makeOutListener(infowindow));
+
+        // 마커에 표시할 인포윈도우를 생성합니다
+        infowindow_always = new kakao.maps.InfoWindow({
+            // 인포윈도우에 표시할 내용
+            content: "<div style=\"padding:5px; font-weight:bold; white-space:nowrap;\">" + list[index].camp.name + " (★ : " + list[index].scoreView + ")</div>"
+        });
+        infowindow_always.open(map, markers[index]);
+
+        kakao.maps.event.addListener(markers[index], 'mouseover', null);
+        kakao.maps.event.addListener(markers[index], 'mouseout', null);
+
         choice = index;
         let moveLatLon = new kakao.maps.LatLng(mapY, mapX);
         map.panTo(moveLatLon);
+
+
     }
 
     // 모든 'search-checked' 클래스를 가진 체크박스를 선택합니다.

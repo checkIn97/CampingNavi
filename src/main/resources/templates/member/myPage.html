@@ -135,7 +135,12 @@
                 <div>
                     <div id="review_area"></div>
                     <!-- 페이징 처리 시작 -->
-                    <div class="page-box" id="review_page-area"></div>
+                    <div class="page-box">
+                        <img class="icon width-rem1" id="prevBtn2" src="/assets/images/icon/arrowL.png"/>
+                        <div id="review_page-area"></div>
+                        <img class="icon width-rem1" id="nextBtn2" src="/assets/images/icon/arrowR.png"/>
+                        <input type="hidden" id="hiddenTotal2">
+                    </div>
                     <!-- 페이징 처리 끝 -->
                     <!--
                     <h3>리뷰 제목 좀 길어지면 어떻게 보이는지 확인하는 부분 어떻게 보이려나</h3>
@@ -161,7 +166,12 @@
                 <div>
                     <div id="list_area"></div>
                     <!-- 페이징 처리 시작 -->
-                    <div class="page-box" id="page_area"></div>
+                    <div class="page-box">
+                        <img class="icon width-rem1" id="prevBtn" src="/assets/images/icon/arrowL.png"/>
+                        <div id="page_area"></div>
+                        <img class="icon width-rem1" id="nextBtn" src="/assets/images/icon/arrowR.png"/>
+                        <input type="hidden" id="hiddenTotal">
+                    </div>
                     <!-- 페이징 처리 끝 -->
                 </div>
             </div>
@@ -198,7 +208,7 @@
                 url: '/member/mypage/review',
                 data: {
                     page : page2,
-                    size : 10
+                    size : 5
                 },
                 success: function (data) {
                     var reviewArea = $("#review_area");
@@ -221,18 +231,39 @@
                         reviewArea.append('<p>' + formattedDate + '</p>');
                     });
 
-                    var pagination2 = $("#review_page_area");
+                    var pagination2 = $("#review_page-area");
                     pagination2.empty();
-                    for (var i = 0; i < data.page.totalPages; i++) {
-                        pagination2.append('<button class="page-btn" id="review-page-btn" data-page="' + i + '">' + (i + 1) + '</button>');
+                    var totalPages2 = data.page.totalPages;
+                    $("#hiddenTotal2").val(totalPages2);
+                    var visiblePages2 = 3; // 표시할 페이지 버튼 수
+                    var startPage2 = Math.max(0, Math.min(page2 - Math.floor(visiblePages2 / 2), totalPages2 - visiblePages2));
+                    var endPage2 = Math.min(totalPages2, startPage2 + visiblePages2);
+
+                    // 페이지 버튼
+                    for (var i = startPage2; i < endPage2; i++) {
+                        pagination2.append('<button class="page-btn" id="review-page" data-page="' + i + '">' + (i + 1) + '</button>');
                     }
+
+                    currentPage2 = page2;
                 }
             });
         }
 
-        $(document).on('click', '#review-page-btn', function () {
+        $(document).on('click', '#review-page', function () {
             var page2 = $(this).data('page');
             reviewList(page2);
+        });
+
+        $('#prevBtn2').click(function () {
+            if (currentPage2 > 0) {
+                reviewList(currentPage2 - 1);
+            }
+        });
+
+        $('#nextBtn2').click(function () {
+            if (currentPage2 < $('#hiddenTotal2').val() -1) {
+                reviewList(currentPage2 + 1);
+            }
         });
 
         reviewList(0);
@@ -246,7 +277,7 @@
                 url: '/member/mypage/paging',
                 data: {
                     page: page,
-                    size: 10
+                    size: 5
                 },
                 success: function (data) {
                     var listArea = $("#list_area");
@@ -256,7 +287,7 @@
                         listArea.append('<div>');
                         listArea.append('<div class="buttonContain">');
                         listArea.append('<h3 class="myPageSaveTitle">' + recommend.camp.name + '</h3>');
-                        listArea.append('<a class="myPageSavaLink" href="#">상세보기</a>');
+                        listArea.append('<a class="myPageSavaLink" href="/camp/detail/?mapX='+ recommend.camp.mapX + '&mapY=' + recommend.camp.mapY + '&contentId=' + recommend.camp.contentId + '&cseq=' + recommend.camp.cseq + '">상세보기</a>');
                         listArea.append('</div>');
                         listArea.append('<hr>');
                         listArea.append('</div>');
@@ -264,9 +295,18 @@
 
                     var pagination = $("#page_area");
                     pagination.empty();
-                    for (var i = 0; i < data.page.totalPages; i++) {
+                    var totalPages = data.page.totalPages;
+                    $("#hiddenTotal").val(totalPages);
+                    var visiblePages = 3; // 표시할 페이지 버튼 수
+                    var startPage = Math.max(0, Math.min(page - Math.floor(visiblePages / 2), totalPages - visiblePages));
+                    var endPage = Math.min(totalPages, startPage + visiblePages);
+
+                    // 페이지 버튼
+                    for (var i = startPage; i < endPage; i++) {
                         pagination.append('<button class="page-btn" data-page="' + i + '">' + (i + 1) + '</button>');
                     }
+
+                    currentPage = page;
                 }
             });
         }
@@ -274,6 +314,18 @@
         $(document).on('click', '.page-btn', function () {
             var page = $(this).data('page');
             reloadList(page);
+        });
+
+        $('#prevBtn').click(function () {
+            if (currentPage > 0) {
+                reloadList(currentPage - 1);
+            }
+        });
+
+        $('#nextBtn').click(function () {
+            if (currentPage < $('#hiddenTotal').val() -1) {
+                reloadList(currentPage + 1);
+            }
         });
 
         reloadList(0);

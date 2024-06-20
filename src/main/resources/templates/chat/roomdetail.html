@@ -14,7 +14,6 @@
 <th:block th:insert="insert/header.html"></th:block>
 
 <article class="box" id="chatBox">
-    <button class="close" id="chatExit"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
     <div class="container" id="app">
         <div>
             <h2>{{ room.name }}</h2>
@@ -39,8 +38,9 @@
             <div class="buttonContain" id="chatInputGroup">
                 <input class="form-control" type="text" v-model="message" v-on:keypress.enter="sendMessage">
                 <div class="input-group-append">
-                    <button @click="sendMessage" class="btn btn-primary" type="button">보내기</button>
+                    <button @click="sendMessage" class="chatBtn" type="button">보내기</button>
                 </div>
+                <button class="chatBtn mainBtn" id="chatExit">나가기</button>
             </div>
         </div>
     </div>

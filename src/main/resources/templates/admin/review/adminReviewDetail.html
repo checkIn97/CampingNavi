@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+            crossorigin="anonymous"></script>
+    <title>관리자 페이지</title>
+</head>
+
+<body>
+
+    <div>
+        <h2 class="mb-4" th:text="${reviewVo.review.camp.getName()} + '리뷰'"></h2>
+        <hr class="vertical">
+        <div class="card webkit">
+            <div class="card-header">
+                <h3 th:text="${reviewVo.review.title}">제목</h3>
+            </div>
+            <hr>
+            <div class="card-body">
+                <div class="info">
+                    <div class="space-between">
+                        <div class="space-between-flex">
+                            캠핑장 :
+                            <span th:text="${reviewVo.review.camp.getName()}">캠핑장명</span>
+                        <div class="buttonContain space-between-flex">
+                            리뷰 평점 :
+                            <p class="campingGrade margin0">
+                                <th:block th:with="starScore=${starScore}">
+                            <span class="satisfaction" th:alt="${starScore}" th:title="${starScore}">
+                                <th:block th:if="${starScore < 0.5}">
+                                    <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                                </th:block>
+                                <th:block th:if="${starScore >= 0.5 and starScore < 1.0}">
+                                    <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
+                                </th:block>
+                                <th:block th:if="${starScore >= 1.0}">
+                                    <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
+                                </th:block>
+
+                                <th:block th:if="${starScore < 1.5}">
+                                    <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                                </th:block>
+                                <th:block th:if="${starScore >= 1.5 and starScore < 2.0}">
+                                    <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
+                                </th:block>
+                                <th:block th:if="${starScore >= 2.0}">
+                                    <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
+                                </th:block>
+
+                                <th:block th:if="${starScore < 2.5}">
+                                    <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                                </th:block>
+                                <th:block th:if="${starScore >= 2.5 and starScore < 3.0}">
+                                    <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
+                                </th:block>
+                                <th:block th:if="${starScore >= 3.0}">
+                                    <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
+                                </th:block>
+
+                                <th:block th:if="${starScore < 3.5}">
+                                    <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                                </th:block>
+                                <th:block th:if="${starScore >= 3.5 and starScore < 4.0}">
+                                    <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
+                                </th:block>
+                                <th:block th:if="${starScore >= 4.0}">
+                                    <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
+                                </th:block>
+
+                                <th:block th:if="${starScore < 4.5}">
+                                    <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                                </th:block>
+                                <th:block th:if="${starScore >= 4.5 and starScore < 5.0}">
+                                    <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
+                                </th:block>
+                                <th:block th:if="${starScore >= 5.0}">
+                                    <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
+                                </th:block>
+                            </span>
+                                </th:block>
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="space-between">
+                        <div class="space-between-flex">
+                            <input name="vseq" th:value="${reviewVo.review.vseq}" type="hidden">
+                            작성자: <span
+                                th:text="${reviewVo.review.member.nickname + '(' + reviewVo.review.member.username + ')'}">작성자명</span>
+
+                        </div>
+                        <div class="space-between-flex">
+                            작성일시: <span
+                                th:text="${#dates.format(reviewVo.review.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
+                        </div>
+                        <div class="space-between-flex">
+                            조회수: <span th:text="${reviewVo.review.count}+1">조회수</span>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+
+                <p class="content" id="content" th:utext="${reviewVo.review.content}">내용</p>
+
+
+                <hr>
+                <div class="buttonContain button-full">
+                    <!-- 목록으로 돌아가기 -->
+                    <a class="button webkit" th:href="@{/admin/review/list}">
+                        <button class="webkit">목록보기</button>
+                    </a>
+                    <form class="webkit"
+                          method="post" th:action="@{'/review/delete/' + ${reviewVo.review.vseq}}">
+                        <button class="webkit mainBtn" onclick="return confirmDelete()" type="submit">삭제하기</button>
+                    </form>
+                </div>
+                <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <th:block th:insert="~{/admin/review/adminReviewComments}"></th:block>
+
+    </div>
+
+<script>
+    function confirmDelete() {
+        return confirm("게시글을 삭제하시겠습니까?");
+    }
+</script>
+
+</body>
+</html>

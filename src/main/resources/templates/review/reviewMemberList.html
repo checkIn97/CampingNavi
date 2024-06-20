@@ -2,10 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+<link href="/assets/css/main.css" rel="stylesheet"/>
+<link href="/assets/css/bg/BG.css" rel="stylesheet"/>
 <title>Review List</title>
 
+<th:block th:insert="/insert/header"></th:block>
 
-<article id="box">
+<body>
+<article class="box" id="review-list">
 
     <h3><span th:text="${authorList[0].review.member.nickname}"></span>님의 게시글 목록</h3>
     <table>
@@ -22,7 +27,7 @@
             <td>
                 <div class="review_list">
                     <a th:href="@{'/review/detail/' + ${reviewVo.review.vseq}}"
-                       th:text="${reviewVo.review.title + ' ' + '[' + '전체 댓글수 표시' + ']'}"></a><!-- 댓글 수 출력 -->
+                       th:text="${reviewVo.review.title} + '[' + ${reviewVo.review.commentCount} + ']'"></a><!-- 댓글 수 출력 -->
                 </div>
                 <input type="hidden" id="vseq"
                        name="vseq" th:value="${reviewVo.review.vseq}"/></td>
@@ -62,3 +67,10 @@
 
 </article>
 
+<footer id="footer">
+    <p class="copyright">&copy; Team Navigation. </p>
+</footer>
+
+<div id="bg"></div>
+</body>
+</html>
