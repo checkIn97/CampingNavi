@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -356,11 +358,13 @@ public class ReviewController {
         return "redirect:/review/list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
 
+
     @GetMapping("/memberList/{mseq}")
     public String showReviewList(Model model,
-                                @PathVariable(value = "mseq") int mseq,
-                                HttpSession session) {
+                                 @PathVariable(value = "mseq") int mseq,
+                                 HttpSession session) {
 
+        List<ReviewVo> reviewList = reviewService.getAuthorReviewVoList(mseq);
         // 세션에서 사용자 정보 가져오기
         Member member = (Member) session.getAttribute("loginUser");
         // MemberVo memberVo = new MemberVo(member);
@@ -372,10 +376,53 @@ public class ReviewController {
             return "review/review_alert";
         }
 
-        model.addAttribute("authorList", reviewService.getAuthorReviewVoList(mseq));
-        model.addAttribute("commentList", reviewCommentService.getCommentMemberList(mseq));
-        // model.addAttribute("memberVo", memberVo);
-        return "review/reviewMemberList";
+        model.addAttribute("authorList",reviewList);
+            return "review/reviewMemberList";
+    }
+
+
+    @GetMapping("/memberReviewList/{mseq}")
+    @ResponseBody
+    public ResponseEntity <Map<String, Object>> showReviewList(@PathVariable(value = "mseq") int mseq,
+                                              @RequestParam(name = "page", defaultValue = "1") int page,
+                                              Model model) {
+        int pageSize = 10;
+
+        List<Review> reviewList = reviewService.getAuthorReviewVoList(mseq, page, pageSize);
+
+
+        long totalReviews = reviewService.getAuthorReviewVoList(mseq).size();
+        int maxPage = (int) Math.ceil((double) totalReviews / pageSize);
+
+        StringBuilder reviewListHtml = new StringBuilder();
+
+        if (reviewList.isEmpty()) {
+            reviewListHtml.append("<p> 작성한 리뷰가 없습니다.</p>");
+        } else {
+            for (Review review : reviewList) {
+                reviewListHtml.append("<tr>");
+                reviewListHtml.append("<td><a href='/review/detail/")
+                        .append(review.getVseq())
+                        .append("'>")
+                        .append(review.getTitle())
+                        .append(" [")
+                        .append(review.getCommentCount())
+                        .append("]</a></td>");
+                reviewListHtml.append("<td>").append(review.getMember().getUsername()).append("</td>");
+                reviewListHtml.append("<td>").append(new SimpleDateFormat("yyyy-MM-dd").format(review.getCreatedAt())).append("</td>");
+                reviewListHtml.append("<td>").append(review.getCount()).append("</td>");
+                reviewListHtml.append("</tr>");
+            }
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("reviewListHtml", reviewListHtml.toString());
+        response.put("maxPage", maxPage);
+        response.put("totalReviews", totalReviews);
+        response.put("currentPage", page);
+
+
+        return ResponseEntity.ok().body(response);
     }
 
 

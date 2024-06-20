@@ -37,4 +37,6 @@ public interface ReviewService {
 	long getTotalReviewsByCampId(int cseq);
 
 	public Page<Review> findAllByMember(Member member, Pageable pageable);
+
+    List<Review> getAuthorReviewVoList(int mseq, int page, int pageSize);
 }

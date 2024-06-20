@@ -13,6 +13,7 @@
 <article class="box" id="review-list">
 
     <h3><span th:text="${authorList[0].review.member.nickname}"></span>님의 게시글 목록</h3>
+    <input type="hidden" id="mseq" name="mseq" th:value="${authorList[0].review.member.mseq}">
     <table>
         <thead>
         <tr>
@@ -23,44 +24,43 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="reviewVo : ${authorList}">
-            <td>
-                <div class="review_list">
-                    <a th:href="@{'/review/detail/' + ${reviewVo.review.vseq}}"
-                       th:text="${reviewVo.review.title} + '[' + ${reviewVo.review.commentCount} + ']'"></a><!-- 댓글 수 출력 -->
+                <div class="reviewlist">
+                    <!-- 리스트 영역 -->
                 </div>
-                <input type="hidden" id="vseq"
-                       name="vseq" th:value="${reviewVo.review.vseq}"/></td>
-            <td th:text="${reviewVo.review.member.username}"></td>
-            <td
-                    th:text="${#dates.format(reviewVo.review.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-            <td th:text="${reviewVo.review.count}"></td>
-        </tr>
-
 
         </tbody>
+        <!-- 페이지 영역 -->
+        <div class="page-box">
+            <img class="icon width-rem1" id="prevBtn" src="/assets/images/icon/arrowL.png">
+            <div id="pagination" class="page-numbers"></div> <!-- 페이지 숫자가 들어갈 영역 -->
+            <img class="icon width-rem1" id="nextBtn" src="/assets/images/icon/arrowR.png">
+            <!-- hidden inputs -->
+            <input type="hidden" id="currentPage" name="currentPage" value="1">
+            <input type="hidden" id="maxPage" name="maxPage" value="1">
+        </div>
+
     </table>
 
     <h3><span th:text="${authorList[0].review.member.nickname}"></span>님의 댓글 목록</h3>
-    <table>
-        <thead>
-        <tr>
-            <th>댓글</th>
-            <th>작성일시</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="comment : ${commentList}">
-            <td>
-                <div class="review_list">
-                    <a th:href="@{'/review/detail/' + ${comment.review.vseq}}" th:text="${comment.content}"></a>
-                </div>
-            <td th:text="${#dates.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-        </tr>
+<!--    <table>-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>댓글</th>-->
+<!--            <th>작성일시</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr th:each="comment : ${commentList}">-->
+<!--            <td>-->
+<!--                <div class="review_list">-->
+<!--                    <a th:href="@{'/review/detail/' + ${comment.review.vseq}}" th:text="${comment.content}"></a>-->
+<!--                </div>-->
+<!--            <td th:text="${#dates.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>-->
+<!--        </tr>-->
 
 
-        </tbody>
-    </table>
+<!--        </tbody>-->
+<!--    </table>-->
 
     <button onclick="window.location.href='/review/list'" class="button">리스트로 돌아가기
     </button>
@@ -72,5 +72,94 @@
 </footer>
 
 <div id="bg"></div>
+<!-- 리뷰 리스트 페이징 처리 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 초기 데이터 로딩
+        loadReviewPage(1); // 초기에 첫 페이지 로딩
+
+        // 이전 페이지로 이동
+        document.getElementById('prevBtn').addEventListener('click', function () {
+            const currentPage = parseInt(document.getElementById('currentPage').value);
+            if (currentPage > 1) {
+                loadReviewPage(currentPage - 1);
+            }
+        });
+
+        // 다음 페이지로 이동
+        document.getElementById('nextBtn').addEventListener('click', function () {
+            const currentPage = parseInt(document.getElementById('currentPage').value);
+            const maxPage = parseInt(document.getElementById('maxPage').value);
+            if (currentPage < maxPage) {
+                loadReviewPage(currentPage + 1);
+            }
+        });
+    });
+
+    // 리뷰 데이터를 비동기로 로딩하는 함수
+    function loadReviewPage(pageNumber) {
+        const mseq = document.getElementById('mseq').value;
+        fetch(`/review/memberReviewList/${mseq}?page=${pageNumber}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 서버로부터 받은 데이터를 이용하여 리뷰 목록을 업데이트
+                document.getElementById('reviewList').innerHTML = data.reviewListHtml; // 리뷰 목록을 서버에서 받은 HTML로 업데이트
+                document.getElementById('currentPage').value = data.currentPage; // 현재 페이지 업데이트
+                document.getElementById('maxPage').value = data.maxPage; // 최대 페이지 업데이트
+
+                // 페이지 숫자 업데이트
+                updatePagination(data.currentPage, data.maxPage);
+            })
+
+    }
+
+    function updatePagination(currentPage, maxPage) {
+        const paginationDiv = document.getElementById('pagination');
+        paginationDiv.innerHTML = ''; // 이전에 추가된 페이지 번호 초기화
+
+        // 페이지 숫자를 표시할 최대 범위 설정
+        const displayRange = 3; // 현재 페이지를 중심으로 좌우에 몇 개의 페이지 숫자를 표시할 것인지 지정
+
+        // 시작 페이지와 끝 페이지 계산
+        let startPage = currentPage - displayRange;
+        let endPage = currentPage + displayRange;
+        if (startPage < 1) {
+            startPage = 1;
+            endPage = Math.min(startPage + displayRange*2, maxPage);
+        }
+        if (endPage > maxPage) {
+            endPage = maxPage;
+            startPage = Math.max(endPage - displayRange*2, 1);
+        }
+
+        // 시작 페이지와 끝 페이지 사이에 페이지 버튼 생성
+        for (let i = startPage; i <= endPage; i++) {
+            const pageButton = document.createElement('span');
+            pageButton.textContent = i;
+            pageButton.classList.add('page-number');
+
+            if (i === currentPage) {
+                pageButton.classList.add('current');
+            }
+
+            pageButton.addEventListener('click', function () {
+                loadReviewPage(i);
+            });
+
+            paginationDiv.appendChild(pageButton);
+        }
+    }
+</script>
+
 </body>
 </html>
