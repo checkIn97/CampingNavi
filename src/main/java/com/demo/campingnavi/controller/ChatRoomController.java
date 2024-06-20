@@ -42,7 +42,7 @@ public class ChatRoomController {
     // 채팅 리스트 화면
     @GetMapping("/room")
     public String rooms(Model model,
-                        HttpServletRequest request,
+                        HttpSession session,
                         @RequestParam(defaultValue = "") String campName,
                         @RequestParam(defaultValue = "") List<String> purpose) {
         // 인증 객체 생성
@@ -66,6 +66,7 @@ public class ChatRoomController {
         model.addAttribute("member", member);
         model.addAttribute("comuCamp", campName);
         model.addAttribute("purpose", purpose);
+        session.setAttribute("loginUser", member);
         System.out.println(purpose + " 를 room 뷰로 전송");
         System.out.println(campName + "을 room 뷰로 전송");
 
@@ -88,7 +89,8 @@ public class ChatRoomController {
             Camp camp = chatRoom.getCamp();
             campList.add(camp);
             campService.saveCampRecommendList(campList, member, campRecommendVo);
-            chatRoomVoList.add(new ChatRoomVo(chatRoom, campRecommendVo.getCampRecommendListAll().get(0).getScore()));
+            long reviewCount = reviewRepository.countByCampCseq(camp.getCseq());
+            chatRoomVoList.add(new ChatRoomVo(chatRoom, campRecommendVo.getCampRecommendListAll().get(0).getScore(), reviewCount));
         }
 
         return chatRoomVoList;
@@ -145,6 +147,7 @@ public class ChatRoomController {
     @RequestMapping("/create")
     public String chatCreate(Model model, HttpSession session) {
         Member member = (Member) session.getAttribute("loginUser");
+        System.out.println(member);
         model.addAttribute("member", member);
         return "chat/create";
     }

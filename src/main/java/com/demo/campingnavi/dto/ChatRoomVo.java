@@ -14,11 +14,13 @@ public class ChatRoomVo {
     private ChatRoom chatRoom;
     private float score;
     private String scoreView;
+    private Long reviewCount;
 
-    public ChatRoomVo(ChatRoom chatRoom, float score) {
+    public ChatRoomVo(ChatRoom chatRoom, float score, long reviewCount) {
         this.chatRoom = chatRoom;
         this.score = score;
         this.scoreView = String.format("%.1f", score);
+        this.reviewCount = reviewCount;
     }
 
 }
