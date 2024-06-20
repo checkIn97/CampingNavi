@@ -79,6 +79,8 @@
 <script type="text/javascript">
     var map = null;
     var markers = null;
+    var list = null;
+    var infowindow_always = null;
     var choice = 0;
 
     // 선택한 마커 이미지 정보
@@ -297,7 +299,7 @@
             success: function (data) {
                 markers = [];
                 choice = 0;
-                let list = data.campRecommendVo.campRecommendList;
+                list = data.campRecommendVo.campRecommendList;
                 if (list.length > 0) {
                     // 지도 생성
                     let initX = list[0].camp.mapX;
@@ -346,8 +348,16 @@
                             // 인포윈도우에 표시할 내용
                             content: "<div style=\"padding:5px; font-weight:bold; white-space:nowrap;\">" + list[i].camp.name + " (★ : " + list[i].scoreView + ")</div>"
                         });
+
+                        if (i == choice) {
+                            infowindow_always = infowindow;
+                            infowindow_always.open(map, marker);
+                        }
+
                         kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
                         kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+
+
                     }
                 }
             },
@@ -374,9 +384,21 @@
     function move_map(index, mapX, mapY) {
         markers[choice].setImage(null);
         markers[index].setImage(markerImage);
+        infowindow_always.close();
+
+        // 마커에 표시할 인포윈도우를 생성합니다
+        infowindow_always = new kakao.maps.InfoWindow({
+            // 인포윈도우에 표시할 내용
+            content: "<div style=\"padding:5px; font-weight:bold; white-space:nowrap;\">" + list[index].camp.name + " (★ : " + list[index].scoreView + ")</div>"
+        });
+
+        infowindow_always.open(map, markers[index]);
+
         choice = index;
         let moveLatLon = new kakao.maps.LatLng(mapY, mapX);
         map.panTo(moveLatLon);
+
+
     }
 
     // 모든 'search-checked' 클래스를 가진 체크박스를 선택합니다.
