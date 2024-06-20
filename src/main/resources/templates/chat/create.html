@@ -9,7 +9,7 @@
 </head>
 <body>
 <th:block th:insert="insert/header.html"></th:block>
-<input type="hidden" th:value="${member.name}" name="memberName"/>
+<input type="hidden" th:value="${member.name}" id="memberName" name="memberName"/>
 <article class="box" id="chatCreateBox">
     <div id="app" class="lengthContain">
         <!--채팅방 이름-->
@@ -92,12 +92,13 @@
             max_mem: '',
             purpose: [],
             selectedItemName: '',
-            memberName: memberName,
+            memberName:'',
             camp_name: ''
         },
         created() {
 
             window.addEventListener("message", this.receiveMessage, false);
+            this.memberName = document.getElementById('memberName').value;
         },
         methods: {
             findAllRoom: function () {
@@ -131,13 +132,13 @@
                 }
             },
             enterRoom: function (roomId) {
-                var sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + memberName + ' ) 으로 입장합니다.');
+                var sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + this.memberName + ' ) 으로 입장합니다.');
                 if (sender != "") {
                     localStorage.setItem('wschat.sender', sender);
                     localStorage.setItem('wschat.roomId', roomId);
                     location.href = "/chat/room/enter/" + roomId;
                 } else {
-                    sender = memberName;
+                    sender = this.memberName;
                     localStorage.setItem('wschat.sender', sender);
                     localStorage.setItem('wschat.roomId', roomId);
                     location.href = "/chat/room/enter/" + roomId;

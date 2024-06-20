@@ -9,13 +9,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
 public class ChatController {
     private final SimpMessageSendingOperations messagingTemplate;
     private final MongoChatMessageRepository mongoChatMessageRepository;
+
+
+
 
     @MessageMapping("/chat/message")
     public void message(ChatMessage message) {

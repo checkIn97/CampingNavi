@@ -55,7 +55,7 @@
                                 <div class="buttonContain">
                                     <img class="chatHumanIcon" src="/assets/images/icon/human.png">
                                     <span class="chatGradeNum">{{item.scoreView}}점</span>
-                                    <span class="chatReviewNum">{{item.chatRoom.reviewCount}}개의 후기</span>
+                                    <span class="chatReviewNum">{{item.reviewCount}}개의 후기</span>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                             <div class="buttonContain chatRoomNameBox">
                                 <span class="chatRoomName">{{item.chatRoom.name}}</span>
                                 <!--채팅방 인원수-->
-                                <span class="chatRoomPN">12</span>
+                                <span class="chatRoomPN"></span>
                             </div>
                         </div>
                     </li>
@@ -170,7 +170,8 @@
             memberName: memberName,
             camp_name: '',
             comuCamp: comuCamp,
-            search_word: ''
+            search_word: '',
+
         },
         created() {
             this.findAllRoom();
@@ -182,9 +183,11 @@
                 console.log(comuCamp + "rooms 로 전송");
                 axios.get('/chat/rooms', { params: params }).then(response => {
                     this.chatrooms = response.data;
+
                 });
 
             },
+
             createRoom: function () {
                 if ("" === this.room_name) {
                     alert("방 제목을 입력해 주십시요.");
@@ -207,6 +210,10 @@
             },
             enterRoom: function (roomId) {
                 var sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + memberName + ' ) 으로 입장합니다.');
+                if (sender === null) {
+                    alert('입장이 취소되었습니다.');
+                    return;
+                }
                 if (sender != "") {
                     localStorage.setItem('wschat.sender', sender);
                     localStorage.setItem('wschat.roomId', roomId);
@@ -217,10 +224,7 @@
                     localStorage.setItem('wschat.roomId', roomId);
                     location.href = "/chat/room/enter/" + roomId;
                 }
-                if (sender == null) {
-                    alert('대화명을 입력해 주세요.');
-                    return this.enterRoom(roomId);
-                }
+
             },
             searchRoom: function () {
                 if ("" === this.search_word) {

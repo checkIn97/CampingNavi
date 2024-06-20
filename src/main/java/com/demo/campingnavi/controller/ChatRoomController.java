@@ -118,8 +118,7 @@ public class ChatRoomController {
         chatRoom.setCampName(campName);
         chatRoom.setCamp(camp);
         System.out.println(campName);
-        long reviewCount = reviewRepository.countByCampCseq(camp.getCseq());
-        chatRoom.setReviewCount(reviewCount);
+        
         chatRoomService.createChatRoom(chatRoom);
 
         return chatRoomService.createChatRoom(chatRoom);
