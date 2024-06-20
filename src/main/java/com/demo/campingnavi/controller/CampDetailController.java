@@ -30,13 +30,6 @@ import java.util.Map;
 @RequestMapping("/camp/detail")
 public class CampDetailController {
 
-    private final TemplateEngine springTemplateEngine;
-
-    @Autowired
-    public CampDetailController(TemplateEngine templateEngine) {
-        this.springTemplateEngine = templateEngine;
-    }
-
     @Autowired
     private CampDetailService campDetailService;
     @Autowired
