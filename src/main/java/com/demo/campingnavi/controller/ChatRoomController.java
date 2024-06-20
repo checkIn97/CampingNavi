@@ -3,10 +3,7 @@ package com.demo.campingnavi.controller;
 import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.ChatRoom;
 import com.demo.campingnavi.domain.Member;
-import com.demo.campingnavi.dto.CampRecommendVo;
-import com.demo.campingnavi.dto.ChatMessage;
-import com.demo.campingnavi.dto.CustomOauth2UserDetails;
-import com.demo.campingnavi.dto.CustomSecurityUserDetails;
+import com.demo.campingnavi.dto.*;
 import com.demo.campingnavi.repository.jpa.CampRepository;
 import com.demo.campingnavi.repository.jpa.ChatRoomRepository;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
@@ -23,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -78,11 +76,22 @@ public class ChatRoomController {
     // 모든 채팅방 목록 반환
     @GetMapping("/rooms")
     @ResponseBody
-    public List<ChatRoom> room(@RequestParam(defaultValue = "") String campName) {
+    public List<ChatRoomVo> room(@RequestParam(defaultValue = "") String campName,
+                               HttpSession session) {
         System.out.println(campName + "으로 찾기실행");
-        return chatRoomService.findByCampNameContaining(campName);
+        List<ChatRoom> chatRoomList = chatRoomService.findByCampNameContaining(campName);
+        List<ChatRoomVo> chatRoomVoList = new ArrayList<>();
+        Member member = (Member) session.getAttribute("loginUser");
+        CampRecommendVo campRecommendVo = new CampRecommendVo();
+        for (ChatRoom chatRoom : chatRoomList) {
+            List<Camp> campList = new ArrayList<>();
+            Camp camp = chatRoom.getCamp();
+            campList.add(camp);
+            campService.saveCampRecommendList(campList, member, campRecommendVo);
+            chatRoomVoList.add(new ChatRoomVo(chatRoom, campRecommendVo.getCampRecommendListAll().get(0).getScore()));
+        }
 
-
+        return chatRoomVoList;
     }
 
     // 채팅방 생성

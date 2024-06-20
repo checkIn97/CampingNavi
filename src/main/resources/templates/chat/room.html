@@ -22,12 +22,12 @@
             <!--                    </li>-->
             <!--                </ul>-->
             <!--            </div>-->
-            <div class="col-md-4 chatRoomBox" v-bind:key="item.roomId" v-for="item in chatrooms"
-                 v-on:click="enterRoom(item.roomId)">
+            <div class="col-md-4 chatRoomBox" v-bind:key="item.chatRoom.roomId" v-for="item in chatrooms"
+                 v-on:click="enterRoom(item.chatRoom.roomId)">
                 <ul class="list-group">
                     <li class="listChat">
                         <div class="buttonContain">
-                            <h1 class="campingNameChat">{{item.campName}}</h1>
+                            <h1 class="campingNameChat">{{item.chatRoom.campName}}</h1>
                             <div class="lengthContain" id="chatGradeMember">
                                 <span class="chatGrade">
                                     <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
@@ -38,8 +38,8 @@
                                 </span>
                                 <div class="buttonContain">
                                     <img class="chatHumanIcon" src="/assets/images/icon/human.png">
-                                    <span class="chatGradeNum">3.5점</span>
-                                    <span class="chatReviewNum">{{item.reviewCount}}개의 후기</span>
+                                    <span class="chatGradeNum">{{item.scoreView}}점</span>
+                                    <span class="chatReviewNum">{{item.chatRoom.reviewCount}}개의 후기</span>
                                 </div>
                             </div>
                         </div>
@@ -47,13 +47,13 @@
                             <div class="chatInfo">
                                 <img class="calender" src="/assets/images/icon/calendar.png">
                                 <div class="lengthContain">
-                                    <span class="chat-day">{{item.startDate}} - {{item.endDate}}</span>
+                                    <span class="chat-day">{{item.chatRoom.startDate}} - {{item.chatRoom.endDate}}</span>
                                     <span class="chat-member">캠핑 모집 인원수 <span
-                                            class="chat-member-num">{{item.maxMem}}</span></span>
+                                            class="chat-member-num">{{item.chatRoom.maxMem}}</span></span>
                                 </div>
                             </div>
                             <div class="chatPurpose">
-                                <div class="chatPurposeSee" v-for="purpose in item.purpose">
+                                <div class="chatPurposeSee" v-for="purpose in item.chatRoom.purpose">
                                     <img alt="dance" class="chatPurposeIcon" src="/assets/images/icon/dance.png"
                                          v-if="purpose === '같이 놀아요!'">
                                     <img alt="dogwith" class="chatPurposeIcon" src="/assets/images/icon/dogwith.png"
@@ -69,7 +69,7 @@
                                 </div>
                             </div>
                             <div class="buttonContain chatRoomNameBox">
-                                <span class="chatRoomName">{{item.name}}</span>
+                                <span class="chatRoomName">{{item.chatRoom.name}}</span>
                                 <!--채팅방 인원수-->
                                 <span class="chatRoomPN">12</span>
                             </div>
