@@ -34,29 +34,18 @@
             <button class="mainBtn" id="searchBtn" onclick="camp_search(); return false;" type="button">검색</button>
         </div>
         <div id="searchRequirement">
-            <input class="search-checked" id="camping" name="campType" type="checkbox">
+            <input class="search-checked" id="camping" name="campType" type="checkbox" value="generalCamping" checked>
             <label class="search-icon-area" for="camping" title="일반캠핑장"><img class="search-icon"
-                                                                             src="/assets/images/icon/camping.png"></label>
-            <input class="search-checked" id="glamping" name="campType" type="checkbox">
+                                                                             src="/assets/images/icon/camping.png" ></label>
+            <input class="search-checked" id="glamping" name="campType" type="checkbox" value="glamping" checked>
             <label class="search-icon-area" for="glamping" title="글램핑"><img class="search-icon"
                                                                             src="/assets/images/icon/glamping.png"></label>
-            <input class="search-checked" id="caravan" name="campType" type="checkbox">
+            <input class="search-checked" id="caravan" name="campType" type="checkbox" value="caravan" checked>
             <label class="search-icon-area" for="caravan" title="카라반"><img class="search-icon"
                                                                            src="/assets/images/icon/caravan.png"></label>
-            <input class="search-checked" id="car" name="campType" type="checkbox">
+            <input class="search-checked" id="car" name="campType" type="checkbox" value="autoCamping" checked>
             <label class="search-icon-area" for="car" title="자동차야영장"><img class="search-icon"
                                                                           src="/assets/images/icon/car.png"></label>
-
-            <th:block th:each="campType, iterStat : ${campRecommendVo.campTypeArray}">
-                <input checked name="campType" th:id="${campType[0]}"
-                       th:if="${campRecommendVo.campType[iterStat.index] == campType[0]}"
-                       th:value="${campType[0]}" type="checkbox"/>
-                <input name="campType" th:id="${campType[0]}"
-                       th:unless="${campRecommendVo.campType[iterStat.index] == campType[0]}" th:value="${campType[0]}"
-                       type="checkbox"/>
-                <label class="checkboxLabel" th:for="${campType[0]}">[[${campType[1]}]]</label>
-            </th:block>
-
         </div>
         <div id="search-list_area"></div>
         <div class="page-box" id="search-page_area"></div>
