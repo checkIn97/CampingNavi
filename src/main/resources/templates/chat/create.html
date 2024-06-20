@@ -9,62 +9,66 @@
 </head>
 <body>
 <th:block th:insert="insert/header.html"></th:block>
-<input type="hidden" th:value="${member.name}" name="memberName"/>
+<input name="memberName" th:value="${member.name}" type="hidden"/>
 <article class="box" id="chatCreateBox">
-    <div id="app" class="lengthContain">
+    <div class="lengthContain" id="app">
         <!--채팅방 이름-->
         <div>
             <input class="createName" placeholder="방 이름을 입력해주세요" type="text" v-model="room_name">
         </div>
+
+        <h3>캠핑장</h3>
+            <input id="selectedItem" placeholder="캠핑장 검색을 눌러주세요." readonly type="text" v-model="selectedItemName">
+            <!--상세보기로 들어온 경우 보이지 않음-->
+            <button id="openSearch" onclick="openSearch()" type="button">캠핑장 검색</button>
+
         <!--목적-->
         <h3>캠핑 목적</h3>
         <div class="createPurposeDiv">
-            <input id="chatPurpose1" name="chatPurpose" type="checkbox" value="같이 놀아요!" v-model="purpose">
+            <input id="chatPurpose1" name="chatPurpose" type="checkbox" v-model="purpose" value="같이 놀아요!">
             <label for="chatPurpose1">
                 <img alt="dance" class="chatPurposeIcon" src="/assets/images/icon/dance.png">
                 같이 놀아요!
             </label>
-            <input id="chatPurpose2" name="chatPurpose" type="checkbox" value="애완동물과 함께해요!" v-model="purpose">
+            <input id="chatPurpose2" name="chatPurpose" type="checkbox" v-model="purpose" value="애완동물과 함께해요!">
             <label for="chatPurpose2">
                 <img alt="dogwith" class="chatPurposeIcon" src="/assets/images/icon/dogwith.png">
                 애완동물과 함께해요!
             </label>
-            <input id="chatPurpose3" name="chatPurpose" type="checkbox" value="만남을 원해요!" v-model="purpose">
+            <input id="chatPurpose3" name="chatPurpose" type="checkbox" v-model="purpose" value="만남을 원해요!">
             <label for="chatPurpose3">
                 <img alt="love" class="chatPurposeIcon" src="/assets/images/icon/love.png">
                 만남을 원해요!
             </label>
-            <input id="chatPurpose4" name="chatPurpose" type="checkbox" value="조용히 쉬어요!" v-model="purpose">
+            <input id="chatPurpose4" name="chatPurpose" type="checkbox" v-model="purpose" value="조용히 쉬어요!">
             <label for="chatPurpose4">
                 <img alt="campingHuman" class="chatPurposeIcon" src="/assets/images/icon/campingHuman.png">
                 조용히 쉬어요!
             </label>
-            <input id="chatPurpose5" name="chatPurpose" type="checkbox" value="아이와 함께해요!" v-model="purpose">
+            <input id="chatPurpose5" name="chatPurpose" type="checkbox" v-model="purpose" value="아이와 함께해요!">
             <label for="chatPurpose5">
                 <img alt="parent" class="chatPurposeIcon" src="/assets/images/icon/parent.png">
                 아이와 함께해요!
             </label>
         </div>
+
         <!--기간-->
         <h3>캠핑 기간</h3>
         <div class="createDate">
-            <input id="chatDateStart" name="chatDateStart" v-model="start_date" type="date">
-            <input id="chatDateEnd" name="chatDateEnd" v-model="end_date" type="date">
+            <input id="chatDateStart" name="chatDateStart" type="date" v-model="start_date">
+            <input id="chatDateEnd" name="chatDateEnd" type="date" v-model="end_date">
         </div>
+
         <!--인원-->
         <h3>캠핑 참여 인원수</h3>
         <div class="createMember">
             <input id="chatPeople" max="10" min="1" name="chatPeople" type="number" v-model="max_mem">
         </div>
+
         <div class="buttonContain">
-            <!--상세보기로 들어온 경우 보이지 않음-->
-            <button type="button" id="openSearch">캠핑장 검색</button>
+
             <button @click="createRoom" class="mainBtn" type="button">방 생성</button>
-            <div id="search" style="display:none;">
-                <button class="close" id="searchExit" type="button"><img alt="closeIcon" id="closeImg" src="/assets/images/icon/close.png"></button>
-                <input type="text" id="selectedItem" readonly v-model="selectedItemName">
-                <button onclick="openSearch()">검색하기</button>
-            </div>
+
         </div>
     </div>
 </article>
@@ -116,7 +120,7 @@
                     params.append("endDate", this.end_date);
                     params.append("maxMem", this.max_mem);
                     params.append("purpose", this.purpose);
-                    params.append("campName",this.selectedItemName)
+                    params.append("campName", this.selectedItemName)
                     axios.post('/chat/room', params)
                         .then(
                             response => {
@@ -147,7 +151,7 @@
                     return this.enterRoom(roomId);
                 }
             },
-            receiveMessage: function(event) {
+            receiveMessage: function (event) {
                 if (event.origin !== window.location.origin) {
                     return;
                 }
@@ -169,9 +173,6 @@
     }
     document.getElementById('openSearch').addEventListener('click', function () {
         document.getElementById('search').style.display = 'block';
-    });
-    document.getElementById('searchExit').addEventListener('click', function () {
-        document.getElementById('search').style.display = 'none';
     });
 
 </script>
