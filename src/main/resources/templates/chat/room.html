@@ -30,11 +30,58 @@
                             <h1 class="campingNameChat">{{item.chatRoom.campName}}</h1>
                             <div class="lengthContain" id="chatGradeMember">
                                 <span class="chatGrade">
-                                    <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
-                                    <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
-                                    <img alt="star-full" class="star" src="/assets/images/icon/star-full.png">
-                                    <img alt="star-half" class="star" src="/assets/images/icon/star-half.png">
-                                    <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                                    <span class="satisfaction" v-alt="item.score" v-title="item.score">
+                                        <block v-if="item.score < 0.5">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                                        </block>
+                                        <block v-if="item.score >= 0.5 && item.score < 1.0">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-half.png">
+                                        </block>
+                                        <block v-if="item.score >= 1.0">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-full.png">
+                                        </block>
+
+                                        <block v-if="item.score < 1.5">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                                        </block>
+                                        <block v-if="item.score >= 1.5 && item.score < 2.0">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-half.png">
+                                        </block>
+                                        <block v-if="item.score >= 2.0">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-full.png">
+                                        </block>
+
+                                        <block v-if="item.score < 2.5">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                                        </block>
+                                        <block v-if="item.score >= 2.5 && item.score < 3.0">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-half.png">
+                                        </block>
+                                        <block v-if="item.score >= 3.0">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-full.png">
+                                        </block>
+
+                                        <block v-if="item.score < 3.5">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                                        </block>
+                                        <block v-if="item.score >= 3.5 && item.score < 4.0">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-half.png">
+                                        </block>
+                                        <block v-if="item.score >= 4.0">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-full.png">
+                                        </block>
+
+                                        <block v-if="item.score < 4.5">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-empty.png">
+                                        </block>
+                                        <block v-if="item.score >= 4.5 && item.score < 5.0">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-half.png">
+                                        </block>
+                                        <block v-if="item.score >= 5.0">
+                                            <img alt="star-empty" class="star" src="/assets/images/icon/star-full.png">
+                                        </block>
+
+                                    </span>
                                 </span>
                                 <div class="buttonContain">
                                     <img class="chatHumanIcon" src="/assets/images/icon/human.png">
