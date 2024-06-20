@@ -76,6 +76,7 @@
                 let page = data.page;
                 let size = data.size;
                 let pageMaxDisplay = data.pageMaxDisplay;
+                let pageWidth = parseInt(pageMaxDisplay/2);
                 let result = data.result;
 
 
@@ -136,9 +137,17 @@
                     pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page-1) + ", 'vseq', 'DESC'); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\"></a>";
                 }
 
-                let start = parseInt((page-1)/pageMaxDisplay)*pageMaxDisplay + 1;
-                let end = start + pageMaxDisplay < totalPages ? start + pageMaxDisplay : totalPages + 1;
-                for (let i = start; i < end; i++) {
+                let start = page - pageWidth;
+                let end = page + pageWidth;
+                if (start < 1) {
+                    start = 1;
+                    end = Math.min(start + pageWidth*2, totalPages);
+                }
+                if (end > totalPages) {
+                    end = totalPages;
+                    start = Math.max(end - pageWidth*2, 1);
+                }
+                for (let i = start; i <= end; i++) {
                     if (i == page) {
                         pageHTML += "<span class=\"page-num active\">" + i + "</span>";
                     } else {
