@@ -295,8 +295,16 @@
         const displayRange = 3; // 현재 페이지를 중심으로 좌우에 몇 개의 페이지 숫자를 표시할 것인지 지정
 
         // 시작 페이지와 끝 페이지 계산
-        let startPage = Math.max(1, currentPage - displayRange);
-        let endPage = Math.min(maxPage, currentPage + displayRange);
+        let startPage = currentPage - displayRange;
+        let endPage = currentPage + displayRange;
+        if (startPage < 1) {
+            startPage = 1;
+            endPage = Math.min(startPage + displayRange*2, maxPage);
+        }
+        if (endPage > maxPage) {
+            endPage = maxPage;
+            startPage = Math.max(endPage - displayRange*2, 1);
+        }
 
         // 시작 페이지와 끝 페이지 사이에 페이지 버튼 생성
         for (let i = startPage; i <= endPage; i++) {
