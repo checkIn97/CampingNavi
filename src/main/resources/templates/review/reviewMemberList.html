@@ -1,17 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<meta charset="UTF-8">
-<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
-<link href="/assets/css/main.css" rel="stylesheet"/>
-<link href="/assets/css/bg/BG.css" rel="stylesheet"/>
-<title>Review List</title>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <link href="/assets/css/main.css" rel="stylesheet"/>
+    <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
+    <title>Review List</title>
+    <style>
+        .page-number {
+            margin: 0 5px; /* 좌우 여백 조정 */
+            cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경 */
+        }
 
+        .page-number.current {
+            font-weight: bold; /* 현재 페이지 숫자는 볼드체로 표시 */
+        }
+    </style>
+</head>
+<body>
 <th:block th:insert="/insert/header"></th:block>
 
-<body>
 <article class="box" id="review-list">
-
     <h3><span th:text="${authorList[0].review.member.nickname}"></span>님의 게시글 목록</h3>
     <input type="hidden" id="mseq" name="mseq" th:value="${authorList[0].review.member.mseq}">
     <table>
@@ -23,48 +33,42 @@
             <th>조회수</th>
         </tr>
         </thead>
-        <tbody>
-                <div class="reviewlist">
-                    <!-- 리스트 영역 -->
-                </div>
-
+        <tbody id="reviewList">
         </tbody>
-        <!-- 페이지 영역 -->
-        <div class="page-box">
-            <img class="icon width-rem1" id="prevBtn" src="/assets/images/icon/arrowL.png">
-            <div id="pagination" class="page-numbers"></div> <!-- 페이지 숫자가 들어갈 영역 -->
-            <img class="icon width-rem1" id="nextBtn" src="/assets/images/icon/arrowR.png">
-            <!-- hidden inputs -->
-            <input type="hidden" id="currentPage" name="currentPage" value="1">
-            <input type="hidden" id="maxPage" name="maxPage" value="1">
-        </div>
-
     </table>
 
+    <!-- 페이지 영역 -->
+    <div class="page-box">
+        <img class="icon width-rem1" id="prevReviewBtn" src="/assets/images/icon/arrowL.png">
+        <div id="reviewPagination" class="page-numbers"></div>
+        <img class="icon width-rem1" id="nextReviewBtn" src="/assets/images/icon/arrowR.png">
+        <input type="hidden" id="currentReviewPage" name="currentPage" value="1">
+        <input type="hidden" id="maxReviewPage" name="maxPage" value="1">
+    </div>
+
     <h3><span th:text="${authorList[0].review.member.nickname}"></span>님의 댓글 목록</h3>
-<!--    <table>-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th>댓글</th>-->
-<!--            <th>작성일시</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr th:each="comment : ${commentList}">-->
-<!--            <td>-->
-<!--                <div class="review_list">-->
-<!--                    <a th:href="@{'/review/detail/' + ${comment.review.vseq}}" th:text="${comment.content}"></a>-->
-<!--                </div>-->
-<!--            <td th:text="${#dates.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>-->
-<!--        </tr>-->
+    <table>
+        <thead>
+        <tr>
+            <th>댓글</th>
+            <th>작성자</th>
+            <th>작성일시</th>
+        </tr>
+        </thead>
+        <tbody id="commentList">
+        </tbody>
+    </table>
 
+    <!-- 페이지 영역 -->
+    <div class="page-box">
+        <img class="icon width-rem1" id="prevCommentBtn" src="/assets/images/icon/arrowL.png">
+        <div id="commentPagination" class="page-numbers"></div>
+        <img class="icon width-rem1" id="nextCommentBtn" src="/assets/images/icon/arrowR.png">
+        <input type="hidden" id="currentCommentPage" name="currentPage" value="1">
+        <input type="hidden" id="maxCommentPage" name="maxPage" value="1">
+    </div>
 
-<!--        </tbody>-->
-<!--    </table>-->
-
-    <button onclick="window.location.href='/review/list'" class="button">리스트로 돌아가기
-    </button>
-
+    <button onclick="window.location.href='/review/list'" class="button">리스트로 돌아가기</button>
 </article>
 
 <footer id="footer">
@@ -72,31 +76,44 @@
 </footer>
 
 <div id="bg"></div>
+
 <!-- 리뷰 리스트 페이징 처리 -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // 초기 데이터 로딩
-        loadReviewPage(1); // 초기에 첫 페이지 로딩
+        loadReviewPage(1);
+        loadCommentPage(1);
 
-        // 이전 페이지로 이동
-        document.getElementById('prevBtn').addEventListener('click', function () {
-            const currentPage = parseInt(document.getElementById('currentPage').value);
+        document.getElementById('prevReviewBtn').addEventListener('click', function () {
+            const currentPage = parseInt(document.getElementById('currentReviewPage').value);
             if (currentPage > 1) {
                 loadReviewPage(currentPage - 1);
             }
         });
 
-        // 다음 페이지로 이동
-        document.getElementById('nextBtn').addEventListener('click', function () {
-            const currentPage = parseInt(document.getElementById('currentPage').value);
-            const maxPage = parseInt(document.getElementById('maxPage').value);
+        document.getElementById('nextReviewBtn').addEventListener('click', function () {
+            const currentPage = parseInt(document.getElementById('currentReviewPage').value);
+            const maxPage = parseInt(document.getElementById('maxReviewPage').value);
             if (currentPage < maxPage) {
                 loadReviewPage(currentPage + 1);
             }
         });
+
+        document.getElementById('prevCommentBtn').addEventListener('click', function () {
+            const currentPage = parseInt(document.getElementById('currentCommentPage').value);
+            if (currentPage > 1) {
+                loadCommentPage(currentPage - 1);
+            }
+        });
+
+        document.getElementById('nextCommentBtn').addEventListener('click', function () {
+            const currentPage = parseInt(document.getElementById('currentCommentPage').value);
+            const maxPage = parseInt(document.getElementById('maxCommentPage').value);
+            if (currentPage < maxPage) {
+                loadCommentPage(currentPage + 1);
+            }
+        });
     });
 
-    // 리뷰 데이터를 비동기로 로딩하는 함수
     function loadReviewPage(pageNumber) {
         const mseq = document.getElementById('mseq').value;
         fetch(`/review/memberReviewList/${mseq}?page=${pageNumber}`, {
@@ -112,37 +129,62 @@
                 return response.json();
             })
             .then(data => {
-                // 서버로부터 받은 데이터를 이용하여 리뷰 목록을 업데이트
-                document.getElementById('reviewList').innerHTML = data.reviewListHtml; // 리뷰 목록을 서버에서 받은 HTML로 업데이트
-                document.getElementById('currentPage').value = data.currentPage; // 현재 페이지 업데이트
-                document.getElementById('maxPage').value = data.maxPage; // 최대 페이지 업데이트
+                document.getElementById('reviewList').innerHTML = data.reviewListHtml;
+                document.getElementById('currentReviewPage').value = data.currentPage;
+                document.getElementById('maxReviewPage').value = data.maxPage;
 
-                // 페이지 숫자 업데이트
-                updatePagination(data.currentPage, data.maxPage);
+                updatePagination('reviewPagination', data.currentPage, data.maxPage, loadReviewPage);
             })
-
+            .catch(error => {
+                console.error('Error fetching review data:', error);
+                alert('리뷰 목록을 불러오는 중 오류가 발생했습니다.');
+            });
     }
 
-    function updatePagination(currentPage, maxPage) {
-        const paginationDiv = document.getElementById('pagination');
-        paginationDiv.innerHTML = ''; // 이전에 추가된 페이지 번호 초기화
+    function loadCommentPage(pageNumber) {
+        const mseq = document.getElementById('mseq').value;
+        fetch(`/review/memberCommentList/${mseq}?page=${pageNumber}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('commentList').innerHTML = data.commentListHtml;
+                document.getElementById('currentCommentPage').value = data.currentPage;
+                document.getElementById('maxCommentPage').value = data.maxPage;
 
-        // 페이지 숫자를 표시할 최대 범위 설정
-        const displayRange = 3; // 현재 페이지를 중심으로 좌우에 몇 개의 페이지 숫자를 표시할 것인지 지정
+                updatePagination('commentPagination', data.currentPage, data.maxPage, loadCommentPage);
+            })
+            .catch(error => {
+                console.error('Error fetching comment data:', error);
+                alert('댓글 목록을 불러오는 중 오류가 발생했습니다.');
+            });
+    }
 
-        // 시작 페이지와 끝 페이지 계산
+    function updatePagination(paginationId, currentPage, maxPage, loadPageFunction) {
+        const paginationDiv = document.getElementById(paginationId);
+        paginationDiv.innerHTML = '';
+
+        const displayRange = 3;
+
         let startPage = currentPage - displayRange;
         let endPage = currentPage + displayRange;
         if (startPage < 1) {
             startPage = 1;
-            endPage = Math.min(startPage + displayRange*2, maxPage);
+            endPage = Math.min(startPage + displayRange * 2, maxPage);
         }
         if (endPage > maxPage) {
             endPage = maxPage;
-            startPage = Math.max(endPage - displayRange*2, 1);
+            startPage = Math.max(endPage - displayRange * 2, 1);
         }
 
-        // 시작 페이지와 끝 페이지 사이에 페이지 버튼 생성
         for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('span');
             pageButton.textContent = i;
@@ -153,13 +195,12 @@
             }
 
             pageButton.addEventListener('click', function () {
-                loadReviewPage(i);
+                loadPageFunction(i);
             });
 
             paginationDiv.appendChild(pageButton);
         }
     }
 </script>
-
 </body>
 </html>

@@ -20,4 +20,6 @@ public interface ReviewCommentService {
 	public void updateCommentCount(int vseq);
 
 	public List<ReviewComment> getCommentMemberList(int mseq);
+
+	List<ReviewComment> getAuthorReviewCommentList(int mseq, int page, int pageSize);
 }

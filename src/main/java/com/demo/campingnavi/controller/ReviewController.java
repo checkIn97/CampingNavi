@@ -386,14 +386,18 @@ public class ReviewController {
     public ResponseEntity <Map<String, Object>> showReviewList(@PathVariable(value = "mseq") int mseq,
                                               @RequestParam(name = "page", defaultValue = "1") int page,
                                               Model model) {
-        int pageSize = 10;
+        int pageSize = 6;
 
         List<Review> reviewList = reviewService.getAuthorReviewVoList(mseq, page, pageSize);
 
+        System.out.println(reviewList);
 
         long totalReviews = reviewService.getAuthorReviewVoList(mseq).size();
         int maxPage = (int) Math.ceil((double) totalReviews / pageSize);
 
+        System.out.println(maxPage);
+        System.out.println(totalReviews);
+        // HTML 문자열 생성
         StringBuilder reviewListHtml = new StringBuilder();
 
         if (reviewList.isEmpty()) {
@@ -417,9 +421,52 @@ public class ReviewController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("reviewListHtml", reviewListHtml.toString());
-        response.put("maxPage", maxPage);
-        response.put("totalReviews", totalReviews);
         response.put("currentPage", page);
+        response.put("maxPage", maxPage);
+
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/memberCommentList/{mseq}")
+    @ResponseBody
+    public ResponseEntity <Map<String, Object>> showReviewCommentList(@PathVariable(value = "mseq") int mseq,
+                                                               @RequestParam(name = "page", defaultValue = "1") int page,
+                                                               Model model) {
+        int pageSize = 6;
+
+        List<ReviewComment> reviewCommnetList = reviewCommentService.getAuthorReviewCommentList(mseq, page, pageSize);
+
+        System.out.println(reviewCommnetList);
+
+        long totalReviews = reviewCommentService.getCommentMemberList(mseq).size();
+        int maxPage = (int) Math.ceil((double) totalReviews / pageSize);
+
+        System.out.println(maxPage);
+        System.out.println(totalReviews);
+        // HTML 문자열 생성
+        StringBuilder commentListHtml = new StringBuilder();
+
+        if (reviewCommnetList.isEmpty()) {
+            commentListHtml.append("<p> 작성한 댓글이 없습니다.</p>");
+        } else {
+            for (ReviewComment reviewComment : reviewCommnetList) {
+                commentListHtml.append("<tr>");
+                commentListHtml.append("<td><a href='/review/detail/")
+                        .append(reviewComment.getReview().getVseq())
+                        .append("'>")
+                        .append(reviewComment.getContent())
+                        .append("</a></td>");
+                commentListHtml.append("<td>").append(reviewComment.getMember().getUsername()).append("</td>");
+                commentListHtml.append("<td>").append(new SimpleDateFormat("yyyy-MM-dd").format(reviewComment.getCreatedAt())).append("</td>");
+                commentListHtml.append("</tr>");
+            }
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("commentListHtml", commentListHtml.toString());
+        response.put("currentPage", page);
+        response.put("maxPage", maxPage);
 
 
         return ResponseEntity.ok().body(response);

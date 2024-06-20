@@ -1,5 +1,7 @@
 package com.demo.campingnavi.repository.jpa;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,4 +36,7 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, In
 
 	@Transactional
 	void deleteByParentComment_Cmseq(int cmseq);
+
+	@Query("SELECT r FROM ReviewComment r WHERE r.member.mseq = ?1 ORDER BY r.createdAt DESC")
+	Page<ReviewComment> findAuthorList(int mseq, PageRequest pageRequest);
 }

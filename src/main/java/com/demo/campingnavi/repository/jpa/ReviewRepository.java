@@ -3,6 +3,7 @@ package com.demo.campingnavi.repository.jpa;
 import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.domain.Review;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -54,5 +55,6 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     long countByCampCseq(@Param("cseq") int cseq);
 
     @Query("SELECT r FROM Review r WHERE r.member.mseq = ?1 ORDER BY r.createdAt DESC")
-    List<Review> findAuthorList(int mseq, int page, int pageSize);
+    Page<Review> findAuthorList(int mseq, PageRequest pageRequest);
+
 }

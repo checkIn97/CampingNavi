@@ -114,7 +114,9 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public List<Review> getAuthorReviewVoList(int mseq, int page, int pageSize) {
-		return reviewRepo.findAuthorList(mseq, page, pageSize);
+		PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+		Page<Review> reviewPage = reviewRepo.findAuthorList(mseq, pageRequest);
+		return reviewPage.getContent();
 	}
 
 
