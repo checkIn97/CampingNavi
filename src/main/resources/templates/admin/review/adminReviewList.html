@@ -9,6 +9,8 @@
     <style>
         body {
             display: flex;
+            font-family: Arial, sans-serif; /* 폰트 설정 */
+            line-height: 1.6; /* 줄 간격 */
         }
         .sidebar {
             width: 250px;
@@ -177,9 +179,10 @@
                 // 페이지 번호 요소를 동적으로 생성합니다.
                 let pageHTML = "";
                 if (page == 1) {
-                    pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\">";
+                    pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\" style=\"width: 20px; height: 20px;\">";
+
                 } else {
-                    pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page-1) + ", 'vseq', 'DESC'); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\"></a>";
+                    pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page-1) + ", 'vseq', 'DESC'); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowL.png\" style=\"width: 20px; height: 20px;\"></a>";
                 }
 
                 let start = parseInt((page-1)/pageMaxDisplay)*pageMaxDisplay + 1;
@@ -192,9 +195,9 @@
                     }
                 }
                 if (page == totalPages) {
-                    pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\" >";
+                    pageHTML += "<img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\" style=\"width: 20px; height: 20px;\">";
                 } else {
-                    pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page+1) + ", 'vseq', 'DESC'); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\"></a>";
+                    pageHTML += "<a href=\"\" onclick=\"reloadList(" + (page+1) + ", 'vseq', 'DESC'); return false;\"><img class=\"icon width-rem1\" src=\"/assets/images/icon/arrowR.png\" style=\"width: 20px; height: 20px;\"></a>";
                 }
                 document.getElementById('page_area').innerHTML = pageHTML;
 
