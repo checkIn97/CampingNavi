@@ -40,7 +40,7 @@
                 <div class="input-group-append">
                     <button @click="sendMessage" class="chatBtn" type="button">보내기</button>
                 </div>
-                <button class="chatBtn mainBtn" id="chatExit">나가기</button>
+                <button class="chatBtn mainBtn" id="chatExit">채팅 탈퇴하기</button>
                 <button onclick="goBack()" class="chatBtn">뒤로가기</button>
             </div>
         </div>
@@ -68,11 +68,13 @@
             room: {},
             sender: '',
             message: '',
-            messages: []
+            messages: [],
+            mseq: ''
         },
         created() {
             this.roomId = localStorage.getItem('wschat.roomId');
             this.sender = localStorage.getItem('wschat.sender');
+            this.mseq = localStorage.getItem('wschat.mseq');
             this.findRoom();
             this.loadMessages();
         },
@@ -137,7 +139,7 @@
                 vm.recvMessage(recv);
             });
 
-            ws.send("/pub/chat/message", {}, JSON.stringify({type: 'ENTER', roomId: vm.$data.roomId, sender: vm.$data.sender}));
+            ws.send("/pub/chat/message", {}, JSON.stringify({type: 'ENTER', roomId: vm.$data.roomId, sender: vm.$data.sender, mseq: vm.$data.mseq}));
         }, function (error) {
             if (reconnect++ <= 5) {
                 setTimeout(function () {
@@ -153,7 +155,7 @@
     connect();
 
     document.getElementById('chatExit').addEventListener('click', function () {
-        ws.send("/pub/chat/message", {}, JSON.stringify({type: 'LEAVE', roomId: vm.$data.roomId, sender: vm.$data.sender}));
+        ws.send("/pub/chat/message", {}, JSON.stringify({type: 'LEAVE', roomId: vm.$data.roomId, sender: vm.$data.sender, mseq: vm.$data.mseq}));
         location.href = "/chat/room";
     });
 </script>
