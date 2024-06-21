@@ -2,6 +2,7 @@ package com.demo.campingnavi.controller;
 
 import com.demo.campingnavi.config.PathConfig;
 import com.demo.campingnavi.domain.Member;
+import com.demo.campingnavi.domain.Qna;
 import com.demo.campingnavi.domain.Recommend;
 import com.demo.campingnavi.domain.Review;
 import com.demo.campingnavi.dto.CustomOauth2UserDetails;
@@ -9,6 +10,7 @@ import com.demo.campingnavi.dto.CustomSecurityUserDetails;
 import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
 import com.demo.campingnavi.service.MemberService;
+import com.demo.campingnavi.service.QnaService;
 import com.demo.campingnavi.service.RecommendService;
 import com.demo.campingnavi.service.ReviewService;
 import jakarta.servlet.http.HttpSession;
@@ -40,6 +42,8 @@ public class MemberController {
     RecommendService recommendService;
     @Autowired
     ReviewService reviewService;
+    @Autowired
+    QnaService qnaService;
 
     @GetMapping("/login")
     public String loginP(Model model) {
@@ -236,5 +240,12 @@ public class MemberController {
         Member member = (Member) session.getAttribute("loginUser");
 
         return reviewService.findAllByMember(member, pageable);
+    }
+
+    @GetMapping("/mypage/qna")
+    @ResponseBody
+    public Page<Qna> qnaPaging(HttpSession session, Pageable pageable) {
+        Member member = (Member) session.getAttribute("loginUser");
+        return qnaService.findAllByMember(member, pageable);
     }
 }

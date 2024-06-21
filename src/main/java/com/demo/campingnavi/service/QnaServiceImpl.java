@@ -1,5 +1,6 @@
 package com.demo.campingnavi.service;
 
+import com.demo.campingnavi.domain.Member;
 import com.demo.campingnavi.domain.Qna;
 import com.demo.campingnavi.repository.jpa.QnaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,10 @@ public class QnaServiceImpl implements QnaService{
     @Override
     public Page<Qna> findAllByType(String type, Pageable pageable) {
         return qnaRepository.findAllByType(type, pageable);
+    }
+
+    @Override
+    public Page<Qna> findAllByMember(Member member, Pageable pageable) {
+        return qnaRepository.findAllByMember(member, pageable);
     }
 }

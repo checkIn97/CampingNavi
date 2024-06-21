@@ -177,6 +177,24 @@
             </div>
         </div>
 
+        <!-- 문의 -->
+        <div class="myPageArea" id="myPageQna">
+            <div class="myPageBox">
+                <!--찜 목록 나오는 페이지-->
+                <div>
+                    <div id="qna-area"></div>
+                    <!-- 페이징 처리 시작 -->
+                    <div class="page-box">
+                        <img class="icon width-rem1" id="prevBtn_QNA" src="/assets/images/icon/arrowL.png"/>
+                        <div id="page-area-QNA"></div>
+                        <img class="icon width-rem1" id="nextBtn_QNA" src="/assets/images/icon/arrowR.png"/>
+                        <input type="hidden" id="hiddenTotal_QNA">
+                    </div>
+                    <!-- 페이징 처리 끝 -->
+                </div>
+            </div>
+        </div>
+
 
     </div>
     <div class="buttonContain">
@@ -338,22 +356,94 @@
         reloadList(0);
     });
 
+    // qna 페이징
+    $(document).ready(function () {
+        function qnaList(page_QNA) {
+            $.ajax({
+                type: 'GET',
+                url: '/member/mypage/qna',
+                data: {
+                    page : page_QNA,
+                    size : 3
+                },
+                success: function (data) {
+                    var qnaArea = $("#qna-area");
+                    qnaArea.empty();
+                    var qnas = data.content;
+                    qnas.forEach(function (qna) {
+                        var titleLen = qna.title.length;
+                        if (titleLen <= 6) {
+                            qnaArea.append('<a class="myPageSaveLink" href="/qna/oneByone/detail/'+ qna.qseq +'"><h3>제목: ' + qna.title + '</h3></a>');
+                        } else {
+                            qnaArea.append('<a class="myPageSaveLink" href="/qna/oneByone/detail/'+ qna.qseq +'"><h3>제목: ' + qna.title.substring(0, 6) + '...</h3></a>');
+                        }
+
+                        var contentLen = qna.content.length;
+                        if (contentLen <= 20) {
+                            qnaArea.append('<p>' + qna.content + '</p>');
+                        } else {
+                            qnaArea.append('<p>' + qna.content.substring(0, 20) + '...</p>');
+                        }
+                        var formattedDate = moment(qna.createdAt).format('YYYY-MM-DD HH:mm:ss');
+                        qnaArea.append('<p>' + formattedDate + '</p><hr>');
+                    });
+
+                    var pagination_QNA = $("#page-area-QNA");
+                    pagination_QNA.empty();
+                    var totalPages_QNA = data.page.totalPages;
+                    $("#hiddenTotal_QNA").val(totalPages_QNA);
+                    var visiblePages_QNA = 3; // 표시할 페이지 버튼 수
+                    var startPage_QNA = Math.max(0, Math.min(page_QNA - Math.floor(visiblePages_QNA / 2), totalPages_QNA - visiblePages_QNA));
+                    var endPage_QNA = Math.min(totalPages_QNA, startPage_QNA + visiblePages_QNA);
+
+                    // 페이지 버튼
+                    for (var i = startPage_QNA; i < endPage-QNA; i++) {
+                        pagination_QNA.append('<span style="cursor: pointer;" class="page-num" id="qna-page" data-page="' + i + '">' + (i + 1) + '</span>');
+                    }
+
+                    currentPage2 = page2;
+                }
+            });
+        }
+
+        $(document).on('click', '#qna-page', function () {
+            var page_QNA = $(this).data('page');
+            qnaList(page_QNA);
+        });
+
+        $('#prevBtn_QNA').click(function () {
+            if (currentPage_QNA > 0) {
+                qnaList(currentPage_QNA - 1);
+            }
+        });
+
+        $('#nextBtn_QNA').click(function () {
+            if (currentPage_QNA < $('#hiddenTotal_QNA').val() -1) {
+                qnaList(currentPage_QNA + 1);
+            }
+        });
+
+        qnaList(0);
+    });
 
     window.onload = function () {
         // 각 버튼과 내용 요소를 가져옵니다.
         var myPageInfoBtn = document.getElementById('myPageInfoBtn');
         var myPageReviewBtn = document.getElementById('myPageReviewBtn');
         var myPageSaveBtn = document.getElementById('myPageSaveBtn');
+        var qnaBtn = document.getElementById('qna')
 
         var myPageInfo = document.getElementById('myPageInfo');
         var myPageReview = document.getElementById('myPageReview');
         var myPageSave = document.getElementById('myPageSave');
+        var myPageQna = document.getElementById('myPageQna');
 
         // myPageInfoBtn을 클릭하면 myPageInfo를 보이게 하고, 나머지는 숨깁니다.
         myPageInfoBtn.addEventListener('click', function () {
             myPageInfo.style.display = 'block';
             myPageReview.style.display = 'none';
             myPageSave.style.display = 'none';
+            myPageQna.style.display = 'none';
         });
 
         // myPageReviewBtn을 클릭하면 myPageReview를 보이게 하고, 나머지는 숨깁니다.
@@ -361,14 +451,24 @@
             myPageInfo.style.display = 'none';
             myPageReview.style.display = 'block';
             myPageSave.style.display = 'none';
+            myPageQna.style.display = 'none';
         });
 
         // myPageSaveBtn을 클릭하면 myPageSave를 보이게 하고, 나머지는 숨깁니다.
         myPageSaveBtn.addEventListener('click', function () {
             myPageInfo.style.display = 'none';
             myPageReview.style.display = 'none';
+            myPageQna.style.display = 'none';
             myPageSave.style.display = 'block';
         });
+
+        // qnaBtn을 클릭하면 myPgaeQna를 보이게 하고, 나머지는 숨깁니다.
+        qnaBtn.addEventListener('click', function () {
+            myPageInfo.style.display = 'none';
+            myPageReview.style.display = 'none';
+            myPageSave.style.display = 'none';
+            myPageQna.style.display = 'block';
+        })
     }
 </script>
 
