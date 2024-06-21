@@ -20,7 +20,7 @@
         <h3>캠핑장</h3>
             <input id="selectedItem" placeholder="캠핑장 검색을 눌러주세요." readonly type="text" v-model="selectedItemName">
             <!--상세보기로 들어온 경우 보이지 않음-->
-            <button id="openSearch" onclick="openSearch()" type="button">캠핑장 검색</button>
+            <button id="openSearch" onclick="openSearch()" type="button" class="mainBtn">캠핑장 검색</button>
 
         <!--목적-->
         <h3>캠핑 목적</h3>
@@ -113,6 +113,9 @@
             createRoom: function () {
                 if ("" === this.room_name) {
                     alert("방 제목을 입력해 주십시요.");
+                    return;
+                } else if ("" === this.selectedItemName) {
+                    alert("캠핑장 검색을 눌러주세요.");
                     return;
                 } else {
                     var params = new URLSearchParams();
