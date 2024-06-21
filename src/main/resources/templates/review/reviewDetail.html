@@ -13,7 +13,9 @@
 </head>
 
 <body>
-<article class="box" id="review-detail-box">
+<th:block th:insert="/insert/header"></th:block>
+
+<article class="box centerBox" id="review-detail-box">
     <div class="container">
         <h2 class="mb-4" th:text="${reviewVo.review.camp.getName()} + '리뷰'"></h2>
         <hr class="vertical">

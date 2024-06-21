@@ -81,6 +81,30 @@ li {
     width: -webkit-fill-available !important;
 }
 
+/*스크롤바*/
+
+/* 스크롤바의 전체 너비 */
+
+::-webkit-scrollbar {
+    width: 0;
+}
+
+/* 스크롤바의 트랙(바탕) */
+::-webkit-scrollbar-track {
+    background: none;
+}
+
+/* 스크롤바의 핸들(움직이는 부분) */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 1rem;
+}
+
+/* 스크롤바의 핸들을 호버(마우스 오버)했을 때 */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 /*header*/
 
 .header {
@@ -236,12 +260,21 @@ h2.major {
     margin: 0 0 1rem 0;
 }
 
+.centerBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: auto;
+    max-height: 100vh; /* 화면 높이를 넘지 않도록 설정 */
+}
+
 .box {
     width: max-content;
     display: flex;
     flex-direction: column;
     padding: 3rem;
-    margin: auto;
+    margin-top: 1rem;
     background-color: #fdfada;
     border-radius: 60px;
 }
@@ -1226,7 +1259,7 @@ h1 {
 /*myPage*/
 
 #myPageContainer {
-    position: relative;
+    /*position: relative;*/
     width: 40%;
     margin: auto;
 }
@@ -1282,6 +1315,7 @@ h1 {
     border-radius: 1rem;
     margin-bottom: 1rem;
     margin-left: 1rem;
+    margin-top: 1rem;
 }
 
 .myPage-info-title {
@@ -1421,6 +1455,11 @@ h1 {
 
 /*review*/
 
+.nextContent:hover{
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
 #reviewCseq {
     padding: 0.5rem !important;
 }
@@ -1481,6 +1520,14 @@ h1 {
     margin: auto auto 1rem;
 }
 
+.page-num.current {
+    font-weight: bold;
+}
+
+.page-num:hover {
+    font-weight: bold;
+}
+
 .page-num {
     margin-right: 1rem;
     margin-left: 1rem;
@@ -1526,7 +1573,6 @@ h1 {
 }
 
 #review-list {
-    position: relative;
     width: 60rem;
 }
 

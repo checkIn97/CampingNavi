@@ -21,7 +21,7 @@
 <body>
 <th:block th:insert="insert/header.html"></th:block>
 
-<div class="box" id="myPageContainer">
+<div class="box centerBox" id="myPageContainer">
     <div class="myPageSpace">
         <div class="myPageUserIdImg">
             <div>
@@ -241,7 +241,7 @@
 
                     // 페이지 버튼
                     for (var i = startPage2; i < endPage2; i++) {
-                        pagination2.append('<button class="page-btn" id="review-page" data-page="' + i + '">' + (i + 1) + '</button>');
+                        pagination2.append('<span style="cursor: pointer;" class="page-num" id="review-page" data-page="' + i + '">' + (i + 1) + '</span>');
                     }
 
                     currentPage2 = page2;
@@ -303,7 +303,7 @@
 
                     // 페이지 버튼
                     for (var i = startPage; i < endPage; i++) {
-                        pagination.append('<button class="page-btn" data-page="' + i + '">' + (i + 1) + '</button>');
+                        pagination.append('<span style="cursor: pointer;" class="page-num" data-page="' + i + '">' + (i + 1) + '</span>');
                     }
 
                     currentPage = page;
