@@ -1,31 +1,111 @@
-<!-- 댓글 영역 -->
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+            crossorigin="anonymous"></script>
+    <title>관리자 페이지</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif; /* 폰트 설정 */
+            line-height: 1.6; /* 줄 간격 */
+        }
+        .content {
+            padding: 20px;
+        }
+        .comment-section {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .comment-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .comment {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
+        .comment .comment-actions {
+            margin-top: 5px;
+        }
+        .comment .comment-actions a {
+            margin-right: 10px;
+            color: #dc3545;
+        }
+        .comment .comment-content {
+            margin-bottom: 5px;
+        }
+        .comment .comment-content span {
+            font-weight: bold;
+        }
+        .comment .comment-date {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .comment-form {
+            margin-top: 20px;
+        }
+        .comment-form textarea {
+            width: 50%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            resize: none;
+        }
+        .comment-form .btn {
+            margin-top: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .comment-form .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
 <div class="container">
-    <form id="commentForm" name="commentForm" method="post">
-        <br> <br>
-        <div>
+    <div class="content">
+        <form id="commentForm" name="commentForm" method="post">
+            <br> <br>
             <div>
-                <span><h3>comments</h3></span> <span id="Cnt"></span>
+                <div>
+                    <span><h3>댓글</h3></span> <span id="Cnt"></span>
+                </div>
+                <div id="reply">
+
+                </div>
             </div>
-            <div id="reply">
+            <input type="hidden" id="vseq" name="vseq" th:value="${reviewVo.review.vseq}"/>
+        </form>
+    </div>
 
+    <div class="comment-section">
+        <form id="commentListForm" name="commentListForm" method="get">
+            <div id="commentList">
+                <!-- 댓글 출력 영역 -->
             </div>
+        </form>
+
+        <!-- 페이지 처리 영역 -->
+        <div>
+            <ul id="pagination">
+            </ul>
         </div>
-        <input type="hidden" id="vseq" name="vseq" th:value="${reviewVo.review.vseq}"/>
-    </form>
-</div>
-<div class="container">
-    <form id="commentListForm" name="commentListForm" method="get">
-
-        <div id="commentList">
-            <!--  댓글 출력 영역 -->
-        </div>
-    </form>
-
-
-    <!-- 페이지 처리 영역 -->
-    <div>
-        <ul id="pagination">
-        </ul>
     </div>
 </div>
 
@@ -75,44 +155,41 @@
     function showHTML(vseq, commentCount, parentCommentCmseqArray, parentCommentMseqArray, parentCommentMemberArray, parentCommentContentArray, parentCommentDateArray, childCommentCmseqArray, childCommentMseqArray, childCommentMemberArray, childCommentContentArray, childCommentDateArray) {
         var html = "";
         if (parentCommentCmseqArray.length > 0) {
-            for (let i = 0 ; i < parentCommentCmseqArray.length ; i++) {
+            for (let i = 0; i < parentCommentCmseqArray.length; i++) {
                 // 부모 댓글 섹션
-                html += "<div id=\"parent_comment_" + parentCommentCmseqArray[i] + "\">"; // 각 부모 댓글에 대해 고유한 id 부여
-                html += "<strong>작성자: " + parentCommentMemberArray[i] + "</strong>&nbsp;&nbsp;&nbsp; ";
-                html += "<span id=\"write_date\"> 작성일: " + displayTime(parentCommentDateArray[i]) + "</span><br>";
-                html += parentCommentContentArray[i];
-                html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' onclick=\"deleteComment(" + parentCommentCmseqArray[i] + "); return false\" class='button' id='commentsDel'>삭제</a>";
-
-                // 대댓글 폼
-                html += "<div id=\"replyForm_" + parentCommentCmseqArray[i] + "_" + vseq + "\" style=\"display:none;\">"; // 대댓글 폼의 기본적인 HTML을 추가하고 숨김 처리
-                html += "<textarea rows=\"3\" cols=\"50\" id=\"ReplyContent_" + parentCommentCmseqArray[i] + "_" + vseq + "\" name=\"ReplyContent\" placeholder=\"답글을 입력하세요\"></textarea>";
-                html += "<a href=\"#\" onClick=\"save_reply(" + parentCommentCmseqArray[i] + "," + vseq + "); return false;\" class=\"btn\">등록</a>"; // 대댓글 등록 버튼
+                html += "<div class='comment' id=\"parent_comment_" + parentCommentCmseqArray[i] + "\">"; // 각 부모 댓글에 대해 고유한 id 부여
+                html += "<div class='comment-content'><span>작성자: " + parentCommentMemberArray[i] + "</span>&nbsp;&nbsp;&nbsp; ";
+                html += "<span class='comment-date'>작성일: " + displayTime(parentCommentDateArray[i]) + "</span></div>";
+                html += "<div class='comment-content'>" + parentCommentContentArray[i] + "</div>";
+                html += "<div class='comment-actions'>";
+                html += "<a href='#' onclick=\"deleteComment(" + parentCommentCmseqArray[i] + "); return false\" class='btn' id='commentsDel'>삭제</a>";
                 html += "</div>";
+
 
                 // 자식 댓글 섹션
                 if (childCommentCmseqArray[i].length > 0) {
-                    for (let j = 0 ; j < childCommentCmseqArray[i].length ; j++) {
-                        html += "<div id=\"child_comment_" + childCommentCmseqArray[i][j] + "\">"; // 각 자식 댓글에 대해 고유한 id 부여
-                        html += "&nbsp;&nbsp;&nbsp;&nbsp;<strong>작성자: " + childCommentMemberArray[i][j] + "</strong>&nbsp;&nbsp;&nbsp; ";
-                        html += "&nbsp;&nbsp;&nbsp;&nbsp;<span id=\"write_date\"> 작성일: " + displayTime(childCommentDateArray[i][j]) + "</span><br>";
-                        html += "&nbsp;&nbsp;&nbsp;&nbsp;<span>"+ childCommentContentArray[i][j] +"</span>";
-                        html += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#' onclick=\"deleteComment(" + childCommentCmseqArray[i][j] + "); return false\" class='button' id='commentsDel'>삭제</a>";
-
-                        html += "<br></div>";
+                    for (let j = 0; j < childCommentCmseqArray[i].length; j++) {
+                        html += "<div class='comment child-comment' id=\"child_comment_" + childCommentCmseqArray[i][j] + "\">"; // 각 자식 댓글에 대해 고유한 id 부여
+                        html += "<div class='comment-content'><span>작성자: " + childCommentMemberArray[i][j] + "</span>&nbsp;&nbsp;&nbsp; ";
+                        html += "<span class='comment-date'>작성일: " + displayTime(childCommentDateArray[i][j]) + "</span></div>";
+                        html += "<div class='comment-content'>" + childCommentContentArray[i][j] + "</div>";
+                        html += "<div class='comment-actions'>";
+                        html += "<a href='#' onclick=\"deleteComment(" + childCommentCmseqArray[i][j] + "); return false\" class='btn' id='commentsDel'>삭제</a>";
+                        html += "</div>";
+                        html += "</div>";
                     }
                 }
+                html += "</div>";
             }
         } else {
-            html += "<div>";
+            html += "<div class='comment'>";
             html += "<h3>등록된 댓글이 없습니다.</h3>";
             html += "</div>";
         }
 
-        $("#Cnt").html("댓글 " + "<span style='color;#00f;'>" + commentCount + "</span>");
+        $("#Cnt").html("댓글 " + "<span style='color: #00f;'>" + commentCount + "</span>");
         $("#commentList").html(html); /* 브라우저에 출력 */
     }
-
-
 
     /*
      ** 입력 파라미터:
@@ -124,23 +201,14 @@
         // timeValue를 Date객체로 변환
         var dateObj = new Date(timeValue);
 
-        console.log("timeValue=" + timeValue);
-        console.log("dateObj=" + dateObj);
-
         var timeGap = today.getTime() - dateObj.getTime();
 
         // 오늘 작성된 것은 작성시각으로, 그 외는 작성일자로 표시
         if (dateObj.getFullYear() == today.getFullYear() && dateObj.getMonth() == today.getMonth() && dateObj.getDate() == today.getDate()) {
-            // timeGap이 24시간 이내인지 판단
-            //if (timeGap < (1000 * 60 * 60 * 24)) {  // 시, 분, 초를 구함
             var hh = dateObj.getHours();
             var mi = dateObj.getMinutes();
             var ss = dateObj.getSeconds();
-            console.log("hh=" + hh);
-            console.log("mi=" + mi);
-            console.log("ss=" + ss);
 
-            //return hh + ':' + mi + ':' + ss;
             return [(hh > 9 ? '' : '0') + hh, ':', (mi > 9 ? '' : '0') + mi, ':',
                 (ss > 9 ? '' : '0') + ss].join('');
         } else {
@@ -148,10 +216,8 @@
             var mm = dateObj.getMonth() + 1;
             var dd = dateObj.getDate();
 
-            //return yy + "-" + mm + "-" + dd;
             return [yy, '/', (mm > 9 ? '' : '0') + mm, '/', (dd > 9 ? '' : '0') + dd].join('');
         }
-
     }
 
     function deleteComment(cmseq) {
@@ -177,7 +243,7 @@
             });
         }
     }
-
-
-
 </script>
+
+</body>
+</html>
