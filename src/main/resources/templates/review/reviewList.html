@@ -90,7 +90,7 @@
                         if (bestTitle.length > 50) {
                             bestTitle = bestTitle.substring(0, 50) + "...";
                         }
-                        HTML += "<tr class='review-list-pop-back'><td><a class='popularPosts' href='/camp/detail/?mapX=" + bestList[i].review.camp.mapX + "&mapY=" + bestList[i].review.camp.mapY + "&contentId=" + bestList[i].review.camp.contentId + "&cseq=" + bestList[i].review.camp.cseq + "'>" + bestList[i].review.camp.name + "</a></td>";
+                        HTML += "<tr class='review-list-pop-back'><td><a class='popularPosts' href='/camp/detail/?cseq=" + bestList[i].review.camp.cseq + "'>" + bestList[i].review.camp.name + "</a></td>";
                         HTML += "<td><div class=\"popularPosts\">[인기] <a class=\"popularPosts\" href=\"/review/detail/" + bestList[i].review.vseq + "\">";
                         HTML += "<span class=\"popularPosts\" >" + bestTitle + "&nbsp</span>";
                         HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);\"/>";
@@ -111,7 +111,7 @@
                             title = title.substring(0, 50) + "...";
                         }
 
-                        HTML += "<tr class=\"review_list\"><td><a href='/camp/detail/?mapX=" + list[i].review.camp.mapX + "&mapY=" + list[i].review.camp.mapY + "&contentId=" + list[i].review.camp.contentId + "&cseq=" + list[i].review.camp.cseq + "'>" + list[i].review.camp.name + "</a></td>";
+                        HTML += "<tr class=\"review_list\"><td><a href='/camp/detail/?cseq=" + list[i].review.camp.cseq + "'>" + list[i].review.camp.name + "</a></td>";
                         HTML += "<td><div class=\"review_list\"><a href=\"/review/detail/" + list[i].review.vseq + "\">";
                         HTML += "<span>" + title + "&nbsp</span>";
                         HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle;\"/>";
