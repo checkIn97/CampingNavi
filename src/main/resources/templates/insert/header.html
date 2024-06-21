@@ -30,10 +30,10 @@
 </div>
 <script>
 
-    var headerCampingBtn = document.getElementById('headerCampingBtn');
-    var headerCamping = document.getElementById('headerCamping');
-    var headerCommunityBtn = document.getElementById('headerCommunityBtn');
-    var headerCommunity = document.getElementById('headerCommunity');
+    let headerCampingBtn = document.getElementById('headerCampingBtn');
+    let headerCamping = document.getElementById('headerCamping');
+    let headerCommunityBtn = document.getElementById('headerCommunityBtn');
+    let headerCommunity = document.getElementById('headerCommunity');
 
     // 마우스가 headerCampingBtn 요소 위에 있을 때 headerCamping 요소를 표시합니다.
     headerCampingBtn.addEventListener('mouseover', function () {
@@ -74,16 +74,16 @@
     });
 
 
-    window.onload = function () {
-        var headerCampingBtn = document.getElementById('headerCampingBtn');
-        var headerCamping = document.getElementById('headerCamping');
-        var headerCommunityBtn = document.getElementById('headerCommunityBtn');
-        var headerCommunity = document.getElementById('headerCommunity');
+    window.addEventListener('load', function() {
+        let headerCampingBtn = document.getElementById('headerCampingBtn');
+        let headerCamping = document.getElementById('headerCamping');
+        let headerCommunityBtn = document.getElementById('headerCommunityBtn');
+        let headerCommunity = document.getElementById('headerCommunity');
 
         // headerCampingBtn 요소의 너비를 계산합니다.
-        var campingBtnWidth = headerCampingBtn.offsetWidth;
+        let campingBtnWidth = headerCampingBtn.offsetWidth;
         // headerCommunityBtn 요소의 너비를 계산합니다.
-        var communityBtnWidth = headerCommunityBtn.offsetWidth;
+        let communityBtnWidth = headerCommunityBtn.offsetWidth;
 
         // headerCamping 요소의 위치를 조정합니다.
         headerCamping.style.left = '50%';
@@ -108,7 +108,7 @@
             if (headerCommunity.style.display === 'block') {
                 // headerCommunity 요소의 위치를 headerCommunityBtn 요소의 중앙으로 조정합니다.
                 // headerCamping 요소의 너비를 고려합니다.
-                var leftPosition = headerCommunityBtn.offsetLeft + communityBtnWidth / 2;
+                let leftPosition = headerCommunityBtn.offsetLeft + communityBtnWidth / 2;
                 if (headerCamping.style.display === 'block') {
                     leftPosition += headerCamping.offsetWidth / 2;
                 }
@@ -116,26 +116,26 @@
                 headerCommunity.style.transform = 'translateX(-50%)';
             }
         });
-    }
+    });
 
     window.addEventListener('mousemove', function (e) {
-        var header = document.querySelector('.header');
+        let header = document.querySelector('.header');
         // 마우스의 Y 좌표가 50px 이하일 때 header 요소를 표시합니다.
         if (e.clientY <= 50) {
             header.style.display = 'block';
         }
     });
 
-    var header = document.querySelector('.header');
+    let header = document.querySelector('.header');
 
     header.addEventListener('mouseleave', function () {
         header.style.display = 'none';
     });
 
 
-    var headerVals = document.querySelectorAll('.headerVal');
+    let headerVals = document.querySelectorAll('.headerVal');
 
-for (var i = 0; i < headerVals.length; i++) {
+for (let i = 0; i < headerVals.length; i++) {
     headerVals[i].addEventListener('mouseover', function () {
         this.style.fontWeight = 'bolder';
         this.style.fontSize = '1.1rem';

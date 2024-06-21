@@ -141,6 +141,7 @@ li {
 }
 
 .headerValBox.box {
+    display: none;
     border-radius: 1rem;
     z-index: 9998;
     top: 2rem;
