@@ -4,39 +4,100 @@
 <head>
     <meta charset="utf-8"/>
 
-    <title>관리자 페이지</title>
+    <title>리뷰 관리 페이지</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #343a40;
+            padding: 20px;
+        }
+        .sidebar a {
+            color: #ffffff;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+        .page-index {
+            padding: 20px;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        .table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .page-box {
+            text-align: center;
+        }
+        .page-num {
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        .page-num.active {
+            font-weight: bold;
+        }
+        .icon {
+            cursor: pointer;
+        }
+        .review-list-pop-back {
+            background-color: #f8f9fa;
+        }
+        .popularPosts {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
 </head>
 
 <body>
-
-    <h2>리뷰 리스트 관리자 페이지</h2>
+<div class="d-flex">
+    <div class="sidebar">
+        <a th:href="@{/admin/}"><h4 class="text-white">CampNavi Admin</h4></a>
+        <a th:href="@{#}">데이터 관리</a>
+        <a th:href="@{/admin/review/list}">리뷰 관리</a>
+        <a th:href="@{#}">회원 관리</a>
+    </div>
+</div>
+<div class="content">
+    <h2 class="my-4">리뷰 리스트 관리자 페이지</h2>
     <div class="page-index">
+        <!-- 검색 영역 -->
+        <form method="get" th:action="@{/admin/review/list}">
+            <div class="search-container form-inline">
+                <select class="form-control mr-2" id="search" name="searchField">
+                    <option value="campName">캠핑장명</option>
+                    <option value="title">제목</option>
+                    <option value="content">내용</option>
+                    <option value="titleContent">제목 / 내용</option>
+                    <option value="writer">작성자</option>
+                </select>
+                <input class="form-control mr-2" name="searchWord" type="text">
+                <button class="btn btn-primary" type="submit">검색</button>
+            </div>
+        </form>
+
         <!-- 리스트 영역 -->
         <div id="list_area"></div>
+
         <!-- 페이지 영역 -->
-        <div class="page-box" id="page_area">
-            <a class="page-num"></a>
-        </div>
-
-
+        <div class="page-box" id="page_area"></div>
     </div>
+</div>
 
 
-    <form method="get" th:action="@{/admin/review/list}">
-        <div class="search-container review-list-search-index">
-            <select class="search" id="search" name="searchField">
-                <option value="campName">캠핑장명</option>
-                <option value="title">제목</option>
-                <option value="content">내용</option>
-                <option value="titleContent">제목 / 내용</option>
-                <option value="writer">작성자</option>
-            </select>
-
-            <input class="searchWord" name="searchWord" type="text">
-            <button class="searchButton" type="submit">검색</button>
-
-        </div>
-    </form>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -66,7 +127,7 @@
 
                 if (result === "success") {
                     let HTML = "";
-                    HTML += "<table><thead><tr><th>캠핑장명</th><th>제목</th><th>작성자</th><th>작성일시</th><th>추천수</th><th>조회수</th></tr></thead><tbody>";
+                    HTML += "<table class='table table-striped'><thead><tr><th>캠핑장명</th><th>제목</th><th>작성자</th><th>작성일시</th><th>추천수</th><th>조회수</th></tr></thead><tbody>";
                     for (let i = 0; i < (bestList.length < 3 ? bestList.length : 3); i++) {
 
                         var bestTitle = bestList[i].review.title;
@@ -82,6 +143,7 @@
                         HTML += "<span> [" + bestList[i].review.commentCount + "]</span></a></div>";
                         HTML += "<input type=\"hidden\" name=\"vseq\" value=\"" + bestList[i].review.vseq + "\"/></td>";
                         HTML += "<input type=\"hidden\" name=\"mseq\" value=\"" + bestList[i].review.member.mseq + "\"/></td>";
+                        HTML += "<td class='popularPosts'>" + bestList[i].review.member.name + "</td>";
                         HTML += "<td class=\"popularPosts\">" + bestList[i].createdAt + "</td>";
                         HTML += "<td class=\"popularPosts\">" + bestList[i].rcdCount + "</td>";
                         HTML += "<td class=\"popularPosts\">" + bestList[i].review.count + "</td></tr>";
@@ -102,6 +164,7 @@
                         HTML += "<span> [" + list[i].review.commentCount + "]</span></a></div>";
                         HTML += "<input type=\"hidden\" name=\"vseq\" value=\"" + list[i].review.vseq + "\"/></td>";
                         HTML += "<input type=\"hidden\" name=\"mseq\" value=\"" + list[i].review.member.mseq + "\"/></td>";
+                        HTML += "<td>" + list[i].review.member.name + "</td>";
                         HTML += "<td>" + list[i].createdAt + "</td>";
                         HTML += "<td>" + list[i].rcdCount + "</td>";
                         HTML += "<td>" + list[i].review.count + "</td></tr>";

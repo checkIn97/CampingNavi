@@ -35,6 +35,11 @@ public class AdminController {
     @Autowired
     DataService dataService;
 
+    @GetMapping("/")
+    public String adminIndex(){
+        return "admin/adminPage";
+    }
+
     @Transactional
     @ResponseBody
     @PostMapping("/update")
