@@ -200,11 +200,12 @@ public class CampServiceImpl implements CampService {
 
     @Override
     public void campAllDisabled() {
-        List<Camp> campList = getCampListByUseyn("y");
-        for (Camp camp : campList) {
-            camp.setUseyn("n");
-            campRepo.save(camp);
-        }
+//        List<Camp> campList = getCampListByUseyn("y");
+//        for (Camp camp : campList) {
+//            camp.setUseyn("n");
+//            campRepo.save(camp);
+//        }
+        campRepo.campAllDisabled();
     }
 
     @Override

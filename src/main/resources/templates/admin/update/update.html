@@ -11,6 +11,7 @@
 <body>
 <h2>캠핑장데이터</h2>
 <div id="camp_ver"></div>
+<div id="camp_update_progress"></div>
 <button type="button" name="update_camp" id="update_camp">캠핑장데이터 업데이트</button>
 <h2>추천모델</h2>
 <div id="model_ver"></div>
@@ -67,6 +68,154 @@
            }
         });
     }
+
+    function update1(kind) {
+        if (kind == "camp") {
+            alert("캠핑장데이터 업데이트 시작");
+            $.ajax({
+                type: "POST",
+                url: "/admin/get_totalCount",
+                data: {
+                    kind: kind
+                },
+                success: function(data0) {
+                    if (data0.result == 'success') {
+                        HTML = "";
+                        HTML += "0\%";
+                        $("#camp_update_progress").html(HTML);
+                        let totalCount = data0.totalCount;
+                        let size = 100;
+                        let totalPage = parseInt((totalCount + size - 1) / size);
+                        let status = false;
+                        for (let page = 1 ; page <= totalPage ; page++) {
+                            $.ajax({
+                                type: "POST",
+                                url: "/admin/camping_data_search_from_api",
+                                data: {
+                                    kind: kind,
+                                    page: page
+                                },
+                                success: function(data1) {
+                                    if (data1.result == 'success') {
+                                        HTML = "";
+                                        HTML += parseInt((page*100/totalPage)*0.90) + "\%";
+                                        $("#camp_update_progress").html(HTML);
+                                    } else {
+                                        alert("캠핑장 데이터 가져오기 실패");
+                                        HTML = "";
+                                        $("#camp_update_progress").html(HTML);
+                                        status = true;
+                                    }
+                                },
+                                error: function() {
+                                    alert("캠핑장 데이터 가져오기 실패");
+                                    HTML = "";
+                                    $("#camp_update_progress").html(HTML);
+                                    status = true;
+                                }
+                            });
+                            if (status) {
+                                break;
+                            }
+                        }
+                        if (!status) {
+                            $.ajax({
+                               type: "POST",
+                               url: "/admin/camping_data_integration",
+                               data: {
+                                   kind: kind,
+                                   totalPage: totalPage
+                               },
+                               success: function(data2) {
+                                   HTML = "";
+                                   HTML += "95\%";
+                                   $("#camp_update_progress").html(HTML);
+                                   if (data2.result == 'success') {
+                                       $.ajax({
+                                           type: "POST",
+                                           url: "/admin/camping_data_insert",
+                                           data: {
+                                               kind: kind
+                                           },
+                                           success: function(data3) {
+                                               if (data3.result == 'success') {
+                                                   HTML = "";
+                                                   HTML += "100\%";
+                                                   $("#camp_update_progress").html(HTML);
+                                                   load_update_history(kind);
+                                                   HTML = "";
+                                                   $("#camp_update_progress").html(HTML);
+                                               } else {
+                                                   alert("캠핑장데이터 최신화 오류");
+                                                   HTML = "";
+                                                   $("#camp_update_progress").html(HTML);
+                                                   load_update_history(kind);
+                                               }
+                                           },
+                                           error: function() {
+                                               alert("캠핑장데이터 최신화 오류");
+                                               HTML = "";
+                                               $("#camp_update_progress").html(HTML);
+                                               load_update_history(kind);
+                                           }
+                                       })
+                                   } else {
+                                       alert("데이터 통합 실패");
+                                       HTML = "";
+                                       $("#camp_update_progress").html(HTML);
+                                       load_update_history(kind);
+                                   }
+                               },
+                               error: function() {
+                                   alert("데이터 통합 실패");
+                                   HTML = "";
+                                   $("#camp_update_progress").html(HTML);
+                                   load_update_history(kind);
+                               }
+                            });
+                        } else {
+                            load_update_history(kind);
+                        }
+                    } else {
+                        alert("totalCount 가져오기 실패");
+                        HTML = "";
+                        $("#camp_update_progress").html(HTML);
+                        load_update_history(kind);
+                    }
+                },
+                error: function() {
+                    alert(kind + " 업데이트 중 오류 발생");
+                    HTML = "";
+                    $("#camp_update_progress").html(HTML);
+                    load_update_history(kind);
+                }
+            });
+        } else {
+            alert("추천모델 업데이트 시작");
+            $.ajax({
+                type: "POST",
+                url: "/admin/update",
+                data: {
+                    kind: kind
+                },
+                success: function(data) {
+                    if (data.result == 'success') {
+                        alert("작업 완료");
+                        load_update_history(kind);
+                    } else {
+                        alert("작업 실패");
+                        load_update_history(kind);
+                    }
+                },
+                error: function() {
+                    alert(kind + " 업데이트 중 오류 발생");
+                    load_update_history(kind);
+                }
+            });
+        }
+
+    }
+
 
     function load_update_history(kind) {
         $.ajax({

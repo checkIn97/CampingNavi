@@ -5,8 +5,11 @@ import com.demo.campingnavi.domain.UpdateHistory;
 import java.util.List;
 
 public interface AdminService {
-    public String recommendModelUpdate();
-    public String campDataUpdate();
-    public void saveUpdateHistory(UpdateHistory updateHistory);
-    public List<UpdateHistory> getUpdateHistoryList(String kind);
+    String recommendModelUpdate();
+    String campDataUpdate();
+    int getCampingTotalCount();
+    String getCampingDataFromApi(int page);
+    String getCampingDataIntegration(int totalPage);
+    void saveUpdateHistory(UpdateHistory updateHistory);
+    List<UpdateHistory> getUpdateHistoryList(String kind);
 }
