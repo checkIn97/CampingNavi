@@ -803,9 +803,12 @@ input[name="slide"] {
 
 /*chat*/
 
+#chatBack {
+    width: 17rem;
+}
+
 #chatBox {
-    position: relative;
-    width: 50%;
+    width: 53%;
     overflow: auto;
 }
 
@@ -882,8 +885,13 @@ input[name="slide"] {
 }
 
 #chatExit {
-    width: 6rem;
-    flex: none;
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10rem;
+    padding: 0.5rem;
+    justify-content: center;
 }
 
 #chatInputGroup {
@@ -1514,8 +1522,8 @@ h1 {
     display: flex;
     flex-direction: row;
     padding: 0 0.3rem;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
+    background-color: #f1f9eb;
+    border: 1px solid yellowgreen;
     border-radius: 2rem;
     align-items: center;
     margin: auto auto 1rem;

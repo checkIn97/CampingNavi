@@ -13,7 +13,7 @@
 
 <th:block th:insert="insert/header.html"></th:block>
 
-<article class="box" id="chatBox">
+<article class="box centerBox" id="chatBox">
     <div class="container" id="app">
         <div>
             <h2>{{ room.name }}</h2>
@@ -40,12 +40,12 @@
                 <div class="input-group-append">
                     <button @click="sendMessage" class="chatBtn" type="button">보내기</button>
                 </div>
-                <button class="chatBtn mainBtn" id="chatExit">채팅 탈퇴하기</button>
-                <button onclick="goBack()" class="chatBtn">뒤로가기</button>
+                <button onclick="goBack()" class="chatBtn mainBte" id="chatBack">나가기</button>
             </div>
         </div>
     </div>
 </article>
+<button class="chatBtn mainBtn" id="chatExit">채팅방 탈퇴</button>
 <th:block th:insert="insert/footer.html"></th:block>
 
 <!-- JavaScript -->
