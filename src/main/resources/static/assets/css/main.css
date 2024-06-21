@@ -529,8 +529,8 @@ table.alt tfoot {
     display: none;
     width: 27%;
     height: 90vh;
-    margin: 0; /* 요소를 화면 중앙에 배치합니다. */
-    padding: 2rem;
+    margin-right: 2rem;
+    padding: 4rem;
     border-radius: 50px;
     background-color: #fdfada;
 }
