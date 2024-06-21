@@ -24,27 +24,22 @@
 
 <th:block th:insert="~{insert/header.html}"></th:block>
 
-<div class="box detailBox">
+<div class="box detailBox centerBox">
     <div class="buttonContain" id="reviewGrade">
 
     </div>
     <div class="buttonContain">
-        <a href="/qna/faq/writeView">
+<!--        <a href="/qna/faq/writeView">
         <button class="mainBtn" id="faqWrite" target="_blank" type="button">
             FAQ 작성하기
         </button>
-        </a>
-        <a href="/qna/oneByone/writeView">
-            <button class="mainBtn" id="oneByone" target="_blank" type="button">
-                1:1 문의 작성하기
-            </button>
-        </a>
+        </a>-->
     </div>
     <div class="buttonContain" id="detailContain">
-        <input class="detailBtn" id="viewDetailBtn" name="btn" type="radio" checked>
-        <label for="viewDetailBtn">FAQ</label>
-        <input class="detailBtn" id="reviewBtn" name="btn" type="radio">
-        <label for="reviewBtn">문의목록</label>
+        <input class="detailBtn" id="faq" name="btn" type="radio" checked>
+        <label for="faq" class="faq-label">자주 묻는 질문</label>
+        <input class="detailBtn" id="qna" name="btn" type="radio">
+        <label for="qna" class="qna-label">1 대 1 문의</label>
     </div>
 
     <div id="campDetail">
@@ -52,14 +47,6 @@
             <!-- 리스트 영역 -->
             <div id="faqList"></div>
 
-            <!-- 페이지 영역 -->
-            <div class="page-box">
-                <img class="icon width-rem1" id="prevBtn_FAQ" src="/assets/images/icon/arrowL.png">
-                <div id="pagination_FAQ" class="page-numbers"></div> <!-- 페이지 숫자가 들어갈 영역 -->
-                <img class="icon width-rem1" id="nextBtn_FAQ" src="/assets/images/icon/arrowR.png">
-                <!-- hidden inputs -->
-                <input type="hidden" id="hiddenTotal_FAQ">
-            </div>
         </div>
     </div>
 
@@ -67,15 +54,12 @@
         <div class="reviewList">
             <!-- 리스트 영역 -->
             <div id="qnaList"></div>
+            <a href="/qna/oneByone/writeView">
+                <button class="mainBtn" id="oneByone" target="_blank" type="button">
+                    1:1 문의 작성하기
+                </button>
+            </a>
 
-            <!-- 페이지 영역 -->
-            <div class="page-box">
-                <img class="icon width-rem1" id="prevBtn_QNA" src="/assets/images/icon/arrowL.png">
-                <div id="pagination_QNA" class="page-numbers"></div> <!-- 페이지 숫자가 들어갈 영역 -->
-                <img class="icon width-rem1" id="nextBtn_QNA" src="/assets/images/icon/arrowR.png">
-                <!-- hidden inputs -->
-                <input type="hidden" id="hiddenTotal_QNA">
-            </div>
         </div>
 
 
@@ -89,12 +73,12 @@
 <th:block th:insert="~{insert/footer.html}"></th:block>
 
 <script>
-    document.getElementById('viewDetailBtn').addEventListener('click', function () {
+    document.getElementById('faq').addEventListener('click', function () {
         document.getElementById('campDetail').style.display = 'block';
         document.getElementById('review').style.display = 'none';
     });
 
-    document.getElementById('reviewBtn').addEventListener('click', function () {
+    document.getElementById('qna').addEventListener('click', function () {
         document.getElementById('campDetail').style.display = 'none';
         document.getElementById('review').style.display = 'block';
     });
@@ -185,27 +169,15 @@
                     var faqArea = $("#faqList");
                     faqArea.empty();
                     var faqs = data.content;
-                    var index = 1;
-                    faqArea.append('<table>');
-                    faqArea.append('<tr>');
-                    faqArea.append('<th>번호</th>');
-                    faqArea.append('<th>제목</th>');
-                    faqArea.append('<th>작성일자</th>');
-                    faqArea.append('<th>작성자</th>');
-                    faqArea.append('</tr>');
 
                     if(faqs.length < 1) {
-                        faqArea.append('<tr><td>자주 묻는 질문을 등록해주세요.</td></tr>');
+                        faqArea.append('<span>자주 묻는 질문을 등록해주세요.</span>');
                     } else {
                         faqs.forEach(function (faq) {
-                            faqArea.append('<tr>');
-                            faqArea.append('<td>' + index++ + '</td>');
-                            faqArea.append('<td><a class="myPageSavaLink" href="/qna/faq/detail/' + faq.qseq + '"><h3>' + faq.title + '</h3></a></td>');
-                            faqArea.append('<td>' + faq.createdAt + '</td>');
-                            faqArea.append('<td>' + faq.member.name + '</td>');
-                            faqArea.append('</tr>');
-                            faqArea.append('</table>');
-                        });
+                            faqArea.append('<details><summary class="faqTitle">' + faq.title + '</summary>' +
+                                '<span class="faqSpan"><div class="faqContent">' + faq.content +'' +
+                                '</div><img class="faqImg webkit" src="/assets/qnaImages/' + faq.image + '"></span></details>');
+                        });e
                     }
                     var pagination_FAQ = $("#pagination_FAQ");
                     pagination_FAQ.empty();
