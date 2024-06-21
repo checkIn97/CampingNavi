@@ -54,7 +54,6 @@
 </head>
 <body>
 <h1>캠핑장 검색</h1>
-<label for="keyword">캠핑장 이름을 입력해주세요.</label>
 <input id="keyword" list="campKeywords"  name="campKeyword" placeholder="캠핑장 이름을 입력해주세요." />
 <datalist id="campKeywords">
     <option th:each="camp : ${campList}" th:value="${camp.name}" th:text="${camp.name}">
