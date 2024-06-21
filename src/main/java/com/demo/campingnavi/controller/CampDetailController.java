@@ -35,7 +35,6 @@ public class CampDetailController {
     @Autowired
     private CampService campService;
 
-
     @Autowired
     private ReviewService reviewService;
 
@@ -45,9 +44,7 @@ public class CampDetailController {
     }
 
     @GetMapping("/")
-    public String campDetailView(@RequestParam("mapX") String mapX, @RequestParam("mapY") String mapY,
-                                 @RequestParam("contentId") String contentId,
-                                 @RequestParam("cseq") int cseq,
+    public String campDetailView(@RequestParam("cseq") int cseq,
                                  Model model, HttpSession session) {
 
         // 세션에서 사용자 정보 가져오기
@@ -58,6 +55,12 @@ public class CampDetailController {
             model.addAttribute("redirectTo","/");
             return "review/review_alert";
         }
+        Camp camp = new Camp();
+        camp = campService.getCampByCseq(cseq);
+
+        String mapX = camp.getMapX();
+        String mapY = camp.getMapY();
+        String contentId = camp.getContentId();
 
         List<ApiResponse.Item> itemList = campDetailService.DataFromApi(mapX, mapY);
         List<ApiImageResponse.Item> imageList = campDetailService.DataFromApiImage((contentId));

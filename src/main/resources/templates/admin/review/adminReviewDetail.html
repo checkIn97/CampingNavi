@@ -114,7 +114,7 @@
                         <button class="webkit">목록보기</button>
                     </a>
                     <form class="webkit"
-                          method="post" th:action="@{'/review/delete/' + ${reviewVo.review.vseq}}">
+                          method="post" th:action="@{'/admin/review/delete/' + ${reviewVo.review.vseq}}">
                         <button class="webkit mainBtn" onclick="return confirmDelete()" type="submit">삭제하기</button>
                     </form>
                 </div>
