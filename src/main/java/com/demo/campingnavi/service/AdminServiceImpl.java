@@ -37,7 +37,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public String campDataUpdate() {
-        String pyFile = "campData.py";
+        String pyFile = "campingData.py";
         pyFile = PathConfig.realPath(pyFile);
 
         ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile);

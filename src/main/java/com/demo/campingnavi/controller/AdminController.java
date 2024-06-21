@@ -3,14 +3,12 @@ package com.demo.campingnavi.controller;
 import com.demo.campingnavi.domain.*;
 import com.demo.campingnavi.dto.ReviewScanVo;
 import com.demo.campingnavi.dto.ReviewVo;
-import com.demo.campingnavi.service.AdminService;
-import com.demo.campingnavi.service.ReviewCommentService;
-import com.demo.campingnavi.service.ReviewRecommendService;
-import com.demo.campingnavi.service.ReviewService;
+import com.demo.campingnavi.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,20 +29,35 @@ public class AdminController {
     @Autowired
     ReviewCommentService reviewCommentService;
 
+    @Autowired
+    CampService campService;
+
+    @Autowired
+    DataService dataService;
+
+    @Transactional
     @ResponseBody
     @PostMapping("/update")
-    public Map<String, String> recommendModelUpdate(@RequestParam("kind") String kind) {
-        Map<String, String> result = new HashMap<>();
-
+    public Map<String, Object> recommendModelUpdate(@RequestParam("kind") String kind) {
+        Map<String, Object> result = new HashMap<>();
+        String text = "";
         if (kind.equals("model")) {
-            result.put("result", adminService.recommendModelUpdate());
+            text = adminService.recommendModelUpdate();
         } else {
-            result.put("result", adminService.campDataUpdate());
+            // 캠프 데이터 최신화
+            text = adminService.campDataUpdate();
+            // 기존 데이터베이스 캠프를 모두 n으로 처리
+            campService.campAllDisabled();
+            // 최신화된 데이터를 새로 적용
+            String csvFile = "campingData.csv";
+            String n = "all";
+            List<Camp> campList = dataService.campInFromCsv(csvFile, n);
         }
+        result.put("result", text);
 
         UpdateHistory updateHistory = new UpdateHistory();
         updateHistory.setKind(kind);
-        updateHistory.setResult(result.get("result"));
+        updateHistory.setResult(text);
         adminService.saveUpdateHistory(updateHistory);
 
         return result;
@@ -88,6 +101,11 @@ public class AdminController {
             text = "실패";
         }
 
+        if (kind.equals("camp")) {
+            List<Camp> campList = campService.getCampListByUseyn("y");
+            result.put("totalCount", campList.size());
+        }
+
         System.out.println(updateTime);
         System.out.println(updateTry);
         System.out.println(text);
@@ -99,7 +117,7 @@ public class AdminController {
 
     @GetMapping("update_page")
     public String updatePage() {
-        return "admin/update";
+        return "admin/update/update";
     }
 
     // 리뷰관리 리스트 보기

@@ -78,9 +78,14 @@
             success: function(data) {
                 let updateTime = data.updateTime;
                 let updateTry = data.updateTry;
+                let totalCount = data.totalCount;
                 let result = data.result;
                 HTML = "";
-                HTML += "<h3>현재 버전 : " + updateTime + "</h3>";
+                if (kind == "camp") {
+                    HTML += "<h3>현재 버전 : " + updateTime + " (" + totalCount + "개)</h3>";
+                } else {
+                    HTML += "<h3>현재 버전 : " + updateTime + "</h3>";
+                }
                 HTML += "<h3>갱신 시도 : " + updateTry + " " + result + "</h3>";
                 if (kind == 'camp') {
                     $("#camp_ver").html(HTML);

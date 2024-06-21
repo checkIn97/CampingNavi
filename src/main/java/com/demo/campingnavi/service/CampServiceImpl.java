@@ -197,6 +197,21 @@ public class CampServiceImpl implements CampService {
     public List<Camp> searchItems(String keyword) {
         return campRepo.findByNameContaining(keyword);
     }
+
+    @Override
+    public void campAllDisabled() {
+        List<Camp> campList = getCampListByUseyn("y");
+        for (Camp camp : campList) {
+            camp.setUseyn("n");
+            campRepo.save(camp);
+        }
+    }
+
+    @Override
+    public List<Camp> getCampListByUseyn(String useyn) {
+        return campRepo.findByUseynContaining(useyn);
+    }
+
     @Override
     public List<Camp> searchCamps(String keyword) {
         return campRepo.searchCamps(keyword);

@@ -9,16 +9,16 @@ import com.demo.campingnavi.repository.jpa.CampRepository;
 import java.util.List;
 
 public interface CampService {
-    public Camp getCampByCseq(int cseq);
-    public CampVo getCampVoByCseq(int cseq, Member member);
-    public List<Camp> getCampScanList(CampRecommendVo campRecommendVo);
-    public void saveCampRecommendList(List<Camp> filteredList, Member member, CampRecommendVo campRecommendVo);
-    public List<Camp> searchItems(String keyword);
-
-
+    Camp getCampByCseq(int cseq);
+    CampVo getCampVoByCseq(int cseq, Member member);
+    List<Camp> getCampScanList(CampRecommendVo campRecommendVo);
+    void saveCampRecommendList(List<Camp> filteredList, Member member, CampRecommendVo campRecommendVo);
+    List<Camp> searchItems(String keyword);
+    void campAllDisabled();
+    List<Camp> getCampListByUseyn(String useyn);
 
     List<Camp> searchCamps(String keyword);
-    public Camp getCampByName(String campName);
+    Camp getCampByName(String campName);
 
     boolean isValidCampName(String campName);
 }
