@@ -69,6 +69,125 @@ public class AdminController {
     }
 
     @ResponseBody
+    @PostMapping("/get_totalCount")
+    public Map<String, Object> getTotalCount(@RequestParam("kind") String kind) {
+        Map<String, Object> result = new HashMap<>();
+        String text = "";
+        int totalCount = adminService.getCampingTotalCount();
+        try{
+            if (totalCount >= 0) {
+                text = "success";
+                result.put("result", text);
+                result.put("totalCount", totalCount);
+            } else {
+                text = "fail";
+                result.put("result", text);
+                UpdateHistory updateHistory = new UpdateHistory();
+                updateHistory.setKind(kind);
+                updateHistory.setResult(text);
+                adminService.saveUpdateHistory(updateHistory);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            text = "fail";
+            result.put("result", text);
+            UpdateHistory updateHistory = new UpdateHistory();
+            updateHistory.setKind(kind);
+            updateHistory.setResult(text);
+            adminService.saveUpdateHistory(updateHistory);
+        }
+
+        return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/camping_data_search_from_api")
+    public Map<String, Object> campingDataSearchFromApi(@RequestParam("kind") String kind,
+            @RequestParam("page") int page) {
+        Map<String, Object> result = new HashMap<>();
+        String text = "";
+        try{
+            text = adminService.getCampingDataFromApi(page);
+            if (text.equals("success")) {
+                result.put("result", text);
+            } else {
+                result.put("result", text);
+                UpdateHistory updateHistory = new UpdateHistory();
+                updateHistory.setKind(kind);
+                updateHistory.setResult(text);
+                adminService.saveUpdateHistory(updateHistory);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            text = "fail";
+            result.put("result", text);
+            UpdateHistory updateHistory = new UpdateHistory();
+            updateHistory.setKind(kind);
+            updateHistory.setResult(text);
+            adminService.saveUpdateHistory(updateHistory);
+        }
+        return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/camping_data_integration")
+    public Map<String, Object> campingDataIntegration(@RequestParam("kind") String kind,
+            @RequestParam("totalPage") int totalPage) {
+        Map<String, Object> result = new HashMap<>();
+        String text = "";
+        try {
+            text = adminService.getCampingDataIntegration(totalPage);
+            if (text.equals("success")) {
+                result.put("result", text);
+            } else {
+                result.put("result", text);
+                UpdateHistory updateHistory = new UpdateHistory();
+                updateHistory.setKind(kind);
+                updateHistory.setResult(text);
+                adminService.saveUpdateHistory(updateHistory);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            text = "fail";
+            result.put("result", text);
+            UpdateHistory updateHistory = new UpdateHistory();
+            updateHistory.setKind(kind);
+            updateHistory.setResult(text);
+            adminService.saveUpdateHistory(updateHistory);
+        }
+
+        return result;
+    }
+
+    @Transactional
+    @ResponseBody
+    @PostMapping("/camping_data_insert")
+    public Map<String, Object> campingDataInsert(@RequestParam("kind") String kind) {
+        Map<String, Object> result = new HashMap<>();
+        String text = "";
+        try {
+            // 기존 데이터베이스 캠프를 모두 n으로 처리
+            campService.campAllDisabled();
+            // 최신화된 데이터를 새로 적용
+            String csvFile = "campingData.csv";
+            String n = "all";
+            List<Camp> campList = dataService.campInFromCsv(csvFile, n);
+            text = "success";
+        } catch (Exception e) {
+            e.printStackTrace();
+            text = "fail";
+            result.put("result", text);
+            UpdateHistory updateHistory = new UpdateHistory();
+            updateHistory.setKind(kind);
+            updateHistory.setResult(text);
+            adminService.saveUpdateHistory(updateHistory);
+        }
+
+        result.put("result", text);
+        return result;
+    }
+
+    @ResponseBody
     @PostMapping("/load_update_history")
     public Map<String, Object> loadUpdateHistory(@RequestParam(value="kind") String kind) {
         Map<String, Object> result = new HashMap<>();

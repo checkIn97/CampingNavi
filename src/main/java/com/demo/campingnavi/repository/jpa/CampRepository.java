@@ -40,4 +40,7 @@ public interface CampRepository extends JpaRepository<Camp, Integer> {
 
     List<Camp> findByUseynContaining(String useyn);
 
+    @Modifying
+    @Query(value="UPDATE Camp SET useyn = 'n' ", nativeQuery = true)
+    void campAllDisabled();
 }
