@@ -153,7 +153,9 @@ public class ChatRoomController {
     }
 
     @GetMapping("/chatCampingSearch")
-    public String chatCampingSearch(){
+    public String chatCampingSearch(Model model){
+        List<Camp> campList = campRepository.findAll();
+        model.addAttribute("campList", campList);
         return "chat/chatCampingSearch";
     }
 
