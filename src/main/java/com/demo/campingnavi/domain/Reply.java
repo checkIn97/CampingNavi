@@ -17,36 +17,31 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Qna {
+public class Reply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int qseq; // 문의 번호
+    private int reply_id;
+
+    @Column(nullable = false, length = 2000)
+    private String content;
 
     @ManyToOne
-    @JoinColumn(name="mseq", nullable=false)
-    private Member member;
-
-    @Column(length = 500, nullable = false)
-    private String title; // 제목
-
-    @Column(length = 1000, nullable = false)
-    private String content; // 내용
-
-    @Column(length = 1000)
-    private String image; // 이미지
+    @JoinColumn(name = "qseq", nullable = false)
+    private Qna qna;
 
     @Temporal(value=TemporalType.TIMESTAMP)
     @ColumnDefault("sysdate")
     @Column(updatable=false)
     private Date createdAt; // 생성일
 
-    @Column(length = 1, nullable = false)
-    private String checkyn; // 답변 여부
-
-    @Column(length = 1)
-    private String useyn;
+    @ManyToOne
+    @JoinColumn(name = "mseq", nullable = false)
+    private Member member;
 
     @Column
-    private String type;
+    private String img;
+
+    @Column
+    private String useyn;
 }

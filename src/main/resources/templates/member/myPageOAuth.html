@@ -26,9 +26,13 @@
             <div>
                 <!--프로필 사진-->
                 <div class="box" id="profileImg">
-                    <div class="myPageProPicture">
-                        <input hidden="hidden" id="myPagePictureUploadInput" type="file">
-                        <img alt="수정아이콘" class="correctionImg" id="correctionImg" src="/assets/images/icon/pen.png">
+                    <div class="myPageProPicture" id="myPageProPicture">
+                        <form id="uploadForm">
+                            <input id="backURL" th:value="${img != null ? img : ''}" type="hidden">
+                            <input id="img" type="hidden">
+                            <input hidden="hidden" id="myPagePictureUploadInput" type="file">
+                            <img alt="수정아이콘" class="correctionImg" id="correctionImg" src="/assets/images/icon/pen.png">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -47,6 +51,8 @@
                 <label for="myPageReviewBtn">내가 남긴 후기</label>
                 <input class="detailBtn" id="myPageSaveBtn" name="btn" type="radio">
                 <label for="myPageSaveBtn">찜한 목록 보기</label>
+                <input class="detailBtn" id="qna" name="btn" type="radio">
+                <label for="qna">고객문의</label>
             </div>
         </div>
 
@@ -172,6 +178,15 @@
 </footer>
 
 <script>
+
+    $(document).ready(function () {
+        document.getElementById('myPageProPicture').style.display = 'none';
+        var img = $("#backURL").val();
+        if (img != null) {
+            document.getElementById('profileImg').style.backgroundImage = img;
+        }
+    })
+
     $(document).ready(function() {
         // Change가 붙은 요소들을 block으로 설정
         document.getElementById('memberSexChange').style.display = 'block';
@@ -319,6 +334,18 @@
         var phone = $("#phone").val();
         var addr1 = $("#addr1").val();
         var addr2 = $("#addr2").val();
+        var img = $("#backURL").val();
+        var formData = new FormData();
+        formData.append('nickname', nickname);
+        formData.append('birth', birth);
+        formData.append('phone', phone);
+        formData.append('addr1', addr1);
+        formData.append('addr2', addr2);
+        var fileInput = $('#myPagePictureUploadInput')[0];
+        if (fileInput.files.length > 0) {
+            formData.append('file', fileInput.files[0]);
+        }
+
         const getValue = () => {
             let curr_value;
             const radioValue = document.getElementsByName("sex");
@@ -329,6 +356,9 @@
             });
             return curr_value;
         };
+
+        formData.append('img', img);
+        formData.append('sex', getValue());
 
 
         if (nickname == "") {
@@ -353,21 +383,17 @@
             $.ajax({
                 url: "/member/mypage/edit/detail",
                 method: "POST",
-                data: {
-                    nickname : nickname,
-                    birth : birth,
-                    phone : phone,
-                    addr1 : addr1,
-                    addr2 : addr2,
-                    sex : getValue()
-                },
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function (response) {
-                    document.getElementById('memberAddr2Read').textContent = response.addr2
-                    document.getElementById('memberSexRead').textContent = response.sex
-                    document.getElementById('memberAddr1Read').textContent = response.addr1
-                    document.getElementById('memberNickNameRead').textContent = response.nickname
-                    document.getElementById('memberPhoneRead').textContent = response.phone
-                    document.getElementById('memberBirthRead').textContent = response.birth
+                    document.getElementById('memberAddr2Read').textContent = response.addr2;
+                    document.getElementById('memberSexRead').textContent = response.sex;
+                    document.getElementById('memberAddr1Read').textContent = response.addr1;
+                    document.getElementById('memberNickNameRead').textContent = response.nickname;
+                    document.getElementById('memberPhoneRead').textContent = response.phone;
+                    document.getElementById('memberBirthRead').textContent = response.birth;
+                    document.getElementById('profileImg').style.backgroundImage = img;
 
                     // Change가 붙은 요소들을 block으로 설정
                     document.getElementById('memberSexChange').style.display = 'none';
@@ -377,6 +403,7 @@
                     document.getElementById('memberAddr2Change').style.display = 'none';
                     document.getElementById('memberNickNameChange').style.display = 'none';
                     document.getElementById('myPageRead').style.display = 'none';
+                    document.getElementById('myPageProPicture').style.display = 'none';
 
                     // Read가 붙은 요소들을 none으로 설정
                     document.getElementById('memberSexRead').style.display = 'block';
@@ -390,6 +417,7 @@
                 },
                 error: function (error) {
                     alert("데이터 전송 실패");
+                    console.log("error:" + error);
                 }
             })
         }
@@ -401,6 +429,7 @@
 
     reader.onloadend = function() {
         document.getElementById('profileImg').style.backgroundImage = 'url("' + reader.result + '")';
+        $("#backURL").val('url("' + reader.result + '")');
     }
 
     if (file) {

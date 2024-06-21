@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <link href="/assets/css/main.css" rel="stylesheet"/>
+    <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>CampNavi</title>
+</head>
+
+<body>
+<article class="box" id="review-detail-box">
+    <div class="container">
+        <h2 class="mb-4">FAQ</h2>
+        <hr class="vertical">
+        <div class="card webkit" id="faqForm">
+            <form action="/qna/faq/write" method="post" enctype="multipart/form-data" id="writeForm_FAQ">
+            <div class="card-header">
+                <input type="text" name="title" placeholder="제목을 적어주세요"/>
+            </div>
+            <hr>
+            <div class="card-body">
+                <div class="info">
+                    <div class="space-between">
+                        <div class="space-between-flex">
+                            <span
+                                th:text="${member.name}"></span>
+
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+
+                <textarea class="content" name="content" placeholder="내용을 적어주세요"></textarea>
+                <hr>
+                <label for="faqImg">파일 등록: </label>
+                <input type="file" name="img" id="faqImg">
+                <hr>
+                <div class="buttonContain button-full">
+                    <!-- 작성자만 수정 및 삭제 버튼을 볼 수 있도록 -->
+                    <button class="webkit" type="submit">제출하기</button>
+
+                    <!-- 목록으로 돌아가기 -->
+                    <button class="webkit" onclick="backToHome()">뒤로가기</button>
+                </div>
+
+                <hr>
+            </div>
+            </form>
+        </div>
+    </div>
+
+</article>
+<input type="hidden" th:value="${member.role}" id="userRole">
+<th:block th:insert="/insert/footer"></th:block>
+<script>
+    function backToHome() {
+        history.go(-1);
+    }
+</script>
+</body>
+</html>

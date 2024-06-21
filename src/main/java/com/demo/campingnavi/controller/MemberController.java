@@ -163,8 +163,8 @@ public class MemberController {
                                           @RequestParam("phone") String phone,
                                           @RequestParam("addr1") String addr1,
                                           @RequestParam("addr2") String addr2,
-                                          @RequestParam("img") String img,
-                                          @RequestParam("file") MultipartFile file) {
+                                          @RequestParam(value = "img", required = false) String img,
+                                          @RequestParam(value = "file", required = false) MultipartFile file) {
         // 인증 객체 생성
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = "";
@@ -182,7 +182,7 @@ public class MemberController {
         // 추출된 아이디로 회원 객체 생성
         Map<String, Object> data = new HashMap<>();
         Member member = memberRepository.findByUsername(username);
-        if (!file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             String fileName = file.getOriginalFilename();
             String uuid = UUID.randomUUID().toString();
             String saveName = uuid + "_" + fileName;

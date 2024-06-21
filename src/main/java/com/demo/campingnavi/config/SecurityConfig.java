@@ -32,7 +32,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers("/resources/**", "/static/**", "/assets/**", "/templates/**","/css/**", "/js/**", "/images/**")
-                .requestMatchers("/camp/**");
+                .requestMatchers("/camp/**", "/qna/**");
     }
 
     @Bean

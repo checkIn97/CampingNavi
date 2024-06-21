@@ -1,6 +1,9 @@
 package com.demo.campingnavi;
 
 import com.demo.campingnavi.config.PathConfig;
+import com.demo.campingnavi.domain.Qna;
+import com.demo.campingnavi.domain.Role;
+import com.demo.campingnavi.repository.jpa.QnaRepository;
 import com.demo.campingnavi.service.DataService;
 import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.Member;
@@ -18,6 +21,8 @@ public class DataTest {
     private MemberRepository memberRepository;
     @Autowired
     private DataService dataService;
+    @Autowired
+    private QnaRepository qnaRepository;
 
     @Disabled
     @Test
@@ -45,5 +50,19 @@ public class DataTest {
         String n = "all";
         List<Camp> campList = dataService.campInFromCsv(csvFile, n);
 
+    }
+
+    @Test
+    void faqInsertTest() {
+        Qna qna = Qna.builder()
+                .member(memberRepository.findByUsername("test33"))
+                .title("FAQ TEST1")
+                .content("FAQ 테스트 1번 입니다.")
+                .checkyn("n")
+                .useyn("y")
+                .type("FAQ")
+                .build();
+
+        qnaRepository.save(qna);
     }
 }

@@ -29,7 +29,7 @@
                 <div class="box" id="profileImg">
                     <div class="myPageProPicture" id="myPageProPicture">
                         <form id="uploadForm">
-                        <input id="backURL" th:value="${img}" type="hidden">
+                        <input id="backURL" th:value="${img != null ? img : ''}" type="hidden">
                         <input id="img" type="hidden">
                         <input hidden="hidden" id="myPagePictureUploadInput" type="file">
                         <img alt="수정아이콘" class="correctionImg" id="correctionImg" src="/assets/images/icon/pen.png">
@@ -63,7 +63,7 @@
                     <h3 class="myPage-info-title">기본정보</h3>
                     <hr>
                     <div class="myPageTitle">아이디</div>
-                    <div th:text="${member.username}"></div>
+                    <div th:text="${member.username.length() > 17 ? member.username.substring(0, 18) + '...' : member.username}"></div>
                     <hr>
                     <div class="myPageTitle">이름</div>
                     <div th:text="${member.name}"></div>
@@ -208,7 +208,7 @@
                 url: '/member/mypage/review',
                 data: {
                     page : page2,
-                    size : 5
+                    size : 3
                 },
                 success: function (data) {
                     var reviewArea = $("#review_area");
@@ -216,10 +216,17 @@
                     var reviews = data.content;
                     reviews.forEach(function (review) {
                         var titleLen = review.title.length;
-                        if (titleLen <= 10) {
-                            reviewArea.append('<h3>' + review.title + '</h3>');
+                        if (titleLen <= 6) {
+                            reviewArea.append('<h3>제목: ' + review.title + '</h3>');
                         } else {
-                            reviewArea.append('<h3>' + review.title.substring(0, 10) + '...</h3>');
+                            reviewArea.append('<h3>제목: ' + review.title.substring(0, 6) + '...</h3>');
+                        }
+                        reviewArea.append('<a class="myPageSaveLink" href="/review/detail/'+ review.vseq +'">리뷰평점: ' + review.likes + '</a><br>')
+                        var campLen = review.camp.name.length;
+                        if (campLen <= 6) {
+                            reviewArea.append('<a class="myPageSavaLink" href="/camp/detail/?mapX='+ review.camp.mapX + '&mapY=' + review.camp.mapY + '&contentId=' + review.camp.contentId + '&cseq=' + review.camp.cseq + '">' + review.camp.name + '</a><br>');
+                        } else {
+                            reviewArea.append('<a class="myPageSavaLink" href="/camp/detail/?mapX='+ review.camp.mapX + '&mapY=' + review.camp.mapY + '&contentId=' + review.camp.contentId + '&cseq=' + review.camp.cseq + '">' + review.camp.name.substring(0, 6) + '...</a><br>');
                         }
                         var contentLen = review.content.length;
                         if (contentLen <= 20) {
@@ -471,6 +478,7 @@
         if (fileInput.files.length > 0) {
             formData.append('file', fileInput.files[0]);
         }
+
         const getValue = () => {
             let curr_value;
             const radioValue = document.getElementsByName("sex");
@@ -481,8 +489,10 @@
             });
             return curr_value;
         };
+
+        formData.append('img', img);
         formData.append('sex', getValue());
-        formData.append('img', $("#backURL").val());
+
 
         if (nickname == "") {
             alert("사이트에서 사용할 닉네임을 입력해주세요!");
@@ -540,6 +550,7 @@
                 },
                 error: function (error) {
                     alert("데이터 전송 실패");
+                    console.log("error:" + error);
                 }
             })
         }

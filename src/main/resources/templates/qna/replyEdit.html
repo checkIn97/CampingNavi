@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <link href="/assets/css/main.css" rel="stylesheet"/>
+    <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>CampNavi</title>
+</head>
+
+<body>
+<article class="box" id="review-detail-box">
+    <div class="container">
+        <h2 class="mb-4">문의 답변</h2>
+        <hr class="vertical">
+        <div class="card webkit">
+            <form action="/qna/reply/edit" method="post" enctype="multipart/form-data" id="replyEditForm">
+                <input type="hidden" name="reply_id" th:value="${reply.reply_id}">
+            <div class="card-body">
+                <div class="info">
+                    <div class="space-between">
+                        <div class="space-between-flex">
+                            작성자: <span
+                                th:text="${reply.member.name}">작성자명</span>
+
+                        </div>
+                        <div class="space-between-flex">
+                            작성일시: <span
+                                th:text="${reply.createdAt}">날짜시간</span>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+
+                <textarea class="content" id="content" name="content" th:text="${reply.content}"></textarea>
+                <hr>
+                <input type="file" name="img">
+                <hr>
+                <div class="buttonContain button-full">
+                    <!-- 작성자만 수정 및 삭제 버튼을 볼 수 있도록 -->
+                    <button class="webkit" type="submit">수정하기</button>
+
+                    <!-- 목록으로 돌아가기 -->
+                    <button class="webkit" onclick="backToDetail()">뒤로가기</button>
+                </div>
+
+                <hr>
+            </div>
+            </form>
+        </div>
+    </div>
+
+</article>
+<th:block th:insert="/insert/footer"></th:block>
+<script>
+    function backToDetail() {
+        history.go(-1);
+    }
+</script>
+</body>
+</html>
