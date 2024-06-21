@@ -7,6 +7,8 @@ import com.demo.campingnavi.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -34,6 +36,9 @@ public class AdminController {
 
     @Autowired
     DataService dataService;
+
+    @Autowired
+    private MemberService memberService;
 
     @GetMapping("/")
     public String adminIndex(){
@@ -360,4 +365,14 @@ public class AdminController {
         return map;
     }
 
+    @GetMapping("/member/list")
+    public String memberListView() {
+        return "admin/member/adminMemberList";
+    }
+
+    @GetMapping("/member/list/page")
+    @ResponseBody
+    public Page<Member> memberPaging(Pageable pageable) {
+        return memberService.findAll(pageable);
+    }
 }

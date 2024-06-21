@@ -102,5 +102,10 @@ public class MemberServiceImpl implements MemberService{
         return this.recommendRepository.findAllByMember(member, pageable);
     }
 
+    @Override
+    public Page<Member> findAll(Pageable pageable) {
+        return memberRepository.findAll(pageable);
+    }
+
 
 }

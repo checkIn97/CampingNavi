@@ -20,4 +20,6 @@ public interface MemberService {
     public boolean isNickName(MemberVo vo);
 
     public Page<Recommend> getList(int page, Member member);
+
+    public Page<Member> findAll(Pageable pageable);
 }
