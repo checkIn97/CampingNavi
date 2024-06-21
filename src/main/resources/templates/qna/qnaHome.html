@@ -34,17 +34,12 @@
             FAQ 작성하기
         </button>
         </a>-->
-        <a href="/qna/oneByone/writeView">
-            <button class="mainBtn" id="oneByone" target="_blank" type="button">
-                1:1 문의 작성하기
-            </button>
-        </a>
     </div>
     <div class="buttonContain" id="detailContain">
         <input class="detailBtn" id="faq" name="btn" type="radio" checked>
-        <label for="faq">자주 묻는 질문</label>
+        <label for="faq" class="faq-label">자주 묻는 질문</label>
         <input class="detailBtn" id="qna" name="btn" type="radio">
-        <label for="qna">문의목록</label>
+        <label for="qna" class="qna-label">1 대 1 문의</label>
     </div>
 
     <div id="campDetail">
@@ -59,6 +54,11 @@
         <div class="reviewList">
             <!-- 리스트 영역 -->
             <div id="qnaList"></div>
+            <a href="/qna/oneByone/writeView">
+                <button class="mainBtn" id="oneByone" target="_blank" type="button">
+                    1:1 문의 작성하기
+                </button>
+            </a>
 
         </div>
 

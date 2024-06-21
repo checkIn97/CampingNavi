@@ -1706,3 +1706,11 @@ details[open] summary::after {
 .faqImg {
     margin-bottom: 2rem;
 }
+
+.faq-label {
+    font-size: 1.5rem;
+}
+
+.qna-label {
+    font-size: 1.5rem;
+}
