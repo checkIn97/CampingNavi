@@ -10,6 +10,7 @@
 <body>
 <th:block th:insert="insert/header.html"></th:block>
 <input type="hidden" th:value="${member.name}" name="memberName"/>
+<input type="hidden" th:value="${member.mseq}" name="memberMseq"/>
 <input type="hidden" th:value="${comuCamp}" name="comuCamp"/>
 <article class="box centerBox" id="chatRoomBox">
     <div class="container" id="app">
@@ -87,7 +88,7 @@
                             <div class="buttonContain chatRoomNameBox">
                                 <span class="chatRoomName">{{item.chatRoom.name}}</span>
                                 <!--채팅방 인원수-->
-                                <span class="chatRoomPN"></span>
+                                <span class="chatRoomPN">참여인원 : {{item.chatRoom.userCount}}</span>
                             </div>
                         </div>
                     </li>
@@ -153,6 +154,7 @@
 <script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
 <script>
     var memberName = $('input[name=memberName]').val();
+    var memberMseq = $('input[name=memberMseq]').val();
     var comuCamp = $('input[name=comuCamp]').val();
 </script>
 <script>
@@ -169,6 +171,7 @@
             camp_name: '',
             comuCamp: comuCamp,
             search_word: '',
+            memberMseq: memberMseq
 
         },
         created() {
@@ -208,6 +211,7 @@
             },
             enterRoom: function (roomId) {
                 var sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + memberName + ' ) 으로 입장합니다.');
+                var mseq = memberMseq;
                 if (sender === null) {
                     alert('입장이 취소되었습니다.');
                     return;
@@ -215,11 +219,13 @@
                 if (sender != "") {
                     localStorage.setItem('wschat.sender', sender);
                     localStorage.setItem('wschat.roomId', roomId);
+                    localStorage.setItem('wschat.mseq', mseq)
                     location.href = "/chat/room/enter/" + roomId;
                 } else {
                     sender = memberName;
                     localStorage.setItem('wschat.sender', sender);
                     localStorage.setItem('wschat.roomId', roomId);
+                    localStorage.setItem('wschat.mseq', mseq)
                     location.href = "/chat/room/enter/" + roomId;
                 }
 

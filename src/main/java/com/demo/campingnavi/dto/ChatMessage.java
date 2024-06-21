@@ -26,6 +26,7 @@ public class ChatMessage {
     private String roomId; // 방번호
     private String sender; // 메세지 발신인
     private String message; // 메세지
+    private int mseq;
     private LocalDateTime createdAt; // 발송시간
 
 }

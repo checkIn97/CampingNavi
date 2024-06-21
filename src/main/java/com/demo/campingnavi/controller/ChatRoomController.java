@@ -83,6 +83,7 @@ public class ChatRoomController {
         CampRecommendVo campRecommendVo = new CampRecommendVo();
         List<Camp> campList = chatRoomService.getCampListExistingChatRoom();
         campService.saveCampRecommendList(campList, member, campRecommendVo);
+
         Map<Integer, Float> scoreList = new HashMap<>();
         for (CampVo campVo : campRecommendVo.getCampRecommendListAll()) {
             scoreList.put(campVo.getCamp().getCseq(), campVo.getScore());
@@ -92,7 +93,6 @@ public class ChatRoomController {
             long reviewCount = reviewRepository.countByCampCseq(chatRoom.getCamp().getCseq());
             chatRoomVoList.add(new ChatRoomVo(chatRoom, scoreList.get(chatRoom.getCamp().getCseq()), reviewCount));
         }
-
 
         return chatRoomVoList;
     }
@@ -163,5 +163,9 @@ public class ChatRoomController {
     public String searchRoom(){
         return "chat/room";
     }
-
+    @GetMapping("/userList")
+    public List<String> userList(String roomId){
+        List<String> userList = chatRoomService.getUserList(roomId);
+        return userList;
+    }
 }

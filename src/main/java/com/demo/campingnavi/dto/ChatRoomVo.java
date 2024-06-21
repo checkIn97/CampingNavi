@@ -16,11 +16,13 @@ public class ChatRoomVo {
     private String scoreView;
     private Long reviewCount;
 
+
     public ChatRoomVo(ChatRoom chatRoom, float score, long reviewCount) {
         this.chatRoom = chatRoom;
         this.score = score;
         this.scoreView = String.format("%.1f", score);
         this.reviewCount = reviewCount;
+
     }
 
 }

@@ -2,9 +2,9 @@ package com.demo.campingnavi.service;
 
 import com.demo.campingnavi.domain.Camp;
 import com.demo.campingnavi.domain.ChatRoom;
+import com.demo.campingnavi.domain.Member;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ChatRoomService {
 
@@ -19,4 +19,8 @@ public interface ChatRoomService {
     public List<Camp> getCampListExistingChatRoom();
 
 
+    public void addUser(String roomId, int mseq);
+    public void delUser(String roomId, int mseq);
+    public String getUserName(String roomId);
+    public List<String> getUserList(String roomId);
 }
