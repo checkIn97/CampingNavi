@@ -67,7 +67,6 @@
     </div>
 </div>
 
-</div>
 <input type="hidden" id="userRole" th:value="${member.role}">
 <input type="hidden" id="username" th:value="${member.username}">
 <th:block th:insert="~{insert/footer.html}"></th:block>
@@ -177,7 +176,7 @@
                             faqArea.append('<details><summary class="faqTitle">' + faq.title + '</summary>' +
                                 '<span class="faqSpan"><div class="faqContent">' + faq.content +'' +
                                 '</div><img class="faqImg webkit" src="/assets/qnaImages/' + faq.image + '"></span></details>');
-                        });e
+                        });
                     }
                     var pagination_FAQ = $("#pagination_FAQ");
                     pagination_FAQ.empty();
@@ -228,6 +227,7 @@
                 },
                 success: function (data) {
                     var qnaArea = $("#qnaList");
+                    var username = $("#username").val()
                     qnaArea.empty();
                     var qnas = data.content;
                     var index = 1;
@@ -243,7 +243,7 @@
                         qnaArea.append('<tr><td>1:1 문의를 등록해주세요.</td></tr>');
                     } else {
                         qnas.forEach(function (qna) {
-                            qnaArea.append('<tr>');
+                            qnaArea.append('<tr th:if="' + username + '==' + qna.member.username + '">');
                             qnaArea.append('<td>' + index++ + '</td>');
                             qnaArea.append('<td><a class="myPageSavaLink" href="/qna/oneByone/detail/' + qna.qseq + '"><h3>' + qna.title + '</h3></a></td>');
                             qnaArea.append('<td>' + qna.createdAt + '</td>');
@@ -299,11 +299,6 @@
         } else {
             $("#faqWrite").hide();
             $("#oneByone").show();
-            if ($("#username").val() != $("#hiddenUsername").val()) {
-                $("#qnaList").hide();
-            } else {
-                $("#qnaList").show();
-            }
         }
     });
 </script>

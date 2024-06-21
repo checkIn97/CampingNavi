@@ -67,10 +67,17 @@ public class QnaController {
         Member member = (Member) session.getAttribute("loginUser");
 
         Qna qna = qnaService.findById(qseq);
-        model.addAttribute("member", member);
-        model.addAttribute("qna", qna);
 
-        return "qna/qnaDetail";
+        if(member.getMseq() == qna.getMember().getMseq()) {
+            model.addAttribute("member", member);
+            model.addAttribute("qna", qna);
+
+            return "qna/qnaDetail";
+        } else {
+            model.addAttribute("message", "회원님께서 작성하신 글이 아닙니다.");
+            return "qna/qnaAlert";
+        }
+
     }
 
     @GetMapping("/detail/edit/{qseq}")
