@@ -11,18 +11,30 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
-    @Query("SELECT EXISTS(SELECT m FROM Member m WHERE m.username = :username)")
+    @Query("SELECT EXISTS(SELECT m FROM Member m WHERE m.username = ?1 AND m.useyn = 'y')")
     public boolean existsByUsername(String username);
 
-    @Query("SELECT m FROM Member m WHERE m.username = :username")
+    @Query("SELECT m FROM Member m WHERE m.username = ?1 AND m.useyn = 'y'")
     public Member findByUsername(String username);
 
-    @Query("SELECT EXISTS(SELECT m FROM Member m WHERE m.nickname = :nickname)")
+    @Query("SELECT EXISTS(SELECT m FROM Member m WHERE m.nickname = ?1 AND m.useyn = 'y')")
     public boolean existsByNickname(String nickname);
 
-    @Query("SELECT m FROM Member m WHERE m.email = :email")
-    Optional<Member> findByEmail(String email);
+    @Query("SELECT m FROM Member m WHERE m.email = ?1 AND m.useyn = 'y'")
+    boolean existsByEmail(String username);
 
     @Query("SELECT m FROM Member m WHERE m.role = 'ROLE_USER'")
     Page<Member> findAll(Pageable pageable);
+
+    @Query("SELECT m FROM Member m WHERE m.role = 'ROLE_USER' AND m.username LIKE %?1%")
+    Page<Member> findAllByUsername(String username, Pageable pageable);
+
+    @Query("SELECT m FROM Member m WHERE m.role = 'ROLE_USER' AND m.name LIKE %?1%")
+    Page<Member> findAllByName(String name, Pageable pageable);
+
+    @Query("SELECT m FROM Member m WHERE m.role = 'ROLE_USER' AND m.provider LIKE %?1%")
+    Page<Member> findAllByProvider(String provider, Pageable pageable);
+
+    @Query("SELECT m FROM Member m WHERE m.role = 'ROLE_USER' AND m.email LIKE %?1%")
+    Page<Member> findAllByEmail(String email, Pageable pageable);
 }

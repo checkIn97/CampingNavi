@@ -30,6 +30,16 @@ public class MemberServiceImpl implements MemberService{
     private RecommendRepository recommendRepository;
 
     @Override
+    public Member findById(int mseq) {
+        return memberRepository.findById(mseq).get();
+    }
+
+    @Override
+    public void saveMember(Member member) {
+        memberRepository.save(member);
+    }
+
+    @Override
     public boolean joinProcess(MemberVo vo) {
         boolean result = false;
         String PATTERN_ID = "^[a-z]{1}[a-z0-9]{5,10}+$";
@@ -94,6 +104,11 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    public boolean isEmail(String email) {
+        return memberRepository.existsByEmail(email);
+    }
+
+    @Override
     public Page<Recommend> getList(int page, Member member) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.asc("rseq"));
@@ -105,6 +120,26 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Page<Member> findAll(Pageable pageable) {
         return memberRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Member> findAllByUsername(String username, Pageable pageable) {
+        return memberRepository.findAllByUsername(username, pageable);
+    }
+
+    @Override
+    public Page<Member> findAllByName(String name, Pageable pageable) {
+        return memberRepository.findAllByName(name, pageable);
+    }
+
+    @Override
+    public Page<Member> findAllByProvider(String provider, Pageable pageable) {
+        return memberRepository.findAllByProvider(provider, pageable);
+    }
+
+    @Override
+    public Page<Member> findAllByEmail(String eamil, Pageable pageable) {
+        return memberRepository.findAllByEmail(eamil, pageable);
     }
 
 

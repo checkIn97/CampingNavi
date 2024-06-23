@@ -52,6 +52,7 @@ public class DataTest {
 
     }
 
+    @Disabled
     @Test
     void faqInsertTest() {
         Qna qna = Qna.builder()

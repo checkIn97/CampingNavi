@@ -491,7 +491,38 @@ public class AdminController {
 
     @GetMapping("/member/list/page")
     @ResponseBody
-    public Page<Member> memberPaging(Pageable pageable) {
-        return memberService.findAll(pageable);
+    public Page<Member> memberPaging(Pageable pageable,
+                                     @RequestParam(value = "searchField", defaultValue = "") String searchField,
+                                     @RequestParam(value = "searchWord", defaultValue = "") String searchWord) {
+        if (searchWord.isEmpty() && searchField.isEmpty()) {
+            return memberService.findAll(pageable);
+        } else if (searchField.equals("username")) {
+            return memberService.findAllByUsername(searchWord, pageable);
+        } else if (searchField.equals("name")) {
+            return memberService.findAllByName(searchWord, pageable);
+        } else if (searchField.equals("email")) {
+            return memberService.findAllByEmail(searchWord, pageable);
+        } else if (searchField.equals("provider")) {
+            return memberService.findAllByProvider(searchWord, pageable);
+        } else {
+            return memberService.findAll(pageable);
+        }
+    }
+
+    @PostMapping("/member/delete")
+    @ResponseBody
+    public Map<String, Object> deleteMember(@RequestParam(value = "mseq") int mseq) {
+        Map<String, Object> result = new HashMap<>();
+
+        if (mseq != 0) {
+            Member member = memberService.findById(mseq);
+            member.setUseyn("n");
+            memberService.saveMember(member);
+            result.put("result", "success");
+        } else {
+            result.put("result", "fail");
+        }
+
+        return result;
     }
 }

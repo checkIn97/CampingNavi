@@ -47,6 +47,7 @@
         .page-num {
             margin: 0 5px;
             cursor: pointer;
+            display: inline-block;
         }
         .page-num.active {
             font-weight: bold;
@@ -74,19 +75,20 @@
     </div>
 </div>
 <div class="content">
-    <h2 class="my-4">리뷰 리스트 관리자 페이지</h2>
+    <h2 class="my-4">회원 리스트 관리자 페이지</h2>
     <div class="page-index">
         <!-- 검색 영역 -->
-        <form method="get" th:action="@{/admin/review/list}">
             <div class="search-container form-inline">
-                <select class="form-control mr-2" id="search" name="searchField">
+                <select class="form-control mr-2" id="searchField" name="searchField">
+                    <option value="">선택</option>
                     <option value="username">아이디</option>
                     <option value="name">이름</option>
+                    <option value="email">이메일</option>
+                    <option value="provider">로그인 유형</option>
                 </select>
-                <input class="form-control mr-2" name="searchWord" type="text">
-                <button class="btn btn-primary" type="submit">검색</button>
+                <input class="form-control mr-2" id="searchWord" name="searchWord" type="text">
+                <button class="btn btn-primary" type="button" id="searchButton">검색</button>
             </div>
-        </form>
 
         <!-- 리스트 영역 -->
         <div id="list_area"></div>
@@ -107,25 +109,56 @@
 
 <script>
     $(document).ready(function () {
+        var currentPage = 0;
+
         function memberList(page) {
+            var searchField = $("#searchField").val();
+            var searchWord = $("#searchWord").val();
+
             $.ajax({
                 type: 'GET',
                 url: '/admin/member/list/page',
                 data: {
                     page : page,
-                    size : 10
+                    size : 10,
+                    searchWord : searchWord,
+                    searchField : searchField
                 },
                 success: function (data) {
                     var memberArea = $("#list_area");
                     memberArea.empty();
                     var members = data.content;
+                    var index = 1;
+                    memberArea.append('<table class="table table-striped" style="border: 1px solid black">');
+                    memberArea.append('<tr class="review-list-pop-back">');
+                    memberArea.append('<th>번호</th>');
+                    memberArea.append('<th colspan="2">아이디</th>');
+                    memberArea.append('<th>이름</th>');
+                    memberArea.append('<th colspan="2">생년월일</th>');
+                    memberArea.append('<th colspan="2">이메일</th>');
+                    memberArea.append('<th>로그인 유형</th>');
+                    memberArea.append('<th>탈퇴 유무</th>');
+                    memberArea.append('<th colspan="2"></th>');
+                    memberArea.append('</tr>');
                     members.forEach(function (member) {
-                        memberArea.append('<span>아이디: ' + member.username + '</span>');
-                        memberArea.append('<span>이름: ' + member.name + '</span>');
-                        memberArea.append('<span th:if="' + member.sex + '==' +  '\'m\'' + '?' + '\'남자\'' + ':' + '\'여자\'' + '"></span>');
+                        memberArea.append('<tr class="review-list-pop-back">');
+                        memberArea.append('<td class="popularPosts"><span>' + index + '</span></td>');
+                        memberArea.append('<td class="popularPosts"><span>' + member.username + '</span></td>');
+                        memberArea.append('<td class="popularPosts"></td>');
+                        memberArea.append('<td class="popularPosts"><span>' + member.name + '</span></td>');
                         var formattedDate = moment(member.birth).format('YYYY-MM-DD HH:mm:ss');
-                        memberArea.append('<p>' + formattedDate + '</p>');
+                        memberArea.append('<td class="popularPosts"><span>' + formattedDate + '</span></td>');
+                        memberArea.append('<td class="popularPosts"></td>');
+                        memberArea.append('<td class="popularPosts"><span>' + member.email + '</span></td>');
+                        memberArea.append('<td class="popularPosts"></td>');
+                        memberArea.append('<td class="popularPosts"><span>' + member.provider + '</span></td>');
+                        memberArea.append('<td class="popularPosts"><span>' + member.useyn + '</span></td>');
+                        memberArea.append('<td class="popularPosts"></td>');
+                        memberArea.append('<td class="popularPosts"><button class="delete-btn" data-mseq="' + member.mseq + '">해지</button></td>');
+                        memberArea.append('</tr>');
+                        index++;
                     });
+                    memberArea.append('</table>');
 
                     var pagination = $("#page-area");
                     pagination.empty();
@@ -145,6 +178,10 @@
             });
         }
 
+        $('#searchButton').click(function () {
+            memberList(0); // 검색 버튼 클릭 시 첫 번째 페이지로 이동
+        });
+
         $(document).on('click', '#page', function () {
             var page = $(this).data('page');
             memberList(page);
@@ -163,6 +200,32 @@
         });
 
         memberList(0);
+
+        // 회원 삭제 버튼 클릭 시
+        $(document).on('click', '.delete-btn', function () {
+            var mseq = $(this).data('mseq');
+            deleteMember(mseq);
+        });
+
+        function deleteMember(mseq) {
+            $.ajax({
+                type: 'POST',
+                url: '/admin/member/delete',
+                data: {
+                    mseq: mseq
+                },
+                success: function (response) {
+                    // 성공적으로 삭제되었을 때 처리
+                    alert('회원 삭제 ' + response.result);
+                    // 삭제 후 목록 다시 로드
+                    memberList(currentPage);
+                },
+                error: function (error) {
+                    alert('회원 삭제 실패', error);
+                    // 실패 시 추가 처리
+                }
+            });
+        }
     });
 </script>
 

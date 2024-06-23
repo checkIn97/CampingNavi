@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 @Service
 public interface MemberService {
 
+    public Member findById(int mseq);
+
+    public void saveMember(Member member);
+
     public boolean joinProcess(MemberVo vo);
 
     public boolean loginProcess(MemberVo vo);
@@ -19,7 +23,17 @@ public interface MemberService {
 
     public boolean isNickName(MemberVo vo);
 
+    public boolean isEmail(String email);
+
     public Page<Recommend> getList(int page, Member member);
 
     public Page<Member> findAll(Pageable pageable);
+
+    public Page<Member> findAllByUsername(String username, Pageable pageable);
+
+    public Page<Member> findAllByName(String name, Pageable pageable);
+
+    public Page<Member> findAllByProvider(String provider, Pageable pageable);
+
+    public Page<Member> findAllByEmail(String eamil, Pageable pageable);
 }
