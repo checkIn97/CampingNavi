@@ -20,7 +20,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     @Query("SELECT EXISTS(SELECT m FROM Member m WHERE m.nickname = ?1 AND m.useyn = 'y')")
     public boolean existsByNickname(String nickname);
 
-    @Query("SELECT m FROM Member m WHERE m.email = ?1 AND m.useyn = 'y'")
+    @Query("SELECT EXISTS(SELECT m FROM Member m WHERE m.email = ?1 AND m.useyn = 'y' AND m.provider = 'campingnavi')")
     boolean existsByEmail(String email);
 
     @Query("SELECT m.username FROM Member m WHERE m.name = ?1 AND m.email = ?2 AND m.birth = ?3 AND m.phone = ?4 AND m.provider = ?5 AND m.useyn = 'y'")

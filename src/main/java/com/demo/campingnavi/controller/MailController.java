@@ -25,19 +25,25 @@ public class MailController {
     @PostMapping ("/mailSend")
     public HashMap<String, Object> mailSend(String mail, HttpSession session) {
         HashMap<String, Object> map = new HashMap<>();
-        try {
-            number = mailService.sendMail(mail);
-            String num = String.valueOf(number);
-            System.out.println("num: " + num);
+        if (!memberService.isEmail(mail)) {
+            try {
+                number = mailService.sendMail(mail);
+                String num = String.valueOf(number);
+                System.out.println("num: " + num);
 
-            map.put("success", Boolean.TRUE);
-            map.put("result", "인증번호 전송 성공");
-            map.put("number", num);
-            session.setAttribute("number", num);
-        } catch (Exception e) {
+                map.put("success", Boolean.TRUE);
+                map.put("result", "인증번호 전송 성공");
+                map.put("number", num);
+                session.setAttribute("number", num);
+            } catch (Exception e) {
+                map.put("success", Boolean.FALSE);
+                map.put("result", "인증번호 전송 실패");
+            }
+        } else {
             map.put("success", Boolean.FALSE);
-            map.put("result", "인증번호 전송 실패");
+            map.put("result", "이미 존재하는 메일입니다.");
         }
+
 
         return map;
     }
