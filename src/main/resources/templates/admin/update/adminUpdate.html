@@ -69,6 +69,30 @@
         });
     }
 
+    function update2(kind) {
+        if (kind == "camp") {
+            alert("캠핑장데이터 업데이트 시작");
+            $.ajax({
+                type: "POST",
+                url: "/admin/check_file_exist",
+                data: {
+                    file_name: 'campingData.csv'
+                },
+                success: function(data0) {
+                    if (data0.result) {
+                        alert(true);
+                    } else {
+                        alert(false);
+                    }
+
+                },
+                error: function() {
+                    alert("테스트 실패");
+                }
+            });
+        }
+    }
+
     function update1(kind) {
         if (kind == "camp") {
             alert("캠핑장데이터 업데이트 시작");
@@ -86,7 +110,7 @@
                         let totalCount = data0.totalCount;
                         let size = 100;
                         let totalPage = parseInt((totalCount + size - 1) / size);
-                        let status = false;
+                        let status_tmp_create = false;
                         for (let page = 1 ; page <= totalPage ; page++) {
                             $.ajax({
                                 type: "POST",
@@ -104,21 +128,25 @@
                                         alert("캠핑장 데이터 가져오기 실패");
                                         HTML = "";
                                         $("#camp_update_progress").html(HTML);
-                                        status = true;
+                                        status_tmp_create = true;
                                     }
                                 },
                                 error: function() {
                                     alert("캠핑장 데이터 가져오기 실패");
                                     HTML = "";
                                     $("#camp_update_progress").html(HTML);
-                                    status = true;
+                                    status_tmp_create = true;
                                 }
                             });
-                            if (status) {
+
+                            if (status_tmp_create) {
                                 break;
                             }
+                            let tmp_file = "tmp_campingData" + page + ".csv";
+                            //while(!check_file_exist(tmp_file)) {}
                         }
-                        if (!status) {
+                        if (!status_tmp_create) {
+                            let status_integration = true;
                             $.ajax({
                                type: "POST",
                                url: "/admin/camping_data_integration",
@@ -130,49 +158,52 @@
                                    HTML = "";
                                    HTML += "95\%";
                                    $("#camp_update_progress").html(HTML);
-                                   if (data2.result == 'success') {
-                                       $.ajax({
-                                           type: "POST",
-                                           url: "/admin/camping_data_insert",
-                                           data: {
-                                               kind: kind
-                                           },
-                                           success: function(data3) {
-                                               if (data3.result == 'success') {
-                                                   HTML = "";
-                                                   HTML += "100\%";
-                                                   $("#camp_update_progress").html(HTML);
-                                                   load_update_history(kind);
-                                                   HTML = "";
-                                                   $("#camp_update_progress").html(HTML);
-                                               } else {
-                                                   alert("캠핑장데이터 최신화 오류");
-                                                   HTML = "";
-                                                   $("#camp_update_progress").html(HTML);
-                                                   load_update_history(kind);
-                                               }
-                                           },
-                                           error: function() {
-                                               alert("캠핑장데이터 최신화 오류");
-                                               HTML = "";
-                                               $("#camp_update_progress").html(HTML);
-                                               load_update_history(kind);
-                                           }
-                                       })
-                                   } else {
-                                       alert("데이터 통합 실패");
-                                       HTML = "";
-                                       $("#camp_update_progress").html(HTML);
-                                       load_update_history(kind);
-                                   }
                                },
                                error: function() {
                                    alert("데이터 통합 실패");
                                    HTML = "";
                                    $("#camp_update_progress").html(HTML);
+                                   status_integration = false;
                                    load_update_history(kind);
                                }
                             });
+                            let tmp_file = "campingData.csv";
+                            //while(!check_file_exist(tmp_file)) {}
+                            if (status_integration) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/admin/camping_data_insert",
+                                    data: {
+                                        kind: kind
+                                    },
+                                    success: function(data3) {
+                                        if (data3.result == 'success') {
+                                            HTML = "";
+                                            HTML += "100\%";
+                                            $("#camp_update_progress").html(HTML);
+                                            load_update_history(kind);
+                                            HTML = "";
+                                            $("#camp_update_progress").html(HTML);
+                                        } else {
+                                            alert("캠핑장데이터 최신화 오류");
+                                            HTML = "";
+                                            $("#camp_update_progress").html(HTML);
+                                            load_update_history(kind);
+                                        }
+                                    },
+                                    error: function() {
+                                        alert("캠핑장데이터 최신화 오류");
+                                        HTML = "";
+                                        $("#camp_update_progress").html(HTML);
+                                        load_update_history(kind);
+                                    }
+                                })
+                            } else {
+                                alert("데이터 통합 실패");
+                                HTML = "";
+                                $("#camp_update_progress").html(HTML);
+                                load_update_history(kind);
+                            }
                         } else {
                             load_update_history(kind);
                         }
@@ -214,6 +245,24 @@
             });
         }
 
+    }
+
+    function check_file_exist(file_name) {
+        check_value = false;
+        $.ajax({
+            type: "POST",
+            url: "/admin/check_file_exist",
+            data: {
+                filename: file_name
+            },
+            success: function(data) {
+                check_value = data.result;
+            },
+            error: function() {
+                alert("파일 유무 확인 실패");
+            }
+        });
+        return check_value;
     }
 
 

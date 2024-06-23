@@ -244,9 +244,17 @@ public class AdminController {
         return result;
     }
 
-    @GetMapping("update_page")
+    @GetMapping("/update_page")
     public String updatePage() {
-        return "admin/update/update";
+        return "admin/update/adminUpdate";
+    }
+
+    @PostMapping("/check_file_exist")
+    @ResponseBody
+    public Map<String, Object> check_file_exist(@RequestParam("file_name") String file_name) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("result", dataService.checkFileExist(file_name));
+        return result;
     }
 
     // 리뷰관리 리스트 보기

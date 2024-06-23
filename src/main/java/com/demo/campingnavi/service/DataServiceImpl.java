@@ -108,7 +108,6 @@ public class DataServiceImpl implements DataService {
             System.out.println("데이터 입력 실패!");
         }
 
-        System.out.println(campList.get(0).getName());
         csvFile = "tmp_camp.csv";
         String pyFile = "campListToCsv.py";
         campListOutToCsv(campList, csvFile, pyFile);
@@ -171,16 +170,16 @@ public class DataServiceImpl implements DataService {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
-                .append("cseq,")
-                .append("mapX,")
-                .append("mapY,")
+                .append("cseq;")
+                .append("컨텐츠아이디;")
+                .append("캠핑장이름;")
                 .append("useyn\n");
 
         for (Camp camp : campList) {
             stringBuilder
-                    .append(String.valueOf(camp.getCseq())).append(",")
-                    .append(camp.getMapX()).append(",")
-                    .append(camp.getMapY()).append(",")
+                    .append(camp.getCseq()).append(";")
+                    .append(camp.getContentId()).append(";")
+                    .append(camp.getName()).append(";")
                     .append(camp.getUseyn()).append("\n");
         }
 
@@ -210,5 +209,13 @@ public class DataServiceImpl implements DataService {
             System.out.println("캠프 데이터 내보내기 실패("+csvFile+")");
         }
     }
+
+    @Override
+    public boolean checkFileExist(String file_name) {
+        file_name = PathConfig.realPath(file_name);
+        File file = new File(file_name);
+        return file.exists();
+    }
+
 
 }

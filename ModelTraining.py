@@ -58,7 +58,7 @@ rate_new = []
 for (i, j) in indexes:
     member_new.append(str(i))
     camp_new.append(j)
-    rate_new.append(rating_new.loc[(i, j)]['rate'].iloc[-1])
+    rate_new.append(rating_new.loc[(i, j)]['rate'])
 
 rating_renewal = pd.DataFrame({'member':member_new, 'camp':camp_new, 'rate':rate_new})
 

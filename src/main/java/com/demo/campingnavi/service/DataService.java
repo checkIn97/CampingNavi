@@ -6,7 +6,8 @@ import com.demo.campingnavi.domain.Review;
 import java.util.List;
 
 public interface DataService {
-    public List<Camp> campInFromCsv(String csvFile, String n);
-    public void reviewListOutToCsv(List<Review> reviewList);
-    public void campListOutToCsv(List<Camp> campList, String csvFile, String pyFile);
+    List<Camp> campInFromCsv(String csvFile, String n);
+    void reviewListOutToCsv(List<Review> reviewList);
+    void campListOutToCsv(List<Camp> campList, String csvFile, String pyFile);
+    boolean checkFileExist(String file_name);
 }
