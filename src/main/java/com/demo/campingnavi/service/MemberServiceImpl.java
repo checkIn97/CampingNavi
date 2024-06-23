@@ -109,6 +109,12 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    public String getUsername(String name, String email, String birth, String phone, String provider) {
+
+        return memberRepository.getUsername(name, email, birth, phone, provider);
+    }
+
+    @Override
     public Page<Recommend> getList(int page, Member member) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.asc("rseq"));

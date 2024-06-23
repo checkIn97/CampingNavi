@@ -248,4 +248,16 @@ public class MemberController {
         Member member = (Member) session.getAttribute("loginUser");
         return qnaService.findAllByMember(member, pageable);
     }
+
+    @GetMapping("/search")
+    public String searchView() {
+        return "member/searchUsername";
+    }
+
+    @PostMapping("/search/username")
+    public String searchUsername(MemberVo vo, Model model) {
+        String username = memberService.getUsername(vo.getName(), vo.getEmail(), vo.getBirth(), vo.getPhone(), vo.getProvider());
+        model.addAttribute("username", username);
+        return "member/searchUsername";
+    }
 }

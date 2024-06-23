@@ -28,4 +28,7 @@ public class MemberVo {
     private String sex;
 
     private String role;
+
+    private String provider;
+
 }

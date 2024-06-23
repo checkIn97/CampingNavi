@@ -21,7 +21,10 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     public boolean existsByNickname(String nickname);
 
     @Query("SELECT m FROM Member m WHERE m.email = ?1 AND m.useyn = 'y'")
-    boolean existsByEmail(String username);
+    boolean existsByEmail(String email);
+
+    @Query("SELECT m.username FROM Member m WHERE m.name = ?1 AND m.email = ?2 AND m.birth = ?3 AND m.phone = ?4 AND m.provider = ?5 AND m.useyn = 'y'")
+    public String getUsername(String name, String email, String birth, String phone, String provider);
 
     @Query("SELECT m FROM Member m WHERE m.role = 'ROLE_USER'")
     Page<Member> findAll(Pageable pageable);

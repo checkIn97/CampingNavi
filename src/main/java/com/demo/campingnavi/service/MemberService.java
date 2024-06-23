@@ -25,6 +25,8 @@ public interface MemberService {
 
     public boolean isEmail(String email);
 
+    public String getUsername(String name, String email, String birth, String phone, String provider);
+
     public Page<Recommend> getList(int page, Member member);
 
     public Page<Member> findAll(Pageable pageable);
