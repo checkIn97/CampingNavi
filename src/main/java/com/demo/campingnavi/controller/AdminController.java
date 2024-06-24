@@ -539,9 +539,7 @@ public class AdminController {
     public Page<Member> memberPaging(Pageable pageable,
                                      @RequestParam(value = "searchField", defaultValue = "") String searchField,
                                      @RequestParam(value = "searchWord", defaultValue = "") String searchWord) {
-        if (searchWord.isEmpty() && searchField.isEmpty()) {
-            return memberService.findAll(pageable);
-        } else if (searchField.equals("username")) {
+        if (searchField.equals("username")) {
             return memberService.findAllByUsername(searchWord, pageable);
         } else if (searchField.equals("name")) {
             return memberService.findAllByName(searchWord, pageable);
@@ -574,5 +572,40 @@ public class AdminController {
     @GetMapping("/mail")
     public String writeMail() {
         return "admin/member/adminMail";
+    }
+
+    @GetMapping("/supervisor/list")
+    public String adminListView() {
+        return "admin/supervisor/adminList";
+    }
+
+    @GetMapping("/supervisor/list/page")
+    @ResponseBody
+    public Page<Member> adminPaging(Pageable pageable,
+                                     @RequestParam(value = "searchField", defaultValue = "") String searchField,
+                                     @RequestParam(value = "searchWord", defaultValue = "") String searchWord) {
+        if (searchField.equals("username")) {
+            return memberService.findAllAdminByUsername(searchWord, pageable);
+        } else if (searchField.equals("name")) {
+            return memberService.findAllAdminByName(searchWord, pageable);
+        } else {
+            return memberService.findAllAdmin(pageable);
+        }
+    }
+
+    @GetMapping("/supervisor/addAdmin")
+    public String addAdminView() {
+        return "admin/supervisor/addPage";
+    }
+
+    @PostMapping("/adminAddProc")
+    public String joinProcess(MemberVo vo, Model model) {
+
+        boolean result = memberService.adminAdditionProc(vo);
+        if(result) {
+            return "admin/supervisor/adminList";
+        } else {
+            return "admin/supervisor/addPage";
+        }
     }
 }

@@ -82,6 +82,25 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    public boolean adminAdditionProc(MemberVo vo) {
+        boolean result = false;
+        boolean isMember = memberRepository.existsByUsername(vo.getUsername());
+        if (!isMember) {
+            Member admin = Member.builder()
+                    .username(vo.getUsername())
+                    .pw(passwordEncoder.encode(vo.getPw()))
+                    .name(vo.getName())
+                    .useyn("y")
+                    .role(Role.ADMIN.getKey())
+                    .build();
+
+            memberRepository.save(admin);
+            result = true;
+        }
+        return result;
+    }
+
+    @Override
     public boolean loginProcess(MemberVo vo) {
         boolean isMember = memberRepository.existsByUsername(vo.getUsername());
 
@@ -177,6 +196,21 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Page<Member> findAllByEmail(String eamil, Pageable pageable) {
         return memberRepository.findAllByEmail(eamil, pageable);
+    }
+
+    @Override
+    public Page<Member> findAllAdmin(Pageable pageable) {
+        return memberRepository.findAllAdmin(pageable);
+    }
+
+    @Override
+    public Page<Member> findAllAdminByUsername(String username, Pageable pageable) {
+        return memberRepository.findAllAdminByUsername(username, pageable);
+    }
+
+    @Override
+    public Page<Member> findAllAdminByName(String name, Pageable pageable) {
+        return memberRepository.findAllAdminByName(name, pageable);
     }
 
 

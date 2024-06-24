@@ -1,7 +1,10 @@
 package com.demo.campingnavi.config;
 
 import com.demo.campingnavi.domain.Member;
+import com.demo.campingnavi.domain.Role;
 import com.demo.campingnavi.repository.jpa.MemberRepository;
+import com.demo.campingnavi.service.MyAccessDeniedHandler;
+import com.demo.campingnavi.service.MyAuthenticationEntryPoint;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +45,13 @@ public class SecurityConfig {
                         .requestMatchers("/resources/**", "/static/**", "/assets/**", "/templates/**","/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/member/join", "/index", "/member/joinProc", "/member/membershipAgree", "/member/membership", "/member/validateUser", "/member/validateNickname").permitAll()
                         .requestMatchers("/mailSend", "mailCheck", "/camp/search", "/camp/detail/go").permitAll()
+                        .requestMatchers("/admin/supervisor/**", "/admin/supervisor/list", "/admin/supervisor/list/page", "/admin/adminAddProc").hasRole("SUPERVISOR")
                         .anyRequest().permitAll()
                 );
+        http
+                .exceptionHandling()
+                .authenticationEntryPoint(new MyAuthenticationEntryPoint())
+                .accessDeniedHandler(new MyAccessDeniedHandler());
         http
                 .formLogin((auth) -> auth
                         .loginPage("/oauth-login/member/login")

@@ -21,6 +21,8 @@ public interface MemberService {
 
     boolean joinProcess(MemberVo vo);
 
+    boolean adminAdditionProc(MemberVo vo);
+
     boolean loginProcess(MemberVo vo);
 
     boolean isUserName(MemberVo vo);
@@ -50,4 +52,10 @@ public interface MemberService {
     Page<Member> findAllByProvider(String provider, Pageable pageable);
 
     Page<Member> findAllByEmail(String eamil, Pageable pageable);
+
+    Page<Member> findAllAdmin(Pageable pageable);
+
+    Page<Member> findAllAdminByUsername(String username, Pageable pageable);
+
+    Page<Member> findAllAdminByName(String name, Pageable pageable);
 }

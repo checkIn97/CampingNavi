@@ -24,10 +24,6 @@ public class QnaComment {
     private int qcseq; // 문의 답변 번호
 
     @ManyToOne
-    @JoinColumn(name = "aseq", nullable = false)
-    private Admin admin; // 관리자
-
-    @ManyToOne
     @JoinColumn(name = "qseq", nullable = false)
     private Qna qna; // 문의
 
