@@ -55,7 +55,12 @@ public class SecurityConfig {
                                 (request, response, authentication) -> {
                                     Member member = memberRepository.findByUsername(authentication.getName());
                                     session.setAttribute("loginUser", member);
-                                    response.sendRedirect("/main");
+                                    if (member.getRole().equals("ROLE_USER")) {
+                                        response.sendRedirect("/main");
+                                    } else if (member.getRole().equals("ROLE_ADMIN") || member.getRole().equals("ROLE_SUPERVISOR")) {
+                                        response.sendRedirect("/admin/");
+                                    }
+
                                 }
                         )
                         .failureHandler(

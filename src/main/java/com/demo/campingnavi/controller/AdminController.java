@@ -1,6 +1,7 @@
 package com.demo.campingnavi.controller;
 
 import com.demo.campingnavi.domain.*;
+import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.dto.ReviewScanVo;
 import com.demo.campingnavi.dto.ReviewVo;
 import com.demo.campingnavi.service.*;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -40,9 +42,39 @@ public class AdminController {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("/")
     public String adminIndex(){
         return "admin/adminPage";
+    }
+
+    @GetMapping("/login")
+    public String adminLogin(){
+        return "admin/loginPage";
+    }
+
+    @PostMapping("/loginProc")
+    public String adminLoginProc(MemberVo vo, HttpSession session, Model model) {
+        Member admin = memberService.findByUsername(vo.getUsername());
+        if (admin != null) {
+            if (!admin.getRole().equals(Role.USER.getKey()) && admin.getRole() != null) {
+                if (passwordEncoder.matches(vo.getPw(),admin.getPw())) {
+                    session.setAttribute("admin", admin);
+                    return "admin/adminPage";
+                } else {
+                    model.addAttribute("msg", "비밀번호가 다릅니다.");
+                    return "admin/loginPage";
+                }
+            } else {
+                model.addAttribute("msg", "관리자가 아닙니다.");
+                return "admin/loginPage";
+            }
+        } else {
+            model.addAttribute("msg", "일치하는 사용자가 없습니다.");
+            return "admin/loginPage";
+        }
     }
 
     @Transactional

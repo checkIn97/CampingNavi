@@ -11,7 +11,7 @@
 <div id="wrapper">
     <img src="/assets/images/logo/typo.png" id="logoTypo">
     <div class="content">
-        <form id="loginForm" action="/oauth-login/member/loginProc" method="post">
+        <form id="loginForm" action="/admin/loginProc" method="post">
             <input id="userId" type="text" name="username" th:placeholder="아이디">
             <input id="userPw" type="password" name="pw" th:placeholder="비밀번호">
             <button class="mainBtn" id="loginBtn" type="submit">로그인</button>
@@ -19,21 +19,8 @@
     </div>
 
     <div class="buttonContain" id="loginGroup">
-        <button id="registerBtn" type="button">회원가입</button>
-        <button id="adminBtn" type="button">관리자</button>
+        <button id="adminBtn" type="button">관리자 추가</button>
     </div>
-    <div class="buttonContain" id="searchGroup">
-        <button id="searchUsernameBtn" type="button">아이디 찾기</button>
-        <button id="searchPwBtn" type="button">비밀번호 찾기</button>
-    </div>
-
-    <div class="buttonContain" id="snsGroup">
-        <a href="/oauth2/authorization/kakao" class="snsA"><img src="/assets/images/icon/kakao.png" alt="kakaoLogin"></a>
-        <a href="/oauth2/authorization/naver" class="snsA"><img src="/assets/images/icon/naver.png" alt="naverLogin"></a>
-        <a href="/oauth2/authorization/google" class="snsA"><img src="/assets/images/icon/google.png" alt="googleLogin"></a>
-        <a href="/oauth2/authorization/facebook" class="snsA"><img src="/assets/images/icon/facebook.png" alt="facebookLogin"></a>
-    </div>
-
 </div>
 
 <footer id="footer">
@@ -41,12 +28,9 @@
 </footer>
 
 <script>
-    document.getElementById('registerBtn').addEventListener('click', function () {
-        location.href = '/member/membershipAgree';
-    });
-
+    // 관리자 추가
     document.getElementById('adminBtn').addEventListener('click', function () {
-        location.href = '/admin/login';
+        location.href = '/admin';
     });
 
 /*    document.getElementById('loginBtn').addEventListener('click', function () {
@@ -70,20 +54,6 @@
             }
         });
     })*/
-
-    document.getElementById('loginBtn').addEventListener('click', function () {
-        location.href = '/camp/search'
-    })
-
-    document.getElementById('searchUsernameBtn').addEventListener('click', function () {
-        var type = 'username';
-        location.href = '/member/search/' + type;
-    })
-
-    document.getElementById('searchPwBtn').addEventListener('click', function () {
-        var type = 'password'
-        location.href = '/member/search/' + type;
-    })
 </script>
 <script th:inline="javascript">
     /*<![CDATA[*/
