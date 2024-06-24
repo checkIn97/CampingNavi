@@ -176,7 +176,7 @@ public class ChatRoomController {
 
         List<String> chatRoomUserList = new ArrayList<>();
         for (String mseq : mseqList) {
-            chatRoomUserList.add(String.valueOf(memberRepository.findById(Integer.valueOf(mseq)).get().getUsername()));
+            chatRoomUserList.add(String.valueOf(memberRepository.findById(Integer.valueOf(mseq)).get().getName()));
         }
         System.out.println(chatRoomUserList);
 
