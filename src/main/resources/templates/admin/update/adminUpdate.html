@@ -6,9 +6,74 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="/assets/css/main.css" rel="stylesheet"/>
     <link href="/assets/css/bg/mainBG.css" rel="stylesheet"/>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <title>CampNavi</title>
 </head>
+<style>
+    body {
+        display: flex;
+        font-family: Arial, sans-serif; /* 폰트 설정 */
+        line-height: 1.6; /* 줄 간격 */
+    }
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        background-color: #343a40;
+        padding: 20px;
+    }
+    .sidebar a {
+        color: #ffffff;
+        display: block;
+        padding: 10px;
+        text-decoration: none;
+    }
+    .sidebar a:hover {
+        background-color: #495057;
+    }
+    .content {
+        flex: 1;
+        padding: 20px;
+    }
+    .page-index {
+        padding: 20px;
+    }
+    .search-container {
+        margin-bottom: 20px;
+    }
+    .table {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .page-box {
+        text-align: center;
+    }
+    .page-num {
+        margin: 0 5px;
+        cursor: pointer;
+    }
+    .page-num.active {
+        font-weight: bold;
+    }
+    .icon {
+        cursor: pointer;
+    }
+    .review-list-pop-back {
+        background-color: #f8f9fa;
+    }
+    .popularPosts {
+        font-weight: bold;
+        color: #007bff;
+    }
+</style>
 <body>
+<div class="d-flex">
+    <div class="sidebar">
+        <a th:href="@{/admin/}"><h4 class="text-white">CampNavi Admin</h4></a>
+        <a th:href="@{#}">데이터 관리</a>
+        <a th:href="@{/admin/review/list}">리뷰 관리</a>
+        <a th:href="@{#}">회원 관리</a>
+    </div>
+</div>
 <h2>캠핑장데이터</h2>
 <div id="camp_ver"></div>
 <div id="camp_update_progress"></div>
@@ -35,7 +100,8 @@
         event.preventDefault();
     }
 
-    function update(kind) {
+    /*
+    function update0(kind) {
         if (kind == "camp") {
             alert("캠핑장데이터 업데이트 시작");
         } else {
@@ -68,32 +134,9 @@
            }
         });
     }
+    */
 
-    function update2(kind) {
-        if (kind == "camp") {
-            alert("캠핑장데이터 업데이트 시작");
-            $.ajax({
-                type: "POST",
-                url: "/admin/check_file_exist",
-                data: {
-                    file_name: 'campingData.csv'
-                },
-                success: function(data0) {
-                    if (data0.result) {
-                        alert(true);
-                    } else {
-                        alert(false);
-                    }
-
-                },
-                error: function() {
-                    alert("테스트 실패");
-                }
-            });
-        }
-    }
-
-    function update1(kind) {
+    function update(kind) {
         if (kind == "camp") {
             alert("캠핑장데이터 업데이트 시작");
             $.ajax({
@@ -110,7 +153,7 @@
                         let totalCount = data0.totalCount;
                         let size = 100;
                         let totalPage = parseInt((totalCount + size - 1) / size);
-                        let status_tmp_create = false;
+                        let count = 0;
                         for (let page = 1 ; page <= totalPage ; page++) {
                             $.ajax({
                                 type: "POST",
@@ -121,91 +164,76 @@
                                 },
                                 success: function(data1) {
                                     if (data1.result == 'success') {
+                                        count++;
                                         HTML = "";
-                                        HTML += parseInt((page*100/totalPage)*0.90) + "\%";
+                                        HTML += parseInt((count*100/totalPage)*0.90) + "\%";
                                         $("#camp_update_progress").html(HTML);
+                                        if (count == totalPage) {
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "/admin/camping_data_integration",
+                                                data: {
+                                                    kind: kind,
+                                                    totalPage: totalPage
+                                                },
+                                                success: function(data2) {
+                                                    if (data2.result == 'success') {
+                                                        HTML = "";
+                                                        HTML += "99\%";
+                                                        $("#camp_update_progress").html(HTML);
+                                                        $.ajax({
+                                                            type: "POST",
+                                                            url: "/admin/camping_data_insert",
+                                                            data: {
+                                                                kind: kind
+                                                            },
+                                                            success: function(data3) {
+                                                                if (data3.result == 'success') {
+                                                                    HTML = "";
+                                                                    HTML += "100\%";
+                                                                    $("#camp_update_progress").html(HTML);
+                                                                    load_update_history(kind);
+                                                                    HTML = "";
+                                                                    $("#camp_update_progress").html(HTML);
+                                                                } else {
+                                                                    alert("캠핑장데이터 최신화 오류");
+                                                                    HTML = "";
+                                                                    $("#camp_update_progress").html(HTML);
+                                                                    load_update_history(kind);
+                                                                }
+                                                            },
+                                                            error: function() {
+                                                                alert("캠핑장데이터 최신화 오류");
+                                                                HTML = "";
+                                                                $("#camp_update_progress").html(HTML);
+                                                                load_update_history(kind);
+                                                            }
+                                                        })
+                                                    } else {
+                                                        alert("캠핑장데이터 최신화 오류");
+                                                        HTML = "";
+                                                        $("#camp_update_progress").html(HTML);
+                                                        load_update_history(kind);
+                                                    }
+                                                },
+                                                error: function() {
+                                                    alert("데이터 통합 실패");
+                                                    HTML = "";
+                                                    $("#camp_update_progress").html(HTML);
+                                                    load_update_history(kind);
+                                                }
+                                            });
+                                        }
                                     } else {
                                         alert("캠핑장 데이터 가져오기 실패");
-                                        HTML = "";
-                                        $("#camp_update_progress").html(HTML);
-                                        status_tmp_create = true;
+                                        location.reload();
                                     }
                                 },
                                 error: function() {
                                     alert("캠핑장 데이터 가져오기 실패");
-                                    HTML = "";
-                                    $("#camp_update_progress").html(HTML);
-                                    status_tmp_create = true;
+                                    location.reload();
                                 }
                             });
-
-                            if (status_tmp_create) {
-                                break;
-                            }
-                            let tmp_file = "tmp_campingData" + page + ".csv";
-                            //while(!check_file_exist(tmp_file)) {}
-                        }
-                        if (!status_tmp_create) {
-                            let status_integration = true;
-                            $.ajax({
-                               type: "POST",
-                               url: "/admin/camping_data_integration",
-                               data: {
-                                   kind: kind,
-                                   totalPage: totalPage
-                               },
-                               success: function(data2) {
-                                   HTML = "";
-                                   HTML += "95\%";
-                                   $("#camp_update_progress").html(HTML);
-                               },
-                               error: function() {
-                                   alert("데이터 통합 실패");
-                                   HTML = "";
-                                   $("#camp_update_progress").html(HTML);
-                                   status_integration = false;
-                                   load_update_history(kind);
-                               }
-                            });
-                            let tmp_file = "campingData.csv";
-                            //while(!check_file_exist(tmp_file)) {}
-                            if (status_integration) {
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/admin/camping_data_insert",
-                                    data: {
-                                        kind: kind
-                                    },
-                                    success: function(data3) {
-                                        if (data3.result == 'success') {
-                                            HTML = "";
-                                            HTML += "100\%";
-                                            $("#camp_update_progress").html(HTML);
-                                            load_update_history(kind);
-                                            HTML = "";
-                                            $("#camp_update_progress").html(HTML);
-                                        } else {
-                                            alert("캠핑장데이터 최신화 오류");
-                                            HTML = "";
-                                            $("#camp_update_progress").html(HTML);
-                                            load_update_history(kind);
-                                        }
-                                    },
-                                    error: function() {
-                                        alert("캠핑장데이터 최신화 오류");
-                                        HTML = "";
-                                        $("#camp_update_progress").html(HTML);
-                                        load_update_history(kind);
-                                    }
-                                })
-                            } else {
-                                alert("데이터 통합 실패");
-                                HTML = "";
-                                $("#camp_update_progress").html(HTML);
-                                load_update_history(kind);
-                            }
-                        } else {
-                            load_update_history(kind);
                         }
                     } else {
                         alert("totalCount 가져오기 실패");

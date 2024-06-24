@@ -58,7 +58,7 @@ rate_new = []
 for (i, j) in indexes:
     member_new.append(str(i))
     camp_new.append(j)
-    rate_new.append(rating_new.loc[(i, j)]['rate'])
+    rate_new.append(rating_new.loc[(i, j)]['rate'].iloc[-1])
 
 rating_renewal = pd.DataFrame({'member':member_new, 'camp':camp_new, 'rate':rate_new})
 
@@ -81,6 +81,8 @@ param_grid = {'n_epochs':[20, 40, 60, 80, 100], 'n_factors':[50, 100, 150, 200]}
 # CV를 3개의 폴드로 지정하고 rmse, mse 로 평가 수행
 gs = GridSearchCV(SVD, param_grid, measures=['rmse', 'mse'], cv=3)
 gs.fit(data)
+
+
 
 # 최고의 RMSE 평가점수 매개변수 입력
 best_epochs = gs.best_params['rmse']['n_epochs']

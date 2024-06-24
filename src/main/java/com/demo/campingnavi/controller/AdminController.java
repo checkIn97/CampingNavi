@@ -178,6 +178,11 @@ public class AdminController {
             String n = "all";
             List<Camp> campList = dataService.campInFromCsv(csvFile, n);
             text = "success";
+            result.put("result", text);
+            UpdateHistory updateHistory = new UpdateHistory();
+            updateHistory.setKind(kind);
+            updateHistory.setResult(text);
+            adminService.saveUpdateHistory(updateHistory);
         } catch (Exception e) {
             e.printStackTrace();
             text = "fail";

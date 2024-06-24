@@ -105,7 +105,7 @@ public class AdminServiceImpl implements AdminService {
         String pyFile = "campingDataIntegration.py";
         pyFile = PathConfig.realPath(pyFile);
 
-        ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile);
+        ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, String.valueOf(totalPage));
         String result = "";
         try {
             Process process = processBuilder.start();
