@@ -88,6 +88,7 @@
                 </select>
                 <input class="form-control mr-2" id="searchWord" name="searchWord" type="text">
                 <button class="btn btn-primary" type="button" id="searchButton">검색</button>
+                <button class="btn btn-primary" type="button" id="mailButton">전체 공지 보내기</button>
             </div>
 
         <!-- 리스트 영역 -->
@@ -106,7 +107,11 @@
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+<script>
+    document.getElementById('mailButton').addEventListener('click', function () {
+        location.href = '/admin/mail';
+    });
+</script>
 <script>
     $(document).ready(function () {
         var currentPage = 0;
@@ -229,6 +234,11 @@
         }
     });
 </script>
-
+<input type="hidden" id="result" th:value="${result}" th:if="${result != null}">
+<script>
+    if ($("#result").val() != null && $("#result").val() != "") {
+        alert($("#result").val());
+    }
+</script>
 </body>
 </html>

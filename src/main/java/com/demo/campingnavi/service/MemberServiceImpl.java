@@ -135,6 +135,11 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    public List<String> getEmailList() {
+        return memberRepository.getEmailList();
+    }
+
+    @Override
     public boolean isMemberByPw(String name, String username, String email, String birth, String phone) {
 
         return memberRepository.existsMemberByPw(name, username, email, birth, phone);

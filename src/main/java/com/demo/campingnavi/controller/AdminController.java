@@ -570,4 +570,9 @@ public class AdminController {
 
         return result;
     }
+
+    @GetMapping("/mail")
+    public String writeMail() {
+        return "admin/member/adminMail";
+    }
 }

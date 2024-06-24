@@ -23,6 +23,9 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     @Query("SELECT EXISTS(SELECT m FROM Member m WHERE m.email = ?1 AND m.useyn = 'y' AND m.provider = 'campingnavi')")
     boolean existsByEmail(String email);
 
+    @Query("SELECT DISTINCT m.email FROM Member m WHERE m.useyn = 'y' AND m.role = 'ROLE_USER'")
+    List<String> getEmailList();
+
     @Query("SELECT m.username FROM Member m WHERE m.name = ?1 AND m.email = ?2 AND m.birth = ?3 AND m.phone = ?4 AND m.provider = ?5 AND m.useyn = 'y'")
     String getUsername(String name, String email, String birth, String phone, String provider);
 

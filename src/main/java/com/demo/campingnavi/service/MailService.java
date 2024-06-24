@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MailService {
 
     private final JavaMailSender javaMailSender;
-    private static final String senderEmail = "tksdl1561@gmail.com";
+    private static final String senderEmail = "CampingNavi2@gmail.com";
     private static int number;
 
     // 랜덤으로 숫자 생성
@@ -42,11 +42,35 @@ public class MailService {
         return message;
     }
 
+    public MimeMessage createCustomMail(String mail, String title, String content) {
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        try{
+            message.setFrom(senderEmail);
+            message.setRecipients(MimeMessage.RecipientType.TO, mail);
+            message.setSubject("[전체 공지] " + title);
+            String body = "";
+            body += "<p>" + content + "</p>";
+            message.setText(body, "utf-8", "html");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (jakarta.mail.MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return message;
+    }
+
     public int sendMail(String mail) {
         MimeMessage message = createMail(mail);
         javaMailSender.send(message);
 
         return number;
+    }
+
+    public void sendCustomMail(String mail, String title, String content) {
+        MimeMessage message = createCustomMail(mail, title, content);
+        javaMailSender.send(message);
     }
 
 }
