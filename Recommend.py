@@ -39,7 +39,7 @@ def recomm_camp_by_surprise(svd, member, camp_list, top_n):
 member = int(sys.argv[1])
 
 target_camp_file = 'tmp_filtered.csv'
-camp_list_raw = pd.read_csv(target_camp_file, encoding='utf-8')
+camp_list_raw = pd.read_csv(target_camp_file, sep=';', encoding='utf-8')
 
 camp_list = list(camp_list_raw['cseq'])
 result = recomm_camp_by_surprise(svd, member, camp_list, 0)
