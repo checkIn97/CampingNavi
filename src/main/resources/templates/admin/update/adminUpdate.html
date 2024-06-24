@@ -81,13 +81,23 @@
 <h2>추천모델</h2>
 <div id="model_ver"></div>
 <button type="button" name="update_model" id="update_model">추천모델 업데이트</button>
+<h2>리뷰 크롤링</h2>
+<div id="crawling_ver"></div>
+<div id="crawling_progress"></div>
+<button type="button" name="start_crawling" id="start_crawling">크롤링 시작하기</button>
+<button type="button" name="resume_crawling" id="resume_crawling">크롤링 재개하기</button>
+<button type="button" name="stop_crawling" id="stop_crawling">크롤링 일시정지</button>
 </body>
 <script>
     $(document).ready(function() {
         document.getElementById("update_camp").addEventListener("click", event => update_camp(event));
         document.getElementById("update_model").addEventListener("click", event => update_model(event));
+        document.getElementById("start_crawling").addEventListener("click", event => start_crawling(event));
+        document.getElementById("resume_crawling").addEventListener("click", event => resume_crawling(event));
+        document.getElementById("stop_crawling").addEventListener("click", event => stop_crawling(event));
         load_update_history("camp");
         load_update_history("model");
+        load_update_history("crawling");
     });
 
     function update_camp(event) {
@@ -97,6 +107,34 @@
 
     function update_model(event) {
         update("model");
+        event.preventDefault();
+    }
+
+    function start_crawling(event) {
+        review_crawling("start");
+        event.preventDefault();
+    }
+
+    function resume_crawling(event) {
+        review_crawling("resume");
+        event.preventDefault();
+    }
+
+    function stop_crawling(event) {
+        $.ajax({
+            type: "POST",
+            url: "/admin/crawling_stop",
+            success: function(data) {
+                if (data.result == 'success') {
+                    alert("크롤링 중지");
+                } else {
+                    alert("크롤링 중지 실패");
+                }
+            },
+            error: function() {
+                alert("크롤링 중지 프로세스 오류");
+            }
+        });
         event.preventDefault();
     }
 
@@ -272,7 +310,6 @@
                 }
             });
         }
-
     }
 
     function check_file_exist(file_name) {
@@ -315,12 +352,76 @@
                 HTML += "<h3>갱신 시도 : " + updateTry + " " + result + "</h3>";
                 if (kind == 'camp') {
                     $("#camp_ver").html(HTML);
-                } else {
+                } else if (kind == 'model') {
                     $("#model_ver").html(HTML);
+                } else {
+                    $("#crawling_ver").html(HTML);
                 }
             },
             error: function() {
                 alert(kind + " 로그 데이터 가져오기 실패");
+            }
+        });
+    }
+
+    function review_crawling(update_type) {
+        alert("리뷰 크롤링 시작");
+        $.ajax({
+            type: "POST",
+            url: "/admin/get_crawling_initialize", // 크롤링 동작 유형 확인 (처음부터, 이어서)
+            data: {
+                update_type: update_type
+            },
+            success: function(data0) {
+                if (data0.result != 'fail') {
+                    HTML = "";
+                    $("#crawling_progress").html(HTML);
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/get_crawling_data",
+                        success: function(data1) {
+                            if (data1.result == 'success') {
+                                count++;
+                                HTML = "";
+                                $("#crawling_progress").html(HTML);
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/admin/crawling_data_integration", // 크롤링 완료시 파일 통합
+                                    success: function(data2) {
+                                        alert("크롤링 완료");
+                                        load_update_history(kind);
+                                    },
+                                    error: function() {
+                                        alert("데이터 통합 실패");
+                                        HTML = "";
+                                        $("#crawling_progress").html(HTML);
+                                        load_update_history(kind);
+                                    }
+                                });
+                            } else if (data1.result == 'stopped') {
+                                alert("크롤링 중지 완료");
+                            } else {
+                                alert("크롤링 중 오류 발생");
+                                location.reload();
+                            }
+                        },
+                        error: function() {
+                            alert("크롤링 중 오류 발생");
+                            location.reload();
+                        }
+                    });
+                } else {
+                    alert("초기화 실패");
+                    HTML = "";
+                    $("#crawling_progress").html(HTML);
+                    load_update_history(kind);
+                }
+            },
+            error: function() {
+                alert("크롤링 중 오류 발생");
+                HTML = "";
+                $("#crawling_progress").html(HTML);
+                load_update_history(kind);
             }
         });
     }

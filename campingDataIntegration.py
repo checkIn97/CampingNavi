@@ -9,7 +9,7 @@ import warnings; warnings.filterwarnings('ignore')
 totalPage = int(sys.argv[1])
 campingDataAll = None
 for i in range(totalPage):
-    tmp_filename = 'tmp_campingData' + str(i+1) + '.csv'
+    tmp_filename = 'temp/tmp_campingData' + str(i+1) + '.csv'
     tmp_campingData = pd.read_csv(tmp_filename, sep=';', encoding='utf-8')
     if i == 0:
         campingDataAll = tmp_campingData

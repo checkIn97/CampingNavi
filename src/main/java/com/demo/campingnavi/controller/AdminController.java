@@ -4,6 +4,7 @@ import com.demo.campingnavi.domain.*;
 import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.dto.ReviewScanVo;
 import com.demo.campingnavi.dto.ReviewVo;
+import com.demo.campingnavi.repository.jpa.UpdateHistoryRepository;
 import com.demo.campingnavi.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -40,7 +41,12 @@ public class AdminController {
     DataService dataService;
 
     @Autowired
+    UpdateHistoryService updateHistoryService;
+
+    @Autowired
     private MemberService memberService;
+    @Autowired
+    private UpdateHistoryRepository updateHistoryRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -100,7 +106,7 @@ public class AdminController {
         UpdateHistory updateHistory = new UpdateHistory();
         updateHistory.setKind(kind);
         updateHistory.setResult(text);
-        adminService.saveUpdateHistory(updateHistory);
+        updateHistoryService.saveUpdateHistory(updateHistory);
 
         return result;
     }
@@ -122,7 +128,7 @@ public class AdminController {
                 UpdateHistory updateHistory = new UpdateHistory();
                 updateHistory.setKind(kind);
                 updateHistory.setResult(text);
-                adminService.saveUpdateHistory(updateHistory);
+                updateHistoryService.saveUpdateHistory(updateHistory);
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -131,7 +137,7 @@ public class AdminController {
             UpdateHistory updateHistory = new UpdateHistory();
             updateHistory.setKind(kind);
             updateHistory.setResult(text);
-            adminService.saveUpdateHistory(updateHistory);
+            updateHistoryService.saveUpdateHistory(updateHistory);
         }
 
         return result;
@@ -152,7 +158,7 @@ public class AdminController {
                 UpdateHistory updateHistory = new UpdateHistory();
                 updateHistory.setKind(kind);
                 updateHistory.setResult(text);
-                adminService.saveUpdateHistory(updateHistory);
+                updateHistoryService.saveUpdateHistory(updateHistory);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -161,7 +167,7 @@ public class AdminController {
             UpdateHistory updateHistory = new UpdateHistory();
             updateHistory.setKind(kind);
             updateHistory.setResult(text);
-            adminService.saveUpdateHistory(updateHistory);
+            updateHistoryService.saveUpdateHistory(updateHistory);
         }
         return result;
     }
@@ -181,7 +187,7 @@ public class AdminController {
                 UpdateHistory updateHistory = new UpdateHistory();
                 updateHistory.setKind(kind);
                 updateHistory.setResult(text);
-                adminService.saveUpdateHistory(updateHistory);
+                updateHistoryService.saveUpdateHistory(updateHistory);
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -190,7 +196,7 @@ public class AdminController {
             UpdateHistory updateHistory = new UpdateHistory();
             updateHistory.setKind(kind);
             updateHistory.setResult(text);
-            adminService.saveUpdateHistory(updateHistory);
+            updateHistoryService.saveUpdateHistory(updateHistory);
         }
 
         return result;
@@ -214,7 +220,7 @@ public class AdminController {
             UpdateHistory updateHistory = new UpdateHistory();
             updateHistory.setKind(kind);
             updateHistory.setResult(text);
-            adminService.saveUpdateHistory(updateHistory);
+            updateHistoryService.saveUpdateHistory(updateHistory);
         } catch (Exception e) {
             e.printStackTrace();
             text = "fail";
@@ -222,7 +228,7 @@ public class AdminController {
             UpdateHistory updateHistory = new UpdateHistory();
             updateHistory.setKind(kind);
             updateHistory.setResult(text);
-            adminService.saveUpdateHistory(updateHistory);
+            updateHistoryService.saveUpdateHistory(updateHistory);
         }
 
         result.put("result", text);
@@ -230,10 +236,141 @@ public class AdminController {
     }
 
     @ResponseBody
+    @PostMapping("/get_crawling_initialize")
+    public Map<String, Object> getCrawlingData(@RequestParam("update_type") String update_type) {
+        Map<String, Object> result = new HashMap<>();
+        dataService.deleteFile("/temp/crawling_stop");
+        List<UpdateHistory> updateListCampSuccess = updateHistoryService.getUpdateHistoryList("camp", "success");
+        List<UpdateHistory> updateListCrawlingStopped = updateHistoryService.getUpdateHistoryList("crawling", "stopped");
+        List<UpdateHistory> updateListCrawlingSuccess = updateHistoryService.getUpdateHistoryList("crawling", "success");
+        if (updateListCampSuccess.isEmpty()) {
+            update_type = "fail";
+        } else if (updateListCrawlingSuccess.size() + updateListCrawlingStopped.size() == 0) {
+            update_type = "start";
+        } else {
+            if (updateListCrawlingStopped.isEmpty()) {
+                update_type = "start";
+            } else {
+                if (updateListCrawlingStopped.get(updateListCrawlingStopped.size() - 1).getUseq() < updateListCampSuccess.get(updateListCampSuccess.size() - 1).getUseq()) {
+                    update_type = "start";
+                } else if (updateListCrawlingSuccess.isEmpty()) {
+                    update_type = "resume";
+                } else {
+                    if (updateListCrawlingStopped.get(updateListCrawlingStopped.size() - 1).getUseq() < updateListCrawlingSuccess.get(updateListCrawlingSuccess.size() - 1).getUseq()) {
+                        update_type = "start";
+                    }
+                }
+            }
+        }
+
+        if (!update_type.equals("fail")) {
+            try{
+                if (update_type.equals("start")) {
+                    update_type = dataService.deleteFile("/temp/crawling_status.csv");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                update_type = "fail";
+            }
+        }
+
+        if (update_type.equals("start")) {
+            dataService.deleteFile("/temp/crawling_status.csv");
+        } else if (update_type.equals("fail")) {
+            UpdateHistory updateHistory = new UpdateHistory();
+            updateHistory.setKind("crawling");
+            updateHistory.setResult("fail");
+            updateHistoryService.saveUpdateHistory(updateHistory);
+        }
+
+        result.put("result", update_type);
+
+        return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/get_crawling_data")
+    public Map<String, Object> getCrawlingData() {
+        Map<String, Object> result = new HashMap<>();
+        String text = "";
+        try {
+            text = adminService.getCrawlingData();
+        } catch (Exception e) {
+            e.printStackTrace();
+            text = "fail";
+        }
+
+        if (text.equals("fail")) {
+            UpdateHistory updateHistory = new UpdateHistory();
+            updateHistory.setKind("crawling");
+            updateHistory.setResult("fail");
+            updateHistoryService.saveUpdateHistory(updateHistory);
+        }
+
+        result.put("result", text);
+
+        return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/crawling_data_integration")
+    public Map<String, Object> crawlingDataIntegration() {
+        Map<String, Object> result = new HashMap<>();
+        String text = "";
+        try {
+            text = adminService.getCrawlingDataIntegration();
+            if (text.equals("success")) {
+                result.put("result", text);
+            } else {
+                result.put("result", text);
+                UpdateHistory updateHistory = new UpdateHistory();
+                updateHistory.setKind("crawling");
+                updateHistory.setResult(text);
+                updateHistoryService.saveUpdateHistory(updateHistory);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            text = "fail";
+            result.put("result", text);
+            UpdateHistory updateHistory = new UpdateHistory();
+            updateHistory.setKind("crawling");
+            updateHistory.setResult(text);
+            updateHistoryService.saveUpdateHistory(updateHistory);
+        }
+
+        return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/crawling_stop")
+    public Map<String, Object> crawlingDataStop() {
+        Map<String, Object> result = new HashMap<>();
+        String text = "";
+        try {
+            text = dataService.createFile("/temp/crawling_stop");
+            if (text.equals("success")) {
+                result.put("result", text);
+                UpdateHistory updateHistory = new UpdateHistory();
+                updateHistory.setKind("crawling");
+                updateHistory.setResult("stopped");
+                updateHistoryService.saveUpdateHistory(updateHistory);
+            } else {
+                result.put("result", text);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            text = "fail";
+            result.put("result", text);
+        }
+
+        return result;
+    }
+
+    @ResponseBody
     @PostMapping("/load_update_history")
     public Map<String, Object> loadUpdateHistory(@RequestParam(value="kind") String kind) {
         Map<String, Object> result = new HashMap<>();
-        List<UpdateHistory> updateHistoryList = adminService.getUpdateHistoryList(kind);
+        List<UpdateHistory> updateHistoryList = updateHistoryService.getUpdateHistoryList(kind);
         String defaultText = "내역 없음";
         String updateTime = new String(defaultText);
         String updateTry = new String(defaultText);

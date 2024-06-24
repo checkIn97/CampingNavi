@@ -80,7 +80,7 @@ try:
 except:
     pass
     
-tmp_filename = 'tmp_campingData' + pageNo + '.csv'    
+tmp_filename = 'temp/tmp_campingData' + pageNo + '.csv'    
 df.to_csv(tmp_filename, encoding='utf-8-sig', index=False, sep=";")
 
 while True:

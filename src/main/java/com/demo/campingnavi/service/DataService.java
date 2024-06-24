@@ -10,4 +10,6 @@ public interface DataService {
     void reviewListOutToCsv(List<Review> reviewList);
     void campListOutToCsv(List<Camp> campList, String csvFile, String pyFile);
     boolean checkFileExist(String file_name);
+    String deleteFile(String filename);
+    String createFile(String filename);
 }

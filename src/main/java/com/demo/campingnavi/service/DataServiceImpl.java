@@ -217,5 +217,40 @@ public class DataServiceImpl implements DataService {
         return file.exists();
     }
 
+    @Override
+    public String deleteFile(String filename) {
+        String result = "";
+        File file = new File(filename);
+        if (file.exists()) {
+            if (file.delete()) {
+                result = "success";
+            } else {
+                result = "fail";
+            }
+        } else {
+            result = "success";
+        }
+        return result;
+    }
+
+    @Override
+    public String createFile(String filename) {
+        String result = "";
+        filename = PathConfig.realPath(filename);
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(filename);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write("");
+            fileWriter.close();
+            result = "success";
+        } catch (Exception e) {
+            result = "fail";
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 
 }
