@@ -49,6 +49,9 @@ public class AdminController {
     private UpdateHistoryRepository updateHistoryRepository;
 
     @Autowired
+    private QnaService qnaService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
@@ -744,5 +747,28 @@ public class AdminController {
         } else {
             return "admin/supervisor/addPage";
         }
+    }
+
+    @GetMapping("/qna/list")
+    public String qnaListView() {
+        return "admin/qna/adminQnaList";
+    }
+
+
+    @PostMapping("/qna/delete")
+    @ResponseBody
+    public Map<String, Object> deleteQna(@RequestParam(value = "qseq") int qseq) {
+        Map<String, Object> result = new HashMap<>();
+
+        if (qseq != 0) {
+            Qna qna = qnaService.findById(qseq);
+            qna.setUseyn("n");
+            qnaService.saveQna(qna);
+            result.put("result", "success");
+        } else {
+            result.put("result", "fail");
+        }
+
+        return result;
     }
 }

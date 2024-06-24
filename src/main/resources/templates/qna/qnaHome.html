@@ -238,8 +238,14 @@
                             var date = new Date(qna.createdAt);
                             var formattedDate = date.toLocaleDateString();
                             qnaArea.append('<div th:if="' + username + '==' + qna.member.username + '">');
-                            qnaArea.append('<div class="buttonContain qna-contain"><div><a class="myPageSavaLink" href="/qna/oneByone/detail/'
-                                + qna.qseq + '"><h1>' + "[답변대기]" + qna.title + '</h1></a></div>' + '<div class="qna-createdAt">' + formattedDate + '</div>' + '</div>');
+                            if (qna.checkyn === "n") {
+                                qnaArea.append('<div class="buttonContain qna-contain"><div><a class="myPageSavaLink" href="/qna/oneByone/detail/'
+                                    + qna.qseq + '"><h1>' + "[답변대기]" + qna.title + '</h1></a></div>' + '<div class="qna-createdAt">' + formattedDate + '</div>' + '</div>');
+                            } else {
+                                qnaArea.append('<div class="buttonContain qna-contain"><div><a class="myPageSavaLink" href="/qna/oneByone/detail/'
+                                    + qna.qseq + '"><h1>' + "[답변완료]" + qna.title + '</h1></a></div>' + '<div class="qna-createdAt">' + formattedDate + '</div>' + '</div>');
+                            }
+
                             qnaArea.append('</div>');
                             qnaArea.append('<input type="hidden" id="hiddenUsername" value="' + qna.member.username + '">')
                         });

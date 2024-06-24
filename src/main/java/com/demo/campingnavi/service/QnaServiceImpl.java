@@ -30,6 +30,11 @@ public class QnaServiceImpl implements QnaService{
     }
 
     @Override
+    public Page<Qna> findAllByTypeExceptNone(String type, Pageable pageable) {
+        return qnaRepository.findAllByTypeExceptNone(type, pageable);
+    }
+
+    @Override
     public Page<Qna> findAllByMember(Member member, Pageable pageable) {
         return qnaRepository.findAllByMember(member, pageable);
     }

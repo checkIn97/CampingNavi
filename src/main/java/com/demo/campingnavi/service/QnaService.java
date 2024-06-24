@@ -13,5 +13,7 @@ public interface QnaService {
 
     public Page<Qna> findAllByType(String type, Pageable pageable);
 
+    public Page<Qna> findAllByTypeExceptNone(String type, Pageable pageable);
+
     public Page<Qna> findAllByMember(Member member, Pageable pageable);
 }
