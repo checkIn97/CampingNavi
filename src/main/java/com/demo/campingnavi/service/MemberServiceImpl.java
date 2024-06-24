@@ -35,6 +35,11 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username);
+    }
+
+    @Override
     public void saveMember(Member member) {
         memberRepository.save(member);
     }
@@ -62,7 +67,7 @@ public class MemberServiceImpl implements MemberService{
                     .addr2("n")
                     .provider("campingnavi")
                     .providerId("campingnavi" + vo.getUsername())
-                    .phone(vo.getPhone())
+                    .phone(vo.getPhone() + vo.getPhone2())
                     .nickname(vo.getNickname())
                     .birth(vo.getBirth())
                     .useyn("y")
@@ -109,9 +114,30 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    public boolean validatePw(String pw) {
+        String PATTERN_PW = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,128}+$";
+        boolean pwPattern = Pattern.matches(PATTERN_PW, pw);
+
+        return pwPattern;
+    }
+
+    @Override
+    public boolean validateUsername(String username) {
+        String PATTERN_ID = "^[a-z]{1}[a-z0-9]{5,10}+$";
+        boolean idPattern = Pattern.matches(PATTERN_ID, username);
+        return idPattern;
+    }
+
+    @Override
     public String getUsername(String name, String email, String birth, String phone, String provider) {
 
         return memberRepository.getUsername(name, email, birth, phone, provider);
+    }
+
+    @Override
+    public boolean isMemberByPw(String name, String username, String email, String birth, String phone) {
+
+        return memberRepository.existsMemberByPw(name, username, email, birth, phone);
     }
 
     @Override

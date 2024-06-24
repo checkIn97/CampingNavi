@@ -261,9 +261,10 @@
         var nickname = $("#nickname").val();
         var birth = $("#birth").val();
         var phone = $("#phone").val();
+        var phone2 = $("#phone2").val();
         var email = $("#email").val();
         var addr = $("#addr").val();
-        const phonePattern = /^(01[016789])-(\d{3,4})-(\d{4})$/;
+        const phonePattern = /^(\d{7,8})$/;
 
         if (username == "") {
             alert("아이디를 입력해주세요!");
@@ -288,8 +289,11 @@
             $("#nickname").focus();
         } else if (birth == "") {
             alert("생일을 입력해주세요!");
-        } else if (!phonePattern.test(phone)) {
-            alert("유효하지 않은 휴대전화번호입니다!");
+        } else if (!phonePattern.test(phone2)) {
+            alert("유효하지 않은 전화번호입니다!");
+            $("#phone2").focus();
+        } else if (phone == "") {
+            alert("번호를 선택해주세요.");
             $("#phone").focus();
         } else if (email == "") {
             alert("이메일을 입력해주세요!");
@@ -347,7 +351,27 @@
             </div>
 
             <div class="memberContain">
-                <input placeholder="휴대전화번호 예) 010-1234-5678" type="tel" class="webkit" name="phone" id="phone">
+                <select  type="tel" class="webkit" name="phone" id="phone">
+                    <option value="">선택</option>
+                    <option value="010">010</option>
+                    <option value="02">02) 서울</option>
+                    <option value="031">031) 경기</option>
+                    <option value="032">032) 인천</option>
+                    <option value="033">033) 강원</option>
+                    <option value="041">041) 충남</option>
+                    <option value="042">042) 대전</option>
+                    <option value="043">043) 충북</option>
+                    <option value="051">051) 부산</option>
+                    <option value="052">052) 울산</option>
+                    <option value="053">053) 대구</option>
+                    <option value="054">054) 경북</option>
+                    <option value="055">055) 경남</option>
+                    <option value="061">061) 전남</option>
+                    <option value="062">062) 광주</option>
+                    <option value="063">063) 전북</option>
+                    <option value="064">064) 제주</option>
+                </select>
+                <input placeholder="전화번호 - 없이 숫자만 입력해주세요" type="tel" class="webkit" name="phone2" id="phone2">
                 <!--<button type="button">핸드폰 번호 인증</button>-->
             </div>
 

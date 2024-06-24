@@ -22,6 +22,10 @@
         <button id="registerBtn" type="button">회원가입</button>
         <button id="adminBtn" type="button">관리자</button>
     </div>
+    <div class="buttonContain" id="searchGroup">
+        <button id="searchUsernameBtn" type="button">아이디 찾기</button>
+        <button id="searchPwBtn" type="button">비밀번호 찾기</button>
+    </div>
 
     <div class="buttonContain" id="snsGroup">
         <a href="/oauth2/authorization/kakao" class="snsA"><img src="/assets/images/icon/kakao.png" alt="kakaoLogin"></a>
@@ -69,6 +73,16 @@
 
     document.getElementById('loginBtn').addEventListener('click', function () {
         location.href = '/camp/search'
+    })
+
+    document.getElementById('searchUsernameBtn').addEventListener('click', function () {
+        var type = 'username';
+        location.href = '/member/search/' + type;
+    })
+
+    document.getElementById('searchPwBtn').addEventListener('click', function () {
+        var type = 'password'
+        location.href = '/member/search/' + type;
     })
 </script>
 <script th:inline="javascript">

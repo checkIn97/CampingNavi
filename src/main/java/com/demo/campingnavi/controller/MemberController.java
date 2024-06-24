@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,9 @@ public class MemberController {
     ReviewService reviewService;
     @Autowired
     QnaService qnaService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @GetMapping("/login")
     public String loginP(Model model) {
@@ -165,6 +169,7 @@ public class MemberController {
                                           @RequestParam("sex") String sex,
                                           @RequestParam("birth") String birth,
                                           @RequestParam("phone") String phone,
+                                          @RequestParam("phone2") String phone2,
                                           @RequestParam("addr1") String addr1,
                                           @RequestParam("addr2") String addr2,
                                           @RequestParam(value = "img", required = false) String img,
@@ -208,7 +213,7 @@ public class MemberController {
         member.setNickname(nickname);
         member.setSex(sex);
         member.setBirth(birth);
-        member.setPhone(phone);
+        member.setPhone(phone + phone2);
         member.setAddr1(addr1);
         member.setAddr2(addr2);
 
@@ -218,6 +223,7 @@ public class MemberController {
         data.put("sex", sex);
         data.put("birth", birth);
         data.put("phone", phone);
+        data.put("phone2", phone2);
         data.put("addr1", addr1);
         data.put("addr2", addr2);
         data.put("img", img);
@@ -249,9 +255,16 @@ public class MemberController {
         return qnaService.findAllByMember(member, pageable);
     }
 
-    @GetMapping("/search")
-    public String searchView() {
-        return "member/searchUsername";
+    @GetMapping("/search/{type}")
+    public String searchView(@PathVariable String type) {
+        if (type.equals("username")) {
+            return "member/searchUsername";
+        } else if (type.equals("password")){
+            return "member/searchPassword";
+        } else {
+            return "member/loginPage";
+        }
+
     }
 
     @PostMapping("/search/username")
@@ -259,5 +272,48 @@ public class MemberController {
         String username = memberService.getUsername(vo.getName(), vo.getEmail(), vo.getBirth(), vo.getPhone(), vo.getProvider());
         model.addAttribute("username", username);
         return "member/searchUsername";
+    }
+
+    @PostMapping("/search/password")
+    @ResponseBody
+    public Map<String, Object> searchPw(@RequestParam("name") String name,
+                           @RequestParam("username") String username,
+                           @RequestParam("email") String email,
+                           @RequestParam("birth") String birth,
+                           @RequestParam("phone") String phone) {
+
+        Map<String, Object> map = new HashMap<>();
+        if (memberService.isMemberByPw(name, username, email, birth, phone)) {
+            Member member = memberService.findByUsername(username);
+            map.put("mseq", member.getMseq());
+            map.put("result", "success");
+        } else {
+            map.put("result", "존재하는 회원 정보가 없습니다.");
+        }
+
+        return map;
+    }
+
+    @PostMapping("/search/password/new")
+    @ResponseBody
+    public Map<String, Object> searchPw(@RequestParam("pw") String pw,
+                                        @RequestParam("mseq") int mseq) {
+
+        Map<String, Object> map = new HashMap<>();
+        if (mseq != 0 && pw != null) {
+            if(memberService.validatePw(pw)) {
+                Member member = memberService.findById(mseq);
+                member.setPw(passwordEncoder.encode(pw));
+                memberService.saveMember(member);
+                map.put("result", "success");
+            } else {
+                map.put("result", "비밀번호는 8자 이상이어야 하며, 영문 대/소문자와 특수문자가 1개 이상 포함되어야 합니다.");
+            }
+
+        } else {
+            map.put("result", "공백은 비밀번호로 사용할 수 없습니다.");
+        }
+
+        return map;
     }
 }

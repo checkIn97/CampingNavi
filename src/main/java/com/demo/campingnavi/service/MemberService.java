@@ -11,31 +11,39 @@ import org.springframework.stereotype.Service;
 @Service
 public interface MemberService {
 
-    public Member findById(int mseq);
+    Member findById(int mseq);
 
-    public void saveMember(Member member);
+    Member findByUsername(String username);
 
-    public boolean joinProcess(MemberVo vo);
+    void saveMember(Member member);
 
-    public boolean loginProcess(MemberVo vo);
+    boolean joinProcess(MemberVo vo);
 
-    public boolean isUserName(MemberVo vo);
+    boolean loginProcess(MemberVo vo);
 
-    public boolean isNickName(MemberVo vo);
+    boolean isUserName(MemberVo vo);
 
-    public boolean isEmail(String email);
+    boolean isNickName(MemberVo vo);
 
-    public String getUsername(String name, String email, String birth, String phone, String provider);
+    boolean isEmail(String email);
 
-    public Page<Recommend> getList(int page, Member member);
+    boolean validatePw(String pw);
 
-    public Page<Member> findAll(Pageable pageable);
+    boolean validateUsername(String username);
 
-    public Page<Member> findAllByUsername(String username, Pageable pageable);
+    String getUsername(String name, String email, String birth, String phone, String provider);
 
-    public Page<Member> findAllByName(String name, Pageable pageable);
+    boolean isMemberByPw(String name, String username, String email, String birth, String phone);
 
-    public Page<Member> findAllByProvider(String provider, Pageable pageable);
+    Page<Recommend> getList(int page, Member member);
 
-    public Page<Member> findAllByEmail(String eamil, Pageable pageable);
+    Page<Member> findAll(Pageable pageable);
+
+    Page<Member> findAllByUsername(String username, Pageable pageable);
+
+    Page<Member> findAllByName(String name, Pageable pageable);
+
+    Page<Member> findAllByProvider(String provider, Pageable pageable);
+
+    Page<Member> findAllByEmail(String eamil, Pageable pageable);
 }

@@ -12,19 +12,22 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
     @Query("SELECT EXISTS(SELECT m FROM Member m WHERE m.username = ?1 AND m.useyn = 'y')")
-    public boolean existsByUsername(String username);
+    boolean existsByUsername(String username);
 
     @Query("SELECT m FROM Member m WHERE m.username = ?1 AND m.useyn = 'y'")
-    public Member findByUsername(String username);
+    Member findByUsername(String username);
 
     @Query("SELECT EXISTS(SELECT m FROM Member m WHERE m.nickname = ?1 AND m.useyn = 'y')")
-    public boolean existsByNickname(String nickname);
+    boolean existsByNickname(String nickname);
 
     @Query("SELECT EXISTS(SELECT m FROM Member m WHERE m.email = ?1 AND m.useyn = 'y' AND m.provider = 'campingnavi')")
     boolean existsByEmail(String email);
 
     @Query("SELECT m.username FROM Member m WHERE m.name = ?1 AND m.email = ?2 AND m.birth = ?3 AND m.phone = ?4 AND m.provider = ?5 AND m.useyn = 'y'")
-    public String getUsername(String name, String email, String birth, String phone, String provider);
+    String getUsername(String name, String email, String birth, String phone, String provider);
+
+    @Query("SELECT EXISTS(SELECT m FROM Member m WHERE m.name = ?1 AND m.username = ?2 AND m.email = ?3 AND m.birth = ?4 AND m.phone = ?5 AND m.useyn = 'y')")
+    boolean existsMemberByPw(String name, String username, String email, String birth, String phone);
 
     @Query("SELECT m FROM Member m WHERE m.role = 'ROLE_USER'")
     Page<Member> findAll(Pageable pageable);
