@@ -694,6 +694,7 @@ input[name="slide"] {
 }
 
 .detailBox {
+    margin: auto;
     width: 52rem;
 }
 
