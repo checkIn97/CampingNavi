@@ -32,10 +32,11 @@ public class ChatController {
         if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
             message.setMessage(message.getSender() + "님이 입장하셨습니다.");
             List<String> userList = chatRoomService.getUserList(message.getRoomId());
+            System.out.println(message.getChatRoomUserList());
             String newMseq = String.valueOf(message.getMseq());
             boolean isAlreadyJoined = userList.contains(newMseq);
-
             if (!isAlreadyJoined) {
+
                 chatRoomService.addUser(message.getRoomId(), message.getMseq());
             }
 
@@ -46,9 +47,9 @@ public class ChatController {
             // 입장 메시지를 설정하고 저장
             message.setCreatedAt(LocalDateTime.now());
             mongoChatMessageRepository.save(message);
-
             // 채팅방에 입장 메시지를 전송
             messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
+
         } else if(ChatMessage.MessageType.TALK.equals(message.getType())) {
             // 다른 타입의 메시지 처리
             message.setCreatedAt(LocalDateTime.now());

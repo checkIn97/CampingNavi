@@ -128,14 +128,16 @@ public class ChatRoomController {
     @GetMapping("/room/enter/{roomId}")
     public String roomDetail(Model model, @PathVariable String roomId) {
         model.addAttribute("roomId", roomId);
+
         return "/chat/roomdetail";
     }
     // 특정 채팅방 조회
-//    @GetMapping("/room/{roomId}")
-//    @ResponseBody
-//    public ChatRoom roomInfo(@PathVariable String roomId) {
-//        return chatRoomService.findRoomById(roomId);
-//    }
+    @GetMapping("/room/{roomId}")
+    @ResponseBody
+    public ChatRoom roomInfo(@PathVariable String roomId) {
+        System.out.println("특정채팅방 조회 메서드 : " + chatRoomService.findRoomById(roomId));
+        return chatRoomService.findRoomById(roomId);
+    }
 
     // 특정 채팅방의 모든 메시지 조회
     @GetMapping("/room/{roomId}/messages")
@@ -163,9 +165,24 @@ public class ChatRoomController {
     public String searchRoom(){
         return "chat/room";
     }
-    @GetMapping("/userList")
-    public List<String> userList(String roomId){
-        List<String> userList = chatRoomService.getUserList(roomId);
-        return userList;
+
+    @GetMapping("/userList/{roomId}")
+    @ResponseBody
+    public List<String> userList(@PathVariable String roomId){
+
+        System.out.println("룸아이디로 유저리스트 찾기 " + roomId);
+        System.out.println("이 방의 참여자는" + chatRoomService.findRoomById(roomId));
+
+        List<String> mseqList = chatRoomService.getUserList(roomId);
+
+        List<String> chatRoomUserList = new ArrayList<>();
+        for (String mseq : mseqList) {
+            chatRoomUserList.add(String.valueOf(memberRepository.findById(Integer.valueOf(mseq)).get().getUsername()));
+        }
+        System.out.println(chatRoomUserList);
+
+        return chatRoomUserList;
     }
+
+
 }

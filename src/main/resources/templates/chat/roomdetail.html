@@ -43,6 +43,12 @@
                 <button onclick="goBack()" class="chatBtn mainBte" id="chatBack">나가기</button>
             </div>
         </div>
+        <div>
+            <h4>참여자</h4>
+            <ul>
+                <li v-for="user in chatRoomUserList">{{user}}</li>
+            </ul>
+        </div>
     </div>
 </article>
 <button class="chatBtn mainBtn" id="chatExit">채팅방 탈퇴</button>
@@ -69,7 +75,9 @@
             sender: '',
             message: '',
             messages: [],
-            mseq: ''
+            mseq: '',
+            chatRoomUserList: [],
+            user: ''
         },
         created() {
             this.roomId = localStorage.getItem('wschat.roomId');
@@ -77,6 +85,8 @@
             this.mseq = localStorage.getItem('wschat.mseq');
             this.findRoom();
             this.loadMessages();
+            this.findUserList();
+
         },
         mounted() {
             this.scrollToBottom();
@@ -85,8 +95,10 @@
             findRoom() {
                 axios.get('/chat/room/' + this.roomId).then(response => {
                     this.room = response.data;
+                    console.log("채팅룸 정보" + this.room);
                 });
             },
+
             loadMessages() {
                 axios.get('/chat/room/' + this.roomId + '/messages').then(response => {
                     this.messages = response.data.map(msg => {
@@ -126,7 +138,15 @@
             scrollToBottom() {
                 const container = this.$el.querySelector('.chat-container');
                 container.scrollTop = container.scrollHeight;
+            },
+            findUserList() {
+                axios.get('/chat/userList/' + this.roomId).then(response => {
+                    this.chatRoomUserList = response.data;
+
+                });
             }
+
+
         }
     });
 

@@ -46,8 +46,8 @@ public class ChatRoom {
     public void downUserCount(){
         this.userCount--;
     }
-    public void addUser(String username){
-        this.userList.add(username);
+    public void addUser(String userMseq){
+        this.userList.add(userMseq);
         System.out.println("addUser 실행완료");
     }
     public void removeUser(String username){
