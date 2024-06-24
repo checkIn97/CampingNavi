@@ -384,7 +384,7 @@ table.alt tfoot {
 
 /*membership*/
 
-.membership-sex{
+.membership-sex {
     justify-content: center;
     align-items: center;
     padding: 0.3rem !important;
@@ -450,6 +450,13 @@ table.alt tfoot {
 
 /*loginPage*/
 
+.member-find {
+    color: #888888;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
 
 #loginBtn {
     width: -webkit-fill-available;
@@ -457,7 +464,7 @@ table.alt tfoot {
 
 #wrapper {
     position: absolute;
-    top: 50%;
+    top: 52%;
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 20px;
@@ -1129,8 +1136,8 @@ input[name="slide"] {
 /*mainPage*/
 
 #mainPageBtnzBody {
-    width: 100%;  /* 너비를 100%로 설정 */
-    height: 100%;  /* 높이를 100%로 설정 */
+    width: 100%; /* 너비를 100%로 설정 */
+    height: 100%; /* 높이를 100%로 설정 */
 }
 
 .mainPageBtn {
@@ -1138,7 +1145,7 @@ input[name="slide"] {
 }
 
 #mainPageBtnz {
-    margin: auto;  /* 가운데 정렬 위해 마진을 자동으로 설정합니다. */
+    margin: auto; /* 가운데 정렬 위해 마진을 자동으로 설정합니다. */
 }
 
 .mainPageBtn {
@@ -1146,7 +1153,7 @@ input[name="slide"] {
     top: 50%;
     left: 50%;
     width: 10rem;
-    margin: -25px 0 0 -25px;  /* 버튼을 중앙에 위치시키기 위해 마진을 설정합니다. */
+    margin: -25px 0 0 -25px; /* 버튼을 중앙에 위치시키기 위해 마진을 설정합니다. */
 }
 
 #chat {
@@ -1274,7 +1281,6 @@ h1 {
 }
 
 
-
 .myPageArea {
     margin-bottom: 3rem;
 }
@@ -1340,7 +1346,6 @@ h1 {
 }
 
 
-
 #myPageInfo {
     display: block;
 }
@@ -1353,7 +1358,7 @@ h1 {
     display: none;
 }
 
-.myPageSaveTitle{
+.myPageSaveTitle {
     margin: 0;
     padding: 0;
 }
@@ -1368,7 +1373,7 @@ h1 {
     vertical-align: baseline;
 }
 
-.myPageProPicture{
+.myPageProPicture {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1378,8 +1383,8 @@ h1 {
     height: 2rem;
     border-radius: 50%;
     position: absolute;
-    right: 2rem;  /* 오른쪽에서의 위치를 지정합니다. */
-    bottom: 0;  /* 하단에서의 위치를 지정합니다. */
+    right: 2rem; /* 오른쪽에서의 위치를 지정합니다. */
+    bottom: 0; /* 하단에서의 위치를 지정합니다. */
 }
 
 .correctionImg {
@@ -1464,7 +1469,7 @@ h1 {
 
 /*review*/
 
-.nextContent:hover{
+.nextContent:hover {
     font-weight: bold;
     font-size: 1.1rem;
 }
@@ -1507,6 +1512,7 @@ h1 {
 .review-title {
     text-align: center;
 }
+
 .review-insert-margin-bottom {
     margin-bottom: 1rem;
 }
@@ -1610,7 +1616,7 @@ h1 {
 
 #review-detail-box {
     width: 50rem;
-    overflow-wrap: anywhere ;
+    overflow-wrap: anywhere;
 }
 
 #likeCount {
@@ -1623,8 +1629,8 @@ hr.vertical {
 }
 
 .button-full {
-    display: flex;  /* flexbox 레이아웃을 사용 */
-    justify-content: space-between;  /* 아이템들 사이에 동일한 간격을 두어 꽉 차게 만듭니다 */
+    display: flex; /* flexbox 레이아웃을 사용 */
+    justify-content: space-between; /* 아이템들 사이에 동일한 간격을 두어 꽉 차게 만듭니다 */
 }
 
 .space-between {
@@ -1678,12 +1684,15 @@ details {
     border-radius: 0.5rem;
     margin-bottom: 1rem;
 }
+
 details:last-child {
     margin-bottom: 0;
 }
+
 summary::-webkit-details-marker {
     display: none;
 }
+
 summary {
     display: block;
     padding: 2rem 3rem 2rem 0;
@@ -1691,6 +1700,7 @@ summary {
     cursor: pointer;
     position: relative;
 }
+
 summary::before,
 summary::after {
     content: "";
@@ -1701,12 +1711,15 @@ summary::after {
     right: 1rem;
     top: 2.5rem;
 }
+
 summary::after {
     transform: rotateZ(90deg);
 }
+
 details p {
     padding-bottom: 2rem;
 }
+
 details[open] summary::after {
     display: none;
 }
