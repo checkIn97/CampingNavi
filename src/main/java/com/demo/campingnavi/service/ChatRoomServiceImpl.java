@@ -37,7 +37,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     @Override
     public ChatRoom findRoomById(String roomId) {
 
-        return null;
+        return chatRoomRepository.findById(roomId).orElse(null);
     }
 
     @Override
