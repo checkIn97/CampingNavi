@@ -448,6 +448,41 @@ table.alt tfoot {
     margin-bottom: 20px;
 }
 
+/*userSearch*/
+
+#user-search-name-pw {
+    margin-bottom: 1rem;
+}
+
+#user-search-logo {
+    width: 55%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#user-search-box {
+    width: 30%;
+    margin: auto;
+}
+
+#user-search-prov {
+    margin-bottom: 1rem;
+}
+
+#user-search-birth {
+    margin-bottom: 1rem;
+}
+
+#user-search-email {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+#user-search-phone {
+    margin-bottom: 1rem;
+}
+
 /*loginPage*/
 
 .member-find {
