@@ -12,9 +12,6 @@ import java.util.List;
 @Service
 public class AdminServiceImpl implements AdminService {
 
-    @Autowired
-    private UpdateHistoryRepository updateHistoryRepo;
-
     @Override
     public String recommendModelUpdate() {
         String pyFile = "ModelTraining.py";
@@ -85,7 +82,7 @@ public class AdminServiceImpl implements AdminService {
             Process process = processBuilder.start();
             process.waitFor();
             System.out.println(pyFile + " 실행 성공");
-            String filename = "tmp_campingData" + page + ".csv";
+            String filename = "temp/tmp_campingData" + page + ".csv";
             filename = PathConfig.realPath(filename);
             File file = new File(filename);
             if (file.exists()) {
@@ -119,15 +116,86 @@ public class AdminServiceImpl implements AdminService {
         return result;
     }
 
-
     @Override
-    public void saveUpdateHistory(UpdateHistory updateHistory) {
-        updateHistoryRepo.save(updateHistory);
+    public int getCrawlingNumber(String update_type) {
+        int n = 0;
+        String filename = "temp/crawling_status.csv";
+        filename = PathConfig.realPath(filename);
+        if (update_type.equals("start")) {
+            File file = new File(filename);
+            if (file.exists()) {
+                if (file.delete()) {
+                    System.out.println(filename+"삭제 완료");
+                } else {
+                    System.out.println(filename+"삭제 실패");
+                    n = -1;
+                }
+            }
+        } else {
+            try {
+                FileReader fileReader = new FileReader(filename);
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                File file = new File(filename);
+                if (file.exists()) {
+                    String text = null;
+                    try {
+                        text = bufferedReader.readLine();
+                        text = bufferedReader.readLine();
+                        String input[] = text.split(",");
+                        n = Integer.parseInt(input[0]);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return n;
     }
 
     @Override
-    public List<UpdateHistory> getUpdateHistoryList(String kind) {
-        return updateHistoryRepo.findByKindOrderByUpdateTimeDesc(kind);
+    public String getCrawlingData() {
+        String pyFile = "CrawlingDataSearch.py";
+        pyFile = PathConfig.realPath(pyFile);
+
+        ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile);
+        String result = "";
+        try {
+            Process process = processBuilder.start();
+            process.waitFor();
+            System.out.println(pyFile + " 실행 성공");
+            InputStream inputStream = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            result = reader.readLine();
+            reader.close();
+            inputStream.close();
+        } catch (IOException | InterruptedException e) {
+            System.out.println(pyFile + " 실행 실패");
+            result = "fail";
+        }
+
+        return result;
     }
 
+
+    @Override
+    public String getCrawlingDataIntegration() {
+        String pyFile = "CrawlingDataIntegration.py";
+        pyFile = PathConfig.realPath(pyFile);
+
+        ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile);
+        String result = "";
+        try {
+            Process process = processBuilder.start();
+            process.waitFor();
+            System.out.println(pyFile + " 실행 성공");
+            result = "success";
+        } catch (IOException | InterruptedException e) {
+            System.out.println(pyFile + " 실행 실패");
+            result = "fail";
+        }
+
+        return result;
+    }
 }
