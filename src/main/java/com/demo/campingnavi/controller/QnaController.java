@@ -235,7 +235,7 @@ public class QnaController {
 
         qnaService.saveQna(qna);
         model.addAttribute("member", member);
-        return "qna/qnaHome";
+        return "redirect:/qna/home";
     }
 
     @GetMapping("/reply/write/{qseq}")
