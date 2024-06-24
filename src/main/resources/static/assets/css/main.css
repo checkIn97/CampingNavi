@@ -1770,3 +1770,27 @@ details[open] summary::after {
 .qna-label {
     font-size: 1.5rem;
 }
+
+#myPageQna {
+    display: none;
+}
+
+.qna-content {
+    width: -webkit-fill-available;
+    height: 300px;
+    border-radius: 1rem;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    resize: none;
+}
+
+.qna-createdAt {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+}
+
+.qna-contain {
+    margin-left: 3rem;
+    margin-right: 3rem;
+}

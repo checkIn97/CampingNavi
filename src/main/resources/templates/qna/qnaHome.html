@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="kr" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="kr" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8"/>
@@ -29,17 +29,17 @@
 
     </div>
     <div class="buttonContain">
-<!--        <a href="/qna/faq/writeView">
-        <button class="mainBtn" id="faqWrite" target="_blank" type="button">
-            FAQ 작성하기
-        </button>
-        </a>-->
+        <!--        <a href="/qna/faq/writeView">
+                <button class="mainBtn" id="faqWrite" target="_blank" type="button">
+                    FAQ 작성하기
+                </button>
+                </a>-->
     </div>
     <div class="buttonContain" id="detailContain">
-        <input class="detailBtn" id="faq" name="btn" type="radio" checked>
-        <label for="faq" class="faq-label">자주 묻는 질문</label>
+        <input checked class="detailBtn" id="faq" name="btn" type="radio">
+        <label class="faq-label" for="faq">자주 묻는 질문</label>
         <input class="detailBtn" id="qna" name="btn" type="radio">
-        <label for="qna" class="qna-label">1 대 1 문의</label>
+        <label class="qna-label" for="qna">1 대 1 문의</label>
     </div>
 
     <div id="campDetail">
@@ -63,12 +63,11 @@
         </div>
 
 
-
     </div>
 </div>
 
-<input type="hidden" id="userRole" th:value="${member.role}">
-<input type="hidden" id="username" th:value="${member.username}">
+<input id="userRole" th:value="${member.role}" type="hidden">
+<input id="username" th:value="${member.username}" type="hidden">
 <th:block th:insert="~{insert/footer.html}"></th:block>
 
 <script>
@@ -160,21 +159,21 @@
                 type: 'GET',
                 url: '/qna/faq',
                 data: {
-                    page : page_FAQ,
-                    size : 10,
-                    sort : 'createdAt,desc'
+                    page: page_FAQ,
+                    size: 10,
+                    sort: 'createdAt,desc'
                 },
                 success: function (data) {
                     var faqArea = $("#faqList");
                     faqArea.empty();
                     var faqs = data.content;
 
-                    if(faqs.length < 1) {
+                    if (faqs.length < 1) {
                         faqArea.append('<span>자주 묻는 질문을 등록해주세요.</span>');
                     } else {
                         faqs.forEach(function (faq) {
                             faqArea.append('<details><summary class="faqTitle">' + faq.title + '</summary>' +
-                                '<span class="faqSpan"><div class="faqContent">' + faq.content +'' +
+                                '<span class="faqSpan"><div class="faqContent">' + faq.content + '' +
                                 '</div><img class="faqImg webkit" src="/assets/qnaImages/' + faq.image + '"></span></details>');
                         });
                     }
@@ -194,6 +193,7 @@
                 }
             });
         }
+
         $(document).on('click', '#faq-page', function () {
             var page_FAQ = $(this).data('page');
             faqList(page_FAQ);
@@ -206,7 +206,7 @@
         });
 
         $('#nextBtn_FAQ').click(function () {
-            if (currentPage_FAQ < $('#hiddenTotal_FAQ').val() -1) {
+            if (currentPage_FAQ < $('#hiddenTotal_FAQ').val() - 1) {
                 faqList(currentPage_FAQ + 1);
             }
         });
@@ -221,36 +221,27 @@
                 type: 'GET',
                 url: '/qna/oneByone',
                 data: {
-                    page : page_QNA,
-                    size : 10,
-                    sort : 'createdAt,desc'
+                    page: page_QNA,
+                    size: 10,
+                    sort: 'createdAt,desc'
                 },
                 success: function (data) {
                     var qnaArea = $("#qnaList");
                     var username = $("#username").val()
                     qnaArea.empty();
                     var qnas = data.content;
-                    var index = 1;
-                    qnaArea.append('<table>');
-                    qnaArea.append('<tr>');
-                    qnaArea.append('<th>번호</th>');
-                    qnaArea.append('<th>제목</th>');
-                    qnaArea.append('<th>작성일자</th>');
-                    qnaArea.append('<th>작성자</th>');
-                    qnaArea.append('</tr>');
 
-                    if(qnas.length < 1) {
-                        qnaArea.append('<tr><td>1:1 문의를 등록해주세요.</td></tr>');
+                    if (qnas.length < 1) {
+                        qnaArea.append('<div class="qna-non-title">1:1 문의를 등록해주세요.</div>');
                     } else {
                         qnas.forEach(function (qna) {
-                            qnaArea.append('<tr th:if="' + username + '==' + qna.member.username + '">');
-                            qnaArea.append('<td>' + index++ + '</td>');
-                            qnaArea.append('<td><a class="myPageSavaLink" href="/qna/oneByone/detail/' + qna.qseq + '"><h3>' + qna.title + '</h3></a></td>');
-                            qnaArea.append('<td>' + qna.createdAt + '</td>');
-                            qnaArea.append('<td>' + qna.member.name + '</td>');
-                            qnaArea.append('</tr>');
-                            qnaArea.append('</table>');
-                            qnaArea.append('<input type="hidden" id="hiddenUsername" value="' + qna.member.username +'">')
+                            var date = new Date(qna.createdAt);
+                            var formattedDate = date.toLocaleDateString();
+                            qnaArea.append('<div th:if="' + username + '==' + qna.member.username + '">');
+                            qnaArea.append('<div class="buttonContain qna-contain"><div><a class="myPageSavaLink" href="/qna/oneByone/detail/'
+                                + qna.qseq + '"><h1>' + "[답변대기]" + qna.title + '</h1></a></div>' + '<div class="qna-createdAt">' + formattedDate + '</div>' + '</div>');
+                            qnaArea.append('</div>');
+                            qnaArea.append('<input type="hidden" id="hiddenUsername" value="' + qna.member.username + '">')
                         });
                     }
                     var pagination_QNA = $("#pagination_QNA");
@@ -269,6 +260,7 @@
                 }
             });
         }
+
         $(document).on('click', '#qna-page', function () {
             var page_QNA = $(this).data('page');
             qnaList(page_QNA);
@@ -281,7 +273,7 @@
         });
 
         $('#nextBtn_QNA').click(function () {
-            if (currentPage_QNA < $('#hiddenTotal_QNA').val() -1) {
+            if (currentPage_QNA < $('#hiddenTotal_QNA').val() - 1) {
                 qnaList(currentPage_QNA + 1);
             }
         });
