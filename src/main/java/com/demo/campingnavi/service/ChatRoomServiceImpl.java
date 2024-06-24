@@ -93,4 +93,11 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
         return users;
     }
+    @Override
+    public List<ChatRoom> findMyChatRooms(String memberMseq) {
+        // 사용자의 mseq를 기준으로 참여 중인 채팅방 리스트 조회
+        return chatRoomRepository.findByUserListContains(memberMseq);
+    }
+
+
 }

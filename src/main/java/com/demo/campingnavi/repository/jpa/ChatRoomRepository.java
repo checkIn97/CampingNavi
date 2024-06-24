@@ -16,4 +16,5 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, String> {
     @Query("SELECT DISTINCT camp FROM Camp camp, ChatRoom chatRoom " +
             "WHERE chatRoom.camp = camp ")
     List<Camp> getCampListExistingChatRoom();
+    List<ChatRoom> findByUserListContains(String memberMseq);
 }

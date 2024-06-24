@@ -11,7 +11,6 @@ import com.demo.campingnavi.repository.jpa.ReviewRepository;
 import com.demo.campingnavi.repository.mongo.MongoChatMessageRepository;
 import com.demo.campingnavi.service.CampService;
 import com.demo.campingnavi.service.ChatRoomService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -184,5 +183,16 @@ public class ChatRoomController {
         return chatRoomUserList;
     }
 
+    @GetMapping("/myList/{memberMseq}")
+    @ResponseBody
+    public List<ChatRoom> findmyList(HttpSession session,
+                                     @PathVariable String memberMseq){
+        Member member = (Member) session.getAttribute("loginUser");
+        List<ChatRoom> myChatRooms = chatRoomService.findMyChatRooms(String.valueOf(memberMseq));
+        return myChatRooms;
 
+
+
+
+    }
 }

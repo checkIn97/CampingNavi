@@ -23,4 +23,8 @@ public interface ChatRoomService {
     public void delUser(String roomId, int mseq);
     public String getUserName(String roomId);
     public List<String> getUserList(String roomId);
+    public List<ChatRoom> findMyChatRooms(String memberMseq);
+
+
+
 }
