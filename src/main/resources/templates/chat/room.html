@@ -144,6 +144,12 @@
         </div>
     </div>
 </div>
+    <div>
+        <h4>참여중인 채팅</h4>
+        <ul>
+            <li v-for="list in myRoomList" v-on:click="enterRoom(list.roomId)">{{list.name}}</li>
+        </ul>
+    </div>
 </div>
 
 
@@ -172,11 +178,14 @@
             camp_name: '',
             comuCamp: comuCamp,
             search_word: '',
-            memberMseq: memberMseq
+            memberMseq: memberMseq,
+            myRoomList: []
+
 
         },
         created() {
             this.findAllRoom();
+            this.findMyRoomList();
         },
         methods: {
             findAllRoom: function () {
@@ -239,6 +248,17 @@
                     comuCamp = this.search_word
                     this.findAllRoom();
                 }
+            },
+            findMyRoomList: function () {
+              axios.get("/chat/myList/" + memberMseq).then (
+                  response => {
+                      this.myRoomList = response.data;
+
+                  }
+              )
+
+
+
             }
 
         }
