@@ -167,7 +167,7 @@ public class MemberController {
     public Map<String, Object> myPageEdit(Model model,
                                           @RequestParam("nickname") String nickname,
                                           @RequestParam("sex") String sex,
-                                          @RequestParam("birth") String birth,
+                                          @RequestParam(value = "birth", defaultValue = "") String birth,
                                           @RequestParam("phone") String phone,
                                           @RequestParam("phone2") String phone2,
                                           @RequestParam("addr1") String addr1,
@@ -212,7 +212,9 @@ public class MemberController {
         member.setImg(img);
         member.setNickname(nickname);
         member.setSex(sex);
-        member.setBirth(birth);
+        if (birth != "") {
+            member.setBirth(birth);
+        }
         member.setPhone(phone + phone2);
         member.setAddr1(addr1);
         member.setAddr2(addr2);
@@ -228,6 +230,22 @@ public class MemberController {
         data.put("addr2", addr2);
         data.put("img", img);
         return data;
+    }
+
+    @GetMapping("/mypage/delete/{mseq}")
+    public String deleteMember(@PathVariable("mseq") int mseq,
+                               Model model) {
+        Member member = memberService.findById(mseq);
+        if(member != null) {
+            member.setUseyn("n");
+            memberService.saveMember(member);
+            model.addAttribute("msg", "삭제 성공");
+            return "redirect:/";
+        } else {
+            model.addAttribute("msg", "일치하는 회원이 없습니다.");
+            return "redirect:/member/mypage";
+        }
+
     }
 
     @GetMapping("/mypage/paging")
