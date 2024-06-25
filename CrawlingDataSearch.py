@@ -54,6 +54,7 @@ for i in range(count, len(camp_name)):
     persons = []
     scores = []
     
+    isError = False
     search_bar.send_keys(camp_name[i] + '\n')
     time.sleep(5)
 
@@ -61,72 +62,74 @@ for i in range(count, len(camp_name)):
         if driver.find_element(By.CLASS_NAME, 'Q2vNVc'):
             search_bar.clear()
             time.sleep(3)
-            continue
+            isError = True
     except:
         pass
-    if driver.find_elements(By.CLASS_NAME, 'hh2c6'):
-            index = 1
+    
+    if not isError:
+        if driver.find_elements(By.CLASS_NAME, 'hh2c6'):
+                index = 1
 
-    else:
-        for c in range(0, 5):
-            # 스크롤바 설정
-            scroll = driver.find_element(By.XPATH, '//*[@id="QA0Szd"]/div/div/div[1]/div[2]/div/div[1]/div/div/div[1]/div[1]')
-            # 캠핑장 목록에서 이름 리스트 설정
-            camps = scroll.find_elements(By.CLASS_NAME, 'hfpxzc')
-            index = 0
-            for camp in camps:
-                if camp_name[i] in camp.get_attribute('aria-label') or camp.get_attribute('aria-label') in camp_name[i]:
-                    camp.click()
+        else:
+            for c in range(0, 5):
+                # 스크롤바 설정
+                scroll = driver.find_element(By.XPATH, '//*[@id="QA0Szd"]/div/div/div[1]/div[2]/div/div[1]/div/div/div[1]/div[1]')
+                # 캠핑장 목록에서 이름 리스트 설정
+                camps = scroll.find_elements(By.CLASS_NAME, 'hfpxzc')
+                index = 0
+                for camp in camps:
+                    if camp_name[i] in camp.get_attribute('aria-label') or camp.get_attribute('aria-label') in camp_name[i]:
+                        camp.click()
+                        time.sleep(3)
+                        index = 1
+                        break
+                    else:
+                        continue
+                if index == 1:
+                    break
+                else:
+                    try:
+                        scroll.send_keys(Keys.PAGE_DOWN)
+                        time.sleep(3)
+                    except:
+                        pass
+                        
+        
+        if index == 1:
+            buttons = driver.find_elements(By.CLASS_NAME, 'hh2c6')
+                
+            for button in buttons:
+                if '리뷰' in button.get_attribute('aria-label'):
+                    actions.move_to_element(button)
+                    actions.click().perform()
                     time.sleep(3)
-                    index = 1
+                        
+                    reviewer_name = driver.find_elements(By.CLASS_NAME, 'd4r55') # 사람이름이 있는 태그 저장
+                    for name in reviewer_name:
+                        persons.append(name.text) # 태그에서 사람 이름만 뽑아서 리스트에 저장
+                        camp_list.append(camp_name[i])
+                        camp_ids.append(camp_cseq[i])
+        
+                    if driver.find_elements(By.CLASS_NAME, 'fzvQIb'):
+                        review_scores = driver.find_elements(By.CLASS_NAME, 'fzvQIb')
+                        for score in review_scores:
+                            scores.append(score.text)
+                    else:
+                        review_scores = driver.find_elements(By.CLASS_NAME, 'kvMYJc')
+                        for score in review_scores:
+                            scores.append(score.get_attribute('aria-label').split(' ')[1][0:1])
+                        
+                    search_bar.clear()
+                    time.sleep(3)
                     break
                 else:
                     continue
-            if index == 1:
-                break
-            else:
-                try:
-                    scroll.send_keys(Keys.PAGE_DOWN)
-                    time.sleep(3)
-                except:
-                    pass
-                    
-    
-    if index == 1:
-        buttons = driver.find_elements(By.CLASS_NAME, 'hh2c6')
-            
-        for button in buttons:
-            if '리뷰' in button.get_attribute('aria-label'):
-                actions.move_to_element(button)
-                actions.click().perform()
-                time.sleep(3)
-                    
-                reviewer_name = driver.find_elements(By.CLASS_NAME, 'd4r55') # 사람이름이 있는 태그 저장
-                for name in reviewer_name:
-                    persons.append(name.text) # 태그에서 사람 이름만 뽑아서 리스트에 저장
-                    camp_list.append(camp_name[i])
-                    camp_ids.append(camp_cseq[i])
-    
-                if driver.find_elements(By.CLASS_NAME, 'fzvQIb'):
-                    review_scores = driver.find_elements(By.CLASS_NAME, 'fzvQIb')
-                    for score in review_scores:
-                        scores.append(score.text)
-                else:
-                    review_scores = driver.find_elements(By.CLASS_NAME, 'kvMYJc')
-                    for score in review_scores:
-                        scores.append(score.get_attribute('aria-label').split(' ')[1][0:1])
-                    
-                search_bar.clear()
-                time.sleep(3)
-                break
-            else:
-                continue
-    
-        search_bar.clear()
-        time.sleep(3)
-    else:
-        search_bar.clear()
-        time.sleep(3)
+        
+            search_bar.clear()
+            time.sleep(3)
+        else:
+            search_bar.clear()
+            time.sleep(3)
     
     rating = pd.DataFrame({'캠핑장':camp_list, '회원':persons, '평점':scores, '캠핑장ID':camp_ids})
     tmp_rating_file = 'temp/rating' + str(i+1) + '.csv'

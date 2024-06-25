@@ -1,5 +1,6 @@
 package com.demo.campingnavi.controller;
 
+import com.demo.campingnavi.config.PathConfig;
 import com.demo.campingnavi.domain.*;
 import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.dto.ReviewScanVo;
@@ -240,7 +241,8 @@ public class AdminController {
 
     @ResponseBody
     @PostMapping("/get_crawling_initialize")
-    public Map<String, Object> getCrawlingData(@RequestParam("update_type") String update_type) {
+    public Map<String, Object> getCrawlingData(@RequestParam("update_type") String update_type,
+                                               HttpSession session) {
         Map<String, Object> result = new HashMap<>();
         dataService.deleteFile("/temp/crawling_stop");
         List<UpdateHistory> updateListCampSuccess = updateHistoryService.getUpdateHistoryList("camp", "success");
@@ -346,7 +348,7 @@ public class AdminController {
 
     @ResponseBody
     @PostMapping("/crawling_stop")
-    public Map<String, Object> crawlingDataStop() {
+    public Map<String, Object> crawlingDataStop(HttpSession session) {
         Map<String, Object> result = new HashMap<>();
         String text = "";
         try {
@@ -357,6 +359,7 @@ public class AdminController {
                 updateHistory.setKind("crawling");
                 updateHistory.setResult("stopped");
                 updateHistoryService.saveUpdateHistory(updateHistory);
+                session.setAttribute("crawling", "n");
             } else {
                 result.put("result", text);
             }
@@ -366,6 +369,20 @@ public class AdminController {
             result.put("result", text);
         }
 
+        return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/set_crawling_session")
+    public Map<String, Object> clearCrawlingSession(HttpSession session,
+                                                    @RequestParam("value") String value) {
+        Map<String, Object> result = new HashMap<>();
+        session.setAttribute("crawling", value);
+        if (value.equals("y")) {
+            result.put("result", "open");
+        } else {
+            result.put("result", "close");
+        }
         return result;
     }
 
@@ -431,7 +448,6 @@ public class AdminController {
             }
         }
 
-
         if (text.equals("")) {
             text = " ";
         } else if (text.equals("success")) {
@@ -457,7 +473,16 @@ public class AdminController {
     }
 
     @GetMapping("/update_page")
-    public String updatePage() {
+    public String updatePage(HttpSession session, Model model) {
+        String crawling = "n";
+        if (session.getAttribute("crawling") != null) {
+            crawling = (String) session.getAttribute("crawling");
+        }
+        model.addAttribute("crawling", crawling);
+
+        String dir = "/temp";
+        dataService.createDir(dir);
+
         return "admin/update/adminUpdate";
     }
 

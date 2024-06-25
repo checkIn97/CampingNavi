@@ -131,14 +131,22 @@
     </tr>
     <tr>
         <td colspan="2" style="text-align:center" id="crawling_action_button">
-            <button type="button" name="start_crawling" id="start_crawling">크롤링 시작하기</button>
-            <button type="button" name="stop_crawling" id="stop_crawling">크롤링 일시정지</button>
+            <th:block th:if="${crawling == 'n'}">
+                <button type="button" name="start_crawling" id="start_crawling">크롤링 시작하기</button>
+                <button type="button" name="stop_crawling" id="stop_crawling" style="display: none">크롤링 일시정지</button>
+            </th:block>
+            <th:block th:if="${crawling == 'y'}">
+                <button type="button" name="start_crawling" id="start_crawling" style="display: none">크롤링 시작하기</button>
+                <button type="button" name="stop_crawling" id="stop_crawling">크롤링 일시정지</button>
+            </th:block>
+            <input type="hidden" name="crawling_session" id="crawling_session" th:value="${crawling}">
         </td>
     </tr>
 </table>
 
 </body>
 <script>
+    var crawling_status_update = null;
     $(document).ready(function() {
         document.getElementById("update_camp").addEventListener("click", event => update_camp(event));
         document.getElementById("update_model").addEventListener("click", event => update_model(event));
@@ -147,6 +155,18 @@
         load_update_history("camp");
         load_update_history("model");
         load_update_history("crawling");
+        if ($("#crawling_session").val() == 'y') {
+            crawling_status_update = setInterval(load_update_history, 5000, "crawling");
+        }
+    });
+
+    document.getElementById('start_crawling').addEventListener('click', function () {
+        document.getElementById('start_crawling').style.display = 'none';
+        document.getElementById('stop_crawling').style.display = 'block';
+    });
+
+    document.getElementById('stop_crawling').addEventListener('click', function () {
+
     });
 
     function update_camp(event) {
@@ -159,22 +179,26 @@
         event.preventDefault();
     }
 
-    var crawling_status_update = null;
     function start_crawling(event) {
         review_crawling("start");
         crawling_status_update = setInterval(load_update_history, 5000, "crawling");
         event.preventDefault();
     }
 
+    var tmp_crawling_stop = null;
     function stop_crawling(event) {
-        let stop_crawling_result = false;
         $.ajax({
             type: "POST",
             url: "/admin/crawling_stop",
             success: function(data) {
                 if (data.result == 'success') {
+                    clearInterval(crawling_status_update);
+                    crawling_status_update = null;
                     alert("크롤링 중지 요청");
-                    stop_crawling_result = true;
+                    if ($("#crawling_session").val() == 'y') {
+                        tmp_crawling_stop = setTimeout(tmp_crawling_stop_process, 8000);
+                        $("#crawling_session").val('n');
+                    }
                 } else {
                     alert("크롤링 중지 실패");
                 }
@@ -183,11 +207,20 @@
                 alert("크롤링 중지 프로세스 오류");
             }
         });
-        if (stop_crawling_result) {
-            clearInterval(crawling_status_update);
-            crawling_status_update = null;
-        }
+
+
+
         event.preventDefault();
+    }
+
+    function tmp_crawling_stop_process() {
+        load_update_history("crawling");
+        clearTimeout(tmp_crawling_stop);
+        tmp_crawling_stop = null;
+        set_crawling_session('n');
+        document.getElementById('start_crawling').style.display = 'block';
+        document.getElementById('stop_crawling').style.display = 'none';
+        alert("크롤링 중지 완료");
     }
 
     /*
@@ -238,7 +271,7 @@
                 success: function(data0) {
                     if (data0.result == 'success') {
                         HTML = "";
-                        HTML += "0\%";
+                        HTML += "<h3>0\%</h3>";
                         $("#camp_update_progress").html(HTML);
                         let totalCount = data0.totalCount;
                         let size = 100;
@@ -256,7 +289,7 @@
                                     if (data1.result == 'success') {
                                         count++;
                                         HTML = "";
-                                        HTML += parseInt((count*100/totalPage)*0.90) + "\%";
+                                        HTML += "<h3>" + parseInt((count*100/totalPage)*0.90) + "\%</h3>";
                                         $("#camp_update_progress").html(HTML);
                                         if (count == totalPage) {
                                             $.ajax({
@@ -269,7 +302,7 @@
                                                 success: function(data2) {
                                                     if (data2.result == 'success') {
                                                         HTML = "";
-                                                        HTML += "99\%";
+                                                        HTML += "<h3>99\%</h3>";
                                                         $("#camp_update_progress").html(HTML);
                                                         $.ajax({
                                                             type: "POST",
@@ -280,38 +313,38 @@
                                                             success: function(data3) {
                                                                 if (data3.result == 'success') {
                                                                     HTML = "";
-                                                                    HTML += "100\%";
+                                                                    HTML += "<h3>100\%</h3>";
                                                                     $("#camp_update_progress").html(HTML);
                                                                     alert("캠핑장 데이터 업데이트 완료");
                                                                     load_update_history(kind);
                                                                     HTML = "";
                                                                     $("#camp_update_progress").html(HTML);
                                                                 } else {
-                                                                    alert("캠핑장데이터 최신화 오류");
                                                                     HTML = "";
                                                                     $("#camp_update_progress").html(HTML);
                                                                     load_update_history(kind);
+                                                                    alert("캠핑장데이터 최신화 오류");
                                                                 }
                                                             },
                                                             error: function() {
-                                                                alert("캠핑장데이터 최신화 오류");
                                                                 HTML = "";
                                                                 $("#camp_update_progress").html(HTML);
                                                                 load_update_history(kind);
+                                                                alert("캠핑장데이터 최신화 오류");
                                                             }
                                                         })
                                                     } else {
-                                                        alert("캠핑장데이터 최신화 오류");
                                                         HTML = "";
                                                         $("#camp_update_progress").html(HTML);
                                                         load_update_history(kind);
+                                                        alert("캠핑장데이터 최신화 오류");
                                                     }
                                                 },
                                                 error: function() {
-                                                    alert("데이터 통합 실패");
                                                     HTML = "";
                                                     $("#camp_update_progress").html(HTML);
                                                     load_update_history(kind);
+                                                    alert("데이터 통합 실패");
                                                 }
                                             });
                                         }
@@ -327,17 +360,17 @@
                             });
                         }
                     } else {
-                        alert("totalCount 가져오기 실패");
                         HTML = "";
                         $("#camp_update_progress").html(HTML);
                         load_update_history(kind);
+                        alert("totalCount 가져오기 실패");
                     }
                 },
                 error: function() {
-                    alert(kind + " 업데이트 중 오류 발생");
                     HTML = "";
                     $("#camp_update_progress").html(HTML);
                     load_update_history(kind);
+                    alert(kind + " 업데이트 중 오류 발생");
                 }
             });
         } else {
@@ -350,16 +383,16 @@
                 },
                 success: function(data) {
                     if (data.result == 'success') {
+                        load_update_history(kind);
                         alert("추천모델 업데이트 완료");
-                        load_update_history(kind);
                     } else {
-                        alert("작업 실패");
                         load_update_history(kind);
+                        alert("작업 실패");
                     }
                 },
                 error: function() {
-                    alert(kind + " 업데이트 중 오류 발생");
                     load_update_history(kind);
+                    alert(kind + " 업데이트 중 오류 발생");
                 }
             });
         }
@@ -434,6 +467,7 @@
             },
             success: function(data0) {
                 if (data0.result != 'fail') {
+                    set_crawling_session('y');
                     $.ajax({
                         type: "POST",
                         url: "/admin/get_crawling_data",
@@ -447,43 +481,71 @@
                                     url: "/admin/crawling_data_integration", // 크롤링 완료시 파일 통합
                                     success: function(data2) {
                                         if (data2.result == 'success') {
+                                            load_update_history(kind);
+                                            set_crawling_session('n');
+                                            document.getElementById('start_crawling').style.display = 'block';
+                                            document.getElementById('stop_crawling').style.display = 'none';
                                             alert("크롤링 완료");
-                                            load_update_history(kind);
                                         } else {
-                                            alert("데이터 통합 실패");
                                             load_update_history(kind);
+                                            set_crawling_session('n');
+                                            document.getElementById('start_crawling').style.display = 'block';
+                                            document.getElementById('stop_crawling').style.display = 'none';
+                                            alert("데이터 통합 실패");
                                         }
                                     },
                                     error: function() {
+                                        set_crawling_session('n');
                                         alert("데이터 통합 실패");
                                         location.reload();
                                     }
                                 });
                             } else if (data1.result == 'stopped') {
-                                alert("크롤링 중지 완료");
+                                set_crawling_session('n');
                                 load_update_history(kind);
+                                document.getElementById('start_crawling').style.display = 'block';
+                                document.getElementById('stop_crawling').style.display = 'none';
+                                alert("크롤링 중지 완료");
                             } else {
+                                set_crawling_session('n');
                                 alert("크롤링 중 오류 발생");
                                 location.reload();
                             }
                         },
                         error: function() {
+                            set_crawling_session('n');
                             alert("크롤링 중 오류 발생");
                             location.reload();
                         }
                     });
                 } else {
+                    set_crawling_session('n');
                     alert("초기화 실패");
                     load_update_history(kind);
                 }
             },
             error: function() {
+                set_crawling_session('n');
                 alert("크롤링 중 오류 발생");
                 load_update_history(kind);
             }
         });
     }
 
+    function set_crawling_session(value) {
+        $.ajax({
+            type: "POST",
+            url: "/admin/set_crawling_session",
+            data: {
+                value: value
+            },
+            success: function(data) {
+            },
+            error: function() {
+                alert("크롤링 세션 조작 실패");
+            }
+        })
+    }
 
 
 </script>

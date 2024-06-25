@@ -253,5 +253,28 @@ public class DataServiceImpl implements DataService {
         return result;
     }
 
+    @Override
+    public String createDir(String dir) {
+        String result = "";
+        dir = PathConfig.realPath(dir);
+        File file = new File(dir);
+        if (!file.isDirectory()) {
+            try {
+                if (file.mkdir()) {
+                    result = "success";
+                } else {
+                    result = "fail";
+                }
+            } catch (Exception e) {
+                result = "fail";
+                e.printStackTrace();
+            }
+        } else {
+            result = "success";
+        }
+
+        return result;
+    }
+
 
 }
