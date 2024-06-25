@@ -69,7 +69,7 @@
 <div class="d-flex">
     <div class="sidebar">
         <a th:href="@{/admin/}"><h4 class="text-white">CampNavi Admin</h4></a>
-        <a th:href="@{#}">데이터 관리</a>
+        <a th:href="@{/admin/update_page}">데이터 관리</a>
         <a th:href="@{/admin/review/list}">리뷰 관리</a>
         <a th:href="@{/admin/member/list}">회원 관리</a>
         <a th:href="@{/admin/supervisor/list}">관리자 관리</a>
@@ -78,26 +78,71 @@
         <a href="/oauth-login/member/logoutProc">로그아웃</a>
     </div>
 </div>
-<h2>캠핑장데이터</h2>
-<div id="camp_ver"></div>
-<div id="camp_update_progress"></div>
-<button type="button" name="update_camp" id="update_camp">캠핑장데이터 업데이트</button>
-<h2>추천모델</h2>
-<div id="model_ver"></div>
-<button type="button" name="update_model" id="update_model">추천모델 업데이트</button>
-<h2>리뷰 크롤링</h2>
-<div id="crawling_ver"></div>
-<div id="crawling_progress"></div>
-<button type="button" name="start_crawling" id="start_crawling">크롤링 시작하기</button>
-<button type="button" name="resume_crawling" id="resume_crawling">크롤링 재개하기</button>
-<button type="button" name="stop_crawling" id="stop_crawling">크롤링 일시정지</button>
+
+<table>
+    <tr>
+        <th colspan="2" style="text-align:center">캠핑장 데이터</th>
+    </tr>
+    <tr>
+        <td>현재 버전</td>
+        <td><span id="camp_ver"></span></td>
+    </tr>
+    <tr>
+        <td>갱신 시도</td>
+        <td><span id="camp_update_try"></span><span id="camp_update_progress"></span></td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center">
+            <button type="button" name="update_camp" id="update_camp">캠핑장데이터 업데이트</button>
+        <td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th colspan="2" style="text-align:center">추천 모델</th>
+    </tr>
+    <tr>
+        <td>현재 버전</td>
+        <td><span id="model_ver"></span></td>
+    </tr>
+    <tr>
+        <td>갱신 시도</td>
+        <td><span id="model_update_try"></span></td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center">
+            <button type="button" name="update_model" id="update_model">추천 모델 업데이트</button>
+        <td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th colspan="2" style="text-align:center">리뷰 크롤링</th>
+    </tr>
+    <tr>
+        <td>현재 버전</td>
+        <td><span id="crawling_ver"></span></td>
+    </tr>
+    <tr>
+        <td>갱신 시도</td>
+        <td><span id="crawling_try"></span><span id="crawling_progress"></span></td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center" id="crawling_action_button">
+            <button type="button" name="start_crawling" id="start_crawling">크롤링 시작하기</button>
+            <button type="button" name="stop_crawling" id="stop_crawling">크롤링 일시정지</button>
+        </td>
+    </tr>
+</table>
+
 </body>
 <script>
     $(document).ready(function() {
         document.getElementById("update_camp").addEventListener("click", event => update_camp(event));
         document.getElementById("update_model").addEventListener("click", event => update_model(event));
         document.getElementById("start_crawling").addEventListener("click", event => start_crawling(event));
-        document.getElementById("resume_crawling").addEventListener("click", event => resume_crawling(event));
         document.getElementById("stop_crawling").addEventListener("click", event => stop_crawling(event));
         load_update_history("camp");
         load_update_history("model");
@@ -114,23 +159,22 @@
         event.preventDefault();
     }
 
+    var crawling_status_update = null;
     function start_crawling(event) {
         review_crawling("start");
-        event.preventDefault();
-    }
-
-    function resume_crawling(event) {
-        review_crawling("resume");
+        crawling_status_update = setInterval(load_update_history, 5000, "crawling");
         event.preventDefault();
     }
 
     function stop_crawling(event) {
+        let stop_crawling_result = false;
         $.ajax({
             type: "POST",
             url: "/admin/crawling_stop",
             success: function(data) {
                 if (data.result == 'success') {
                     alert("크롤링 중지");
+                    stop_crawling_result = true;
                 } else {
                     alert("크롤링 중지 실패");
                 }
@@ -139,6 +183,9 @@
                 alert("크롤링 중지 프로세스 오류");
             }
         });
+        if (stop_crawling_result) {
+            clearInterval(crawling_status_update);
+        }
         event.preventDefault();
     }
 
@@ -234,6 +281,7 @@
                                                                     HTML = "";
                                                                     HTML += "100\%";
                                                                     $("#camp_update_progress").html(HTML);
+                                                                    alert("캠핑장 데이터 업데이트 완료");
                                                                     load_update_history(kind);
                                                                     HTML = "";
                                                                     $("#camp_update_progress").html(HTML);
@@ -301,7 +349,7 @@
                 },
                 success: function(data) {
                     if (data.result == 'success') {
-                        alert("작업 완료");
+                        alert("추천모델 업데이트 완료");
                         load_update_history(kind);
                     } else {
                         alert("작업 실패");
@@ -347,19 +395,25 @@
                 let updateTry = data.updateTry;
                 let totalCount = data.totalCount;
                 let result = data.result;
-                HTML = "";
+                let HTML = "";
                 if (kind == "camp") {
-                    HTML += "<h3>현재 버전 : " + updateTime + " (" + totalCount + "개)</h3>";
-                } else {
-                    HTML += "<h3>현재 버전 : " + updateTime + "</h3>";
-                }
-                HTML += "<h3>갱신 시도 : " + updateTry + " " + result + "</h3>";
-                if (kind == 'camp') {
+                    HTML += "<h3>" + updateTime + " (" + totalCount + "개)</h3>";
                     $("#camp_ver").html(HTML);
+                    HTML = "<h3>" + updateTry + " " + result + "</h3>";
+                    $("#camp_update_try").html(HTML);
                 } else if (kind == 'model') {
+                    HTML += "<h3>" + updateTime + "</h3>";
                     $("#model_ver").html(HTML);
+                    HTML = "<h3>" + updateTry + " " + result + "</h3>";
+                    $("#model_update_try").html(HTML);
                 } else {
+                    HTML += "<h3>" + updateTime + "</h3>";
                     $("#crawling_ver").html(HTML);
+                    HTML = "<h3>" + updateTry + " " + result + "</h3>";
+                    if (result == '중단') {
+                        HTML += "\n<h4>" + data.currentCount + "개 중 " + totalCount + "개 완료 (" + parseInt(data.currentCount*100/totalCount) +  "\%)</h4>";
+                    }
+                    $("#crawling_try").html(HTML);
                 }
             },
             error: function() {
@@ -369,6 +423,7 @@
     }
 
     function review_crawling(update_type) {
+        let kind = "crawling";
         alert("리뷰 크롤링 시작");
         $.ajax({
             type: "POST",
@@ -392,18 +447,26 @@
                                     type: "POST",
                                     url: "/admin/crawling_data_integration", // 크롤링 완료시 파일 통합
                                     success: function(data2) {
-                                        alert("크롤링 완료");
-                                        load_update_history(kind);
+                                        if (data2.result == 'success') {
+                                            alert("크롤링 완료");
+                                            load_update_history(kind);
+                                        } else {
+                                            alert("데이터 통합 실패");
+                                            HTML = "";
+                                            $("#crawling_progress").html(HTML);
+                                            load_update_history(kind);
+                                        }
                                     },
                                     error: function() {
                                         alert("데이터 통합 실패");
                                         HTML = "";
                                         $("#crawling_progress").html(HTML);
-                                        load_update_history(kind);
+                                        location.reload();
                                     }
                                 });
                             } else if (data1.result == 'stopped') {
                                 alert("크롤링 중지 완료");
+                                load_update_history(kind);
                             } else {
                                 alert("크롤링 중 오류 발생");
                                 location.reload();

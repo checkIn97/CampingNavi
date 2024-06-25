@@ -37,5 +37,9 @@ if len(rating_all) != 0:
     stop_command = '/temp/crawling_stop'
     if os.path.exist(stop_command):
         os.remove(stop_command)
+        
+    crawling_status = '/temp/crawling_status'
+    if os.path.exist(crawling_status):
+        os.remove(crawling_status)
 
 print('success')   

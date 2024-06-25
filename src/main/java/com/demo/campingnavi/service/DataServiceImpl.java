@@ -220,6 +220,7 @@ public class DataServiceImpl implements DataService {
     @Override
     public String deleteFile(String filename) {
         String result = "";
+        filename = PathConfig.realPath(filename);
         File file = new File(filename);
         if (file.exists()) {
             if (file.delete()) {
@@ -228,7 +229,7 @@ public class DataServiceImpl implements DataService {
                 result = "fail";
             }
         } else {
-            result = "success";
+            result = "not exist";
         }
         return result;
     }
