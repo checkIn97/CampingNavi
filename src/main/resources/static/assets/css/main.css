@@ -858,6 +858,12 @@ input[name="slide"] {
 
 .chat-participation-room {
 
+    background-color: #fdfada;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #E58B33;
+    cursor: pointer;
 }
 
 #chat-participation {
@@ -964,7 +970,7 @@ input[name="slide"] {
 
 #chatExit {
     display: flex;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     right: 0;
     width: 10rem;
