@@ -405,7 +405,6 @@ table.alt tfoot {
 }
 
 #privacy {
-    width: 100%;
     height: 400px;
 }
 
@@ -414,6 +413,10 @@ table.alt tfoot {
     margin-top: 20px;
     display: flex;
     justify-content: center;
+}
+
+#membershipBox {
+    margin-top: 0;
 }
 
 #membershipAgree input {
