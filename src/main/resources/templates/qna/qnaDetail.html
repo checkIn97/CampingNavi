@@ -51,7 +51,7 @@
                 <div class="buttonContain button-full">
                     <!-- 작성자만 수정 및 삭제 버튼을 볼 수 있도록 -->
                     <a class="webkit"
-                       th:href="@{/qna/detail/edit/} + ${qna.qseq}" th:if="${qna.member.mseq == member.mseq}">
+                       th:href="@{/qna/detail/edit/} + ${qna.qseq}" th:if="${qna.member.mseq == member.mseq || member.role == 'ROLE_ADMIN' || member.role == 'ROLE_SUPERVISOR'}">
                         <button class="webkit" >수정하기</button>
                     </a>
                     <!-- 목록으로 돌아가기 -->
