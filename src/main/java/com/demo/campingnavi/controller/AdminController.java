@@ -55,12 +55,12 @@ public class AdminController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
-    public String adminIndex(){
+    public String adminIndex() {
         return "admin/adminPage";
     }
 
     @GetMapping("/login")
-    public String adminLogin(){
+    public String adminLogin() {
         return "admin/loginPage";
     }
 
@@ -69,7 +69,7 @@ public class AdminController {
         Member admin = memberService.findByUsername(vo.getUsername());
         if (admin != null) {
             if (!admin.getRole().equals(Role.USER.getKey()) && admin.getRole() != null) {
-                if (passwordEncoder.matches(vo.getPw(),admin.getPw())) {
+                if (passwordEncoder.matches(vo.getPw(), admin.getPw())) {
                     session.setAttribute("admin", admin);
                     return "admin/adminPage";
                 } else {
@@ -120,7 +120,7 @@ public class AdminController {
         Map<String, Object> result = new HashMap<>();
         String text = "";
         int totalCount = adminService.getCampingTotalCount();
-        try{
+        try {
             if (totalCount >= 0) {
                 text = "success";
                 result.put("result", text);
@@ -133,7 +133,7 @@ public class AdminController {
                 updateHistory.setResult(text);
                 updateHistoryService.saveUpdateHistory(updateHistory);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             text = "fail";
             result.put("result", text);
@@ -149,10 +149,10 @@ public class AdminController {
     @ResponseBody
     @PostMapping("/camping_data_search_from_api")
     public Map<String, Object> campingDataSearchFromApi(@RequestParam("kind") String kind,
-            @RequestParam("page") int page) {
+                                                        @RequestParam("page") int page) {
         Map<String, Object> result = new HashMap<>();
         String text = "";
-        try{
+        try {
             text = adminService.getCampingDataFromApi(page);
             if (text.equals("success")) {
                 result.put("result", text);
@@ -178,7 +178,7 @@ public class AdminController {
     @ResponseBody
     @PostMapping("/camping_data_integration")
     public Map<String, Object> campingDataIntegration(@RequestParam("kind") String kind,
-            @RequestParam("totalPage") int totalPage) {
+                                                      @RequestParam("totalPage") int totalPage) {
         Map<String, Object> result = new HashMap<>();
         String text = "";
         try {
@@ -192,7 +192,7 @@ public class AdminController {
                 updateHistory.setResult(text);
                 updateHistoryService.saveUpdateHistory(updateHistory);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             text = "fail";
             result.put("result", text);
@@ -267,7 +267,7 @@ public class AdminController {
         }
 
         if (!update_type.equals("fail")) {
-            try{
+            try {
                 if (update_type.equals("start")) {
                     update_type = dataService.deleteFile("/temp/crawling_status.csv");
                 }
@@ -331,7 +331,7 @@ public class AdminController {
                 updateHistory.setResult(text);
                 updateHistoryService.saveUpdateHistory(updateHistory);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             text = "fail";
             result.put("result", text);
@@ -360,7 +360,7 @@ public class AdminController {
             } else {
                 result.put("result", text);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             text = "fail";
             result.put("result", text);
@@ -371,7 +371,7 @@ public class AdminController {
 
     @ResponseBody
     @PostMapping("/load_update_history")
-    public Map<String, Object> loadUpdateHistory(@RequestParam(value="kind") String kind) {
+    public Map<String, Object> loadUpdateHistory(@RequestParam(value = "kind") String kind) {
         Map<String, Object> result = new HashMap<>();
         List<UpdateHistory> updateHistoryList = updateHistoryService.getUpdateHistoryList(kind);
         String defaultText = "내역 없음";
@@ -469,7 +469,7 @@ public class AdminController {
             List<ReviewVo> reviewVoList = reviewService.findReviewVoList(reviewScanVo);
             reviewScanVo.setReviewVoList(reviewVoList);
             reviewScanVo.setReviewVoBestList(reviewService.getBestReviewVoList());
-            reviewScanVo.setTotalPages((reviewScanVo.getReviewVoList().size()+ reviewScanVo.getSize()-1)/ reviewScanVo.getSize());
+            reviewScanVo.setTotalPages((reviewScanVo.getReviewVoList().size() + reviewScanVo.getSize() - 1) / reviewScanVo.getSize());
             session.setAttribute("reviewScanVo", reviewScanVo);
         } else {
             reviewScanVo = (ReviewScanVo) session.getAttribute("reviewScanVo");
@@ -477,7 +477,7 @@ public class AdminController {
             List<ReviewVo> reviewVoList = reviewService.findReviewVoList(reviewScanVo);
             reviewScanVo.setReviewVoList(reviewVoList);
             reviewScanVo.setReviewVoBestList(reviewService.getBestReviewVoList());
-            reviewScanVo.setTotalPages((reviewScanVo.getReviewVoList().size()+ reviewScanVo.getSize()-1)/ reviewScanVo.getSize());
+            reviewScanVo.setTotalPages((reviewScanVo.getReviewVoList().size() + reviewScanVo.getSize() - 1) / reviewScanVo.getSize());
             session.setAttribute("reviewScanVo", reviewScanVo);
         }
 
@@ -546,30 +546,30 @@ public class AdminController {
     @PostMapping("/review/reloadList")
     @ResponseBody
     public Map<String, Object> reloadList(HttpSession session,
-                                          @RequestParam(value="page") int page,
-                                          @RequestParam(value="sortBy") String sortBy,
-                                          @RequestParam(value="sortDirection") String sortDirection) {
+                                          @RequestParam(value = "page") int page,
+                                          @RequestParam(value = "sortBy") String sortBy,
+                                          @RequestParam(value = "sortDirection") String sortDirection) {
         Map<String, Object> result = new HashMap<>();
         // 세션에서 어드민 정보 가져오기
         //Admin admin = (Admin) session.getAttribute("adminUser");
-       // if (admin != null) {
-            ReviewScanVo reviewScanVo = (ReviewScanVo) session.getAttribute("reviewScanVo");
-            if (reviewScanVo.getPage() != page) {
-                reviewScanVo.setPage(page);
-                reviewScanVo.setSortBy(sortBy);
-                reviewScanVo.setSortDirection(sortDirection);
-            }
+        // if (admin != null) {
+        ReviewScanVo reviewScanVo = (ReviewScanVo) session.getAttribute("reviewScanVo");
+        if (reviewScanVo.getPage() != page) {
+            reviewScanVo.setPage(page);
+            reviewScanVo.setSortBy(sortBy);
+            reviewScanVo.setSortDirection(sortDirection);
+        }
 
-            result.put("reviewVoList", reviewScanVo.getReviewVoList());
-            result.put("reviewVoBestList", reviewScanVo.getReviewVoBestList());
-            result.put("totalPages", reviewScanVo.getTotalPages());
-            result.put("page", reviewScanVo.getPage());
-            result.put("size", reviewScanVo.getSize());
-            result.put("pageMaxDisplay", reviewScanVo.getPageMaxDisplay());
-            result.put("result", "success");
+        result.put("reviewVoList", reviewScanVo.getReviewVoList());
+        result.put("reviewVoBestList", reviewScanVo.getReviewVoBestList());
+        result.put("totalPages", reviewScanVo.getTotalPages());
+        result.put("page", reviewScanVo.getPage());
+        result.put("size", reviewScanVo.getSize());
+        result.put("pageMaxDisplay", reviewScanVo.getPageMaxDisplay());
+        result.put("result", "success");
         //} else {
-           // result.put("result", "fail");
-       // }
+        // result.put("result", "fail");
+        // }
 
         return result;
     }
@@ -587,14 +587,14 @@ public class AdminController {
         String[] parentCommentContentArray = new String[parentComments.size()];
         String[] parentCommentDateArray = new String[parentComments.size()];
 
-        for (int i = 0 ; i < parentComments.size() ; i++) {
+        for (int i = 0; i < parentComments.size(); i++) {
             parentCommentCmseqArray[i] = parentComments.get(i).getCmseq();
             parentCommentMseqArray[i] = parentComments.get(i).getMember().getMseq();
 
 
             Member tmp_member = parentComments.get(i).getMember();
 
-            parentCommentMemberArray[i] = tmp_member.getName()+"("+tmp_member.getUsername()+")";
+            parentCommentMemberArray[i] = tmp_member.getName() + "(" + tmp_member.getUsername() + ")";
             parentCommentContentArray[i] = parentComments.get(i).getContent();
             String date = parentComments.get(i).getCreatedAt().toString();
             parentCommentDateArray[i] = date;
@@ -613,20 +613,20 @@ public class AdminController {
         String[] tmp_ContentArray = null;
         String[] tmp_DateArray = null;
         // 부모 댓글마다 대댓글 목록 가져오기
-        for (int i = 0 ; i < parentComments.size() ; i++) {
+        for (int i = 0; i < parentComments.size(); i++) {
             List<ReviewComment> replies = reviewCommentService.getReplyCommentList(parentComments.get(i).getCmseq());
             tmp_CmseqArray = new int[replies.size()];
             tmp_MseqArray = new int[replies.size()];
             tmp_MemberArray = new String[replies.size()];
             tmp_ContentArray = new String[replies.size()];
             tmp_DateArray = new String[replies.size()];
-            for (int j = 0 ; j < replies.size(); j++) {
+            for (int j = 0; j < replies.size(); j++) {
                 tmp_CmseqArray[j] = replies.get(j).getCmseq();
                 tmp_MseqArray[j] = replies.get(j).getMember().getMseq();
 
                 Member tmp_member = replies.get(j).getMember();
 
-                tmp_MemberArray[j] = tmp_member.getName()+"("+tmp_member.getUsername()+")";
+                tmp_MemberArray[j] = tmp_member.getName() + "(" + tmp_member.getUsername() + ")";
                 tmp_ContentArray[j] = replies.get(j).getContent();
                 String date = replies.get(j).getCreatedAt().toString();
                 // date = date.substring(0, date.length()-4);
@@ -656,6 +656,7 @@ public class AdminController {
 
         return result;
     }
+
     // 댓글 삭제
     @PostMapping(value = "/review/comment/delete")
     @ResponseBody
@@ -709,6 +710,23 @@ public class AdminController {
         return result;
     }
 
+    @PostMapping("/member/restore")
+    @ResponseBody
+    public Map<String, Object> restoreMember(@RequestParam(value = "mseq") int mseq) {
+        Map<String, Object> result = new HashMap<>();
+
+        if (mseq != 0) {
+            Member member = memberService.findById(mseq);
+            member.setUseyn("y");
+            memberService.saveMember(member);
+            result.put("result", "success");
+        } else {
+            result.put("result", "fail");
+        }
+
+        return result;
+    }
+
     @GetMapping("/mail")
     public String writeMail() {
         return "admin/member/adminMail";
@@ -722,8 +740,8 @@ public class AdminController {
     @GetMapping("/supervisor/list/page")
     @ResponseBody
     public Page<Member> adminPaging(Pageable pageable,
-                                     @RequestParam(value = "searchField", defaultValue = "") String searchField,
-                                     @RequestParam(value = "searchWord", defaultValue = "") String searchWord) {
+                                    @RequestParam(value = "searchField", defaultValue = "") String searchField,
+                                    @RequestParam(value = "searchWord", defaultValue = "") String searchWord) {
         if (searchField.equals("username")) {
             return memberService.findAllAdminByUsername(searchWord, pageable);
         } else if (searchField.equals("name")) {
@@ -742,7 +760,7 @@ public class AdminController {
     public String joinProcess(MemberVo vo, Model model) {
 
         boolean result = memberService.adminAdditionProc(vo);
-        if(result) {
+        if (result) {
             return "admin/supervisor/adminList";
         } else {
             return "admin/supervisor/addPage";
@@ -754,6 +772,24 @@ public class AdminController {
         return "admin/qna/adminQnaList";
     }
 
+    @GetMapping("/qna/list/page")
+    @ResponseBody
+    public Page<Qna> adminQNAPaging(Pageable pageable,
+                                       @RequestParam(value = "searchField", defaultValue = "") String searchField,
+                                       @RequestParam(value = "searchWord", defaultValue = "") String searchWord,
+                                       @RequestParam(value = "type") String type) {
+        if (searchField.equals("username")) {
+            return qnaService.findAllByUsername(type, searchWord, pageable);
+        } else if (searchField.equals("name")) {
+            return qnaService.findAllByName(type, searchWord, pageable);
+        } else if (searchField.equals("title")) {
+            return qnaService.findAllByTitle(type, searchWord, pageable);
+        } else if (searchField.equals("content")) {
+            return qnaService.findAllByContent(type, searchWord, pageable);
+        } else {
+            return qnaService.findAllByTypeExceptNone(type, pageable);
+        }
+    }
 
     @PostMapping("/qna/delete")
     @ResponseBody
@@ -770,5 +806,27 @@ public class AdminController {
         }
 
         return result;
+    }
+
+    @PostMapping("/qna/restore")
+    @ResponseBody
+    public Map<String, Object> restoreQna(@RequestParam(value = "qseq") int qseq) {
+        Map<String, Object> result = new HashMap<>();
+
+        if (qseq != 0) {
+            Qna qna = qnaService.findById(qseq);
+            qna.setUseyn("y");
+            qnaService.saveQna(qna);
+            result.put("result", "success");
+        } else {
+            result.put("result", "fail");
+        }
+
+        return result;
+    }
+
+    @GetMapping("/faq/list")
+    public String fqaListView() {
+        return "admin/qna/adminFaqList";
     }
 }

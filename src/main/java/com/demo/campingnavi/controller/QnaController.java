@@ -68,7 +68,7 @@ public class QnaController {
 
         Qna qna = qnaService.findById(qseq);
 
-        if(member.getMseq() == qna.getMember().getMseq()) {
+        if(member.getMseq() == qna.getMember().getMseq() || member.getRole().equals(Role.ADMIN.getKey()) || member.getRole().equals(Role.SUPERVISOR.getKey())) {
             model.addAttribute("member", member);
             model.addAttribute("qna", qna);
 
@@ -199,7 +199,7 @@ public class QnaController {
 
         qnaService.saveQna(qna);
         model.addAttribute("member", member);
-        return "qna/qnaHome";
+        return "redirect:/admin/faq/list";
     }
 
     @PostMapping("/oneByone/write")

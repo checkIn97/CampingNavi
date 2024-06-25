@@ -73,7 +73,8 @@
         <a th:href="@{/admin/review/list}">리뷰 관리</a>
         <a th:href="@{/admin/member/list}">회원 관리</a>
         <a th:href="@{/admin/supervisor/list}">관리자 관리</a>
-        <a th:href="@{/admin/qna/list}">관리자 문의</a>
+        <a th:href="@{/admin/faq/list}">FAQ 관리</a>
+        <a th:href="@{/admin/qna/list}">1:1 문의 관리</a>
         <a href="/oauth-login/member/logoutProc">로그아웃</a>
     </div>
 </div>
@@ -86,12 +87,11 @@
                     <option value="">선택</option>
                     <option value="username">아이디</option>
                     <option value="name">이름</option>
-                    <option value="email">이메일</option>
-                    <option value="provider">로그인 유형</option>
+                    <option value="title">제목</option>
+                    <option value="content">내용</option>
                 </select>
                 <input class="form-control mr-2" id="searchWord" name="searchWord" type="text">
                 <button class="btn btn-primary" type="button" id="searchButton">검색</button>
-                <button class="btn btn-primary" type="button" id="mailButton">전체 공지 보내기</button>
             </div>
 
         <!-- 리스트 영역 -->
@@ -111,9 +111,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    document.getElementById('mailButton').addEventListener('click', function () {
-        location.href = '/admin/mail';
-    });
+
 </script>
 <script>
     $(document).ready(function () {
@@ -144,6 +142,7 @@
                     tableHTML += '<th colspan="2">아이디</th>';
                     tableHTML += '<th>제목</th>';
                     tableHTML += '<th colspan="2">내용</th>';
+                    tableHTML += '<th colspan="2">작성시간</th>'
                     tableHTML += '<th>답변 여부</th>';
                     tableHTML += '<th>사용 여부</th>';
                     tableHTML += '<th colspan="2"></th>';
@@ -152,15 +151,19 @@
                     qnas.forEach(function (qna, index) {
                         tableHTML += '<tr class="review-list-pop-back">';
                         tableHTML += '<td><span class="popularPosts">' + (index + 1) + '</span></td>';
-                        tableHTML += '<td><span class="popularPosts">' + qna.member.username + '</span></td>';
+                        tableHTML += '<td><a href="/admin/member/list/page?searchField=username&searchWord=' + qna.member.username +'"><span class="popularPosts">' + qna.member.username + '</span></a></td>';
                         tableHTML += '<td></td>';
-                        tableHTML += '<td><span class="popularPosts">' + qna.title + '</span></td>';
+                        tableHTML += '<td><a href="/qna/oneByone/detail/' + qna.qseq + '"><span class="popularPosts">' + qna.title + '</span></a></td>';
                         tableHTML += '<td><span class="popularPosts">' + qna.content.substring(0, 15) + '...</span></td>';
                         tableHTML += '<td></td>';
-                        tableHTML += '<td><span class="popularPosts">' + qna.checkyn + '</span></td>';
-                        tableHTML += '<td><span class="popularPosts">' + qna.useryn + '</span></td>';
+                        var formattedDate = moment(qna.createdAt).format('YYYY-MM-DD HH:mm:ss');
+                        tableHTML += '<td><span class="popularPosts">' + formattedDate + '</span></td>';
                         tableHTML += '<td></td>';
-                        tableHTML += '<td><button class="delete-btn" data-qseq="' + qna.qseq + '">해지</button></td>';
+                        tableHTML += '<td><span class="popularPosts">' + qna.checkyn + '</span></td>';
+                        tableHTML += '<td><span class="popularPosts">' + qna.useyn + '</span></td>';
+                        tableHTML += '<td></td>';
+                        tableHTML += '<td><button class="delete-btn" data-qseq="' + qna.qseq + '">삭제</button></td>';
+                        tableHTML += '<td><button class="restore-btn" data-qseq="' + qna.qseq + '">복구</button></td>';
                         tableHTML += '</tr>';
                     });
                     tableHTML += '</tbody></table>';
@@ -222,12 +225,37 @@
                 },
                 success: function (response) {
                     // 성공적으로 삭제되었을 때 처리
-                    alert('회원 삭제 ' + response.result);
+                    alert('QNA 삭제 ' + response.result);
                     // 삭제 후 목록 다시 로드
-                    memberList(currentPage);
+                    qnaList(currentPage);
                 },
                 error: function (error) {
-                    alert('회원 삭제 실패', error);
+                    alert('QNA 삭제 실패', error);
+                    // 실패 시 추가 처리
+                }
+            });
+        }
+
+        $(document).on('click', '.restore-btn', function () {
+            var qseq = $(this).data('qseq');
+            restoreQNA(qseq);
+        });
+
+        function restoreQNA(qseq) {
+            $.ajax({
+                type: 'POST',
+                url: '/admin/qna/restore',
+                data: {
+                    qseq: qseq
+                },
+                success: function (response) {
+                    // 성공적으로 삭제되었을 때 처리
+                    alert('FAQ 복구 ' + response.result);
+                    // 삭제 후 목록 다시 로드
+                    qnaList(currentPage);
+                },
+                error: function (error) {
+                    alert('FAQ 복구 실패', error);
                     // 실패 시 추가 처리
                 }
             });
