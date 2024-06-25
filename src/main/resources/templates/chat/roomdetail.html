@@ -16,7 +16,7 @@
     <article class="box centerBox" id="chatBox">
         <div class="container">
             <div>
-                <h2>{{ room.name }}</h2>
+                <h2>{{ room.name.length > 30 ? room.name.slice(0, 30) + '...' : room.name }}</h2>
             </div>
             <div class="chat-container">
                 <ul class="list-group">
