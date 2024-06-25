@@ -220,6 +220,7 @@ public class DataServiceImpl implements DataService {
     @Override
     public String deleteFile(String filename) {
         String result = "";
+        filename = PathConfig.realPath(filename);
         File file = new File(filename);
         if (file.exists()) {
             if (file.delete()) {
@@ -228,7 +229,7 @@ public class DataServiceImpl implements DataService {
                 result = "fail";
             }
         } else {
-            result = "success";
+            result = "not exist";
         }
         return result;
     }
@@ -247,6 +248,29 @@ public class DataServiceImpl implements DataService {
         } catch (Exception e) {
             result = "fail";
             e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    @Override
+    public String createDir(String dir) {
+        String result = "";
+        dir = PathConfig.realPath(dir);
+        File file = new File(dir);
+        if (!file.isDirectory()) {
+            try {
+                if (file.mkdir()) {
+                    result = "success";
+                } else {
+                    result = "fail";
+                }
+            } catch (Exception e) {
+                result = "fail";
+                e.printStackTrace();
+            }
+        } else {
+            result = "success";
         }
 
         return result;

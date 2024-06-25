@@ -1,5 +1,6 @@
 package com.demo.campingnavi.controller;
 
+import com.demo.campingnavi.config.PathConfig;
 import com.demo.campingnavi.domain.*;
 import com.demo.campingnavi.dto.MemberVo;
 import com.demo.campingnavi.dto.ReviewScanVo;
@@ -240,7 +241,8 @@ public class AdminController {
 
     @ResponseBody
     @PostMapping("/get_crawling_initialize")
-    public Map<String, Object> getCrawlingData(@RequestParam("update_type") String update_type) {
+    public Map<String, Object> getCrawlingData(@RequestParam("update_type") String update_type,
+                                               HttpSession session) {
         Map<String, Object> result = new HashMap<>();
         dataService.deleteFile("/temp/crawling_stop");
         List<UpdateHistory> updateListCampSuccess = updateHistoryService.getUpdateHistoryList("camp", "success");
@@ -266,19 +268,16 @@ public class AdminController {
             }
         }
 
-        if (!update_type.equals("fail")) {
-            try {
-                if (update_type.equals("start")) {
-                    update_type = dataService.deleteFile("/temp/crawling_status.csv");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                update_type = "fail";
-            }
-        }
-
         if (update_type.equals("start")) {
-            dataService.deleteFile("/temp/crawling_status.csv");
+            try {
+                String delete_result = dataService.deleteFile("/temp/crawling_status.csv");
+                if (delete_result.equals("fail")) {
+                    update_type = "fail";
+                }
+            } catch(Exception e) {
+                update_type = "fail";
+                e.printStackTrace();
+            }
         } else if (update_type.equals("fail")) {
             UpdateHistory updateHistory = new UpdateHistory();
             updateHistory.setKind("crawling");
@@ -287,6 +286,9 @@ public class AdminController {
         }
 
         result.put("result", update_type);
+        if (result.get("result").equals("start")) {
+            adminService.clearRatingTempFile();
+        }
 
         return result;
     }
@@ -346,7 +348,7 @@ public class AdminController {
 
     @ResponseBody
     @PostMapping("/crawling_stop")
-    public Map<String, Object> crawlingDataStop() {
+    public Map<String, Object> crawlingDataStop(HttpSession session) {
         Map<String, Object> result = new HashMap<>();
         String text = "";
         try {
@@ -357,6 +359,7 @@ public class AdminController {
                 updateHistory.setKind("crawling");
                 updateHistory.setResult("stopped");
                 updateHistoryService.saveUpdateHistory(updateHistory);
+                session.setAttribute("crawling", "n");
             } else {
                 result.put("result", text);
             }
@@ -370,32 +373,78 @@ public class AdminController {
     }
 
     @ResponseBody
+    @PostMapping("/set_crawling_session")
+    public Map<String, Object> clearCrawlingSession(HttpSession session,
+                                                    @RequestParam("value") String value) {
+        Map<String, Object> result = new HashMap<>();
+        session.setAttribute("crawling", value);
+        if (value.equals("y")) {
+            result.put("result", "open");
+        } else {
+            result.put("result", "close");
+        }
+        return result;
+    }
+
+    @ResponseBody
     @PostMapping("/load_update_history")
     public Map<String, Object> loadUpdateHistory(@RequestParam(value = "kind") String kind) {
         Map<String, Object> result = new HashMap<>();
-        List<UpdateHistory> updateHistoryList = updateHistoryService.getUpdateHistoryList(kind);
+        List<UpdateHistory> updateHistoryListSuccess = updateHistoryService.getUpdateHistoryList(kind, "success");
+        List<UpdateHistory> updateHistoryListFail = updateHistoryService.getUpdateHistoryList(kind, "fail");
+        List<UpdateHistory> updateHistoryListStopped = updateHistoryService.getUpdateHistoryList(kind, "stopped");
+        Map<String, Integer> crawlingStatus = adminService.getCrawlingStatus();
+
+        UpdateHistory updateHistorySuccess = null;
+        int updateHistorySuccessUseq = 0;
+        if (!updateHistoryListSuccess.isEmpty()) {
+            updateHistorySuccess = updateHistoryListSuccess.get(updateHistoryListSuccess.size() - 1);
+            updateHistorySuccessUseq = updateHistorySuccess.getUseq();
+        }
+
+        UpdateHistory updateHistoryFail = null;
+        int updateHistoryFailUseq = 0;
+        if (!updateHistoryListFail.isEmpty()) {
+            updateHistoryFail = updateHistoryListFail.get(updateHistoryListFail.size() - 1);
+            updateHistoryFailUseq = updateHistoryFail.getUseq();
+        }
+
+        UpdateHistory updateHistoryStopped = null;
+        int updateHistoryStoppedUseq = 0;
+        if (!updateHistoryListStopped.isEmpty()) {
+            updateHistoryStopped = updateHistoryListStopped.get(updateHistoryListStopped.size() - 1);
+            updateHistoryStoppedUseq = updateHistoryStopped.getUseq();
+        }
         String defaultText = "내역 없음";
         String updateTime = new String(defaultText);
         String updateTry = new String(defaultText);
         String text = "";
-        for (UpdateHistory updateHistory : updateHistoryList) {
-            if (!updateTime.equals(defaultText) && !updateTry.equals(defaultText)) {
-                break;
+        if (!kind.equals("crawling")) {
+            if (updateHistorySuccessUseq > 0) {
+                updateTime = updateHistorySuccess.getUpdateTime().toString().substring(0, 19);
+            }
+            if (updateHistorySuccessUseq > updateHistoryFailUseq) {
+                updateTry = updateTime;
+                text = "success";
             } else {
-                if (updateHistory.getResult().equals("success")) {
-                    if (updateTime.equals(defaultText)) {
-                        updateTime = updateHistory.getUpdateTime().toString().substring(0, 19);
-                    }
-                    if (updateTry.equals(defaultText)) {
-                        updateTry = updateHistory.getUpdateTime().toString().substring(0, 19);
-                        text = updateHistory.getResult();
-                    }
-                } else {
-                    if (updateTry.equals(defaultText)) {
-                        updateTry = updateHistory.getUpdateTime().toString().substring(0, 19);
-                        text = updateHistory.getResult();
-                    }
+                if (updateHistoryFailUseq > 0) {
+                    updateTry = updateHistoryFail.getUpdateTime().toString().substring(0, 19);
+                    text = "fail";
                 }
+            }
+        } else {
+            if (updateHistorySuccessUseq > 0) {
+                updateTime = updateHistorySuccess.getUpdateTime().toString().substring(0, 19);
+            }
+            if (updateHistorySuccessUseq > updateHistoryFailUseq && updateHistorySuccessUseq > updateHistoryStoppedUseq) {
+                updateTry = updateTime;
+                text = "success";
+            } else if (updateHistoryStoppedUseq > updateHistorySuccessUseq && updateHistoryStoppedUseq > updateHistoryFailUseq) {
+                updateTry = updateHistoryStopped.getUpdateTime().toString().substring(0, 19);
+                text = "stopped";
+            } else if (updateHistoryFailUseq > updateHistorySuccessUseq && updateHistoryFailUseq > updateHistoryStoppedUseq) {
+                updateTry = updateHistoryFail.getUpdateTime().toString().substring(0, 19);
+                text = "fail";
             }
         }
 
@@ -403,18 +452,20 @@ public class AdminController {
             text = " ";
         } else if (text.equals("success")) {
             text = "성공";
-        } else {
+        } else if (text.equals("fail")) {
             text = "실패";
+        } else {
+            text = "중단";
         }
 
         if (kind.equals("camp")) {
             List<Camp> campList = campService.getCampListByUseyn("y");
             result.put("totalCount", campList.size());
+        } else if (kind.equals("crawling")) {
+            result.put("totalCount", crawlingStatus.get("total"));
+            result.put("currentCount", crawlingStatus.get("current"));
         }
 
-        System.out.println(updateTime);
-        System.out.println(updateTry);
-        System.out.println(text);
         result.put("updateTime", updateTime);
         result.put("updateTry", updateTry);
         result.put("result", text);
@@ -422,7 +473,16 @@ public class AdminController {
     }
 
     @GetMapping("/update_page")
-    public String updatePage() {
+    public String updatePage(HttpSession session, Model model) {
+        String crawling = "n";
+        if (session.getAttribute("crawling") != null) {
+            crawling = (String) session.getAttribute("crawling");
+        }
+        model.addAttribute("crawling", crawling);
+
+        String dir = "/temp";
+        dataService.createDir(dir);
+
         return "admin/update/adminUpdate";
     }
 

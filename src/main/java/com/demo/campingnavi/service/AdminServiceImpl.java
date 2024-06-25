@@ -7,10 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AdminServiceImpl implements AdminService {
+
+    @Autowired
+    CampService campService;
 
     @Override
     public String recommendModelUpdate() {
@@ -117,41 +122,23 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public int getCrawlingNumber(String update_type) {
-        int n = 0;
-        String filename = "temp/crawling_status.csv";
-        filename = PathConfig.realPath(filename);
-        if (update_type.equals("start")) {
+    public Map<String, Integer> getCrawlingStatus() {
+        Map<String, Integer> crawlingStatus = new HashMap<>();
+        int current = 0;
+        int total = campService.getCampListByUseyn("").size();
+        while (true) {
+            String filename = "temp/rating" + (current+1) + ".csv";
+            filename = PathConfig.realPath(filename);
             File file = new File(filename);
-            if (file.exists()) {
-                if (file.delete()) {
-                    System.out.println(filename+"삭제 완료");
-                } else {
-                    System.out.println(filename+"삭제 실패");
-                    n = -1;
-                }
+            if (!file.exists()) {
+                break;
             }
-        } else {
-            try {
-                FileReader fileReader = new FileReader(filename);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-                File file = new File(filename);
-                if (file.exists()) {
-                    String text = null;
-                    try {
-                        text = bufferedReader.readLine();
-                        text = bufferedReader.readLine();
-                        String input[] = text.split(",");
-                        n = Integer.parseInt(input[0]);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            current++;
         }
-        return n;
+
+        crawlingStatus.put("current", current);
+        crawlingStatus.put("total", total);
+        return crawlingStatus;
     }
 
     @Override
@@ -197,5 +184,26 @@ public class AdminServiceImpl implements AdminService {
         }
 
         return result;
+    }
+
+    @Override
+    public void clearRatingTempFile() {
+        int i = 1;
+        while (true) {
+            String filename = "temp/rating" + i + ".csv";
+            filename = PathConfig.realPath(filename);
+            File file = new File(filename);
+            if (!file.exists()) {
+                break;
+            }
+            i++;
+        }
+
+        String filename = "temp/crawling_status.csv";
+        filename = PathConfig.realPath(filename);
+        File file = new File(filename);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 }

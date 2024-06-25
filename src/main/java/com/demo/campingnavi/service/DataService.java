@@ -12,4 +12,5 @@ public interface DataService {
     boolean checkFileExist(String file_name);
     String deleteFile(String filename);
     String createFile(String filename);
+    String createDir(String dir);
 }
