@@ -81,12 +81,16 @@
 
 </article>
 <input type="hidden" id="userRole" th:value="${member.role}">
+<input type="hidden" id="mseq" th:value="${member.mseq}">
 <input type="hidden" id="qseq" th:value="${qna.qseq}">
+<input type="hidden" id="qnaMember" th:value="${qna.member.mseq}">
 <script>
 
     $(document).ready(function () {
         let userRole = $("#userRole").val();
-        if (userRole != "ROLE_USER") {
+        let qnaMember = $("#qnaMember").val();
+        let mseq = $("#mseq").val();
+        if (qnaMember != mseq && userRole == "ROLE_USER") {
             document.getElementById('replyBtn').style.display = 'none';
             document.getElementById('reply-area').style.display = 'none';
         }
