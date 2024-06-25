@@ -96,7 +96,7 @@ public class QnaController {
 
         Member member = (Member) session.getAttribute("loginUser");
         Qna qna = qnaService.findById(vo.getQseq());
-        if(qna.getMember().getMseq() == member.getMseq()) {
+        if(qna.getMember().getMseq() == member.getMseq() || member.getRole().equals(Role.ADMIN.getKey()) || member.getRole().equals(Role.SUPERVISOR.getKey())) {
             qna.setTitle(vo.getTitle());
             qna.setContent(vo.getContent());
             if (!vo.getImg().isEmpty()) {
@@ -133,7 +133,7 @@ public class QnaController {
     public String deleteQna(@PathVariable("qseq") int qseq, HttpSession session, Model model) {
         Member member = (Member) session.getAttribute("loginUser");
         Qna qna = qnaService.findById(qseq);
-        if(qna.getMember().getMseq() == member.getMseq()) {
+        if(qna.getMember().getMseq() == member.getMseq() || member.getRole().equals(Role.ADMIN.getKey()) || member.getRole().equals(Role.SUPERVISOR.getKey())) {
             qna.setUseyn("n");
             qnaService.saveQna(qna);
             model.addAttribute("member", member);
