@@ -628,6 +628,7 @@ table#searchList td {
 
 #contentSearchArea {
     display: inline-grid;
+    margin-top: 0;
 }
 
 #search-area {
