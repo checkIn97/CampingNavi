@@ -151,7 +151,7 @@
                     qnas.forEach(function (qna, index) {
                         tableHTML += '<tr class="review-list-pop-back">';
                         tableHTML += '<td><span class="popularPosts">' + (index + 1) + '</span></td>';
-                        tableHTML += '<td><a href="/admin/member/list/page?searchField=username&searchWord=' + qna.member.username +'"><span class="popularPosts">' + qna.member.username + '</span></a></td>';
+                        tableHTML += '<td><a href="/admin/member/detail/' + qna.member.mseq + '"><span class="popularPosts">' + qna.member.username + '</span></a></td>';
                         tableHTML += '<td></td>';
                         tableHTML += '<td><a href="/qna/oneByone/detail/' + qna.qseq + '"><span class="popularPosts">' + qna.title + '</span></a></td>';
                         tableHTML += '<td><span class="popularPosts">' + qna.content.substring(0, 15) + '...</span></td>';
