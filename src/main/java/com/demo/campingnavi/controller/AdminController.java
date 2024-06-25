@@ -693,6 +693,15 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/member/detail/{mseq}")
+    public String memberDetailView(@PathVariable("mseq") int mseq,
+                                   Model model) {
+        Member member = memberService.findById(mseq);
+        model.addAttribute("member", member);
+        return "admin/member/adminMemberDetail";
+    }
+
+
     @PostMapping("/member/delete")
     @ResponseBody
     public Map<String, Object> deleteMember(@RequestParam(value = "mseq") int mseq) {
@@ -700,9 +709,15 @@ public class AdminController {
 
         if (mseq != 0) {
             Member member = memberService.findById(mseq);
-            member.setUseyn("n");
-            memberService.saveMember(member);
-            result.put("result", "success");
+            if (!member.getUseyn().equals("n")) {
+                member.setUseyn("n");
+                memberService.saveMember(member);
+                result.put("result", "success");
+                result.put("useyn", member.getUseyn());
+            } else {
+                result.put("result", "할 수 없습니다. 이미 탈퇴한 회원입니다.");
+            }
+
         } else {
             result.put("result", "fail");
         }
@@ -717,9 +732,15 @@ public class AdminController {
 
         if (mseq != 0) {
             Member member = memberService.findById(mseq);
-            member.setUseyn("y");
-            memberService.saveMember(member);
-            result.put("result", "success");
+            if (!member.getUseyn().equals("y")) {
+                member.setUseyn("y");
+                memberService.saveMember(member);
+                result.put("result", "success");
+                result.put("useyn", member.getUseyn());
+            } else {
+                result.put("result", "할 수 없습니다. 이미 사용중인 회원입니다.");
+            }
+
         } else {
             result.put("result", "fail");
         }
@@ -798,9 +819,14 @@ public class AdminController {
 
         if (qseq != 0) {
             Qna qna = qnaService.findById(qseq);
-            qna.setUseyn("n");
-            qnaService.saveQna(qna);
-            result.put("result", "success");
+            if (!qna.getUseyn().equals("n")) {
+                qna.setUseyn("n");
+                qnaService.saveQna(qna);
+                result.put("result", "success");
+            } else {
+                result.put("result", "할 수 없습니다. 이미 삭제된 글입니다.");
+            }
+
         } else {
             result.put("result", "fail");
         }
@@ -815,9 +841,14 @@ public class AdminController {
 
         if (qseq != 0) {
             Qna qna = qnaService.findById(qseq);
-            qna.setUseyn("y");
-            qnaService.saveQna(qna);
-            result.put("result", "success");
+            if (!qna.getUseyn().equals("y")) {
+                qna.setUseyn("y");
+                qnaService.saveQna(qna);
+                result.put("result", "success");
+            } else {
+                result.put("result", "할 수 없습니다. 이미 사용중인 글입니다.");
+            }
+
         } else {
             result.put("result", "fail");
         }
