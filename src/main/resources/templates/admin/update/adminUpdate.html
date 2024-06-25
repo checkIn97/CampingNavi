@@ -64,6 +64,7 @@
         font-weight: bold;
         color: #007bff;
     }
+
 </style>
 <body>
 <div class="d-flex">
@@ -78,71 +79,70 @@
         <a href="/oauth-login/member/logoutProc">로그아웃</a>
     </div>
 </div>
+<div class="content">
+    <h2 class="my-4">데이터 업데이트 관리자 페이지</h2>
+    <table>
+        <tr>
+            <th colspan="5" style="text-align:center; width:100%"><h3>캠핑장 데이터</h3></th>
+        </tr>
+        <tr>
+            <td><h4>현재 버전</h4></td>
+            <td colspan="4"><span id="camp_ver"></span></td>
+        </tr>
+        <tr>
+            <td><h4>갱신 시도</h4></td>
+            <td colspan="2"><span id="camp_update_try"></span></td>
+            <td colspan="2"><span id="camp_update_progress"></span></td>
+        </tr>
+        <tr>
+            <td colspan="5" style="text-align:center; width:100%">
+                <button type="button" name="update_camp" id="update_camp" style="font-size: 1.2rem; width: 250px;">캠핑장 데이터 업데이트</button>
+            <td>
+        </tr>
+        <tr>
+            <th colspan="5" style="text-align:center; width:100%"><h3>추천 모델</h3></th>
+        </tr>
+        <tr>
+            <td><h4>현재 버전</h4></td>
+            <td colspan="4"><span id="model_ver"></span></td>
+        </tr>
+        <tr>
+            <td><h4>갱신 시도</h4></td>
+            <td colspan="4"><span id="model_update_try"></span></td>
+        </tr>
+        <tr>
+            <td colspan="5" style="text-align:center; width:100%">
+                <button type="button" name="update_model" id="update_model" style="font-size: 1.2rem; width: 250px;">추천 모델 업데이트</button>
+            <td>
+        </tr>
+        <tr>
+            <th colspan="5" style="text-align:center; width:100%"><h3>리뷰 크롤링</h3></th>
+        </tr>
+        <tr>
+            <td><h4>현재 버전</h4></td>
+            <td colspan="4"><span id="crawling_ver"></span></td>
+        </tr>
+        <tr>
+            <td><h4>갱신 시도</h4></td>
+            <td colspan="2"><span id="crawling_try"></span></td>
+            <td colspan="2"><span id="crawling_progress"></span></td>
+        </tr>
+        <tr>
+            <td colspan="5" style="text-align:center; width:100%">
+                <th:block th:if="${crawling == 'n'}">
+                    <button type="button" name="start_crawling" id="start_crawling" style="font-size: 1.2rem; width: 250px;">크롤링 시작하기</button>
+                    <button type="button" name="stop_crawling" id="stop_crawling" style="display: none; font-size: 1.2rem; width: 250px;">크롤링 일시정지</button>
+                </th:block>
+                <th:block th:if="${crawling == 'y'}">
+                    <button type="button" name="start_crawling" id="start_crawling" style="display: none; font-size: 1.2rem; width: 250px;">크롤링 시작하기</button>
+                    <button type="button" name="stop_crawling" id="stop_crawling" style="font-size: 1.2rem; width: 250px;">크롤링 일시정지</button>
+                </th:block>
+                <input type="hidden" name="crawling_session" id="crawling_session" th:value="${crawling}">
+            </td>
+        </tr>
+    </table>
+</div>
 
-<table>
-    <tr>
-        <th colspan="2" style="text-align:center">캠핑장 데이터</th>
-    </tr>
-    <tr>
-        <td>현재 버전</td>
-        <td><span id="camp_ver"></span></td>
-    </tr>
-    <tr>
-        <td>갱신 시도</td>
-        <td><span id="camp_update_try"></span><span id="camp_update_progress"></span></td>
-    </tr>
-    <tr>
-        <td colspan="2" style="text-align:center">
-            <button type="button" name="update_camp" id="update_camp">캠핑장데이터 업데이트</button>
-        <td>
-    </tr>
-</table>
-
-<table>
-    <tr>
-        <th colspan="2" style="text-align:center">추천 모델</th>
-    </tr>
-    <tr>
-        <td>현재 버전</td>
-        <td><span id="model_ver"></span></td>
-    </tr>
-    <tr>
-        <td>갱신 시도</td>
-        <td><span id="model_update_try"></span></td>
-    </tr>
-    <tr>
-        <td colspan="2" style="text-align:center">
-            <button type="button" name="update_model" id="update_model">추천 모델 업데이트</button>
-        <td>
-    </tr>
-</table>
-
-<table>
-    <tr>
-        <th colspan="2" style="text-align:center">리뷰 크롤링</th>
-    </tr>
-    <tr>
-        <td>현재 버전</td>
-        <td><span id="crawling_ver"></span></td>
-    </tr>
-    <tr>
-        <td>갱신 시도</td>
-        <td><span id="crawling_try"></span></td>
-    </tr>
-    <tr>
-        <td colspan="2" style="text-align:center" id="crawling_action_button">
-            <th:block th:if="${crawling == 'n'}">
-                <button type="button" name="start_crawling" id="start_crawling">크롤링 시작하기</button>
-                <button type="button" name="stop_crawling" id="stop_crawling" style="display: none">크롤링 일시정지</button>
-            </th:block>
-            <th:block th:if="${crawling == 'y'}">
-                <button type="button" name="start_crawling" id="start_crawling" style="display: none">크롤링 시작하기</button>
-                <button type="button" name="stop_crawling" id="stop_crawling">크롤링 일시정지</button>
-            </th:block>
-            <input type="hidden" name="crawling_session" id="crawling_session" th:value="${crawling}">
-        </td>
-    </tr>
-</table>
 
 </body>
 <script>
@@ -271,7 +271,7 @@
                 success: function(data0) {
                     if (data0.result == 'success') {
                         HTML = "";
-                        HTML += "<h3>0\%</h3>";
+                        HTML += "<h4>0\% 완료</h4>";
                         $("#camp_update_progress").html(HTML);
                         let totalCount = data0.totalCount;
                         let size = 100;
@@ -289,7 +289,7 @@
                                     if (data1.result == 'success') {
                                         count++;
                                         HTML = "";
-                                        HTML += "<h3>" + parseInt((count*100/totalPage)*0.90) + "\%</h3>";
+                                        HTML += "<h4>" + parseInt((count*100/totalPage)*0.90) + "\%</h4>";
                                         $("#camp_update_progress").html(HTML);
                                         if (count == totalPage) {
                                             $.ajax({
@@ -302,7 +302,7 @@
                                                 success: function(data2) {
                                                     if (data2.result == 'success') {
                                                         HTML = "";
-                                                        HTML += "<h3>99\%</h3>";
+                                                        HTML += "<h4>99\% 완료</h4>";
                                                         $("#camp_update_progress").html(HTML);
                                                         $.ajax({
                                                             type: "POST",
@@ -313,7 +313,7 @@
                                                             success: function(data3) {
                                                                 if (data3.result == 'success') {
                                                                     HTML = "";
-                                                                    HTML += "<h3>100\%</h3>";
+                                                                    HTML += "<h4>100\% 완료</h4>";
                                                                     $("#camp_update_progress").html(HTML);
                                                                     alert("캠핑장 데이터 업데이트 완료");
                                                                     load_update_history(kind);
@@ -431,23 +431,24 @@
                 let result = data.result;
                 let HTML = "";
                 if (kind == "camp") {
-                    HTML += "<h3>" + updateTime + " (" + totalCount + "개)</h3>";
+                    HTML += "<h4>" + updateTime + " (" + totalCount + "개)</h4>";
                     $("#camp_ver").html(HTML);
-                    HTML = "<h3>" + updateTry + " " + result + "</h3>";
+                    HTML = "<h4>" + updateTry + " " + result + "</h4>";
                     $("#camp_update_try").html(HTML);
                 } else if (kind == 'model') {
-                    HTML += "<h3>" + updateTime + "</h3>";
+                    HTML += "<h4>" + updateTime + "</h4>";
                     $("#model_ver").html(HTML);
-                    HTML = "<h3>" + updateTry + " " + result + "</h3>";
+                    HTML = "<h4>" + updateTry + " " + result + "</h4>";
                     $("#model_update_try").html(HTML);
                 } else {
-                    HTML += "<h3>" + updateTime + "</h3>";
+                    HTML += "<h4>" + updateTime + "</h4>";
                     $("#crawling_ver").html(HTML);
-                    HTML = "<h3>" + updateTry + " " + result + "</h3>";
-                    if (result == '중단') {
-                        HTML += "\n<h4>" + data.currentCount + "개 중 " + totalCount + "개 완료 (" + parseInt(data.currentCount*100/totalCount) +  "\%)</h4>";
-                    }
+                    HTML = "<h4>" + updateTry + "\t" + result + "</h4>";
                     $("#crawling_try").html(HTML);
+                    if (result == '중단') {
+                        HTML = "<h4>" + data.totalCount + "개 중 " + data.currentCount + "개 완료 (" + parseInt(data.currentCount*100/totalCount) +  "\%)</h4>";
+                        $("#crawling_progress").html(HTML);
+                    }
                 }
             },
             error: function() {
@@ -546,7 +547,5 @@
             }
         })
     }
-
-
 </script>
 </html>
