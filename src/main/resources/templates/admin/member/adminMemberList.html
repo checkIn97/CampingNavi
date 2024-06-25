@@ -73,7 +73,8 @@
         <a th:href="@{/admin/review/list}">리뷰 관리</a>
         <a th:href="@{/admin/member/list}">회원 관리</a>
         <a th:href="@{/admin/supervisor/list}">관리자 관리</a>
-        <a th:href="@{/admin/qna/list}">관리자 문의</a>
+        <a th:href="@{/admin/faq/list}">FAQ 관리</a>
+        <a th:href="@{/admin/qna/list}">1:1 문의 관리</a>
         <a href="/oauth-login/member/logoutProc">로그아웃</a>
     </div>
 </div>
@@ -155,7 +156,7 @@
                         tableHTML += '<td><span class="popularPosts">' + member.username + '</span></td>';
                         tableHTML += '<td></td>';
                         tableHTML += '<td><span class="popularPosts">' + member.name + '</span></td>';
-                        var formattedDate = moment(member.birth).format('YYYY-MM-DD HH:mm:ss');
+                        var formattedDate = moment(member.birth).format('YYYY-MM-DD');
                         tableHTML += '<td><span class="popularPosts">' + formattedDate + '</span></td>';
                         tableHTML += '<td></td>';
                         tableHTML += '<td><span class="popularPosts">' + member.email + '</span></td>';
@@ -164,6 +165,7 @@
                         tableHTML += '<td><span class="popularPosts">' + member.useyn + '</span></td>';
                         tableHTML += '<td></td>';
                         tableHTML += '<td><button class="delete-btn" data-mseq="' + member.mseq + '">해지</button></td>';
+                        tableHTML += '<td><button class="restore-btn" data-mseq="' + member.mseq + '">복구</button></td>';
                         tableHTML += '</tr>';
                     });
                     tableHTML += '</tbody></table>';
@@ -231,6 +233,31 @@
                 },
                 error: function (error) {
                     alert('회원 삭제 실패', error);
+                    // 실패 시 추가 처리
+                }
+            });
+        }
+
+        $(document).on('click', '.restore-btn', function () {
+            var mseq = $(this).data('mseq');
+            restoreMember(mseq);
+        });
+
+        function restoreMember(mseq) {
+            $.ajax({
+                type: 'POST',
+                url: '/admin/member/restore',
+                data: {
+                    mseq: mseq
+                },
+                success: function (response) {
+                    // 성공적으로 삭제되었을 때 처리
+                    alert('회원 복구 ' + response.result);
+                    // 삭제 후 목록 다시 로드
+                    memberList(currentPage);
+                },
+                error: function (error) {
+                    alert('회원 데이터 전송 실패', error);
                     // 실패 시 추가 처리
                 }
             });

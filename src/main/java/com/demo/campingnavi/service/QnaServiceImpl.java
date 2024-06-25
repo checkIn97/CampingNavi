@@ -35,6 +35,26 @@ public class QnaServiceImpl implements QnaService{
     }
 
     @Override
+    public Page<Qna> findAllByUsername(String type, String username, Pageable pageable) {
+        return qnaRepository.findAllByUsername(type, username, pageable);
+    }
+
+    @Override
+    public Page<Qna> findAllByName(String type, String name, Pageable pageable) {
+        return qnaRepository.findAllByName(type, name, pageable);
+    }
+
+    @Override
+    public Page<Qna> findAllByTitle(String type, String title, Pageable pageable) {
+        return qnaRepository.findAllByTitle(type, title, pageable);
+    }
+
+    @Override
+    public Page<Qna> findAllByContent(String type, String content, Pageable pageable) {
+        return qnaRepository.findAllByContent(type, content, pageable);
+    }
+
+    @Override
     public Page<Qna> findAllByMember(Member member, Pageable pageable) {
         return qnaRepository.findAllByMember(member, pageable);
     }

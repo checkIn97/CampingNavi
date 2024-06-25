@@ -55,7 +55,7 @@
                         <button class="webkit" >수정하기</button>
                     </a>
                     <!-- 목록으로 돌아가기 -->
-                    <a class="button webkit" href="/qna/home">
+                    <a class="button webkit" th:href="@{${member.role == 'ROLE_USER'} ? '/qna/home' : '/admin/qna/list'}">
                         <button class="webkit">목록보기</button>
                     </a>
                     <a class="webkit"
@@ -83,6 +83,15 @@
 <input type="hidden" id="userRole" th:value="${member.role}">
 <input type="hidden" id="qseq" th:value="${qna.qseq}">
 <script>
+
+    $(document).ready(function () {
+        let userRole = $("#userRole").val();
+        if (userRole != "ROLE_USER") {
+            document.getElementById('replyBtn').style.display = 'none';
+            document.getElementById('reply-area').style.display = 'none';
+        }
+    })
+
     var userRole = $("#userRole").val();
     if (userRole != "ROLE_USER") {
         $("#replyBtn").show();
