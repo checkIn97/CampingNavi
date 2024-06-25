@@ -210,12 +210,6 @@ public class DataServiceImpl implements DataService {
         }
     }
 
-    @Override
-    public boolean checkFileExist(String file_name) {
-        file_name = PathConfig.realPath(file_name);
-        File file = new File(file_name);
-        return file.exists();
-    }
 
     @Override
     public String deleteFile(String filename) {
