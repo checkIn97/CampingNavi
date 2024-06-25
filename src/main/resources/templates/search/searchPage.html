@@ -9,7 +9,17 @@
     <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
     <title>Search</title>
 </head>
+<style>
+    th {
+        height: 25px;
+    }
 
+    td {
+        height: 25px;
+        text-align: center;
+    }
+
+</style>
 <body>
 
 <th:block th:insert="insert/header.html"></th:block>
@@ -116,7 +126,9 @@
                     }
                     let HTML = "";
                     HTML += "<table id=\"searchList\"><tr>";
-                    HTML += "<th>이름</th><th>지역</th><th>추천점수</th>"
+                    HTML += "<th style='width:50%; text-align:center; font-size:1.1rem;'>이름</th>";
+                    HTML += "<th style='width:30%; text-align:center; font-size:1.1rem;'>지역</th>";
+                    HTML += "<th style='width:20%; text-align:center; font-size:1.1rem;'>추천점수</th>"
 
                     /*
                     if (sortBy == "name" && sortDirection == 'ASC') {
