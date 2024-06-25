@@ -284,6 +284,9 @@ public class AdminController {
         }
 
         result.put("result", update_type);
+        if (result.get("result").equals("start")) {
+            adminService.clearRatingTempFile();
+        }
 
         return result;
     }
@@ -443,7 +446,6 @@ public class AdminController {
             List<Camp> campList = campService.getCampListByUseyn("y");
             result.put("totalCount", campList.size());
         } else if (kind.equals("crawling")) {
-            List<Camp> campList = campService.getCampListByUseyn("");
             result.put("totalCount", crawlingStatus.get("total"));
             result.put("currentCount", crawlingStatus.get("current"));
         }

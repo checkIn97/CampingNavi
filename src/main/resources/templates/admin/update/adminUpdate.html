@@ -127,7 +127,7 @@
     </tr>
     <tr>
         <td>갱신 시도</td>
-        <td><span id="crawling_try"></span><span id="crawling_progress"></span></td>
+        <td><span id="crawling_try"></span></td>
     </tr>
     <tr>
         <td colspan="2" style="text-align:center" id="crawling_action_button">
@@ -173,7 +173,7 @@
             url: "/admin/crawling_stop",
             success: function(data) {
                 if (data.result == 'success') {
-                    alert("크롤링 중지");
+                    alert("크롤링 중지 요청");
                     stop_crawling_result = true;
                 } else {
                     alert("크롤링 중지 실패");
@@ -185,6 +185,7 @@
         });
         if (stop_crawling_result) {
             clearInterval(crawling_status_update);
+            crawling_status_update = null;
         }
         event.preventDefault();
     }
@@ -433,16 +434,14 @@
             },
             success: function(data0) {
                 if (data0.result != 'fail') {
-                    HTML = "";
-                    $("#crawling_progress").html(HTML);
                     $.ajax({
                         type: "POST",
                         url: "/admin/get_crawling_data",
                         success: function(data1) {
+                            if (crawling_status_update != null) {
+                                clearInterval(crawling_status_update);
+                            }
                             if (data1.result == 'success') {
-                                count++;
-                                HTML = "";
-                                $("#crawling_progress").html(HTML);
                                 $.ajax({
                                     type: "POST",
                                     url: "/admin/crawling_data_integration", // 크롤링 완료시 파일 통합
@@ -452,15 +451,11 @@
                                             load_update_history(kind);
                                         } else {
                                             alert("데이터 통합 실패");
-                                            HTML = "";
-                                            $("#crawling_progress").html(HTML);
                                             load_update_history(kind);
                                         }
                                     },
                                     error: function() {
                                         alert("데이터 통합 실패");
-                                        HTML = "";
-                                        $("#crawling_progress").html(HTML);
                                         location.reload();
                                     }
                                 });
@@ -479,15 +474,11 @@
                     });
                 } else {
                     alert("초기화 실패");
-                    HTML = "";
-                    $("#crawling_progress").html(HTML);
                     load_update_history(kind);
                 }
             },
             error: function() {
                 alert("크롤링 중 오류 발생");
-                HTML = "";
-                $("#crawling_progress").html(HTML);
                 load_update_history(kind);
             }
         });

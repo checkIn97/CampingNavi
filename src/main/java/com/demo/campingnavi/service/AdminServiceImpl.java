@@ -14,6 +14,9 @@ import java.util.Map;
 @Service
 public class AdminServiceImpl implements AdminService {
 
+    @Autowired
+    CampService campService;
+
     @Override
     public String recommendModelUpdate() {
         String pyFile = "ModelTraining.py";
@@ -122,27 +125,15 @@ public class AdminServiceImpl implements AdminService {
     public Map<String, Integer> getCrawlingStatus() {
         Map<String, Integer> crawlingStatus = new HashMap<>();
         int current = 0;
-        int total = 0;
-        String filename = "temp/crawling_status.csv";
-        filename = PathConfig.realPath(filename);
-        File file = new File(filename);
-        if (file.exists()) {
-            try {
-                FileReader fileReader = new FileReader(filename);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-                String text = null;
-                try {
-                    text = bufferedReader.readLine();
-                    text = bufferedReader.readLine();
-                    String input[] = text.split(",");
-                    current = Integer.parseInt(input[0]);
-                    total = Integer.parseInt(input[1]);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+        int total = campService.getCampListByUseyn("").size();
+        while (true) {
+            String filename = "temp/rating" + (current+1) + ".csv";
+            filename = PathConfig.realPath(filename);
+            File file = new File(filename);
+            if (!file.exists()) {
+                break;
             }
+            current++;
         }
 
         crawlingStatus.put("current", current);
@@ -193,5 +184,26 @@ public class AdminServiceImpl implements AdminService {
         }
 
         return result;
+    }
+
+    @Override
+    public void clearRatingTempFile() {
+        int i = 1;
+        while (true) {
+            String filename = "temp/rating" + i + ".csv";
+            filename = PathConfig.realPath(filename);
+            File file = new File(filename);
+            if (!file.exists()) {
+                break;
+            }
+            i++;
+        }
+
+        String filename = "temp/crawling_status.csv";
+        filename = PathConfig.realPath(filename);
+        File file = new File(filename);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 }
