@@ -165,8 +165,8 @@
     <div class="box" id="chat-participation">
         <h2 class="major">참여중인 채팅</h2>
         <span class="chat-participation-room" v-for="list in myRoomList" v-on:click="enterRoom(list.roomId)">
-    {{ list.name.length > 6 ? list.name.slice(0, 6) + '...' : list.name }}
-</span>
+        {{ list.name.length > 6 ? list.name.slice(0, 6) + '...' : list.name }}
+        </span>
     </div>
 </div>
 
