@@ -856,6 +856,22 @@ input[name="slide"] {
 
 /*chat*/
 
+.chat-room-detail-user {
+    margin-bottom: 1rem;
+}
+
+#chat-room-detail-user-list-box {
+    background-color: #f1f9eb;
+    border: 1px solid yellowgreen;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 10%;
+    top: 50%;
+    position: fixed;
+    overflow: scroll;
+    height: -webkit-fill-available;
+}
+
 .chat-participation-room {
 
     background-color: #fdfada;
@@ -893,7 +909,9 @@ input[name="slide"] {
 
 #chatBox {
     width: 53%;
-    overflow: auto;
+    overflow: scroll;
+    margin-top: 0;
+    height: revert;
 }
 
 .chatBtn {

@@ -12,45 +12,45 @@
 <body>
 
 <th:block th:insert="insert/header.html"></th:block>
-
-<article class="box centerBox" id="chatBox">
-    <div class="container" id="app">
-        <div>
-            <h2>{{ room.name }}</h2>
-        </div>
-        <div class="chat-container">
-            <ul class="list-group">
-                <!-- 채팅 내용 -->
-                <li class="list-group-item"
-                    v-for="message in messages"
-                    :class="{
+<div id="app">
+    <article class="box centerBox" id="chatBox">
+        <div class="container">
+            <div>
+                <h2>{{ room.name }}</h2>
+            </div>
+            <div class="chat-container">
+                <ul class="list-group">
+                    <!-- 채팅 내용 -->
+                    <li :class="{
                         'message-user': message.isOwn && message.type === 'TALK',
                         'message-other': !message.isOwn && message.type === 'TALK',
                         'message-notification': message.type === 'ENTER' || message.type === 'LEAVE'
-                    }">
-                    <template v-if="message.isOwn || message.type !== 'TALK'">{{ message.message }}</template>
-                    <template v-else>{{ message.sender }} - {{ message.message }}</template>
-                </li>
-            </ul>
-        </div>
-        <div class="input-group">
-            <!-- 메시지 입력란 -->
-            <div class="buttonContain" id="chatInputGroup">
-                <input class="form-control" type="text" v-model="message" v-on:keypress.enter="sendMessage">
-                <div class="input-group-append">
-                    <button @click="sendMessage" class="chatBtn" type="button">보내기</button>
+                    }"
+                        class="list-group-item"
+                        v-for="message in messages">
+                        <template v-if="message.isOwn || message.type !== 'TALK'">{{ message.message }}</template>
+                        <template v-else>{{ message.sender }} - {{ message.message }}</template>
+                    </li>
+                </ul>
+            </div>
+            <div class="input-group">
+                <!-- 메시지 입력란 -->
+                <div class="buttonContain" id="chatInputGroup">
+                    <input class="form-control" type="text" v-model="message" v-on:keypress.enter="sendMessage">
+                    <div class="input-group-append">
+                        <button @click="sendMessage" class="chatBtn" type="button">보내기</button>
+                    </div>
+                    <button class="chatBtn mainBte" id="chatBack" onclick="goBack()">나가기</button>
                 </div>
-                <button onclick="goBack()" class="chatBtn mainBte" id="chatBack">나가기</button>
             </div>
         </div>
-        <div>
-            <h4>참여자</h4>
-            <ul>
-                <li v-for="user in chatRoomUserList">{{user}}</li>
-            </ul>
-        </div>
+    </article>
+
+    <div id="chat-room-detail-user-list-box">
+        <h2 class="major">참여자</h2>
+            <span class="chat-room-detail-user" v-for="user in chatRoomUserList">{{user}}</span>
     </div>
-</article>
+</div>
 <button class="chatBtn mainBtn" id="chatExit">채팅방 탈퇴</button>
 <th:block th:insert="insert/footer.html"></th:block>
 
@@ -159,7 +159,12 @@
                 vm.recvMessage(recv);
             });
 
-            ws.send("/pub/chat/message", {}, JSON.stringify({type: 'ENTER', roomId: vm.$data.roomId, sender: vm.$data.sender, mseq: vm.$data.mseq}));
+            ws.send("/pub/chat/message", {}, JSON.stringify({
+                type: 'ENTER',
+                roomId: vm.$data.roomId,
+                sender: vm.$data.sender,
+                mseq: vm.$data.mseq
+            }));
         }, function (error) {
             if (reconnect++ <= 5) {
                 setTimeout(function () {
@@ -175,9 +180,18 @@
     connect();
 
     document.getElementById('chatExit').addEventListener('click', function () {
-        ws.send("/pub/chat/message", {}, JSON.stringify({type: 'LEAVE', roomId: vm.$data.roomId, sender: vm.$data.sender, mseq: vm.$data.mseq}));
+        ws.send("/pub/chat/message", {}, JSON.stringify({
+            type: 'LEAVE',
+            roomId: vm.$data.roomId,
+            sender: vm.$data.sender,
+            mseq: vm.$data.mseq
+        }));
         location.href = "/chat/room";
     });
+
+    function goBack() {
+        window.history.back();
+    }
 </script>
 
 </body>
