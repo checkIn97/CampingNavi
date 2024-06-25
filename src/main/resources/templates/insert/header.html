@@ -122,14 +122,14 @@
         let header = document.querySelector('.header');
         // 마우스의 Y 좌표가 50px 이하일 때 header 요소를 표시합니다.
         if (e.clientY <= 50) {
-            header.style.display = 'block';
+            header.classList.add('show');
         }
     });
 
     let header = document.querySelector('.header');
 
     header.addEventListener('mouseleave', function () {
-        header.style.display = 'none';
+        header.classList.remove('show');
     });
 
 

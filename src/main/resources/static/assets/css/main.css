@@ -109,7 +109,16 @@ li {
 
 .header {
     position: relative;
-    display: none;
+    /*display: none;*/
+    transition: all 0.4s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 9999;
+}
+
+.header.show {
+    opacity: 1;
+    visibility: visible;
 }
 
 #headerBox {
@@ -147,6 +156,7 @@ li {
     top: 2rem;
     background-color: #E58B33;
     width: 10rem;
+    margin-top: 0;
 }
 
 #headerCampingBtn {
@@ -275,7 +285,7 @@ h2.major {
     display: flex;
     flex-direction: column;
     padding: 3rem;
-    margin-top: 1rem;
+    margin-top: 7rem;
     background-color: #fdfada;
     border-radius: 60px;
 }
@@ -845,6 +855,31 @@ input[name="slide"] {
 }
 
 /*chat*/
+
+.chat-participation-room {
+
+}
+
+#chat-participation {
+    height: 100vh;
+    width: 10%;
+    overflow: scroll;
+    border-radius: 0;
+    background-color: #f1f9eb;
+    border: 1px solid yellowgreen;
+    margin-top: 0;
+    top: 0;
+    position: fixed;
+    box-shadow: 1px 1px 1px rgba(35,37,45,0.11);
+    transition: all 0.3s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+}
+
+#chat-participation.show {
+    opacity: 1;
+    visibility: visible;
+}
 
 #chatBack {
     width: 17rem;
