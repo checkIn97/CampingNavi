@@ -21,7 +21,7 @@ public class CampController {
     @Autowired
     private CampService campService;
 
-    @RequestMapping("/search")
+    @GetMapping("/search")
     public String search(HttpSession session, Model model, CampRecommendVo campRecommendVo,
                          @RequestParam(value="page", defaultValue="0") int page,
                          @RequestParam(value="size", defaultValue="5") int size,
