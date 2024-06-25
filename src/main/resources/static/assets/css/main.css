@@ -1764,6 +1764,10 @@ hr.vertical {
 
 /*qna*/
 
+#oneByone {
+    width: -webkit-fill-available;
+}
+
 .faqTitle {
     font-size: 1.5rem;
     margin: 1rem;
