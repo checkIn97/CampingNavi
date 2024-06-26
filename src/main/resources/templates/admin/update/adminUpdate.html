@@ -64,7 +64,6 @@
         font-weight: bold;
         color: #007bff;
     }
-
 </style>
 <body>
 <div class="d-flex">
@@ -129,13 +128,21 @@
         </tr>
         <tr>
             <td colspan="5" style="text-align:center; width:100%">
-                <th:block th:if="${crawling == 'n'}">
+                <th:block id="crawling_button_area" th:if="${crawling == 'n'}">
+                    <div id="start_crawling_area">
                     <button type="button" name="start_crawling" id="start_crawling" style="font-size: 1.2rem; width: 250px;">크롤링 시작하기</button>
+                    </div>
+                    <div id="stop_crawling_area">
                     <button type="button" name="stop_crawling" id="stop_crawling" style="display: none; font-size: 1.2rem; width: 250px;">크롤링 일시정지</button>
+                    </div>
                 </th:block>
-                <th:block th:if="${crawling == 'y'}">
+                <th:block id="crawling_button_area" th:if="${crawling == 'y'}">
+                    <div id="start_crawling_area">
                     <button type="button" name="start_crawling" id="start_crawling" style="display: none; font-size: 1.2rem; width: 250px;">크롤링 시작하기</button>
+                    </div>
+                    <div id="stop_crawling_area">
                     <button type="button" name="stop_crawling" id="stop_crawling" style="font-size: 1.2rem; width: 250px;">크롤링 일시정지</button>
+                    </div>
                 </th:block>
                 <input type="hidden" name="crawling_session" id="crawling_session" th:value="${crawling}">
             </td>
@@ -158,15 +165,6 @@
         if ($("#crawling_session").val() == 'y') {
             crawling_status_update = setInterval(load_update_history, 5000, "crawling");
         }
-    });
-
-    document.getElementById('start_crawling').addEventListener('click', function () {
-        document.getElementById('start_crawling').style.display = 'none';
-        document.getElementById('stop_crawling').style.display = 'block';
-    });
-
-    document.getElementById('stop_crawling').addEventListener('click', function () {
-
     });
 
     function update_camp(event) {
@@ -215,9 +213,20 @@
         clearTimeout(tmp_crawling_stop);
         tmp_crawling_stop = null;
         set_crawling_session('n');
-        document.getElementById('start_crawling').style.display = 'block';
-        document.getElementById('stop_crawling').style.display = 'none';
+        crawling_button_display("start");
         alert("크롤링 중지 완료");
+    }
+
+    function crawling_button_display(button) {
+        if (button == 'start') {
+            document.getElementById('start_crawling').style.display = 'block';
+            document.getElementById('start_crawling').style.margin = 'auto';
+            document.getElementById('stop_crawling').style.display = 'none';
+        } else {
+            document.getElementById('start_crawling').style.display = 'none';
+            document.getElementById('stop_crawling').style.display = 'block';
+            document.getElementById('stop_crawling').style.margin = 'auto';
+        }
     }
 
     /*
@@ -436,6 +445,7 @@
     }
 
     function review_crawling() {
+        crawling_button_display("stop");
         let kind = "crawling";
         alert("리뷰 크롤링 시작");
         $.ajax({
@@ -459,50 +469,52 @@
                                         if (data2.result == 'success') {
                                             load_update_history(kind);
                                             set_crawling_session('n');
-                                            document.getElementById('start_crawling').style.display = 'block';
-                                            document.getElementById('stop_crawling').style.display = 'none';
                                             alert("크롤링 완료");
+                                            crawling_button_display("start");
                                         } else {
                                             load_update_history(kind);
                                             set_crawling_session('n');
-                                            document.getElementById('start_crawling').style.display = 'block';
-                                            document.getElementById('stop_crawling').style.display = 'none';
-                                            alert("데이터 통합 실패");
+                                            alert("데이터 통합 실패-fail");
+                                            crawling_button_display("start");
                                         }
                                     },
                                     error: function() {
                                         set_crawling_session('n');
-                                        alert("데이터 통합 실패");
+                                        alert("데이터 통합 실패-error");
+                                        crawling_button_display("start");
                                         location.reload();
                                     }
                                 });
                             } else if (data1.result == 'stopped') {
                                 set_crawling_session('n');
                                 load_update_history(kind);
-                                document.getElementById('start_crawling').style.display = 'block';
-                                document.getElementById('stop_crawling').style.display = 'none';
                                 alert("크롤링 중지 완료");
+                                crawling_button_display("start");
                             } else {
                                 set_crawling_session('n');
-                                alert("크롤링 중 오류 발생");
+                                alert("크롤링 중 오류 발생3-fail");
+                                crawling_button_display("start");
                                 location.reload();
                             }
                         },
                         error: function() {
                             set_crawling_session('n');
-                            alert("크롤링 중 오류 발생");
+                            alert("크롤링 중 오류 발생2-error");
+                            crawling_button_display("start");
                             location.reload();
                         }
                     });
                 } else {
                     set_crawling_session('n');
                     alert("초기화 실패");
+                    crawling_button_display("start");
                     load_update_history(kind);
                 }
             },
             error: function() {
                 set_crawling_session('n');
-                alert("크롤링 중 오류 발생");
+                alert("크롤링 중 오류 발생1-error");
+                crawling_button_display("start");
                 load_update_history(kind);
             }
         });
