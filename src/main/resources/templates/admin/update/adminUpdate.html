@@ -292,7 +292,7 @@
                 success: function (data0) {
                     if (data0.result == 'success') {
                         HTML = "";
-                        HTML += "<p class='card-text'>0\% 완료</p>";
+                        HTML += "<progress id='progress' value='0' max='100'></progress>";
                         $("#camp_update_progress").html(HTML);
                         let totalCount = data0.totalCount;
                         let size = 100;
@@ -310,7 +310,7 @@
                                     if (data1.result == 'success') {
                                         count++;
                                         HTML = "";
-                                        HTML += "<h4>" + parseInt((count * 100 / totalPage) * 0.95) + "\% 완료</h4>";
+                                        HTML += "<progress id='progress' value='" + parseInt((count * 100 / totalPage) * 0.95) + "' max='100'></progress>";
                                         $("#camp_update_progress").html(HTML);
                                         if (count == totalPage) {
                                             $.ajax({
@@ -323,7 +323,7 @@
                                                 success: function (data2) {
                                                     if (data2.result == 'success') {
                                                         HTML = "";
-                                                        HTML += "<p class='card-text'>99\% 완료</p>";
+                                                        HTML += "<progress id='progress' value='97' max='100'></progress>";
                                                         $("#camp_update_progress").html(HTML);
                                                         $.ajax({
                                                             type: "POST",
@@ -334,7 +334,7 @@
                                                             success: function (data3) {
                                                                 if (data3.result == 'success') {
                                                                     HTML = "";
-                                                                    HTML += "<h4>100\% 완료</h4>";
+                                                                    HTML += "<progress class='progress' value='100' max='100'></progress>";
                                                                     $("#camp_update_progress").html(HTML);
                                                                     alert("캠핑장 데이터 업데이트 완료");
                                                                     load_update_history(kind);
