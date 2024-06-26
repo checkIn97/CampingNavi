@@ -295,7 +295,7 @@
                                     if (data1.result == 'success') {
                                         count++;
                                         HTML = "";
-                                        HTML += "<h4>" + parseInt((count*100/totalPage)*0.90) + "\%</h4>";
+                                        HTML += "<h4>" + parseInt((count*100/totalPage)*0.95) + "\% 완료</h4>";
                                         $("#camp_update_progress").html(HTML);
                                         if (count == totalPage) {
                                             $.ajax({

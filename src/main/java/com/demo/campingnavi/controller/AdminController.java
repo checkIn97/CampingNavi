@@ -270,7 +270,7 @@ public class AdminController {
                 }
             }
         }
-        System.out.println(update_type);
+
         if (update_type.equals("start")) {
             try {
                 String delete_result = dataService.deleteFile("/temp/crawling_status.csv");
@@ -289,7 +289,7 @@ public class AdminController {
         }
 
         result.put("result", update_type);
-        if (result.get("result").equals("start")) {
+        if (update_type.equals("start")) {
             adminService.clearRatingTempFile(1);
         }
 

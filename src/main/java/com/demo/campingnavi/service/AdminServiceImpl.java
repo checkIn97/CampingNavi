@@ -199,6 +199,8 @@ public class AdminServiceImpl implements AdminService {
             File file = new File(filename);
             if (!file.exists()) {
                 break;
+            } else {
+                file.delete();
             }
             i++;
         }
