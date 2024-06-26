@@ -191,8 +191,11 @@ public class ChatRoomController {
         List<ChatRoom> myChatRooms = chatRoomService.findMyChatRooms(String.valueOf(memberMseq));
         return myChatRooms;
 
-
-
+    }
+    @GetMapping("/chatSearch")
+    @ResponseBody
+    public List<Camp> searchItems(@RequestParam String keyword) {
+        return campService.searchItems(keyword);
 
     }
 }
