@@ -163,7 +163,12 @@
 
                     for (let i = (page - 1) * size; i < (page * size < list.length ? page * size : list.length); i++) {
                         HTML += "<tr class=\"tableResult\">";
-                        HTML += "<td><a href=\"\" onclick=\"move_map(" + i + ", " + list[i].camp.mapX + ", " + list[i].camp.mapY + ")\; return false\;\">" + list[i].camp.name + "</a></td>";
+                        let tmp_name = list[i].camp.name;
+                        let name_length_limit = 16;
+                        if (tmp_name.length >= name_length_limit) {
+                            tmp_name = tmp_name.substring(0, name_length_limit-1) + "...";
+                        }
+                        HTML += "<td><a href=\"\" onclick=\"move_map(" + i + ", " + list[i].camp.mapX + ", " + list[i].camp.mapY + ")\; return false\;\" title=\"" + list[i].camp.name + "\">" + tmp_name + "</a></td>";
                         HTML += "<td>" + list[i].addressShort + "</td>";
 
                         let starScore = parseFloat(list[i].scoreView);
