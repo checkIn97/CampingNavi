@@ -159,6 +159,7 @@
                 <button class="btn btn-primary" id="stop_crawling" name="stop_crawling"
                         type="button">크롤링 일시정지
                 </button>
+                <input type="hidden" name="crawling_session" id="crawling_session" th:value="${crawling}">
             </div>
         </div>
     </div>
@@ -177,7 +178,10 @@
         load_update_history("model");
         load_update_history("crawling");
         if ($("#crawling_session").val() == 'y') {
+            crawling_button_display("stop");
             crawling_status_update = setInterval(load_update_history, 5000, "crawling");
+        } else {
+            crawling_button_display("start");
         }
     });
 
@@ -235,12 +239,12 @@
     function crawling_button_display(button) {
         if (button == 'start') {
             document.getElementById('start_crawling').style.display = 'block';
-            document.getElementById('start_crawling').style.margin = 'auto';
+            //document.getElementById('start_crawling').style.margin = 'auto';
             document.getElementById('stop_crawling').style.display = 'none';
         } else {
             document.getElementById('start_crawling').style.display = 'none';
             document.getElementById('stop_crawling').style.display = 'block';
-            document.getElementById('stop_crawling').style.margin = 'auto';
+            //document.getElementById('stop_crawling').style.margin = 'auto';
         }
     }
 
