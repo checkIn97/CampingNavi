@@ -241,9 +241,9 @@ public class AdminController {
 
     @ResponseBody
     @PostMapping("/crawling_initialize")
-    public Map<String, Object> getCrawlingData(@RequestParam("update_type") String update_type,
-                                               HttpSession session) {
+    public Map<String, Object> crawlingInitialize() {
         Map<String, Object> result = new HashMap<>();
+        String update_type = "start";
         dataService.deleteFile("/temp/crawling_stop");
         List<UpdateHistory> updateListCampSuccess = updateHistoryService.getUpdateHistoryList("camp", "success");
         List<UpdateHistory> updateListCrawlingStopped = updateHistoryService.getUpdateHistoryList("crawling", "stopped");
