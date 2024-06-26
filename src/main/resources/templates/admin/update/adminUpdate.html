@@ -31,20 +31,38 @@
         background-color: #495057;
     }
     .content {
-        display: flex;
-        flex-direction: column;
+        flex: 1;
+        padding: 20px;
     }
-
-    .section {
-        display: flex;
-        flex-direction: column;
+    .page-index {
+        padding: 20px;
+    }
+    .search-container {
         margin-bottom: 20px;
     }
-
-    .item {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
+    .table {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .page-box {
+        text-align: center;
+    }
+    .page-num {
+        margin: 0 5px;
+        cursor: pointer;
+    }
+    .page-num.active {
+        font-weight: bold;
+    }
+    .icon {
+        cursor: pointer;
+    }
+    .review-list-pop-back {
+        background-color: #f8f9fa;
+    }
+    .popularPosts {
+        font-weight: bold;
+        color: #007bff;
     }
 </style>
 <body>
@@ -60,55 +78,76 @@
         <a href="/oauth-login/member/logoutProc">로그아웃</a>
     </div>
 </div>
-
 <div class="content">
     <h2 class="my-4">데이터 업데이트 관리자 페이지</h2>
-    <div class="section">
-        <h3>캠핑장 데이터</h3>
-        <div class="item">
-            <h4>현재 버전</h4>
-            <span id="camp_ver"></span>
-        </div>
-        <div class="item">
-            <h4>갱신 시도</h4>
-            <span id="camp_update_try"></span>
-            <span id="camp_update_progress"></span>
-        </div>
-        <div class="item">
-            <button type="button" name="update_camp" id="update_camp" style="font-size: 1.2rem; width: 250px;">캠핑장 데이터 업데이트</button>
-        </div>
-    </div>
-    <div class="section">
-        <h3>추천 모델</h3>
-        <div class="item">
-            <h4>현재 버전</h4>
-            <span id="model_ver"></span>
-        </div>
-        <div class="item">
-            <h4>갱신 시도</h4>
-            <span id="model_update_try"></span>
-            <span id="model_update_progress"></span>
-        </div>
-        <div class="item">
-            <button type="button" name="update_model" id="update_model" style="font-size: 1.2rem; width: 250px;">추천 모델 업데이트</button>
-        </div>
-    </div>
-    <div class="section">
-        <h3>리뷰 크롤링</h3>
-        <div class="item">
-            <h4>현재 버전</h4>
-            <span id="crawling_ver"></span>
-        </div>
-        <div class="item">
-            <h4>갱신 시도</h4>
-            <span id="crawling_try"></span>
-            <span id="crawling_progress"></span>
-        </div>
-        <div class="item">
-            <button type="button" name="start_crawling" id="start_crawling" style="font-size: 1.2rem; width: 250px;">크롤링 시작하기</button>
-            <button type="button" name="stop_crawling" id="stop_crawling" style="display: none; font-size: 1.2rem; width: 250px;">크롤링 일시정지</button>
-        </div>
-    </div>
+    <table>
+        <tr>
+            <th colspan="5" style="text-align:center; width:100%"><h3>캠핑장 데이터</h3></th>
+        </tr>
+        <tr>
+            <td><h4>현재 버전</h4></td>
+            <td colspan="4"><span id="camp_ver"></span></td>
+        </tr>
+        <tr>
+            <td><h4>갱신 시도</h4></td>
+            <td colspan="2"><span id="camp_update_try"></span></td>
+            <td colspan="2"><span id="camp_update_progress"></span></td>
+        </tr>
+        <tr>
+            <td colspan="5" style="text-align:center; width:100%">
+                <button class="btn btn-primary" type="button" name="update_camp" id="update_camp" style="font-size: 1.2rem; width: 250px;">캠핑장 데이터 업데이트</button>
+            <td>
+        </tr>
+        <tr>
+            <th colspan="5" style="text-align:center; width:100%"><h3>추천 모델</h3></th>
+        </tr>
+        <tr>
+            <td><h4>현재 버전</h4></td>
+            <td colspan="4"><span id="model_ver"></span></td>
+        </tr>
+        <tr>
+            <td><h4>갱신 시도</h4></td>
+            <td colspan="4"><span id="model_update_try"></span></td>
+        </tr>
+        <tr>
+            <td colspan="5" style="text-align:center; width:100%">
+                <button class="btn btn-primary" type="button" name="update_model" id="update_model" style="font-size: 1.2rem; width: 250px;">추천 모델 업데이트</button>
+            <td>
+        </tr>
+        <tr>
+            <th colspan="5" style="text-align:center; width:100%"><h3>리뷰 크롤링</h3></th>
+        </tr>
+        <tr>
+            <td><h4>현재 버전</h4></td>
+            <td colspan="4"><span id="crawling_ver"></span></td>
+        </tr>
+        <tr>
+            <td><h4>갱신 시도</h4></td>
+            <td colspan="2"><span id="crawling_try"></span></td>
+            <td colspan="2"><span id="crawling_progress"></span></td>
+        </tr>
+        <tr>
+            <td colspan="5" style="text-align:center; width:100%">
+                <th:block id="crawling_button_area" th:if="${crawling == 'n'}">
+                    <div id="start_crawling_area">
+                    <button class="btn btn-primary" type="button" name="start_crawling" id="start_crawling" style="font-size: 1.2rem; width: 250px;">크롤링 시작하기</button>
+                    </div>
+                    <div id="stop_crawling_area">
+                    <button type="button" name="stop_crawling" id="stop_crawling" style="display: none; font-size: 1.2rem; width: 250px;">크롤링 일시정지</button>
+                    </div>
+                </th:block>
+                <th:block id="crawling_button_area" th:if="${crawling == 'y'}">
+                    <div id="start_crawling_area">
+                    <button type="button" name="start_crawling" id="start_crawling" style="display: none; font-size: 1.2rem; width: 250px;">크롤링 시작하기</button>
+                    </div>
+                    <div id="stop_crawling_area">
+                    <button type="button" name="stop_crawling" id="stop_crawling" style="font-size: 1.2rem; width: 250px;">크롤링 일시정지</button>
+                    </div>
+                </th:block>
+                <input type="hidden" name="crawling_session" id="crawling_session" th:value="${crawling}">
+            </td>
+        </tr>
+    </table>
 </div>
 
 
