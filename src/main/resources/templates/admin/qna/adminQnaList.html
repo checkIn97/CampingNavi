@@ -148,7 +148,7 @@
                     tableHTML += '<th colspan="2">내용</th>';
                     tableHTML += '<th colspan="2">작성시간</th>'
                     tableHTML += '<th>답변 여부</th>';
-                    tableHTML += '<th>사용 여부</th>';
+                    tableHTML += '<th>삭제 유무</th>';
                     tableHTML += '<th colspan="2"></th>';
                     tableHTML += '</tr></thead><tbody>';
 
@@ -157,8 +157,8 @@
                         tableHTML += '<td><span class="popularPosts">' + (index + 1) + '</span></td>';
                         tableHTML += '<td><a href="/admin/member/detail/' + qna.member.mseq + '"><span class="popularPosts">' + qna.member.username + '</span></a></td>';
                         tableHTML += '<td></td>';
-                        tableHTML += '<td><a href="/qna/oneByone/detail/' + qna.qseq + '"><span class="popularPosts">' + qna.title + '</span></a></td>';
-                        tableHTML += '<td><span class="popularPosts">' + qna.content.substring(0, 15) + '...</span></td>';
+                        tableHTML += '<td><a href="/qna/oneByone/detail/' + qna.qseq + '"><span class="popularPosts">' + (qna.title.length < 21 ? qna.title : qna.title.substring(0, 20) + '...') + '</span></a></td>';
+                        tableHTML += '<td><span class="popularPosts">' + (qna.content.length < 21 ? qna.content : qna.content.substring(0, 20) + '...') + '</span></td>';
                         tableHTML += '<td></td>';
                         var formattedDate = moment(qna.createdAt).format('YYYY-MM-DD HH:mm:ss');
                         tableHTML += '<td><span class="popularPosts">' + formattedDate + '</span></td>';
@@ -254,12 +254,12 @@
                 },
                 success: function (response) {
                     // 성공적으로 삭제되었을 때 처리
-                    alert('FAQ 복구 ' + response.result);
+                    alert('QNA 복구 ' + response.result);
                     // 삭제 후 목록 다시 로드
                     qnaList(currentPage);
                 },
                 error: function (error) {
-                    alert('FAQ 복구 실패', error);
+                    alert('QNA 복구 실패', error);
                     // 실패 시 추가 처리
                 }
             });

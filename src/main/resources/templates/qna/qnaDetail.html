@@ -7,6 +7,7 @@
     <link href="/assets/css/main.css" rel="stylesheet"/>
     <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <title>CampNavi</title>
 </head>
 
@@ -83,6 +84,7 @@
 <input type="hidden" id="userRole" th:value="${member.role}">
 <input type="hidden" id="mseq" th:value="${member.mseq}">
 <input type="hidden" id="qseq" th:value="${qna.qseq}">
+<input type="hidden" id="type" th:value="${qna.type}">
 <input type="hidden" id="qnaMember" th:value="${qna.member.mseq}">
 <script>
 
@@ -122,86 +124,90 @@
 </script>
 <script>
     $(document).ready(function () {
-        function replyList(page) {
-            $.ajax({
-                type: 'GET',
-                url: '/qna/reply/paging',
-                data: {
-                    page : page,
-                    size : 3,
-                    sort : 'createdAt,desc',
-                    qseq : $("#qseq").val()
-                },
-                success: function (data) {
-                    var replyArea = $("#reply-area");
-                    replyArea.empty();
-                    var replys = data.content;
-                    var index = 1;
-                    replyArea.append('<table>');
-                    replyArea.append('<tr>');
-                    replyArea.append('<th>번호</th>');
-                    replyArea.append('<th>내용</th>');
-                    replyArea.append('<th>작성일자</th>');
-                    replyArea.append('<th colspan="3">작성자</th>');
-                    replyArea.append('</tr>');
-
-                    if(replys.length < 1) {
-                        replyArea.append('<tr><td>답변을 등록해주세요.</td></tr>');
-                    } else {
-                        replys.forEach(function (reply) {
-                            replyArea.append('<tr>');
-                            replyArea.append('<td>' + index++ + '</td>');
-                            replyArea.append('<td><span>' + reply.content + '</span></td>');
-                            replyArea.append('<td>' + reply.createdAt + '</td>');
-                            replyArea.append('<td>' + reply.member.name + '</td>');
-                            replyArea.append('<td><button type="button" onclick="editReply()">수정하기</button> </td>');
-                            replyArea.append('<td><button type="button" onclick="deleteReply()">삭제하기</td>');
-                            replyArea.append('</tr>');
-                            replyArea.append('<tr><td><img src="/assets/replyImages/' + reply.img + '"></td></tr>');
-                            replyArea.append('</table>');
-                            replyArea.append('<input type="hidden" id="reply_id" value="' + reply.reply_id + '"/>');
+        if ($("#type").val() !== "FAQ") {
+            function replyList(page) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/qna/reply/paging',
+                    data: {
+                        page : page,
+                        size : 3,
+                        sort : 'createdAt,desc',
+                        qseq : $("#qseq").val()
+                    },
+                    success: function (data) {
+                        var replyArea = $("#reply-area");
+                        replyArea.empty();
+                        var replys = data.content;
+                        var index = 1;
+                        let HTML = '';
+                        HTML += '<table>';
+                        HTML += '<tr>';
+                        HTML += '<th>번호</th>';
+                        HTML += '<th>내용</th>';
+                        HTML += '<th>작성일자</th>';
+                        HTML += '<th>작성자</th>';
+                        HTML += '<th colspan="2">관리</th>';
+                        HTML += '</tr>';
+                        replys.forEach(function (reply, index) {
+                            HTML += '<tr>';
+                            HTML += '<td>' + (index+1) + '</td>';
+                            HTML += '<td><span>' + reply.content + '</span></td>';
+                            var formattedDate = moment(reply.createdAt).format('YYYY-MM-DD HH:mm:ss');
+                            HTML += '<td>' + formattedDate + '</td>';
+                            HTML += '<td>' + reply.member.name + '</td>';
+                            HTML += '<td><button id="reply-edit" type="button" onclick="editReply()">수정하기</button> </td>';
+                            HTML += '<td><button id="reply-delete" type="button" onclick="deleteReply()">삭제하기</td>';
+                            HTML += '</tr>';
+                            HTML += '<tr><td><img src="/assets/replyImages/' + reply.img + '"></td></tr>';
+                            HTML += '<input type="hidden" id="reply_id" value="' + reply.reply_id + '"/>';
                         });
-                    }
-                    var pagination = $("#pagination");
-                    pagination.empty();
-                    var totalPages = data.page.totalPages;
-                    $("#hiddenTotal").val(totalPages);
-                    var visiblePages = 5;
-                    var startPage = Math.max(0, Math.min(page - Math.floor(visiblePages / 2), totalPages - visiblePages));
-                    var endPage = Math.min(totalPages, startPage + visiblePages);
+                        HTML += '</table>';
+                        replyArea.append(HTML);
 
-                    for (var i = startPage; i < endPage; i++) {
-                        pagination.append('<button class="page-btn" id="page" data-page="' + i + '">' + (i + 1) + '</button>');
-                    }
+                        var pagination = $("#pagination");
+                        pagination.empty();
+                        var totalPages = data.page.totalPages;
+                        $("#hiddenTotal").val(totalPages);
+                        var visiblePages = 5;
+                        var startPage = Math.max(0, Math.min(page - Math.floor(visiblePages / 2), totalPages - visiblePages));
+                        var endPage = Math.min(totalPages, startPage + visiblePages);
 
-                    currentPage = page;
+                        for (var i = startPage; i < endPage; i++) {
+                            pagination.append('<button class="page-btn" id="page" data-page="' + i + '">' + (i + 1) + '</button>');
+                        }
+
+                        currentPage = page;
+                    }
+                });
+            }
+            $(document).on('click', '#page', function () {
+                var page = $(this).data('page');
+                replyList(page);
+            });
+
+            $('#prevBtn').click(function () {
+                if (currentPage > 0) {
+                    replyList(currentPage - 1);
                 }
             });
+
+            $('#nextBtn').click(function () {
+                if (currentPage < $('#hiddenTotal').val() -1) {
+                    replyList(currentPage + 1);
+                }
+            });
+
+            replyList(0);
+        } else {
+            document.getElementById('prevBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
         }
-        $(document).on('click', '#page', function () {
-            var page = $(this).data('page');
-            replyList(page);
-        });
-
-        $('#prevBtn').click(function () {
-            if (currentPage > 0) {
-                replyList(currentPage - 1);
-            }
-        });
-
-        $('#nextBtn').click(function () {
-            if (currentPage < $('#hiddenTotal').val() -1) {
-                replyList(currentPage + 1);
-            }
-        });
-
-        replyList(0);
     });
 </script>
 <script>
     function editReply() {
         if ($("#userRole").val() != "ROLE_SUPERVISOR") {
-            alert($("#userRole").val());
             alert("권한이 없습니다.");
         } else {
             var reply_id = $("#reply_id").val();
@@ -211,12 +217,12 @@
 
     function deleteReply() {
         if ($("#userRole").val() != "ROLE_SUPERVISOR") {
-            alert($("#userRole").val());
             alert("권한이 없습니다.");
         } else {
             var reply_id = $("#reply_id").val();
             location.href = "/qna/reply/delete/" + reply_id;
         }
+
     }
 </script>
 <th:block th:insert="/insert/footer"></th:block>
