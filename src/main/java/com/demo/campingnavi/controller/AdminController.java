@@ -248,6 +248,7 @@ public class AdminController {
         List<UpdateHistory> updateListCampSuccess = updateHistoryService.getUpdateHistoryList("camp", "success");
         List<UpdateHistory> updateListCrawlingStopped = updateHistoryService.getUpdateHistoryList("crawling", "stopped");
         List<UpdateHistory> updateListCrawlingSuccess = updateHistoryService.getUpdateHistoryList("crawling", "success");
+
         if (updateListCampSuccess.isEmpty()) {
             update_type = "fail";
         } else if (updateListCrawlingSuccess.size() + updateListCrawlingStopped.size() == 0) {
@@ -263,11 +264,13 @@ public class AdminController {
                 } else {
                     if (updateListCrawlingStopped.get(updateListCrawlingStopped.size() - 1).getUseq() < updateListCrawlingSuccess.get(updateListCrawlingSuccess.size() - 1).getUseq()) {
                         update_type = "start";
+                    } else {
+                        update_type = "resume";
                     }
                 }
             }
         }
-
+        System.out.println(update_type);
         if (update_type.equals("start")) {
             try {
                 String delete_result = dataService.deleteFile("/temp/crawling_status.csv");
@@ -287,7 +290,7 @@ public class AdminController {
 
         result.put("result", update_type);
         if (result.get("result").equals("start")) {
-            adminService.clearRatingTempFile();
+            adminService.clearRatingTempFile(1);
         }
 
         return result;
@@ -478,6 +481,7 @@ public class AdminController {
         if (session.getAttribute("crawling") != null) {
             crawling = (String) session.getAttribute("crawling");
         }
+        session.setAttribute("crawling", crawling);
         model.addAttribute("crawling", crawling);
 
         String dir = "/temp";

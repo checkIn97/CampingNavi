@@ -11,5 +11,5 @@ public interface AdminService {
     Map<String, Integer> getCrawlingStatus();
     String getCrawlingData();
     String getCrawlingDataIntegration();
-    void clearRatingTempFile();
+    void clearRatingTempFile(int start_number);
 }

@@ -127,6 +127,10 @@ public class AdminServiceImpl implements AdminService {
         int current = 0;
         int total = campService.getCampListByUseyn("").size();
         while (true) {
+            if (current >= total) {
+                clearRatingTempFile(total+1);
+                break;
+            }
             String filename = "temp/rating" + (current+1) + ".csv";
             filename = PathConfig.realPath(filename);
             File file = new File(filename);
@@ -187,8 +191,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void clearRatingTempFile() {
-        int i = 1;
+    public void clearRatingTempFile(int start_number) {
+        int i = start_number;
         while (true) {
             String filename = "temp/rating" + i + ".csv";
             filename = PathConfig.realPath(filename);
