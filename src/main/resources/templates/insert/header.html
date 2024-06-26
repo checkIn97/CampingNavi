@@ -7,7 +7,7 @@
         <div class="headerCategory" id="headerCommunityBtn">Community</div>
 
         <div class="headerLog buttonContain">
-            <a href="/member/membershipAgree"><div class="headerBtn" id="headerMembershipBtn">[MemberShip]</div></a>
+            <div class="headerBtn" id="user_nickname"></div>
             <a href="/oauth-login/member/logoutProc"><div class="headerBtn" id="headerLogoutBtn">[Logout]</div></a>
             <a href="/member/mypage"><div class="headerBtn" id="headerMyPageBtn">[MyPage]</div></a>
         </div>
@@ -28,6 +28,7 @@
         </ul>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 
     let headerCampingBtn = document.getElementById('headerCampingBtn');
@@ -114,6 +115,19 @@
                 }
                 headerCommunity.style.left = leftPosition + 'px';
                 headerCommunity.style.transform = 'translateX(-50%)';
+            }
+        });
+
+        // 헤더에 회원의 닉네임을 출력
+        $.ajax({
+            type: "POST",
+            url: "/get_nickname",
+            success: function(data) {
+                let nickname = data.nickname;
+                $("#user_nickname").html(nickname + "님");
+            },
+            error: function() {
+                alert("닉네임 출력 실페");
             }
         });
     });
