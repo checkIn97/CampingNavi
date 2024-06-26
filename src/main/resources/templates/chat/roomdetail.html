@@ -48,7 +48,9 @@
 
     <div id="chat-room-detail-user-list-box">
         <h2 class="major">참여자</h2>
-            <span class="chat-room-detail-user" v-for="user in chatRoomUserList">{{user}}</span>
+            <span class="chat-room-detail-user" v-for="user in chatRoomUserList">
+                <p>[ {{user}} ] 님</p>
+            </span>
     </div>
 </div>
 <button class="chatBtn mainBtn" id="chatExit">채팅방 탈퇴</button>
