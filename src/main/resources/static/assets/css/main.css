@@ -577,13 +577,19 @@ table.alt tfoot {
 
 #searchContain {
     margin-bottom: 20px;
+    display: flex;
+}
+
+#searchBar {
+    flex-grow: 1;
 }
 
 #search-box {
-    position: relative;
+    position: absolute;
+    left: 0;
     display: none;
     width: 27%;
-    height: 90vh;
+    height: 684px;
     margin-right: 2rem;
     padding: 4rem;
     border-radius: 50px;
@@ -599,7 +605,8 @@ table#searchList td {
 #searchRequirement {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 5rem;
+    margin-bottom: 3rem;
 }
 
 #menuImg {
@@ -631,7 +638,7 @@ table#searchList td {
 
 #contentSearchArea {
     display: inline-grid;
-    margin-top: 0;
+    margin: auto;
 }
 
 #search-area {
@@ -639,6 +646,7 @@ table#searchList td {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    position: relative;
 }
 
 #searchBtn {

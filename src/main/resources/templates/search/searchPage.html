@@ -71,11 +71,14 @@
 
 <script>
     document.getElementById('search-box-toggle').addEventListener('click', function () {
-        var searchBox = document.getElementById('search-box');
+        let searchBox = document.getElementById('search-box');
+        let contentSearchArea = document.getElementById('contentSearchArea')
         if (searchBox.style.display === 'none') {
             searchBox.style.display = 'block';
+            contentSearchArea.style.marginRight = '10rem';
         } else {
             searchBox.style.display = 'none';
+            contentSearchArea.style.marginRight = 'auto';
         }
     });
 
@@ -87,16 +90,16 @@
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0f99991591de7a581b0817b2c20056f0" type="text/javascript"></script>
 
 <script type="text/javascript">
-    var map = null;
-    var markers = null;
-    var list = null;
-    var infowindow_always = null;
-    var choice = 0;
+    let map = null;
+    let markers = null;
+    let list = null;
+    let infowindow_always = null;
+    let choice = 0;
 
     // 선택한 마커 이미지 정보
-    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-    var imageSize = new kakao.maps.Size(24, 35);
-    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+    let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+    let imageSize = new kakao.maps.Size(24, 35);
+    let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
 
     $(document).ready(function () {
@@ -365,7 +368,7 @@
                         });
 
                         // 마커에 표시할 인포윈도우를 생성합니다
-                        var infowindow = new kakao.maps.InfoWindow({
+                        let infowindow = new kakao.maps.InfoWindow({
                             // 인포윈도우에 표시할 내용
                             content: "<div style=\"padding:5px; font-weight:bold; white-space:nowrap;\">" + list[i].camp.name + " (★ : " + list[i].scoreView + ")</div>"
                         });
