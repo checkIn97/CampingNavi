@@ -562,17 +562,16 @@
     document.getElementById('myPageChange').addEventListener('click', function () {
         // Change가 붙은 요소들을 block으로 설정
         document.getElementById('memberSexChange').style.display = 'block';
-        document.getElementById('memberBirthChange').style.display = 'block';
         document.getElementById('memberPhoneChange').style.display = 'block';
         document.getElementById('memberAddr1Change').style.display = 'block';
         document.getElementById('memberAddr2Change').style.display = 'block';
         document.getElementById('memberNickNameChange').style.display = 'block';
         document.getElementById('myPageRead').style.display = 'block';
+        document.getElementById('myPageProPicture').style.display = 'block';
         document.getElementById('myPageProPicture').style.display = 'flex';
 
         // Read가 붙은 요소들을 none으로 설정
         document.getElementById('memberSexRead').style.display = 'none';
-        document.getElementById('memberBirthRead').style.display = 'none';
         document.getElementById('memberPhoneRead').style.display = 'none';
         document.getElementById('memberAddr1Read').style.display = 'none';
         document.getElementById('memberAddr2Read').style.display = 'none';
@@ -650,12 +649,10 @@
                     document.getElementById('memberAddr1Read').textContent = response.addr1;
                     document.getElementById('memberNickNameRead').textContent = response.nickname;
                     document.getElementById('memberPhoneRead').textContent = response.phone + response.phone2;
-                    document.getElementById('memberBirthRead').textContent = response.birth;
                     document.getElementById('profileImg').style.backgroundImage = img;
 
                     // Change가 붙은 요소들을 block으로 설정
                     document.getElementById('memberSexChange').style.display = 'none';
-                    document.getElementById('memberBirthChange').style.display = 'none';
                     document.getElementById('memberPhoneChange').style.display = 'none';
                     document.getElementById('memberAddr1Change').style.display = 'none';
                     document.getElementById('memberAddr2Change').style.display = 'none';
@@ -665,7 +662,6 @@
 
                     // Read가 붙은 요소들을 none으로 설정
                     document.getElementById('memberSexRead').style.display = 'block';
-                    document.getElementById('memberBirthRead').style.display = 'block';
                     document.getElementById('memberPhoneRead').style.display = 'block';
                     document.getElementById('memberAddr1Read').style.display = 'block';
                     document.getElementById('memberAddr2Read').style.display = 'block';
