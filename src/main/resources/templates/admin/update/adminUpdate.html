@@ -15,51 +15,64 @@
         font-family: Arial, sans-serif; /* 폰트 설정 */
         line-height: 1.6; /* 줄 간격 */
     }
+
     .sidebar {
         width: 250px;
         height: 100vh;
         background-color: #343a40;
         padding: 20px;
     }
+
     .sidebar a {
         color: #ffffff;
         display: block;
         padding: 10px;
         text-decoration: none;
     }
+
     .sidebar a:hover {
         background-color: #495057;
     }
+
     .content {
         flex: 1;
         padding: 20px;
     }
+
     .page-index {
         padding: 20px;
     }
+
     .search-container {
         margin-bottom: 20px;
     }
+
     .table {
         width: 100%;
         margin-bottom: 20px;
     }
+
     .page-box {
         text-align: center;
     }
+
     .page-num {
         margin: 0 5px;
         cursor: pointer;
     }
+
     .page-num.active {
         font-weight: bold;
     }
+
     .icon {
         cursor: pointer;
     }
+
     .review-list-pop-back {
         background-color: #f8f9fa;
     }
+
     .popularPosts {
         font-weight: bold;
         color: #007bff;
@@ -80,81 +93,82 @@
 </div>
 <div class="content">
     <h2 class="my-4">데이터 업데이트 관리자 페이지</h2>
-    <table>
-        <tr>
-            <th colspan="5" style="text-align:center; width:100%"><h3>캠핑장 데이터</h3></th>
-        </tr>
-        <tr>
-            <td><h4>현재 버전</h4></td>
-            <td colspan="4"><span id="camp_ver"></span></td>
-        </tr>
-        <tr>
-            <td><h4>갱신 시도</h4></td>
-            <td colspan="2"><span id="camp_update_try"></span></td>
-            <td colspan="2"><span id="camp_update_progress"></span></td>
-        </tr>
-        <tr>
-            <td colspan="5" style="text-align:center; width:100%">
-                <button class="btn btn-primary" type="button" name="update_camp" id="update_camp" style="font-size: 1.2rem; width: 250px;">캠핑장 데이터 업데이트</button>
-            <td>
-        </tr>
-        <tr>
-            <th colspan="5" style="text-align:center; width:100%"><h3>추천 모델</h3></th>
-        </tr>
-        <tr>
-            <td><h4>현재 버전</h4></td>
-            <td colspan="4"><span id="model_ver"></span></td>
-        </tr>
-        <tr>
-            <td><h4>갱신 시도</h4></td>
-            <td colspan="4"><span id="model_update_try"></span></td>
-        </tr>
-        <tr>
-            <td colspan="5" style="text-align:center; width:100%">
-                <button class="btn btn-primary" type="button" name="update_model" id="update_model" style="font-size: 1.2rem; width: 250px;">추천 모델 업데이트</button>
-            <td>
-        </tr>
-        <tr>
-            <th colspan="5" style="text-align:center; width:100%"><h3>리뷰 크롤링</h3></th>
-        </tr>
-        <tr>
-            <td><h4>현재 버전</h4></td>
-            <td colspan="4"><span id="crawling_ver"></span></td>
-        </tr>
-        <tr>
-            <td><h4>갱신 시도</h4></td>
-            <td colspan="2"><span id="crawling_try"></span></td>
-            <td colspan="2"><span id="crawling_progress"></span></td>
-        </tr>
-        <tr>
-            <td colspan="5" style="text-align:center; width:100%">
-                <th:block id="crawling_button_area" th:if="${crawling == 'n'}">
-                    <div id="start_crawling_area">
-                    <button class="btn btn-primary" type="button" name="start_crawling" id="start_crawling" style="font-size: 1.2rem; width: 250px;">크롤링 시작하기</button>
-                    </div>
-                    <div id="stop_crawling_area">
-                    <button type="button" name="stop_crawling" id="stop_crawling" style="display: none; font-size: 1.2rem; width: 250px;">크롤링 일시정지</button>
-                    </div>
-                </th:block>
-                <th:block id="crawling_button_area" th:if="${crawling == 'y'}">
-                    <div id="start_crawling_area">
-                    <button type="button" name="start_crawling" id="start_crawling" style="display: none; font-size: 1.2rem; width: 250px;">크롤링 시작하기</button>
-                    </div>
-                    <div id="stop_crawling_area">
-                    <button type="button" name="stop_crawling" id="stop_crawling" style="font-size: 1.2rem; width: 250px;">크롤링 일시정지</button>
-                    </div>
-                </th:block>
-                <input type="hidden" name="crawling_session" id="crawling_session" th:value="${crawling}">
-            </td>
-        </tr>
-    </table>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3 class="card-title">캠핑장 데이터</h3>
+            <hr>
+            <div class="card-text mb-3">
+                <h4>현재 버전</h4>
+                <p class="card-text" id="camp_ver"></p>
+            </div>
+            <hr>
+            <div class="card-text mb-3">
+                <h4>갱신 시도</h4>
+                <p class="card-text" id="camp_update_try"></p>
+                <p class="card-text" id="camp_update_progress"></p>
+            </div>
+            <hr>
+            <div class="card-text">
+                <button class="btn btn-primary" id="update_camp" name="update_camp"
+                        type="button">캠핑장 데이터 업데이트
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3 class="card-title">추천 모델</h3>
+            <hr>
+            <div class="card-text mb-3">
+                <h4>현재 버전</h4>
+                <span id="model_ver"></span>
+            </div>
+            <hr>
+            <div class="card-text mb-3">
+                <h4>갱신 시도</h4>
+                <span id="model_update_try"></span>
+                <span id="model_update_progress"></span>
+            </div>
+            <hr>
+            <div class="card-text">
+                <button class="btn btn-primary" id="update_model" name="update_model"
+                        type="button">추천 모델 업데이트
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3 class="card-title">리뷰 크롤링</h3>
+            <hr>
+            <div class="card-text mb-3">
+                <h4>현재 버전</h4>
+                <span id="crawling_ver"></span>
+            </div>
+            <hr>
+            <div class="card-text mb-3">
+                <h4>갱신 시도</h4>
+                <span id="crawling_try"></span>
+                <span id="crawling_progress"></span>
+            </div>
+            <hr>
+            <div class="card-text">
+                <button class="btn btn-primary" id="start_crawling" name="start_crawling"
+                        type="button">크롤링 시작하기
+                </button>
+                <button class="btn btn-primary" id="stop_crawling" name="stop_crawling"
+                        type="button">크롤링 일시정지
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 </body>
 <script>
     var crawling_status_update = null;
-    $(document).ready(function() {
+    $(document).ready(function () {
         document.getElementById("update_camp").addEventListener("click", event => update_camp(event));
         document.getElementById("update_model").addEventListener("click", event => update_model(event));
         document.getElementById("start_crawling").addEventListener("click", event => start_crawling(event));
@@ -184,11 +198,12 @@
     }
 
     var tmp_crawling_stop = null;
+
     function stop_crawling(event) {
         $.ajax({
             type: "POST",
             url: "/admin/crawling_stop",
-            success: function(data) {
+            success: function (data) {
                 if (data.result == 'success') {
                     clearInterval(crawling_status_update);
                     crawling_status_update = null;
@@ -201,7 +216,7 @@
                     alert("크롤링 중지 실패");
                 }
             },
-            error: function() {
+            error: function () {
                 alert("크롤링 중지 프로세스 오류");
             }
         });
@@ -274,16 +289,16 @@
                 data: {
                     kind: kind
                 },
-                success: function(data0) {
+                success: function (data0) {
                     if (data0.result == 'success') {
                         HTML = "";
-                        HTML += "<h4>0\% 완료</h4>";
+                        HTML += "<p class='card-text'>0\% 완료</p>";
                         $("#camp_update_progress").html(HTML);
                         let totalCount = data0.totalCount;
                         let size = 100;
                         let totalPage = parseInt((totalCount + size - 1) / size);
                         let count = 0;
-                        for (let page = 1 ; page <= totalPage ; page++) {
+                        for (let page = 1; page <= totalPage; page++) {
                             $.ajax({
                                 type: "POST",
                                 url: "/admin/camping_data_search_from_api",
@@ -291,11 +306,11 @@
                                     kind: kind,
                                     page: page
                                 },
-                                success: function(data1) {
+                                success: function (data1) {
                                     if (data1.result == 'success') {
                                         count++;
                                         HTML = "";
-                                        HTML += "<h4>" + parseInt((count*100/totalPage)*0.95) + "\% 완료</h4>";
+                                        HTML += "<h4>" + parseInt((count * 100 / totalPage) * 0.95) + "\% 완료</h4>";
                                         $("#camp_update_progress").html(HTML);
                                         if (count == totalPage) {
                                             $.ajax({
@@ -305,10 +320,10 @@
                                                     kind: kind,
                                                     totalPage: totalPage
                                                 },
-                                                success: function(data2) {
+                                                success: function (data2) {
                                                     if (data2.result == 'success') {
                                                         HTML = "";
-                                                        HTML += "<h4>99\% 완료</h4>";
+                                                        HTML += "<p class='card-text'>99\% 완료</p>";
                                                         $("#camp_update_progress").html(HTML);
                                                         $.ajax({
                                                             type: "POST",
@@ -316,7 +331,7 @@
                                                             data: {
                                                                 kind: kind
                                                             },
-                                                            success: function(data3) {
+                                                            success: function (data3) {
                                                                 if (data3.result == 'success') {
                                                                     HTML = "";
                                                                     HTML += "<h4>100\% 완료</h4>";
@@ -332,7 +347,7 @@
                                                                     alert("캠핑장데이터 최신화 오류");
                                                                 }
                                                             },
-                                                            error: function() {
+                                                            error: function () {
                                                                 HTML = "";
                                                                 $("#camp_update_progress").html(HTML);
                                                                 load_update_history(kind);
@@ -346,7 +361,7 @@
                                                         alert("캠핑장데이터 최신화 오류");
                                                     }
                                                 },
-                                                error: function() {
+                                                error: function () {
                                                     HTML = "";
                                                     $("#camp_update_progress").html(HTML);
                                                     load_update_history(kind);
@@ -359,7 +374,7 @@
                                         location.reload();
                                     }
                                 },
-                                error: function() {
+                                error: function () {
                                     alert("캠핑장 데이터 가져오기 실패");
                                     location.reload();
                                 }
@@ -372,7 +387,7 @@
                         alert("totalCount 가져오기 실패");
                     }
                 },
-                error: function() {
+                error: function () {
                     HTML = "";
                     $("#camp_update_progress").html(HTML);
                     load_update_history(kind);
@@ -387,7 +402,7 @@
                 data: {
                     kind: kind
                 },
-                success: function(data) {
+                success: function (data) {
                     if (data.result == 'success') {
                         load_update_history(kind);
                         alert("추천모델 업데이트 완료");
@@ -396,7 +411,7 @@
                         alert("작업 실패");
                     }
                 },
-                error: function() {
+                error: function () {
                     load_update_history(kind);
                     alert(kind + " 업데이트 중 오류 발생");
                 }
@@ -411,34 +426,34 @@
             data: {
                 kind: kind
             },
-            success: function(data) {
+            success: function (data) {
                 let updateTime = data.updateTime;
                 let updateTry = data.updateTry;
                 let totalCount = data.totalCount;
                 let result = data.result;
                 let HTML = "";
                 if (kind == "camp") {
-                    HTML += "<h4>" + updateTime + " (" + totalCount + "개)</h4>";
+                    HTML += "<p class='card-text'>" + updateTime + " (" + totalCount + "개)</p>";
                     $("#camp_ver").html(HTML);
-                    HTML = "<h4>" + updateTry + " " + result + "</h4>";
+                    HTML = "<p class='card-text'>" + updateTry + " " + result + "</p>";
                     $("#camp_update_try").html(HTML);
                 } else if (kind == 'model') {
-                    HTML += "<h4>" + updateTime + "</h4>";
+                    HTML += "<p class='card-text'>" + updateTime + "</p>";
                     $("#model_ver").html(HTML);
-                    HTML = "<h4>" + updateTry + " " + result + "</h4>";
+                    HTML = "<p class='card-text'>" + updateTry + " " + result + "</p>";
                     $("#model_update_try").html(HTML);
                 } else {
-                    HTML += "<h4>" + updateTime + "</h4>";
+                    HTML += "<p class='card-text'>" + updateTime + "</p>";
                     $("#crawling_ver").html(HTML);
-                    HTML = "<h4>" + updateTry + "\t" + result + "</h4>";
+                    HTML = "<p class='card-text'>" + updateTry + "\t" + result + "</p>";
                     $("#crawling_try").html(HTML);
                     if (result == '중단') {
-                        HTML = "<h4>" + data.totalCount + "개 중 " + data.currentCount + "개 완료 (" + parseInt(data.currentCount*100/totalCount) +  "\%)</h4>";
+                        HTML = "<p class='card-text'>" + data.totalCount + "개 중 " + data.currentCount + "개 완료 (" + parseInt(data.currentCount * 100 / totalCount) + "\%)</p>";
                         $("#crawling_progress").html(HTML);
                     }
                 }
             },
-            error: function() {
+            error: function () {
                 alert(kind + " 로그 데이터 가져오기 실패");
             }
         });
@@ -451,13 +466,13 @@
         $.ajax({
             type: "POST",
             url: "/admin/crawling_initialize", // 크롤링 동작 유형 확인 (처음부터, 이어서)
-            success: function(data0) {
+            success: function (data0) {
                 if (data0.result != 'fail') {
                     set_crawling_session('y');
                     $.ajax({
                         type: "POST",
                         url: "/admin/get_crawling_data",
-                        success: function(data1) {
+                        success: function (data1) {
                             if (crawling_status_update != null) {
                                 clearInterval(crawling_status_update);
                             }
@@ -465,7 +480,7 @@
                                 $.ajax({
                                     type: "POST",
                                     url: "/admin/crawling_data_integration", // 크롤링 완료시 파일 통합
-                                    success: function(data2) {
+                                    success: function (data2) {
                                         if (data2.result == 'success') {
                                             load_update_history(kind);
                                             set_crawling_session('n');
@@ -478,7 +493,7 @@
                                             crawling_button_display("start");
                                         }
                                     },
-                                    error: function() {
+                                    error: function () {
                                         set_crawling_session('n');
                                         alert("데이터 통합 실패-error");
                                         crawling_button_display("start");
@@ -497,7 +512,7 @@
                                 location.reload();
                             }
                         },
-                        error: function() {
+                        error: function () {
                             set_crawling_session('n');
                             alert("크롤링 중 오류 발생2-error");
                             crawling_button_display("start");
@@ -511,7 +526,7 @@
                     load_update_history(kind);
                 }
             },
-            error: function() {
+            error: function () {
                 set_crawling_session('n');
                 alert("크롤링 중 오류 발생1-error");
                 crawling_button_display("start");
@@ -527,9 +542,9 @@
             data: {
                 value: value
             },
-            success: function(data) {
+            success: function (data) {
             },
-            error: function() {
+            error: function () {
                 alert("크롤링 세션 조작 실패");
             }
         })
