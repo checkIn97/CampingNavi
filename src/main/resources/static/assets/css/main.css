@@ -1072,7 +1072,7 @@ input[name="slide"] {
     background-blend-mode: inherit;
     background-clip: border-box;
     background-color: #d5d5d5;
-    background: linear-gradient(to top, rgba(255, 255, 255, 1) 25%, rgba(255, 255, 255, 0.2) 100%, rgba(255, 255, 255, 0) 100%), url('https://i.pinimg.com/originals/c4/40/30/c44030431da165bb2c36835d7a5121cd.jpg');
+    background: url(../images/bg/roombackBG.png);
     background-size: cover;
     background-position: center;
 }
@@ -1086,13 +1086,14 @@ input[name="slide"] {
     width: 40%;
 }
 
-.listChat {
-    margin-top: 14rem;
+.chatGradeNum {
+    color: whitesmoke;
 }
 
 .campingNameChat {
     margin: 0;
     font-size: xx-large;
+    color: whitesmoke;
 }
 
 .lengthContain {
@@ -1109,12 +1110,13 @@ input[name="slide"] {
 }
 
 .chatReviewNum {
-    color: #424242;
+    color: #c8c8c8;
     margin-left: 1rem;
     font-size: 0.8rem;
 }
 
 .chatHumanIcon {
+    filter: invert(1);
     width: 1rem;
     object-fit: contain;
 }
@@ -1128,11 +1130,13 @@ input[name="slide"] {
 }
 
 .chatRoomName {
+    color: whitesmoke;
     font-weight: bolder;
     font-size: 1.5rem;
 }
 
 .chatPurposeSee {
+    filter: invert(1);
     border: 2px solid rgb(112, 112, 112);
     border-radius: 50px;
     width: max-content;
@@ -1147,9 +1151,7 @@ input[name="slide"] {
     object-fit: contain;
 }
 
-.chatPurposeText {
-    color: #7c7c7c;
-}
+
 
 .chat-info {
     display: block;
@@ -1165,6 +1167,7 @@ input[name="slide"] {
 }
 
 .calender {
+    filter: invert(1);
     width: 2rem;
     margin: 1rem;
     object-fit: contain;
@@ -1179,9 +1182,17 @@ input[name="slide"] {
     padding: 0.5rem;
 }
 
+.satisfaction-room {
+    filter: invert(1);
+}
+
 .chat-day {
     font-weight: bolder;
-    color: #9e5c21;
+    color: #ff9427;
+}
+
+.chat-member {
+    color: whitesmoke;
 }
 
 .chat-member-num {
