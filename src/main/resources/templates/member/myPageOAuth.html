@@ -47,12 +47,6 @@
             <div class="buttonContain" id="myPageDetailContain">
                 <input checked class="detailBtn" id="myPageInfoBtn" name="btn" type="radio">
                 <label for="myPageInfoBtn">내 정보</label>
-                <input class="detailBtn" id="myPageReviewBtn" name="btn" type="radio">
-                <label for="myPageReviewBtn">내가 남긴 후기</label>
-                <input class="detailBtn" id="myPageSaveBtn" name="btn" type="radio">
-                <label for="myPageSaveBtn">찜한 목록 보기</label>
-                <input class="detailBtn" id="qna" name="btn" type="radio">
-                <label for="qna">고객문의</label>
             </div>
         </div>
 
@@ -144,42 +138,6 @@
                 <h3 class="myPage-info-title">SNS 로그인 여부</h3>
                 <hr>
                 <div th:text="${member.provider != 'campingnavi' ? member.provider : '홈페이지'}"></div>
-            </div>
-        </div>
-
-        <!--내가 남긴 후기-->
-        <div class="myPageArea" id="myPageReview">
-            <div class="myPageBox">
-                <div>
-                    <h3>리뷰 제목 좀 길어지면 어떻게 보이는지 확인하는 부분 어떻게 보이려나</h3>
-                    <p>리뷰 요약 내용 (1줄 혹은 2줄)</p>
-                    <p>리뷰 날짜</p>
-                </div>
-            </div>
-            <div class="myPageBox">
-                <div>
-                    <h3>리뷰 제목</h3>
-                    <p>리뷰 요약 내용</p>
-                    <p>리뷰 날짜</p>
-                </div>
-            </div>
-        </div>
-
-        <!--찜 목록-->
-        <div class="myPageArea" id="myPageSave">
-            <div class="myPageBox">
-                <!--찜 목록 나오는 페이지-->
-                <div>
-                    <div class="buttonContain">
-                        <h3 class="myPageSaveTitle">캠핑장 이름</h3>
-                        <a class="myPageSavaLink">상세보기</a>
-                    </div>
-                    <hr>
-                    <div class="buttonContain">
-                        <h3 class="myPageSaveTitle">캠핑장 이름</h3>
-                        <a class="myPageSavaLink">상세보기</a>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -355,6 +313,7 @@
         var addr1 = $("#addr1").val();
         var addr2 = $("#addr2").val();
         var img = $("#backURL").val();
+        const phonePattern = /^(\d{7,8})$/;
         var formData = new FormData();
         formData.append('nickname', nickname);
         formData.append('birth', birth);
@@ -394,7 +353,7 @@
         } else if (phone == "" || phone == "n") {
             alert("전화번호를 입력해주세요!");
             $("#phone").focus()
-        } else if (phone2 == "" || phone2 == "n") {
+        } else if (!phonePattern.test(phone2)) {
             alert("전화번호를 입력해주세요!");
             $("#phone2").focus()
         } else if (addr1 == "" || addr1 == "n") {
@@ -438,6 +397,7 @@
                     document.getElementById('memberNickNameRead').style.display = 'block';
                     document.getElementById('myPageChange').style.display = 'block';
                     alert("수정완료");
+                    location.href = "/main";
                 },
                 error: function (error) {
                     alert("데이터 전송 실패");

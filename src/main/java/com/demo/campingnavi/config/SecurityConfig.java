@@ -43,9 +43,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/resources/**", "/static/**", "/assets/**", "/templates/**","/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/member/join", "/index", "/member/joinProc", "/member/membershipAgree", "/member/membership", "/member/validateUser", "/member/validateNickname").permitAll()
+                        .requestMatchers("/member/join", "/", "/admin/login", "/admin/loginProc", "/member/joinProc", "/member/membershipAgree", "/member/membership", "/member/validateUser", "/member/validateNickname").permitAll()
                         .requestMatchers("/mailSend", "mailCheck", "/camp/search", "/camp/detail/go").permitAll()
-                        .requestMatchers("/admin/supervisor/**", "/admin/supervisor/list", "/admin/supervisor/list/page", "/admin/adminAddProc").hasRole("SUPERVISOR")
+                        .requestMatchers( "/admin/supervisor/list", "/admin/supervisor/list/page", "/admin/adminAddProc").hasRole("SUPERVISOR")
+                        .requestMatchers("/admin/**").hasAnyRole("SUPERVISOR", "ADMIN")
                         .anyRequest().permitAll()
                 );
         http

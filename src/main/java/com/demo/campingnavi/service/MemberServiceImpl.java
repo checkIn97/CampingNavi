@@ -47,7 +47,7 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public boolean joinProcess(MemberVo vo) {
         boolean result = false;
-        String PATTERN_ID = "^[a-z]{1}[a-z0-9]{5,10}+$";
+        String PATTERN_ID = "^[a-z]{1}[a-z0-9]{5,20}+$";
         String PATTERN_PW = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,128}+$";
         boolean idPattern = Pattern.matches(PATTERN_ID, vo.getUsername());
         boolean pwPattern = Pattern.matches(PATTERN_PW, vo.getPw());

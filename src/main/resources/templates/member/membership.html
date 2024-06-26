@@ -58,7 +58,7 @@
         var op = $("#originpw").val();
         var cp = $("#pwcheck").val();
         var hp = $("#hiddenPw").val();
-        const pwPattern = /^.{2,}$/;
+        const pwPattern = /^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,128}$/;
         if (pwPattern.test(op)) {
             if (op === cp) {
                 $("#hiddenPw").val(op);
@@ -71,7 +71,7 @@
                 $("#originpw").focus();
             }
         } else {
-            alert("비밀번호는 8자 이상이어야 합니다.");
+            alert("비밀번호는 8자 이상 128자 미만으로 영어 대·소문자와 특수문자를 1개 이상 포함하여야 합니다.");
             $("#originpw").focus();
         }
 
@@ -80,7 +80,7 @@
     function validateId() {
         var username = $("#userId").val();
         var hi = $("#hiddenId").val();
-        const usernamePattern = /^.{2,}$/;
+        const usernamePattern = /^[a-z]{1}[a-z0-9]{5,20}$/;
 
         if (usernamePattern.test(username)) {
             $.ajax({
@@ -107,7 +107,7 @@
                 }
             });
         } else {
-            alert("아이디는 6글자 이상 입력해주세요.");
+            alert("아이디는 6글자 이상 20자 미만의 영어 소문자와 숫자로 입력해주세요.");
             $("#userId").focus();
         }
 

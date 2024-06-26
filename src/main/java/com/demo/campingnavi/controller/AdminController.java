@@ -72,7 +72,7 @@ public class AdminController {
             if (!admin.getRole().equals(Role.USER.getKey()) && admin.getRole() != null) {
                 if (passwordEncoder.matches(vo.getPw(), admin.getPw())) {
                     session.setAttribute("admin", admin);
-                    return "admin/adminPage";
+                    return "redirect:/admin/";
                 } else {
                     model.addAttribute("msg", "비밀번호가 다릅니다.");
                     return "admin/loginPage";

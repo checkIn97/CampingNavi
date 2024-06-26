@@ -416,7 +416,7 @@
                     var endPage_QNA = Math.min(totalPages_QNA, startPage_QNA + visiblePages_QNA);
 
                     // 페이지 버튼
-                    for (var i = startPage_QNA; i < endPage-QNA; i++) {
+                    for (var i = startPage_QNA; i < endPage_QNA; i++) {
                         pagination_QNA.append('<span style="cursor: pointer;" class="page-num" id="qna-page" data-page="' + i + '">' + (i + 1) + '</span>');
                     }
 
@@ -588,6 +588,7 @@
         var addr1 = $("#addr1").val();
         var addr2 = $("#addr2").val();
         var img = $("#backURL").val();
+        const phonePattern = /^(\d{7,8})$/;
         var formData = new FormData();
         formData.append('nickname', nickname);
         formData.append('birth', birth);
@@ -627,7 +628,7 @@
         } else if (phone == "" || phone == "n") {
             alert("전화번호를 입력해주세요!");
             $("#phone").focus()
-        } else if (phone2 == "" || phone2 == "n") {
+        } else if (!phonePattern.test(phone2)) {
             alert("전화번호를 입력해주세요!");
             $("#phone2").focus()
         } else if (addr1 == "" || addr1 == "n") {

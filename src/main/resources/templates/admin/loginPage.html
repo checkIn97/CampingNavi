@@ -11,7 +11,7 @@
 <div id="wrapper">
     <img src="/assets/images/logo/typo.png" id="logoTypo">
     <div class="content">
-        <form id="loginForm" action="/admin/loginProc" method="post">
+        <form id="loginForm" action="/oauth-login/member/loginProc" method="post">
             <input id="userId" type="text" name="username" th:placeholder="아이디">
             <input id="userPw" type="password" name="pw" th:placeholder="비밀번호">
             <button class="mainBtn" id="loginBtn" type="submit">로그인</button>
@@ -26,35 +26,6 @@
 <footer id="footer">
     <p class="copyright">&copy; Team Navigation. </p>
 </footer>
-
-<script>
-    // 관리자 추가
-    document.getElementById('adminBtn').addEventListener('click', function () {
-        location.href = '/admin';
-    });
-
-/*    document.getElementById('loginBtn').addEventListener('click', function () {
-        const userId = document.getElementById('userId').value;
-        const userPw = document.getElementById('userPw').value;
-        const data = {
-            userId: userId,
-            userPw: userPw
-        };
-        fetch('/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(response => {
-            if (response.status === 200) {
-                location.href = '/index';
-            } else {
-                alert('아이디 또는 비밀번호가 일치하지 않습니다.');
-            }
-        });
-    })*/
-</script>
 <script th:inline="javascript">
     /*<![CDATA[*/
     var message = /*[[${msg}]]*/ '';
