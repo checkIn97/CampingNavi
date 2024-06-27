@@ -10,6 +10,11 @@
     <link href="/assets/css/bg/mainBG.css" rel="stylesheet"/>
     <title>CampNavi</title>
 </head>
+<style>
+    .active-page {
+        font-weight: bold;
+    }
+</style>
 <script th:inline="javascript">
     /*<![CDATA[*/
     var message = /*[[${msg}]]*/ '';
@@ -283,12 +288,16 @@
                     var startPage2 = Math.max(0, Math.min(page2 - Math.floor(visiblePages2 / 2), totalPages2 - visiblePages2));
                     var endPage2 = Math.min(totalPages2, startPage2 + visiblePages2);
 
+                    currentPage2 = page2;
+
                     // 페이지 버튼
                     for (var i = startPage2; i < endPage2; i++) {
-                        pagination2.append('<span style="cursor: pointer;" class="page-num" id="review-page" data-page="' + i + '">' + (i + 1) + '</span>');
+                        var pageButton2 = $('<span style="cursor: pointer;" class="page-num" id="review-page" data-page="' + i + '">' + (i + 1) + '</span>');
+                        if (i === currentPage2) {
+                            pageButton2.addClass('active-page');
+                        }
+                        pagination2.append(pageButton);
                     }
-
-                    currentPage2 = page2;
                 }
             });
         }
@@ -351,6 +360,15 @@
                     }
 
                     currentPage = page;
+
+                    // 페이지 버튼
+                    for (var i = startPage; i < endPage; i++) {
+                        var pageButton = $('<span style="cursor: pointer;" class="page-num" data-page="' + i + '">' + (i + 1) + '</span>');
+                        if (i === currentPage) {
+                            pageButton.addClass('active-page');
+                        }
+                        pagination.append(pageButton);
+                    }
                 }
             });
         }

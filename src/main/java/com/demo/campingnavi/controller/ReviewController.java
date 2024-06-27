@@ -412,7 +412,7 @@ public class ReviewController {
                         .append(" [")
                         .append(review.getCommentCount())
                         .append("]</a></td>");
-                reviewListHtml.append("<td>").append(review.getMember().getUsername()).append("</td>");
+                reviewListHtml.append("<td>").append(review.getMember().getNickname()).append("</td>");
                 reviewListHtml.append("<td>").append(new SimpleDateFormat("yyyy-MM-dd").format(review.getCreatedAt())).append("</td>");
                 reviewListHtml.append("<td>").append(review.getCount()).append("</td>");
                 reviewListHtml.append("</tr>");
@@ -457,7 +457,7 @@ public class ReviewController {
                         .append("'>")
                         .append(reviewComment.getContent())
                         .append("</a></td>");
-                commentListHtml.append("<td>").append(reviewComment.getMember().getUsername()).append("</td>");
+                commentListHtml.append("<td>").append(reviewComment.getMember().getNickname()).append("</td>");
                 commentListHtml.append("<td>").append(new SimpleDateFormat("yyyy-MM-dd").format(reviewComment.getCreatedAt())).append("</td>");
                 commentListHtml.append("</tr>");
             }

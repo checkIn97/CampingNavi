@@ -109,7 +109,7 @@ public class SecurityConfig {
                                 (request, response, authentication) -> {
                                     Member member = memberRepository.findByUsername(authentication.getName());
                                     session.setAttribute("loginUser", member);
-                                    if(member.getSex().equals("n") || member.getBirth().equals("n") || member.getPhone().equals("n") || member.getAddr1().equals("n")) {
+                                    if(member.getSex().equals(" ") || member.getBirth().equals(" ") || member.getPhone().equals(" ") || member.getAddr1().equals(" ")) {
                                         request.setAttribute("msg", "정보를 입력해주세요.");
                                         request.getRequestDispatcher("/member/mypage/oauth").forward(request, response);
                                     } else {
