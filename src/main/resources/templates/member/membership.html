@@ -289,13 +289,13 @@
         const usernamePattern = /^[a-z]{1}[a-z0-9]{5,20}$/;
         const pwPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,20}$/;
 
-        if (!usernamePattern.test(username)) {
+        if (username == "") {
             alert("아이디를 입력해주세요!");
             $("#userId").focus();
         } else if ($("#hiddenId").val() != username) {
             alert("아이디 중복확인을 진행해주세요!");
             $("#userId").focus();
-        } else if (!pwPattern.test(password)) {
+        } else if (password == "") {
             alert("비밀번호를 입력해주세요!");
             $("#originpw").focus();
         } else if ($("#hiddenPw").val() != password) {
@@ -312,7 +312,7 @@
             $("#nickname").focus();
         } else if (birth == "") {
             alert("생일을 입력해주세요!");
-        } else if (!phonePattern.test(phone2)) {
+        } else if (phone2.length < 7) {
             alert("유효하지 않은 전화번호입니다!");
             $("#phone2").focus();
         } else if (phone == "") {

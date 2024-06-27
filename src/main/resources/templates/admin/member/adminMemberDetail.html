@@ -26,6 +26,11 @@
             <hr>
         </div>
         <div class="myPageTitle">
+            <span for="nickname">닉네임: </span>
+            <span id="nickname" th:text="${member.nickname}"></span>
+            <hr>
+        </div>
+        <div class="myPageTitle">
             <span for="birth">생년월일: </span>
             <span id="birth" th:text="${member.birth}"></span>
             <hr>
@@ -49,7 +54,7 @@
         </div>
         <div class="myPageTitle">
             <span for="addr">주소: </span>
-            <span id="addr" th:text="${member.addr1 + member.addr2}"></span>
+            <span id="addr" th:text="${member.addr1 + ' ' + member.addr2}"></span>
             <hr>
         </div>
         <div class="myPageTitle" id="useynBox">
@@ -60,7 +65,7 @@
     </div>
     <div class="myPageArea">
         <div class="myPageTitle">
-            <button id="delete-btn" class="delete-btn" th:data-mseq="${member.mseq}">삭제</button>
+            <button id="delete-btn" class="delete-btn" th:data-mseq="${member.mseq}">해지</button>
             <button id="restore-btn" class="restore-btn" th:data-mseq="${member.mseq}">복구</button>
             <button id="backUrl">뒤로가기</button>
         </div>

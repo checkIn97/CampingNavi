@@ -18,7 +18,8 @@
         <div class="card webkit">
             <form action="/qna/detail/edit" method="post" enctype="multipart/form-data" id="editForm">
             <div class="card-header">
-                <input type="text" name="title" th:value="${qna.title}"/>
+                <input type="text" name="title" id="title" th:value="${qna.title}" class="myPageInput"/>
+                <input type="hidden" id="title2" th:value="${qna.title}"/>
                 <input type="hidden" name="qseq" th:value="${qna.qseq}">
             </div>
             <hr>
@@ -32,14 +33,23 @@
                         </div>
                         <div class="space-between-flex">
                             작성일시: <span
-                                th:text="${qna.createdAt}">날짜시간</span>
+                                th:text="${#dates.format(qna.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
                         </div>
                     </div>
                     <hr>
                 </div>
 
                 <textarea class="qna-content" id="content" name="content" th:text="${qna.content}"></textarea>
+                <input id="content2" type="hidden" th:value="${qna.content}"/>
                 <hr>
+                <div id="img-area">
+                    <img id="img" class="campAreaImg" th:src="@{/assets/qnaImages/} + ${qna.image}">
+                    <input type="hidden" th:value="${qna.image != null ? 'y' : 'n'}" id="imgCheck">
+                    <input type="hidden" th:value="${qna.useyn}" id="useyn">
+                </div>
+                <div id="none-img-area">
+                    <p class="campAreaImg">이미지가 없습니다.</p>
+                </div>
                 <input type="file" name="img">
                 <hr>
                 <div class="buttonContain button-full">
@@ -53,6 +63,9 @@
                 <hr>
             </div>
                 <input type="hidden" id="username" th:value="${member.mseq == qna.member.mseq ? qna.member.mseq : 'n'}">
+                <input type="hidden" id="qseq" th:value="${qna.qseq}">
+                <input type="hidden" id="type" th:value="${qna.type}">
+                <input type="hidden" id="role" th:value="${member.role}">
             </form>
         </div>
     </div>
@@ -60,6 +73,19 @@
 </article>
 <th:block th:insert="/insert/footer"></th:block>
 <script>
+
+    $(document).ready(function () {
+        var isImg = $("#imgCheck").val();
+        if (isImg == 'y') {
+            $("#img-area").show();
+            $("#img").show();
+            $("#none-img-area").hide();
+        } else {
+            $("#img-area").hide();
+            $("#img").hide();
+            $("#none-img-area").show();
+        }
+    });
     function edit() {
         if($("#username").val() != 'n' || $("#username").val() != null) {
             $("#editForm").attr('action', '/qna/detail/edit').submit();
@@ -69,7 +95,22 @@
     }
 
     function backToDetail() {
-        history.go(-1);
+        let title = $("#title").val();
+        let title2 = $("#title2").val();
+        let content = $("#content").text();
+        let content2 = $("#content2").val();
+
+        if (title !== title2 || content !== content2) {
+            alert("test");
+            $("#title").val(title2);
+            $("#content").text(content2);
+        }
+
+        if ($("#type").val() === "FAQ") {
+            location.href = "/qna/faq/detail/" + $("#qseq").val();
+        } else {
+            location.href = "/qna/oneByone/detail/" + $("#qseq").val();
+        }
     }
 </script>
 </body>

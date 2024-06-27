@@ -7,6 +7,7 @@ import com.demo.campingnavi.domain.Reply;
 import com.demo.campingnavi.domain.Role;
 import com.demo.campingnavi.dto.QnaVo;
 import com.demo.campingnavi.dto.ReplyVo;
+import com.demo.campingnavi.repository.jpa.QnaRepository;
 import com.demo.campingnavi.repository.jpa.ReplyRepository;
 import com.demo.campingnavi.service.QnaService;
 import jakarta.servlet.http.HttpSession;
@@ -31,6 +32,8 @@ public class QnaController {
     QnaService qnaService;
     @Autowired
     private ReplyRepository replyRepository;
+    @Autowired
+    private QnaRepository qnaRepository;
 
     @GetMapping("/home")
     public String qnaHomeView(Model model, HttpSession session) {
@@ -137,10 +140,38 @@ public class QnaController {
             qna.setUseyn("n");
             qnaService.saveQna(qna);
             model.addAttribute("member", member);
-            return "qna/qnaHome";
+            if(!member.getRole().equals(Role.USER.getKey()) && qna.getType().equals("FAQ")) {
+                return "admin/qna/adminFaqList";
+            } else {
+                return "qna/qnaHome";
+            }
         } else {
             model.addAttribute("msg", "권한이 없습니다.");
-            if(qna.getType() == "FAQ") {
+            if(qna.getType().equals("FAQ")) {
+                return "redirect:/faq/detail/" + qseq;
+            } else {
+                return "redirect:/oneByone/detail/" + qseq;
+            }
+
+        }
+    }
+
+    @GetMapping("/detail/restore/{qseq}")
+    public String restoreQna(@PathVariable("qseq") int qseq, HttpSession session, Model model) {
+        Member member = (Member) session.getAttribute("loginUser");
+        Qna qna = qnaService.findById(qseq);
+        if(qna.getMember().getMseq() == member.getMseq() || member.getRole().equals(Role.ADMIN.getKey()) || member.getRole().equals(Role.SUPERVISOR.getKey())) {
+            qna.setUseyn("y");
+            qnaService.saveQna(qna);
+            model.addAttribute("member", member);
+            if(!member.getRole().equals(Role.USER.getKey()) && qna.getType().equals("FAQ")) {
+                return "admin/qna/adminFaqList";
+            } else {
+                return "qna/qnaHome";
+            }
+        } else {
+            model.addAttribute("msg", "권한이 없습니다.");
+            if(qna.getType().equals("FAQ")) {
                 return "redirect:/faq/detail/" + qseq;
             } else {
                 return "redirect:/oneByone/detail/" + qseq;
@@ -335,7 +366,9 @@ public class QnaController {
     @GetMapping("/reply/delete/{reply_id}")
     public String replyDelete(@PathVariable("reply_id") int reply_id) {
         Reply reply = replyRepository.findById(reply_id);
+        Qna qna = qnaRepository.findById(reply.getQna().getQseq());
         reply.setUseyn("n");
+        qna.setCheckyn("n");
         replyRepository.save(reply);
 
         return "redirect:/qna/oneByone/detail/" + reply.getQna().getQseq();

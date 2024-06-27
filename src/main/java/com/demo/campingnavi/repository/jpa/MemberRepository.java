@@ -38,8 +38,8 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     @Query("SELECT m FROM Member m WHERE m.role = 'ROLE_USER' AND m.username LIKE %?1%")
     Page<Member> findAllByUsername(String username, Pageable pageable);
 
-    @Query("SELECT m FROM Member m WHERE m.role = 'ROLE_USER' AND m.name LIKE %?1%")
-    Page<Member> findAllByName(String name, Pageable pageable);
+    @Query("SELECT m FROM Member m WHERE m.role = 'ROLE_USER' AND m.nickname LIKE %?1%")
+    Page<Member> findAllByNickName(String nickname, Pageable pageable);
 
     @Query("SELECT m FROM Member m WHERE m.role = 'ROLE_USER' AND m.provider LIKE %?1%")
     Page<Member> findAllByProvider(String provider, Pageable pageable);

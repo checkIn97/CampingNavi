@@ -738,7 +738,7 @@ public class AdminController {
                                      @RequestParam(value = "searchWord", defaultValue = "") String searchWord) {
         if (searchField.equals("username")) {
             return memberService.findAllByUsername(searchWord, pageable);
-        } else if (searchField.equals("name")) {
+        } else if (searchField.equals("nickname")) {
             return memberService.findAllByName(searchWord, pageable);
         } else if (searchField.equals("email")) {
             return memberService.findAllByEmail(searchWord, pageable);

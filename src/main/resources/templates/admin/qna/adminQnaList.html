@@ -150,7 +150,6 @@
                     tableHTML += '<th colspan="2">작성시간</th>'
                     tableHTML += '<th>답변 여부</th>';
                     tableHTML += '<th>삭제 유무</th>';
-                    tableHTML += '<th colspan="2"></th>';
                     tableHTML += '</tr></thead><tbody>';
 
                     qnas.forEach(function (qna, index) {
@@ -166,9 +165,6 @@
                         tableHTML += '<td></td>';
                         tableHTML += '<td><span class="popularPosts">' + qna.checkyn + '</span></td>';
                         tableHTML += '<td><span class="popularPosts">' + qna.useyn + '</span></td>';
-                        tableHTML += '<td></td>';
-                        tableHTML += '<td><button class="delete-btn" data-qseq="' + qna.qseq + '">삭제</button></td>';
-                        tableHTML += '<td><button class="restore-btn" data-qseq="' + qna.qseq + '">복구</button></td>';
                         tableHTML += '</tr>';
                     });
                     tableHTML += '</tbody></table>';
@@ -215,56 +211,6 @@
 
         qnaList(0);
 
-        // 회원 삭제 버튼 클릭 시
-        $(document).on('click', '.delete-btn', function () {
-            var qseq = $(this).data('qseq');
-            deleteQNA(qseq);
-        });
-
-        function deleteQNA(qseq) {
-            $.ajax({
-                type: 'POST',
-                url: '/admin/qna/delete',
-                data: {
-                    qseq: qseq
-                },
-                success: function (response) {
-                    // 성공적으로 삭제되었을 때 처리
-                    alert('QNA 삭제 ' + response.result);
-                    // 삭제 후 목록 다시 로드
-                    qnaList(currentPage);
-                },
-                error: function (error) {
-                    alert('QNA 삭제 실패', error);
-                    // 실패 시 추가 처리
-                }
-            });
-        }
-
-        $(document).on('click', '.restore-btn', function () {
-            var qseq = $(this).data('qseq');
-            restoreQNA(qseq);
-        });
-
-        function restoreQNA(qseq) {
-            $.ajax({
-                type: 'POST',
-                url: '/admin/qna/restore',
-                data: {
-                    qseq: qseq
-                },
-                success: function (response) {
-                    // 성공적으로 삭제되었을 때 처리
-                    alert('QNA 복구 ' + response.result);
-                    // 삭제 후 목록 다시 로드
-                    qnaList(currentPage);
-                },
-                error: function (error) {
-                    alert('QNA 복구 실패', error);
-                    // 실패 시 추가 처리
-                }
-            });
-        }
     });
 </script>
 <input type="hidden" id="result" th:value="${result}" th:if="${result != null}">

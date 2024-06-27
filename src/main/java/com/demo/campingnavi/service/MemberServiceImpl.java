@@ -185,7 +185,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Page<Member> findAllByName(String name, Pageable pageable) {
-        return memberRepository.findAllByName(name, pageable);
+        return memberRepository.findAllByNickName(name, pageable);
     }
 
     @Override

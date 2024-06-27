@@ -663,7 +663,7 @@
         } else if (phone == "" || phone == "n") {
             alert("전화번호를 입력해주세요!");
             $("#phone").focus()
-        } else if (!phonePattern.test(phone2)) {
+        } else if (phonePattern.test(phone2) !== true) {
             alert("전화번호를 입력해주세요!");
             $("#phone2").focus()
         } else if (addr1 == "" || addr1 == "n") {

@@ -91,7 +91,7 @@
                 <select class="form-control mr-2" id="searchField" name="searchField">
                     <option value="">선택</option>
                     <option value="username">아이디</option>
-                    <option value="name">이름</option>
+                    <option value="nickname">닉네임</option>
                     <option value="email">이메일</option>
                     <option value="provider">로그인 유형</option>
                 </select>
@@ -147,7 +147,7 @@
                     tableHTML += '<thead><tr>';
                     tableHTML += '<th>번호</th>';
                     tableHTML += '<th colspan="2">아이디</th>';
-                    tableHTML += '<th>이름</th>';
+                    tableHTML += '<th>닉네임</th>';
                     tableHTML += '<th colspan="2">생년월일</th>';
                     tableHTML += '<th colspan="2">이메일</th>';
                     tableHTML += '<th>로그인 유형</th>';
@@ -160,7 +160,7 @@
                         tableHTML += '<td><span class="popularPosts">' + (index + 1) + '</span></td>';
                         tableHTML += '<td><a href="/admin/member/detail/' + member.mseq + '"><span class="popularPosts">' + member.username + '</span></a></td>';
                         tableHTML += '<td></td>';
-                        tableHTML += '<td><span class="popularPosts">' + member.name + '</span></td>';
+                        tableHTML += '<td><span class="popularPosts">' + member.nickname + '</span></td>';
                         var formattedDate = moment(member.birth).format('YYYY-MM-DD');
                         tableHTML += '<td><span class="popularPosts">' + formattedDate + '</span></td>';
                         tableHTML += '<td></td>';

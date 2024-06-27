@@ -64,7 +64,7 @@ public class MemberController {
 
         boolean result = memberService.joinProcess(vo);
         if(result) {
-            return "redirect:login";
+            return "redirect:/member/login";
         } else {
             return "redirect:joinAlertView";
         }
