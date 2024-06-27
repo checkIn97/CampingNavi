@@ -28,7 +28,7 @@
                         </div>
                         <div class="space-between-flex">
                             작성일시: <span
-                                th:text="${reply.createdAt}">날짜시간</span>
+                                th:text="${#dates.format(reply.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
                         </div>
                     </div>
                     <hr>
@@ -43,7 +43,7 @@
                     <button class="webkit" type="submit">수정하기</button>
 
                     <!-- 목록으로 돌아가기 -->
-                    <button class="webkit" onclick="backToDetail()">뒤로가기</button>
+                    <button type="button" class="webkit" onclick="backToDetail()">뒤로가기</button>
                 </div>
 
                 <hr>
