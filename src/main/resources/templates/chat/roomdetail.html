@@ -40,7 +40,7 @@
                     <div class="input-group-append">
                         <button @click="sendMessage" class="chatBtn" type="button">보내기</button>
                     </div>
-                    <button class="chatBtn mainBte" id="chatBack">나가기</button>
+                    <button class="chatBtn mainBte" id="chatBack" v-on:click="chatBack()">나가기</button>
                 </div>
             </div>
         </div>
@@ -63,13 +63,6 @@
 <script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>
 
 <script>
-
-    window.onload = function() {
-        document.getElementById('chatBack').addEventListener('click', function () {
-            location.href = "/chat/room";
-            console.log('나가기 버튼이 실행이 되나?');
-        });
-    };
 
     // WebSocket & Stomp 초기화
     let sock = new SockJS("/ws-stomp");
@@ -154,8 +147,10 @@
                     this.chatRoomUserList = response.data;
 
                 });
+            },
+            chatBack(){
+              location.href= "/chat/room";
             }
-
 
         }
     });
