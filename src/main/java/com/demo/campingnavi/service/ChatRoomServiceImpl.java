@@ -99,5 +99,21 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         return chatRoomRepository.findByUserListContains(memberMseq);
     }
 
+    @Override
+    public void addBanUser(String roomId, int mseq) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).get();
+        Member user = memberRepository.findById(mseq).get();
+        chatRoom.addBanUser(String.valueOf(user.getMseq()));
+        chatRoomRepository.save(chatRoom);
+    }
+
+    @Override
+    public List<String> getBanUserList(String roomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).get();
+        List<String> banUsers = chatRoom.getBanList();
+
+        return banUsers;
+    }
+
 
 }

@@ -240,25 +240,37 @@
                 }
             },
             enterRoom: function (roomId) {
-                let sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + memberName + ' ) 으로 입장합니다.');
                 let mseq = memberMseq;
-                if (sender === null) {
-                    alert('입장이 취소되었습니다.');
-                    return;
-                }
-                if (sender != "") {
-                    localStorage.setItem('wschat.sender', sender);
-                    localStorage.setItem('wschat.roomId', roomId);
-                    localStorage.setItem('wschat.mseq', mseq)
-                    location.href = "/chat/room/enter/" + roomId;
-                } else {
-                    sender = memberName;
-                    localStorage.setItem('wschat.sender', sender);
-                    localStorage.setItem('wschat.roomId', roomId);
-                    localStorage.setItem('wschat.mseq', mseq)
-                    location.href = "/chat/room/enter/" + roomId;
-                }
-
+                let params = new URLSearchParams();
+                params.append("roomId", roomId);
+                params.append("mseq", mseq)
+                axios.get('/chat/banCheck', {params: params})
+                    .then(
+                        response => {
+                            if (response.data.banned){
+                                alert("퇴장조치당한 방에는 다시 입장할 수 없습니다.")
+                                return;
+                            } else {
+                                let sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + memberName + ' ) 으로 입장합니다.');
+                                if (sender != "") {
+                                    localStorage.setItem('wschat.sender', sender);
+                                    localStorage.setItem('wschat.roomId', roomId);
+                                    localStorage.setItem('wschat.mseq', mseq)
+                                    location.href = "/chat/room/enter/" + roomId;
+                                } else {
+                                    sender = memberName;
+                                    localStorage.setItem('wschat.sender', sender);
+                                    localStorage.setItem('wschat.roomId', roomId);
+                                    localStorage.setItem('wschat.mseq', mseq)
+                                    location.href = "/chat/room/enter/" + roomId;
+                                }
+                                if (sender === null) {
+                                    alert('입장이 취소되었습니다.');
+                                    return;
+                                }
+                            }
+                        }
+                    )
             },
             searchRoom: function () {
                 if ("" === this.search_word) {

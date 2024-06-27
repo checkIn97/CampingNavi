@@ -44,7 +44,7 @@
     </form>
 
     <button class="review-list-create-button mainBtn" onclick="window.location.href='/review/insert_search_form'">
-        새로운 글 작성
+        리뷰 작성
     </button>
 
 </article>
@@ -96,7 +96,7 @@
                         HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle; filter: invert(100%);\"/>";
                         HTML += "<span> [" + bestList[i].review.commentCount + "]</span></a></div>";
                         HTML += "<input type=\"hidden\" name=\"vseq\" value=\"" + bestList[i].review.vseq + "\"/></td>";
-                        HTML += "<td><a class=\"popularPosts\" href=\"/review/memberList/" + bestList[i].review.member.mseq + "\">" + bestList[i].review.member.username + "</a>";
+                        HTML += "<td><a class=\"popularPosts\" href=\"/review/memberList/" + bestList[i].review.member.mseq + "\">" + bestList[i].review.member.nickname + "</a>";
                         HTML += "<input type=\"hidden\" name=\"mseq\" value=\"" + bestList[i].review.member.mseq + "\"/></td>";
                         HTML += "<td class=\"popularPosts\">" + bestList[i].createdAt + "</td>";
                         HTML += "<td class=\"popularPosts\">" + bestList[i].rcdCount + "</td>";
@@ -117,7 +117,7 @@
                         HTML += "<img src=\"/assets/images/icon/reply.png\" style=\"width: 18px; height: 18px; vertical-align: middle;\"/>";
                         HTML += "<span> [" + list[i].review.commentCount + "]</span></a></div>";
                         HTML += "<input type=\"hidden\" name=\"vseq\" value=\"" + list[i].review.vseq + "\"/></td>";
-                        HTML += "<td><a href=\"/review/memberList/" + list[i].review.member.mseq + "\">" + list[i].review.member.username + "</a>";
+                        HTML += "<td><a href=\"/review/memberList/" + list[i].review.member.mseq + "\">" + list[i].review.member.nickname + "</a>";
                         HTML += "<input type=\"hidden\" name=\"mseq\" value=\"" + list[i].review.member.mseq + "\"/></td>";
                         HTML += "<td>" + list[i].createdAt + "</td>";
                         HTML += "<td>" + list[i].rcdCount + "</td>";

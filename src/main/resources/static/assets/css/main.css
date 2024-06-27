@@ -1315,6 +1315,12 @@ input[name="slide"] {
 }
 
 /*campingEssentials*/
+
+#itemDescription {
+    height: 30rem;
+    overflow: scroll;
+}
+
 .esseIcon {
     width: 1.5rem;
 }
@@ -1518,6 +1524,8 @@ h1 {
     background-color: #cccccc;
     border-radius: 50%;
     background-image: none;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #memberSexRead {
