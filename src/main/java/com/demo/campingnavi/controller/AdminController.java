@@ -561,8 +561,7 @@ public class AdminController {
         // 게시글 번호를 통해 해당 게시글 가져오기
         Review review = reviewService.getReview(vseq);
         ReviewVo reviewVo = new ReviewVo(review, reviewRecommendService.getRcdCountByReview(review));
-        reviewService.updateCnt(vseq);
-
+       
         float score = review.getLikes();
 
         // 모델에 게시글 추가
