@@ -113,7 +113,7 @@
             loadMessages() {
                 axios.get('/chat/room/' + this.roomId + '/messages').then(response => {
                     this.messages = response.data.map(msg => {
-                        msg.isOwn = msg.sender === this.sender;
+                        msg.isOwn = msg.mseq == this.mseq;
                         if (msg.type === 'ENTER' || msg.type === 'LEAVE') {
                             msg.sender = '[알림]';
                         }
@@ -138,7 +138,7 @@
                 }
             },
             recvMessage(recv) {
-                recv.isOwn = recv.sender === this.sender;
+                recv.isOwn = recv.mseq == this.mseq;
                 if (recv.type === 'ENTER' || recv.type === 'LEAVE') {
                     recv.sender = '[알림]';
                 }
