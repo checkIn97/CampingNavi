@@ -115,5 +115,10 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         return banUsers;
     }
 
+    @Override
+    public void deleteRoom(String roomId) {
+        chatRoomRepository.deleteById(roomId);
+    }
+
 
 }
