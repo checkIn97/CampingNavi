@@ -338,6 +338,8 @@
         var addr2 = $("#addr2").val();
         var img = $("#backURL").val();
         const phonePattern = /^(\d{7,8})$/;
+        const nicknamePattern = /^.{2,}$/;
+
         var formData = new FormData();
         formData.append('nickname', nickname);
         formData.append('birth', birth);
@@ -365,7 +367,7 @@
         formData.append('sex', getValue());
 
 
-        if (nickname == "") {
+        if (nicknamePattern.test(nickname)) {
             alert("사이트에서 사용할 닉네임을 입력해주세요!");
             $("#nickname").focus()
         } else if (nickname != $("#originNickname").val() && nickname != $("#hiddenNickname").val()) {

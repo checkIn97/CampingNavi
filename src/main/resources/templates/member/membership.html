@@ -58,7 +58,7 @@
         var op = $("#originpw").val();
         var cp = $("#pwcheck").val();
         var hp = $("#hiddenPw").val();
-        const pwPattern = /^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,128}$/;
+        const pwPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,20}$/;
         if (pwPattern.test(op)) {
             if (op === cp) {
                 $("#hiddenPw").val(op);
@@ -71,7 +71,7 @@
                 $("#originpw").focus();
             }
         } else {
-            alert("비밀번호는 8자 이상 128자 미만으로 영어 대·소문자와 특수문자를 1개 이상 포함하여야 합니다.");
+            alert("비밀번호는 8자 이상 20자 미만으로 영어 대·소문자와 특수문자를 1개 이상 포함하여야 합니다.");
             $("#originpw").focus();
         }
 
@@ -181,17 +181,38 @@
         }
 
     }
+    var countdown; // 카운트 다운을 관리할 변수
 
     // 모달 열기
     function openModal() {
         var modal = document.getElementById('verificationModal');
         modal.style.display = 'block';
+
+        startCountdown(); // 카운트 다운 시작
     }
 
     // 모달 닫기
     function closeModal() {
         var modal = document.getElementById('verificationModal');
         modal.style.display = 'none';
+        clearInterval(countdown); // 카운트 다운 정지
+    }
+
+    function startCountdown() {
+        var timeleft = 180; // 초 단위로 설정할 시간 (3분 = 180초)
+
+        countdown = setInterval(function() {
+            if (timeleft <= 0) {
+                clearInterval(countdown); // 카운트 다운 정지
+                closeModal(); // 시간 초과 후 모달 창 닫기
+                alert("인증시간이 초과되었습니다.")
+            } else {
+                var minutes = Math.floor(timeleft / 60); // 분 계산
+                var seconds = timeleft % 60; // 초 계산
+                document.getElementById("time").textContent = minutes + "분 " + seconds + "초"; // 시간 업데이트
+            }
+            timeleft--;
+        }, 1000); // 1초마다 업데이트
     }
 
     // 인증 코드 확인 처리
@@ -265,14 +286,16 @@
         var email = $("#email").val();
         var addr = $("#addr").val();
         const phonePattern = /^(\d{7,8})$/;
+        const usernamePattern = /^[a-z]{1}[a-z0-9]{5,20}$/;
+        const pwPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,20}$/;
 
-        if (username == "") {
+        if (!usernamePattern.test(username)) {
             alert("아이디를 입력해주세요!");
             $("#userId").focus();
         } else if ($("#hiddenId").val() != username) {
             alert("아이디 중복확인을 진행해주세요!");
             $("#userId").focus();
-        } else if (password == "") {
+        } else if (!pwPattern.test(password)) {
             alert("비밀번호를 입력해주세요!");
             $("#originpw").focus();
         } else if ($("#hiddenPw").val() != password) {
@@ -298,7 +321,7 @@
         } else if (email == "") {
             alert("이메일을 입력해주세요!");
             $("#email").focus();
-        } else if ($("#hiddenEmail").val() != email) {
+        } else if ($("#hiddenEmail").val() !== email) {
             alert("이메일 인증을 진행해주세요!");
             $("#email").focus();
         } else if (addr == "" || addr.length < 10) {
@@ -347,6 +370,7 @@
             </div>
 
             <div class="memberContain">
+                <span class="myPageTitle">생년월일</span>
                 <input placeholder="생년월일" type="date" class="webkit" name="birth" id="birth">
             </div>
 
@@ -401,6 +425,7 @@
         <p>인증번호를 입력하세요:</p>
         <input type="text" id="verificationCodeInput">
         <button onclick="checkVerificationCode()">확인</button>
+        <p id="countdownTimer">남은 시간: <span id="time">3분 0초</span></p>
     </div>
 </div>
 </body>
