@@ -179,35 +179,40 @@
                 }
             },
             banUser: function (roomId, mseq) {
-                let params = new URLSearchParams();
-                params.append('roomId', roomId);
-                params.append('mseq', mseq);
-                axios.get('/chat/banUser', {params: params})
-                    .then(response => {
-                        // 성공 시 처리할 내용
-                        console.log('사용자 퇴장 조치 성공:', response);
-                        // 사용자 목록 다시 불러오기
-                        this.findAllRoom();
-                    })
-                    .catch(error => {
-                        // 오류 발생 시 처리할 내용
-                        console.error('사용자 퇴장 조치 오류:', error);
-                    })
+                if (confirm('회원을 강퇴하시겠습니까?')) {
+                    let params = new URLSearchParams();
+                    params.append('roomId', roomId);
+                    params.append('mseq', mseq);
+                    axios.get('/chat/banUser', { params: params })
+                        .then(response => {
+                            console.log('사용자 퇴장 조치 성공:', response);
+                            this.findAllRoom();
+                        })
+                        .catch(error => {
+                            console.error('사용자 퇴장 조치 오류:', error);
+                        })
+                } else {
+                    alert('취소되었습니다.');
+                }
             },
             deleteRoom: function (roomId) {
-                let params = new URLSearchParams();
-                params.append('roomId', roomId);
-                axios.get('/chat/deleteRoom', {params: params})
-                    .then(response => {
-                        // 성공 시 처리할 내용
-                        console.log('채팅방 삭제 성공:', response);
-                        // 사용자 목록 다시 불러오기
-                        this.findAllRoom();
-                    })
-                    .catch(error => {
-                        // 오류 발생 시 처리할 내용
-                        console.error('방삭제 오류:', error);
-                    })
+                if (confirm('이 방을 삭제하시겠습니까?')) {
+                    let params = new URLSearchParams();
+                    params.append('roomId', roomId);
+                    axios.get('/chat/deleteRoom', {params: params})
+                        .then(response => {
+                            // 성공 시 처리할 내용
+                            console.log('채팅방 삭제 성공:', response);
+                            // 사용자 목록 다시 불러오기
+                            this.findAllRoom();
+                        })
+                        .catch(error => {
+                            // 오류 발생 시 처리할 내용
+                            console.error('방삭제 오류:', error);
+                        })
+                } else {
+                    alert('취소되었습니다.');
+                }
             }
 
 

@@ -17,7 +17,7 @@
 
 <th:block th:insert="insert/header.html"></th:block>
 
-<article class="box centerBox">
+<article class="box centerBox review-box">
     <form name="form" method="post" enctype="multipart/form-data" action="/review/search/insert">
 
         <h2 class="review-title">캠핑장 리뷰 작성</h2>
@@ -29,11 +29,11 @@
         <!-- 후보 캠핑장 이름 표시를 위한 영역 -->
         <div id="campCandidates" style="margin-top: 10px; max-height: 200px; overflow-y: auto;"></div>
 
-
         <hr>
         <div>
-            <div class="review-insert-title">Title</div>
-            <input class="webkit review-insert-input" type="text" id="title" name="title">
+            <div class="review-insert-title">Title (최대 50자)</div>
+            <input class="webkit review-insert-input" type="text" id="title" name="title" maxlength="50">
+            <div id="title-char-count" style="font-size: 12px; color: gray;">1 / 50</div>
         </div>
         <hr>
         <div class="buttonContain">
@@ -89,24 +89,22 @@
             }
         });
 
+        // 캠핑장 입력 시 후보 목록 업데이트
+        $('#camp').on('input', function() {
+            var keyword = $(this).val().trim();
+            if (keyword.length >= 1) {
+                updateCampCandidates(keyword);
+            } else {
+                $('#campCandidates').empty(); // 입력이 없으면 후보 목록 비우기
+            }
+        });
 
-            // 캠핑장 입력 시 후보 목록 업데이트
-            $('#camp').on('input', function() {
-                var keyword = $(this).val().trim();
-                if (keyword.length >= 1) {
-                    updateCampCandidates(keyword);
-                } else {
-                    $('#campCandidates').empty(); // 입력이 없으면 후보 목록 비우기
-                }
-            });
-
-            // 후보 캠핑장 클릭 시 입력창에 채우기
-            $(document).on('click', '#campCandidates div', function() {
-                var campName = $(this).text().trim();
-                $('#camp').val(campName);
-                $('#campCandidates').empty(); // 후보 목록 비우기
-            });
-
+        // 후보 캠핑장 클릭 시 입력창에 채우기
+        $(document).on('click', '#campCandidates div', function() {
+            var campName = $(this).text().trim();
+            $('#camp').val(campName);
+            $('#campCandidates').empty(); // 후보 목록 비우기
+        });
 
         // 다른 곳으로 포커스 이동 시 후보 목록 비우고 유효성 검사
         $('body').on('click keypress', function(event) {
@@ -125,59 +123,63 @@
             }
         });
 
-
-        // 유효성 검사 함수
-            function checkCampValidity(campName) {
-                $.ajax({
-                    url: "/camp/api/validate", // 서버 측 API 엔드포인트
-                    type: "GET",
-                    data: {
-                        campName: campName
-                    },
-                    success: function(response) {
-                        if (response.valid) {
-                            // 유효한 캠핑장 이름일 때의 처리
-                        } else {
-                            alert("캠핑장이 존재하지 않습니다.");
-                            $('#camp').val('');
-                            $('#camp').focus(); // 다시 입력창에 포커스 주기
-                        }
-                    },
-                    error: function() {
-                        alert("서버와의 통신 중 문제가 발생했습니다.");
-                    }
-                });
-            }
-
-            // 캠핑장 후보 목록 업데이트 함수
-            function updateCampCandidates(keyword) {
-                $.ajax({
-                    url: "/camp/api/search", // 서버 측 API 엔드포인트
-                    type: "GET",
-                    data: {
-                        keyword: keyword
-                    },
-                    success: function(data) {
-                        displayCampCandidates(data);
-                    },
-                    error: function() {
-                        alert("캠핑장 후보 목록을 가져오는 데 실패했습니다.");
-                    }
-                });
-            }
-
-            // 캠핑장 후보 목록 표시 함수
-            function displayCampCandidates(camps) {
-                var html = '';
-                camps.forEach(function(camp) {
-                    html += '<div>' + camp.name + '</div>';
-                });
-                $('#campCandidates').html(html);
-            }
+        // 제목 입력 시 글자 수 업데이트
+        $('#title').on('input', function() {
+            var charCount = $(this).val().length;
+            $('#title-char-count').text(charCount + ' / 50');
         });
 
+        // 유효성 검사 함수
+        function checkCampValidity(campName) {
+            $.ajax({
+                url: "/camp/api/validate", // 서버 측 API 엔드포인트
+                type: "GET",
+                data: {
+                    campName: campName
+                },
+                success: function(response) {
+                    if (response.valid) {
+                        // 유효한 캠핑장 이름일 때의 처리
+                    } else {
+                        alert("캠핑장이 존재하지 않습니다.");
+                        $('#camp').val('');
+                        $('#camp').focus(); // 다시 입력창에 포커스 주기
+                    }
+                },
+                error: function() {
+                    alert("서버와의 통신 중 문제가 발생했습니다.");
+                }
+            });
+        }
 
-        function uploadSummernoteImageFile(file, editor) {
+        // 캠핑장 후보 목록 업데이트 함수
+        function updateCampCandidates(keyword) {
+            $.ajax({
+                url: "/camp/api/search", // 서버 측 API 엔드포인트
+                type: "GET",
+                data: {
+                    keyword: keyword
+                },
+                success: function(data) {
+                    displayCampCandidates(data);
+                },
+                error: function() {
+                    alert("캠핑장 후보 목록을 가져오는 데 실패했습니다.");
+                }
+            });
+        }
+
+        // 캠핑장 후보 목록 표시 함수
+        function displayCampCandidates(camps) {
+            var html = '';
+            camps.forEach(function(camp) {
+                html += '<div>' + camp.name + '</div>';
+            });
+            $('#campCandidates').html(html);
+        }
+    });
+
+    function uploadSummernoteImageFile(file, editor) {
         var formData = new FormData();
         formData.append("file", file);
 
@@ -205,14 +207,13 @@
         });
     }
 
-
     function reloadRating(current, index) {
         $.ajax({
             type: "POST",
             url: "/review/reloadRating",
             data: {
-               current: current,
-               index: index
+                current: current,
+                index: index
             },
             success: function(data) {
                 let starScore = data.starScore;
