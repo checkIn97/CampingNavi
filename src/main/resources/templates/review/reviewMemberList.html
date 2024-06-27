@@ -22,7 +22,7 @@
 <th:block th:insert="/insert/header"></th:block>
 
 <article class="box centerBox" id="review-list">
-    <h3><span th:text="${authorList[0].review.member.nickname}"></span>님의 게시글 목록</h3>
+    <h3><span th:text="${authorList[0].review.member.nickname}"></span>님의 리뷰 목록</h3>
     <input type="hidden" id="mseq" name="mseq" th:value="${authorList[0].review.member.mseq}">
     <table>
         <thead>
