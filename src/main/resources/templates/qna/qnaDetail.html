@@ -69,7 +69,7 @@
                         <button class="webkit mainBtn" type="button">삭제하기</button>
                     </a>
                     <a id="restore-btn" class="webkit"
-                       th:href="@{/qna/detail/restore/} + ${qna.qseq}" th:if="${member.role != 'ROLE_USER'}">
+                       th:href="@{/qna/detail/restore/} + ${qna.qseq}" th:if="${member.role != 'ROLE_USER' && qna.type != 'ONE'}">
                         <button class="webkit mainBtn" type="button">복구하기</button>
                     </a>
                     <a class="webkit"
