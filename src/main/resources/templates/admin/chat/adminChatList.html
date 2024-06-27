@@ -11,52 +11,65 @@
             font-family: Arial, sans-serif; /* 폰트 설정 */
             line-height: 1.6; /* 줄 간격 */
         }
+
         .sidebar {
             width: 250px;
             height: 100vh;
             background-color: #343a40;
             padding: 20px;
         }
+
         .sidebar a {
             color: #ffffff;
             display: block;
             padding: 10px;
             text-decoration: none;
         }
+
         .sidebar a:hover {
             background-color: #495057;
         }
+
         .content {
             flex: 1;
             padding: 20px;
         }
+
         .page-index {
             padding: 20px;
         }
+
         .search-container {
             margin-bottom: 20px;
         }
+
         .table {
             width: 100%;
             margin-bottom: 20px;
         }
+
         .page-box {
             text-align: center;
         }
+
         .page-num {
             margin: 0 5px;
             cursor: pointer;
             display: inline-block;
         }
+
         .page-num.active {
             font-weight: bold;
         }
+
         .icon {
             cursor: pointer;
         }
+
         .review-list-pop-back {
             background-color: #f8f9fa;
         }
+
         .popularPosts {
             font-weight: bold;
             color: #007bff;
@@ -85,27 +98,37 @@
 </div>
 <div class="content">
     <h2 class="my-4">채팅 리스트 관리자 페이지</h2>
+
     <div class="page-index">
         <!-- 검색 영역 -->
         <div class="search-container form-inline">
             <input class="form-control mr-2" id="searchWord" name="searchWord" type="text" v-model="search_word">
-            <button class="btn btn-primary" type="button" id="searchButton" v-on:click="searchRoom()">검색</button>
+            <button class="btn btn-primary" id="searchButton" type="button" v-on:click="searchRoom()">검색</button>
         </div>
 
         <!-- 리스트 영역 -->
-        <div id="app">
-            <div class="col-md-4 chatRoomBox">
-                <ul class="list-group" v-bind:key="item.chatRoom.roomId" v-for="item in chatrooms">
-                    <li class="listChat">
-                        <div><span class="chatRoomName">{{item.chatRoom.name}}</span></div>
-                        <div><span class="chatRoomPN">참여인원 : {{item.chatRoom.userCount}}</span></div>
-                        <span class="roomuser" v-for="member in item.chatRoomMemberList">
-                            <p>[ {{member.name}} ] <button type="button" v-on:click="banUser(item.chatRoom.roomId, member.mseq)">퇴장조치</button>&nbsp;&nbsp;</p>
-                        </span>
-                    </li>
-                </ul>
+        <section id="app">
+            <div class="row">
+                <div class="col-md-4" v-bind:key="item.chatRoom.roomId" v-for="item in chatrooms">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">{{item.chatRoom.name}}</h5>
+                            <details>
+                                <summary class="card-text">참여인원 : {{item.chatRoom.userCount}}</summary>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item" v-for="member in item.chatRoomMemberList">
+                                        [ {{member.name}} ]
+                                        <button class="btn btn-sm btn-danger float-right" type="button"
+                                                v-on:click="banUser(item.chatRoom.roomId, member.mseq)">퇴장조치
+                                        </button>
+                                    </li>
+                                </ul>
+                            </details>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
     </div>
 </div>
 
@@ -116,6 +139,7 @@
 <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
 <script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
 <script>
+
     let comuCamp = $('input[name=comuCamp]').val();
     let vm = new Vue({
         el: '#app',
