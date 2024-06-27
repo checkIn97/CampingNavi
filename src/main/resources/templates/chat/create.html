@@ -10,6 +10,7 @@
 <body>
 <th:block th:insert="insert/header.html"></th:block>
 <input id="memberName" name="memberName" th:value="${member.name}" type="hidden"/>
+<input id="memberMseq" name="memberMseq" th:value="${member.mseq}" type="hidden"/>
 <article class="box" id="chatCreateBox">
     <div class="lengthContain" id="app">
         <!--채팅방 이름-->
@@ -79,7 +80,8 @@
 <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
 <script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
 <script>
-    var memberName = $('input[name=memberName]').val();
+    let memberName = $('input[name=memberName]').val();
+    let memberMseq = $('input[name=memberMseq]').val();
 </script>
 <script>
     function openSearch() {
@@ -97,6 +99,7 @@
             purpose: [],
             selectedItemName: '',
             memberName: '',
+            memberMseq: '',
             camp_name: ''
         },
         watch: {
@@ -122,6 +125,7 @@
 
             window.addEventListener("message", this.receiveMessage, false);
             this.memberName = document.getElementById('memberName').value;
+            this.memberMseq = document.getElementById('memberMseq').value;
         },
         methods: {
             findAllRoom: function () {
@@ -144,6 +148,7 @@
                     params.append("maxMem", this.max_mem);
                     params.append("purpose", this.purpose);
                     params.append("campName", this.selectedItemName)
+                    params.append("mseq", this.memberMseq)
                     axios.post('/chat/room', params)
                         .then(
                             response => {
@@ -158,21 +163,37 @@
                 }
             },
             enterRoom: function (roomId) {
-                var sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + this.memberName + ' ) 으로 입장합니다.');
-                if (sender != "") {
-                    localStorage.setItem('wschat.sender', sender);
-                    localStorage.setItem('wschat.roomId', roomId);
-                    location.href = "/chat/room/enter/" + roomId;
-                } else {
-                    sender = this.memberName;
-                    localStorage.setItem('wschat.sender', sender);
-                    localStorage.setItem('wschat.roomId', roomId);
-                    location.href = "/chat/room/enter/" + roomId;
-                }
-                if (sender == null) {
-                    alert('대화명을 입력해 주세요.');
-                    return this.enterRoom(roomId);
-                }
+                let mseq = memberMseq;
+                let params = new URLSearchParams();
+                params.append("roomId", roomId);
+                params.append("mseq", mseq)
+                axios.get('/chat/banCheck', {params: params})
+                    .then(
+                        response => {
+                            if (response.data.banned){
+                                alert("퇴장조치당한 방에는 다시 입장할 수 없습니다.")
+                                return;
+                            } else {
+                                let sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + memberName + ' ) 으로 입장합니다.');
+                                if (sender === null) {
+                                    alert('입장이 취소되었습니다.');
+                                    return;
+                                }
+                                if (sender != "") {
+                                    localStorage.setItem('wschat.sender', sender);
+                                    localStorage.setItem('wschat.roomId', roomId);
+                                    localStorage.setItem('wschat.mseq', mseq)
+                                    location.href = "/chat/room/enter/" + roomId;
+                                } else {
+                                    sender = memberName;
+                                    localStorage.setItem('wschat.sender', sender);
+                                    localStorage.setItem('wschat.roomId', roomId);
+                                    localStorage.setItem('wschat.mseq', mseq)
+                                    location.href = "/chat/room/enter/" + roomId;
+                                }
+                            }
+                        }
+                    )
             },
             receiveMessage: function (event) {
                 if (event.origin !== window.location.origin) {

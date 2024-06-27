@@ -111,8 +111,9 @@ public class ChatRoomController {
                                @RequestParam String endDate,
                                @RequestParam int maxMem,
                                @RequestParam String[] purpose,
-                               @RequestParam String campName) {
-
+                               @RequestParam String campName,
+                               HttpSession session) {
+        Member member = (Member) session.getAttribute("loginUser");
         Camp camp = campRepository.findByName(campName);
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setRoomId(UUID.randomUUID().toString());
@@ -123,6 +124,7 @@ public class ChatRoomController {
         chatRoom.setPurpose(List.of(purpose));
         chatRoom.setCampName(campName);
         chatRoom.setCamp(camp);
+        chatRoom.setOwner(String.valueOf(member.getMseq()));
         System.out.println(campName);
         
         chatRoomService.createChatRoom(chatRoom);
@@ -132,9 +134,15 @@ public class ChatRoomController {
 
     // 채팅방 입장 화면
     @GetMapping("/room/enter/{roomId}")
-    public String roomDetail(Model model, @PathVariable String roomId) {
+    public String roomDetail(Model model, @PathVariable String roomId, HttpSession session) {
         model.addAttribute("roomId", roomId);
-
+        Member member = (Member) session.getAttribute("loginUser");
+        List<String> userList = chatRoomService.getUserList(roomId);
+        String newMseq = String.valueOf(member.getMseq());
+        boolean isAlreadyJoined = userList.contains(newMseq);
+        if (!isAlreadyJoined) {
+            chatRoomService.addUser(roomId, member.getMseq());
+        }
         return "/chat/roomdetail";
     }
     @GetMapping("/banCheck")
@@ -187,16 +195,16 @@ public class ChatRoomController {
 
     @GetMapping("/userList/{roomId}")
     @ResponseBody
-    public List<String> userList(@PathVariable String roomId){
+    public List<Member> userList(@PathVariable String roomId){
 
         System.out.println("룸아이디로 유저리스트 찾기 " + roomId);
         System.out.println("이 방의 참여자는" + chatRoomService.findRoomById(roomId));
 
         List<String> mseqList = chatRoomService.getUserList(roomId);
 
-        List<String> chatRoomUserList = new ArrayList<>();
+        List<Member> chatRoomUserList = new ArrayList<>();
         for (String mseq : mseqList) {
-            chatRoomUserList.add(String.valueOf(memberRepository.findById(Integer.valueOf(mseq)).get().getName()));
+            chatRoomUserList.add(memberRepository.findById(Integer.valueOf(mseq)).get());
         }
         System.out.println(chatRoomUserList);
 
@@ -208,7 +216,7 @@ public class ChatRoomController {
     public List<ChatRoom> findmyList(HttpSession session,
                                      @PathVariable String memberMseq){
         Member member = (Member) session.getAttribute("loginUser");
-        List<ChatRoom> myChatRooms = chatRoomService.findMyChatRooms(String.valueOf(memberMseq));
+        List<ChatRoom> myChatRooms = chatRoomService.findMyChatRooms(String.valueOf(member.getMseq()));
         return myChatRooms;
 
     }
@@ -234,5 +242,14 @@ public class ChatRoomController {
     public String dleteRoom(@RequestParam String roomId) {
         chatRoomRepository.deleteById(roomId);
         return "admin/chat/adminChatList";
+    }
+    @GetMapping("/roomBanUser")
+    @ResponseBody
+    public void roomBanUser(@RequestParam String roomId,
+                          @RequestParam int mseq) {
+        System.out.println("삭제할방" + roomId);
+        System.out.println("삭제할 회원" + mseq);
+        chatRoomService.delUser(roomId, mseq);
+        chatRoomService.addBanUser(roomId, mseq);
     }
 }
