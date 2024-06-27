@@ -261,7 +261,7 @@
                         reviews.forEach(function (review) {
                             var titleLen = review.title.length;
                             if (titleLen <= 6) {
-                                reviewHTML += '<h3>제목: ' + review.title + '</h3>';
+                                reviewHTML += '<h3>제목: ' + '<a class="myPageSaveLink" href="/review/detail/'+ review.vseq +'">' + review.title + '</a></h3>';
                             } else {
                                 reviewHTML += '<h3>제목: ' + review.title.substring(0, 6) + '...</h3>';
                             }
