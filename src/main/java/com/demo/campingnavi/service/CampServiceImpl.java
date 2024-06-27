@@ -9,10 +9,7 @@ import com.demo.campingnavi.repository.jpa.CampRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,6 +107,11 @@ public class CampServiceImpl implements CampService {
         try {
             Process process = processBuilder.start();
             System.out.println("파이썬 프로그램 실행 성공!");
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            String line;
+            while ((line = errorReader.readLine()) != null) {
+                System.err.println(line);
+            }
             try {
                 process.waitFor();
             } catch (InterruptedException e) {
@@ -146,8 +148,10 @@ public class CampServiceImpl implements CampService {
 
                 while(true) {
                     text = br.readLine();
-                    if (text == null)
+                    if (text == null) {
+                        System.out.println("-------text is null!-------");
                         break;
+                    }
 
                     if (check != -1) {
                         String[] input = text.split(",");

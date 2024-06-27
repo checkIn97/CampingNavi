@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +42,9 @@ public class DataServiceImpl implements DataService {
 
         if (num >= 0 || n.equals("all")) {
             try {
-                FileReader fr = new FileReader(csvFile);
-                BufferedReader br = new BufferedReader(fr);
+                FileInputStream fr = new FileInputStream(csvFile);
+                InputStreamReader ir = new InputStreamReader(fr, StandardCharsets.UTF_8);
+                BufferedReader br = new BufferedReader(ir);
 
                 while(true) {
                     if (!n.equals("all")) {

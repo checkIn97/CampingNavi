@@ -3,6 +3,7 @@ package com.demo.campingnavi;
 import com.demo.campingnavi.config.PathConfig;
 import com.demo.campingnavi.domain.Qna;
 import com.demo.campingnavi.domain.Role;
+import com.demo.campingnavi.repository.jpa.CampRepository;
 import com.demo.campingnavi.repository.jpa.QnaRepository;
 import com.demo.campingnavi.service.DataService;
 import com.demo.campingnavi.domain.Camp;
@@ -23,6 +24,8 @@ public class DataTest {
     private DataService dataService;
     @Autowired
     private QnaRepository qnaRepository;
+    @Autowired
+    private CampRepository campRepository;
 
     @Disabled
     @Test
@@ -50,6 +53,15 @@ public class DataTest {
         String n = "all";
         List<Camp> campList = dataService.campInFromCsv(csvFile, n);
 
+    }
+
+    @Disabled
+    @Test
+    void CampDelete() {
+        List<Camp> campList = campRepository.findAll();
+        for (Camp camp : campList) {
+            campRepository.delete(camp);
+        }
     }
 
     @Disabled

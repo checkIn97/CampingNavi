@@ -256,29 +256,36 @@
                     var reviewArea = $("#review_area");
                     reviewArea.empty();
                     var reviews = data.content;
-                    reviews.forEach(function (review) {
-                        var titleLen = review.title.length;
-                        if (titleLen <= 6) {
-                            reviewArea.append('<h3>제목: ' + review.title + '</h3>');
-                        } else {
-                            reviewArea.append('<h3>제목: ' + review.title.substring(0, 6) + '...</h3>');
-                        }
-                        reviewArea.append('<a class="myPageSaveLink" href="/review/detail/'+ review.vseq +'">리뷰평점: ' + review.likes + '</a><br>')
-                        var campLen = review.camp.name.length;
-                        if (campLen <= 6) {
-                            reviewArea.append('<a class="myPageSavaLink" href="/camp/detail/?mapX='+ review.camp.mapX + '&mapY=' + review.camp.mapY + '&contentId=' + review.camp.contentId + '&cseq=' + review.camp.cseq + '">' + review.camp.name + '</a><br>');
-                        } else {
-                            reviewArea.append('<a class="myPageSavaLink" href="/camp/detail/?mapX='+ review.camp.mapX + '&mapY=' + review.camp.mapY + '&contentId=' + review.camp.contentId + '&cseq=' + review.camp.cseq + '">' + review.camp.name.substring(0, 6) + '...</a><br>');
-                        }
-                        var contentLen = review.content.length;
-                        if (contentLen <= 20) {
-                            reviewArea.append('<p>' + review.content + '</p>');
-                        } else {
-                            reviewArea.append('<p>' + review.content.substring(0, 20) + '...</p>');
-                        }
-                        var formattedDate = moment(review.createdAt).format('YYYY-MM-DD HH:mm:ss');
-                        reviewArea.append('<p>' + formattedDate + '</p>');
-                    });
+                    var reviewHTML = "";
+                    if(reviews.length > 0) {
+                        reviews.forEach(function (review) {
+                            var titleLen = review.title.length;
+                            if (titleLen <= 6) {
+                                reviewHTML += '<h3>제목: ' + review.title + '</h3>';
+                            } else {
+                                reviewHTML += '<h3>제목: ' + review.title.substring(0, 6) + '...</h3>';
+                            }
+                            reviewHTML += '<a class="myPageSaveLink" href="/review/detail/'+ review.vseq +'">리뷰평점: ' + review.likes + '</a><br>';
+                            var campLen = review.camp.name.length;
+                            if (campLen <= 6) {
+                                reviewHTML += '<a class="myPageSavaLink" href="/camp/detail/?mapX='+ review.camp.mapX + '&mapY=' + review.camp.mapY + '&contentId=' + review.camp.contentId + '&cseq=' + review.camp.cseq + '">' + review.camp.name + '</a><br>';
+                            } else {
+                                reviewHTML += '<a class="myPageSavaLink" href="/camp/detail/?mapX='+ review.camp.mapX + '&mapY=' + review.camp.mapY + '&contentId=' + review.camp.contentId + '&cseq=' + review.camp.cseq + '">' + review.camp.name.substring(0, 6) + '...</a><br>';
+                            }
+                            var contentLen = review.content.length;
+                            if (contentLen <= 20) {
+                                reviewHTML += '<p>' + review.content + '</p>';
+                            } else {
+                                reviewHTML += '<p>' + review.content.substring(0, 20) + '...</p>';
+                            }
+                            var formattedDate = moment(review.createdAt).format('YYYY-MM-DD HH:mm:ss');
+                            reviewHTML += '<p>' + formattedDate + '</p>';
+                        });
+                        reviewArea.append(reviewHTML);
+                    } else {
+                        reviewArea.append('<strong>남긴 리뷰가 없습니다.</strong>');
+                    }
+
 
                     var pagination2 = $("#review_page-area");
                     pagination2.empty();
@@ -296,7 +303,7 @@
                         if (i === currentPage2) {
                             pageButton2.addClass('active-page');
                         }
-                        pagination2.append(pageButton);
+                        pagination2.append(pageButton2);
                     }
                 }
             });
@@ -336,15 +343,22 @@
                     var listArea = $("#list_area");
                     listArea.empty();
                     var list = data.content;
-                    list.forEach(function (recommend) {
-                        listArea.append('<div>');
-                        listArea.append('<div class="buttonContain">');
-                        listArea.append('<h3 class="myPageSaveTitle">' + recommend.camp.name + '</h3>');
-                        listArea.append('<a class="myPageSavaLink" href="/camp/detail/?mapX='+ recommend.camp.mapX + '&mapY=' + recommend.camp.mapY + '&contentId=' + recommend.camp.contentId + '&cseq=' + recommend.camp.cseq + '">상세보기</a>');
-                        listArea.append('</div>');
-                        listArea.append('<hr>');
-                        listArea.append('</div>');
-                    });
+                    var listHTML = "";
+                    if (list.length > 0) {
+                        list.forEach(function (recommend) {
+                            listHTML += '<div>';
+                            listHTML +='<div class="buttonContain">';
+                            listHTML += '<h3 class="myPageSaveTitle">' + recommend.camp.name + '</h3>';
+                            listHTML += '<a class="myPageSavaLink" href="/camp/detail/?mapX='+ recommend.camp.mapX + '&mapY=' + recommend.camp.mapY + '&contentId=' + recommend.camp.contentId + '&cseq=' + recommend.camp.cseq + '">상세보기</a>';
+                            listHTML += '</div>';
+                            listHTML += '<hr>';
+                            listHTML += '</div>';
+                        });
+                        listArea.append(listHTML);
+                    } else {
+                        listArea.append('<strong>찜한 캠핑장이 없습니다.</strong>');
+                    }
+
 
                     var pagination = $("#page_area");
                     pagination.empty();
@@ -354,16 +368,11 @@
                     var startPage = Math.max(0, Math.min(page - Math.floor(visiblePages / 2), totalPages - visiblePages));
                     var endPage = Math.min(totalPages, startPage + visiblePages);
 
-                    // 페이지 버튼
-                    for (var i = startPage; i < endPage; i++) {
-                        pagination.append('<span style="cursor: pointer;" class="page-num" data-page="' + i + '">' + (i + 1) + '</span>');
-                    }
-
                     currentPage = page;
 
                     // 페이지 버튼
                     for (var i = startPage; i < endPage; i++) {
-                        var pageButton = $('<span style="cursor: pointer;" class="page-num" data-page="' + i + '">' + (i + 1) + '</span>');
+                        var pageButton = $('<span id="rec-page-btn" style="cursor: pointer;" class="page-num" data-page="' + i + '">' + (i + 1) + '</span>');
                         if (i === currentPage) {
                             pageButton.addClass('active-page');
                         }
@@ -373,7 +382,7 @@
             });
         }
 
-        $(document).on('click', '.page-btn', function () {
+        $(document).on('click', '#rec-page-btn', function () {
             var page = $(this).data('page');
             reloadList(page);
         });
@@ -407,23 +416,29 @@
                     var qnaArea = $("#qna-area");
                     qnaArea.empty();
                     var qnas = data.content;
-                    qnas.forEach(function (qna) {
-                        var titleLen = qna.title.length;
-                        if (titleLen <= 6) {
-                            qnaArea.append('<a class="myPageSaveLink" href="/qna/oneByone/detail/'+ qna.qseq +'"><h3>제목: ' + qna.title + '</h3></a>');
-                        } else {
-                            qnaArea.append('<a class="myPageSaveLink" href="/qna/oneByone/detail/'+ qna.qseq +'"><h3>제목: ' + qna.title.substring(0, 6) + '...</h3></a>');
-                        }
+                    let qnaHTML = "";
+                    if (qnas.length > 0) {
+                        qnas.forEach(function (qna) {
+                            var titleLen = qna.title.length;
+                            if (titleLen <= 6) {
+                                qnaHTML += '<a class="myPageSaveLink" href="/qna/oneByone/detail/'+ qna.qseq +'"><h3>제목: ' + qna.title + '</h3></a>';
+                            } else {
+                                qnaHTML += '<a class="myPageSaveLink" href="/qna/oneByone/detail/'+ qna.qseq +'"><h3>제목: ' + qna.title.substring(0, 6) + '...</h3></a>';
+                            }
 
-                        var contentLen = qna.content.length;
-                        if (contentLen <= 20) {
-                            qnaArea.append('<p>' + qna.content + '</p>');
-                        } else {
-                            qnaArea.append('<p>' + qna.content.substring(0, 20) + '...</p>');
-                        }
-                        var formattedDate = moment(qna.createdAt).format('YYYY-MM-DD HH:mm:ss');
-                        qnaArea.append('<p>' + formattedDate + '</p><hr>');
-                    });
+                            var contentLen = qna.content.length;
+                            if (contentLen <= 20) {
+                                qnaHTML += '<p>' + qna.content + '</p>';
+                            } else {
+                                qnaHTML += '<p>' + qna.content.substring(0, 20) + '...</p>';
+                            }
+                            var formattedDate = moment(qna.createdAt).format('YYYY-MM-DD HH:mm:ss');
+                            qnaHTML += '<p>' + formattedDate + '</p><hr>';
+                        });
+                        qnaArea.append(qnaHTML);
+                    } else {
+                        qnaArea.append('<strong>등록한 문의가 없습니다.</strong>');
+                    }
 
                     var pagination_QNA = $("#page-area-QNA");
                     pagination_QNA.empty();
@@ -433,17 +448,20 @@
                     var startPage_QNA = Math.max(0, Math.min(page_QNA - Math.floor(visiblePages_QNA / 2), totalPages_QNA - visiblePages_QNA));
                     var endPage_QNA = Math.min(totalPages_QNA, startPage_QNA + visiblePages_QNA);
 
-                    // 페이지 버튼
-                    for (var i = startPage_QNA; i < endPage_QNA; i++) {
-                        pagination_QNA.append('<span style="cursor: pointer;" class="page-num" id="qna-page" data-page="' + i + '">' + (i + 1) + '</span>');
-                    }
+                    currentPage_QNA = page_QNA;
 
-                    currentPage2 = page2;
+                    for (var i = startPage_QNA; i < endPage_QNA; i++) {
+                        var pageButton_QNA = $('<span id="qna-page-btn" style="cursor: pointer;" class="page-num" data-page="' + i + '">' + (i + 1) + '</span>');
+                        if (i === currentPage_QNA) {
+                            pageButton_QNA.addClass('active-page');
+                        }
+                        pagination_QNA.append(pageButton_QNA);
+                    }
                 }
             });
         }
 
-        $(document).on('click', '#qna-page', function () {
+        $(document).on('click', '#qna-page-btn', function () {
             var page_QNA = $(this).data('page');
             qnaList(page_QNA);
         });
