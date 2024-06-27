@@ -40,7 +40,7 @@
                     <div class="input-group-append">
                         <button @click="sendMessage" class="chatBtn" type="button">보내기</button>
                     </div>
-                    <button class="chatBtn mainBte" id="chatBack" onclick="goBack()">나가기</button>
+                    <button class="chatBtn mainBte" id="chatBack">나가기</button>
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
 
     <div id="chat-room-detail-user-list-box">
         <h2 class="major">참여자</h2>
-            <span class="chat-room-detail-user" v-for="user in chatRoomUserList">
+        <span class="chat-room-detail-user" v-for="user in chatRoomUserList">
                 <p>[ {{user}} ] 님</p>
             </span>
     </div>
@@ -63,13 +63,21 @@
 <script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>
 
 <script>
+
+    window.onload = function() {
+        document.getElementById('chatBack').addEventListener('click', function () {
+            location.href = "/chat/room";
+            console.log('나가기 버튼이 실행이 되나?');
+        });
+    };
+
     // WebSocket & Stomp 초기화
-    var sock = new SockJS("/ws-stomp");
-    var ws = Stomp.over(sock);
-    var reconnect = 0;
+    let sock = new SockJS("/ws-stomp");
+    let ws = Stomp.over(sock);
+    let reconnect = 0;
 
     // Vue.js
-    var vm = new Vue({
+    let vm = new Vue({
         el: '#app',
         data: {
             roomId: '',
@@ -157,7 +165,7 @@
         ws.connect({}, function (frame) {
             // 채팅방 구독
             ws.subscribe("/sub/chat/room/" + vm.$data.roomId, function (message) {
-                var recv = JSON.parse(message.body);
+                let recv = JSON.parse(message.body);
                 vm.recvMessage(recv);
             });
 
@@ -191,9 +199,7 @@
         location.href = "/chat/room";
     });
 
-    function goBack() {
-        window.history.back();
-    }
+
 </script>
 
 </body>
