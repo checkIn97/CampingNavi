@@ -46,6 +46,10 @@ result = recomm_camp_by_surprise(svd, member, camp_list, 0)
 result.set_index('cseq', inplace=True)
 
 review_file = 'Review.csv'
+if not os.path.exists(review_file):
+    tmp_review = pd.DataFrame({'vseq':[], 'member':[], 'camp':[], 'rate':[]})
+    tmp_review.to_csv(review_file, encoding='utf-8', index=False)
+    
 review_data_raw = pd.read_csv(review_file, encoding='utf-8', sep=',')
 review_data_raw.rename(columns={'member':'mseq', 'camp':'cseq'}, inplace=True)
 review_data = review_data_raw.copy()
