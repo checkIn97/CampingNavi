@@ -917,4 +917,10 @@ public class AdminController {
     public String fqaListView() {
         return "admin/qna/adminFaqList";
     }
+
+    @GetMapping("/chat/adminChatList")
+    public String adminchatListView(){
+
+        return "admin/chat/adminChatList";
+    }
 }

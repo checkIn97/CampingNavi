@@ -24,7 +24,8 @@ public interface ChatRoomService {
     public String getUserName(String roomId);
     public List<String> getUserList(String roomId);
     public List<ChatRoom> findMyChatRooms(String memberMseq);
-
+    public void addBanUser(String roomId, int mseq);
+    public List<String> getBanUserList(String roomId);
 
 
 }

@@ -38,6 +38,8 @@ public class ChatRoom {
     private List<String> userList = new ArrayList<>();
     @ElementCollection
     private List<String> purpose;
+    @ElementCollection
+    private List<String> banList = new ArrayList<>();
 
     public void upUserCount(){
         this.userCount++;
@@ -52,6 +54,9 @@ public class ChatRoom {
     }
     public void removeUser(String username){
         this.userList.remove(username);
+    }
+    public void addBanUser(String userMseq){
+        this.banList.add(userMseq);
     }
     public static com.demo.campingnavi.domain.ChatRoom create(String name) {
         com.demo.campingnavi.domain.ChatRoom chatRoom = new com.demo.campingnavi.domain.ChatRoom();

@@ -89,10 +89,17 @@ public class ChatRoomController {
         }
 
         for (ChatRoom chatRoom : chatRoomList) {
+            List<String> mseqList = chatRoomService.getUserList(chatRoom.getRoomId());
+            List<String> chatRoomUserList = new ArrayList<>();
+            List<Member> chatRoomMemberList = new ArrayList<>();
+            for (String mseq : mseqList) {
+                chatRoomUserList.add(String.valueOf(memberRepository.findById(Integer.valueOf(mseq)).get().getName()));
+                chatRoomMemberList.add(memberRepository.findById(Integer.valueOf(mseq)).get());
+            }
             long reviewCount = reviewRepository.countByCampCseq(chatRoom.getCamp().getCseq());
-            chatRoomVoList.add(new ChatRoomVo(chatRoom, scoreList.get(chatRoom.getCamp().getCseq()), reviewCount));
+            chatRoomVoList.add(new ChatRoomVo(chatRoom, scoreList.get(chatRoom.getCamp().getCseq()), reviewCount, chatRoomUserList, chatRoomMemberList));
+            System.out.println(chatRoomUserList);
         }
-
         return chatRoomVoList;
     }
 
@@ -130,6 +137,19 @@ public class ChatRoomController {
 
         return "/chat/roomdetail";
     }
+    @GetMapping("/banCheck")
+    @ResponseBody
+    public String banCheck(@RequestParam String roomId,
+                           @RequestParam int mseq) {
+        List<String> banList = chatRoomService.getBanUserList(roomId);
+        if (banList.contains(String.valueOf(mseq))) {
+            return "{\"banned\":true}";
+        } else {
+            return "{\"banned\":false}";
+        }
+
+    }
+
     // 특정 채팅방 조회
     @GetMapping("/room/{roomId}")
     @ResponseBody
@@ -198,4 +218,17 @@ public class ChatRoomController {
         return campService.searchItems(keyword);
 
     }
+
+    @GetMapping("/banUser")
+    @ResponseBody
+    public String banUser(@RequestParam String roomId,
+                        @RequestParam int mseq){
+        System.out.println("삭제할방" + roomId);
+        System.out.println("삭제할 회원" + mseq);
+        chatRoomService.delUser(roomId, mseq);
+        chatRoomService.addBanUser(roomId, mseq);
+        return "admin/chat/adminChatList";
+    }
+
+
 }
