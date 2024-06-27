@@ -48,14 +48,14 @@ public class MemberServiceImpl implements MemberService{
     public boolean joinProcess(MemberVo vo) {
         boolean result = false;
         String PATTERN_ID = "^[a-z]{1}[a-z0-9]{5,20}+$";
-        String PATTERN_PW = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,128}+$";
+        String PATTERN_PW = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,20}+$";
         boolean idPattern = Pattern.matches(PATTERN_ID, vo.getUsername());
         boolean pwPattern = Pattern.matches(PATTERN_PW, vo.getPw());
 
         // 존재여부확인
         boolean isMember = memberRepository.existsByUsername(vo.getUsername());
 
-        if(/*idPattern && pwPattern && */!isMember){
+        if(idPattern && pwPattern && !isMember){
             String encodedPassword = passwordEncoder.encode(vo.getPw());
             Member member = Member.builder()
                     .username(vo.getUsername())
@@ -64,7 +64,7 @@ public class MemberServiceImpl implements MemberService{
                     .sex(vo.getSex())
                     .email(vo.getEmail())
                     .addr1(vo.getAddr1())
-                    .addr2("n")
+                    .addr2(" ")
                     .provider("campingnavi")
                     .providerId("campingnavi" + vo.getUsername())
                     .phone(vo.getPhone() + vo.getPhone2())
