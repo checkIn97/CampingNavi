@@ -36,13 +36,11 @@ public class ChatController {
             String newMseq = String.valueOf(message.getMseq());
             boolean isAlreadyJoined = userList.contains(newMseq);
             if (!isAlreadyJoined) {
-
                 chatRoomService.addUser(message.getRoomId(), message.getMseq());
             }
-
             // 새로 입장한 유저에게 기존 메시지를 전송
             List<ChatMessage> messagesInRoom = mongoChatMessageRepository.findByRoomId(message.getRoomId());
-            messagesInRoom.forEach(msg -> messagingTemplate.convertAndSend("/user/" + message.getSender() + "/queue/messages", msg));
+            messagesInRoom.forEach(msg -> messagingTemplate.convertAndSend("/user/" + message.getMseq() + "/queue/messages", msg));
 
             // 입장 메시지를 설정하고 저장
             message.setCreatedAt(LocalDateTime.now());
@@ -57,6 +55,13 @@ public class ChatController {
             messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
         } else if(ChatMessage.MessageType.LEAVE.equals(message.getType())) {
             chatRoomService.delUser(message.getRoomId(), message.getMseq());
+            List<String> userList = chatRoomService.getUserList(message.getRoomId());
+            // 사용자 리스트가 비어있으면 방 삭제
+            if (userList.isEmpty()) {
+                chatRoomService.deleteRoom(message.getRoomId());
+                mongoChatMessageRepository.deleteByRoomId(message.getRoomId());
+            }
+
         }
     }
 

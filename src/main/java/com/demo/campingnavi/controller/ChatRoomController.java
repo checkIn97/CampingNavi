@@ -229,6 +229,10 @@ public class ChatRoomController {
         chatRoomService.addBanUser(roomId, mseq);
         return "admin/chat/adminChatList";
     }
-
-
+    @GetMapping("/deleteRoom")
+    @ResponseBody
+    public String dleteRoom(@RequestParam String roomId) {
+        chatRoomRepository.deleteById(roomId);
+        return "admin/chat/adminChatList";
+    }
 }
