@@ -96,7 +96,7 @@
         <a href="/oauth-login/member/logoutProc">로그아웃</a>
     </div>
 </div>
-<div class="content">
+<div class="content" id="app">
     <h2 class="my-4">채팅 리스트 관리자 페이지</h2>
 
     <div class="page-index">
@@ -107,7 +107,7 @@
         </div>
 
         <!-- 리스트 영역 -->
-        <section id="app">
+        <section>
             <div class="row">
                 <div class="col-md-4" v-bind:key="item.chatRoom.roomId" v-for="item in chatrooms">
                     <div class="card mb-4">
