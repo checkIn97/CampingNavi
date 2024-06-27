@@ -1398,6 +1398,26 @@ h1 {
 
 /*myPage*/
 
+#myPageBack {
+    display: block;
+}
+
+#myPageCancel {
+    display: none;
+}
+
+#myPage-save {
+    display: contents;
+}
+
+#myPage-qna {
+    display: contents;
+}
+
+#myPage-review {
+    display: contents;
+}
+
 #myPageContainer {
     /*position: relative;*/
     width: 40%;
@@ -1446,6 +1466,11 @@ h1 {
     font-weight: bold;
 }
 
+.myPage-review-box {
+    height: 40rem;
+    overflow: scroll;
+}
+
 .myPageBox {
     width: 15rem;
     background-color: #f1f9eb;
@@ -1453,7 +1478,6 @@ h1 {
     padding: 1rem;
     border-radius: 1rem;
     margin-bottom: 1rem;
-    margin-left: 1rem;
     margin-top: 1rem;
 }
 
@@ -1713,8 +1737,8 @@ h1 {
     margin: auto auto 1rem;
 }
 
-#review-list {
-    width: 60rem;
+.review-box {
+    width: 60rem !important;
 }
 
 .review-list-create-button {
