@@ -91,7 +91,6 @@
                 <select class="form-control mr-2" id="searchField" name="searchField">
                     <option value="">선택</option>
                     <option value="username">아이디</option>
-                    <option value="name">이름</option>
                     <option value="title">제목</option>
                     <option value="content">내용</option>
                 </select>
@@ -164,7 +163,7 @@
                         var formattedDate = moment(qna.createdAt).format('YYYY-MM-DD HH:mm:ss');
                         tableHTML += '<td><span class="popularPosts">' + formattedDate + '</span></td>';
                         tableHTML += '<td></td>';
-                        tableHTML += '<td><span class="popularPosts">' + qna.useyn + '</span></td>';
+                        tableHTML += '<td><span class="popularPosts">' + (qna.useyn == 'y' ? '사용 중' : '삭제 완료') + '</span></td>';
                         tableHTML += '<td></td>';
                         tableHTML += '<td><button class="delete-btn" data-qseq="' + qna.qseq + '">삭제</button></td>';
                         tableHTML += '<td><button class="restore-btn" data-qseq="' + qna.qseq + '">복구</button></td>';

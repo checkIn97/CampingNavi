@@ -857,8 +857,8 @@ public class AdminController {
                                        @RequestParam(value = "type") String type) {
         if (searchField.equals("username")) {
             return qnaService.findAllByUsername(type, searchWord, pageable);
-        } else if (searchField.equals("name")) {
-            return qnaService.findAllByName(type, searchWord, pageable);
+        } else if (searchField.equals("nickname")) {
+            return qnaService.findAllByNickName(type, searchWord, pageable);
         } else if (searchField.equals("title")) {
             return qnaService.findAllByTitle(type, searchWord, pageable);
         } else if (searchField.equals("content")) {

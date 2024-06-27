@@ -45,8 +45,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/resources/**", "/static/**", "/assets/**", "/templates/**","/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/member/join", "/", "/admin/login", "/admin/loginProc", "/member/joinProc", "/member/membershipAgree", "/member/membership", "/member/validateUser", "/member/validateNickname").permitAll()
-                        .requestMatchers("/member/search/**").permitAll()
-                        .requestMatchers("/mailSend", "mailCheck", "/camp/search", "/camp/detail/go", "/oauth-login/member/loginProc", "/oauth-login/member/login", "\"/oauth-login/member/logoutProc\"").permitAll()
+                        .requestMatchers("/member/search/**", "/member/login").permitAll()
+                        .requestMatchers("/mailSend", "mailCheck", "/camp/search", "/camp/detail/go", "/oauth-login/member/loginProc", "/oauth-login/member/login", "/oauth-login/member/logoutProc").permitAll()
                         .requestMatchers( "/admin/supervisor/list", "/admin/supervisor/list/page", "/admin/adminAddProc").hasRole("SUPERVISOR")
                         .requestMatchers("/admin/login").rememberMe()
                         .requestMatchers("/admin/**").hasAnyRole("SUPERVISOR", "ADMIN")

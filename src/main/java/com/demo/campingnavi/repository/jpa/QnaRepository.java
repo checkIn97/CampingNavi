@@ -20,8 +20,8 @@ public interface QnaRepository extends JpaRepository<Qna, Integer> {
     @Query("SELECT q FROM Qna q WHERE q.type = ?1 AND q.member.username LIKE %?2% ORDER BY q.createdAt DESC")
     Page<Qna> findAllByUsername(String type, String username, Pageable pageable);
 
-    @Query("SELECT q FROM Qna q WHERE q.type = ?1 AND q.member.name LIKE %?2% ORDER BY q.createdAt DESC")
-    Page<Qna> findAllByName(String type, String name, Pageable pageable);
+    @Query("SELECT q FROM Qna q WHERE q.type = ?1 AND q.member.nickname LIKE %?2% ORDER BY q.createdAt DESC")
+    Page<Qna> findAllByNickName(String type, String nickname, Pageable pageable);
 
     @Query("SELECT q FROM Qna q WHERE q.type = ?1 AND q.title LIKE %?2% ORDER BY q.createdAt DESC")
     Page<Qna> findAllByTitle(String type, String title, Pageable pageable);

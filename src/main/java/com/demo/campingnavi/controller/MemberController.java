@@ -66,7 +66,7 @@ public class MemberController {
         if(result) {
             return "redirect:/member/login";
         } else {
-            return "redirect:joinAlertView";
+            return "redirect:/member/joinAlertView";
         }
     }
 

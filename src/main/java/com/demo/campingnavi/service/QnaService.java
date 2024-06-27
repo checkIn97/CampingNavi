@@ -17,7 +17,7 @@ public interface QnaService {
 
     public Page<Qna> findAllByUsername(String type, String username, Pageable pageable);
 
-    public Page<Qna> findAllByName(String type, String name, Pageable pageable);
+    public Page<Qna> findAllByNickName(String type, String nickname, Pageable pageable);
 
     public Page<Qna> findAllByTitle(String type, String title, Pageable pageable);
 

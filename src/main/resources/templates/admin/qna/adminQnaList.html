@@ -91,7 +91,7 @@
                 <select class="form-control mr-2" id="searchField" name="searchField">
                     <option value="">선택</option>
                     <option value="username">아이디</option>
-                    <option value="name">이름</option>
+                    <option value="nickname">닉네임</option>
                     <option value="title">제목</option>
                     <option value="content">내용</option>
                 </select>
@@ -145,6 +145,7 @@
                     tableHTML += '<thead><tr>';
                     tableHTML += '<th>번호</th>';
                     tableHTML += '<th colspan="2">아이디</th>';
+                    tableHTML += '<th colspan="2">닉네임</th>';
                     tableHTML += '<th>제목</th>';
                     tableHTML += '<th colspan="2">내용</th>';
                     tableHTML += '<th colspan="2">작성시간</th>'
@@ -157,14 +158,16 @@
                         tableHTML += '<td><span class="popularPosts">' + (index + 1) + '</span></td>';
                         tableHTML += '<td><a href="/admin/member/detail/' + qna.member.mseq + '"><span class="popularPosts">' + qna.member.username + '</span></a></td>';
                         tableHTML += '<td></td>';
+                        tableHTML += '<td><a href="/admin/member/detail/' + qna.member.mseq + '"><span class="popularPosts">' + qna.member.nickname + '</span></a></td>';
+                        tableHTML += '<td></td>';
                         tableHTML += '<td><a href="/qna/oneByone/detail/' + qna.qseq + '"><span class="popularPosts">' + (qna.title.length < 21 ? qna.title : qna.title.substring(0, 20) + '...') + '</span></a></td>';
                         tableHTML += '<td><span class="popularPosts">' + (qna.content.length < 21 ? qna.content : qna.content.substring(0, 20) + '...') + '</span></td>';
                         tableHTML += '<td></td>';
                         var formattedDate = moment(qna.createdAt).format('YYYY-MM-DD HH:mm:ss');
                         tableHTML += '<td><span class="popularPosts">' + formattedDate + '</span></td>';
                         tableHTML += '<td></td>';
-                        tableHTML += '<td><span class="popularPosts">' + qna.checkyn + '</span></td>';
-                        tableHTML += '<td><span class="popularPosts">' + qna.useyn + '</span></td>';
+                        tableHTML += '<td><span class="popularPosts">' + (qna.checkyn == 'y' ? '답변 완료' : '답변 대기') + '</span></td>';
+                        tableHTML += '<td><span class="popularPosts">' + (qna.useyn == 'y' ? '사용 중' : '삭제 완료') + '</span></td>';
                         tableHTML += '</tr>';
                     });
                     tableHTML += '</tbody></table>';
