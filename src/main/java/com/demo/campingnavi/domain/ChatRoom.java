@@ -33,7 +33,7 @@ public class ChatRoom {
     private Long reviewCount;
     @Column(columnDefinition = "INT default 0")
     private Long userCount;
-
+    private String owner;
     @ElementCollection
     private List<String> userList = new ArrayList<>();
     @ElementCollection

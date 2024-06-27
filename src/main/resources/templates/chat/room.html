@@ -165,7 +165,7 @@
     <div class="box" id="chat-participation">
         <h2 class="major">참여중인 채팅</h2>
         <span class="chat-participation-room" v-for="list in myRoomList" v-on:click="enterRoom(list.roomId)">
-        {{ list.name.length > 6 ? list.name.slice(0, 6) + '...' : list.name }}
+        {{ list.name }}
         </span>
     </div>
 </div>
@@ -252,6 +252,10 @@
                                 return;
                             } else {
                                 let sender = prompt('대화명을 입력해 주세요.\n' + '대화명을 입력하지 않을 시 로그인하신정보( ' + memberName + ' ) 으로 입장합니다.');
+                                if (sender === null) {
+                                    alert('입장이 취소되었습니다.');
+                                    return;
+                                }
                                 if (sender != "") {
                                     localStorage.setItem('wschat.sender', sender);
                                     localStorage.setItem('wschat.roomId', roomId);
@@ -263,10 +267,6 @@
                                     localStorage.setItem('wschat.roomId', roomId);
                                     localStorage.setItem('wschat.mseq', mseq)
                                     location.href = "/chat/room/enter/" + roomId;
-                                }
-                                if (sender === null) {
-                                    alert('입장이 취소되었습니다.');
-                                    return;
                                 }
                             }
                         }
