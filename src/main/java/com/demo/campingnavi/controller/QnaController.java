@@ -10,10 +10,13 @@ import com.demo.campingnavi.dto.ReplyVo;
 import com.demo.campingnavi.repository.jpa.QnaRepository;
 import com.demo.campingnavi.repository.jpa.ReplyRepository;
 import com.demo.campingnavi.service.QnaService;
+import com.demo.campingnavi.service.ReplyService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -22,6 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -34,6 +40,8 @@ public class QnaController {
     private ReplyRepository replyRepository;
     @Autowired
     private QnaRepository qnaRepository;
+    @Autowired
+    ReplyService replyService;
 
     @GetMapping("/home")
     public String qnaHomeView(Model model, HttpSession session) {
@@ -68,6 +76,8 @@ public class QnaController {
     @GetMapping("/oneByone/detail/{qseq}")
     public String qnaDetail(@PathVariable("qseq") int qseq, Model model, HttpSession session) {
         Member member = (Member) session.getAttribute("loginUser");
+        Boolean isAdmin = member.getRole().equals(Role.ADMIN.getKey()) || member.getRole().equals(Role.SUPERVISOR.getKey());
+        model.addAttribute("isAdmin", isAdmin);
 
         Qna qna = qnaService.findById(qseq);
 
@@ -90,6 +100,7 @@ public class QnaController {
         Qna qna = qnaService.findById(qseq);
         model.addAttribute("member", member);
         model.addAttribute("qna", qna);
+        model.addAttribute("img_file", qna.getImage() == null ? null : qna.getImage().substring(qna.getImage().indexOf("_") + 1));
 
         return "qna/qnaEdit";
     }
@@ -280,6 +291,7 @@ public class QnaController {
         return "qna/replyWrite";
     }
 
+    @Transactional
     @PostMapping("/reply/answer")
     public String replyAnswer(ReplyVo vo, Model model, HttpSession session,
                               @RequestParam("qseq") int qseq) {
@@ -323,9 +335,14 @@ public class QnaController {
 
     @GetMapping("/reply/paging")
     @ResponseBody
-    public Page<Reply> replyPaging(Pageable pageable, @RequestParam(value = "qseq") int qseq) {
+    public Map<String, Object> replyPaging(HttpSession session, Pageable pageable, @RequestParam(value = "qseq") int qseq) {
+        Map<String, Object> result = new HashMap<>();
+        Member member = (Member) session.getAttribute("loginUser");
+        Boolean isAdmin = member.getRole().equals(Role.ADMIN.getKey()) || member.getRole().equals(Role.SUPERVISOR.getKey());
+        result.put("isAdmin", isAdmin);
+        result.put("list", replyRepository.findAllByQna(qseq, pageable));
 
-        return replyRepository.findAllByQna(qseq, pageable);
+        return result;
     }
 
     @GetMapping("/reply/edit/{reply_id}")
@@ -363,13 +380,19 @@ public class QnaController {
         return "redirect:/qna/oneByone/detail/" + reply.getQna().getQseq();
     }
 
+    @Transactional
     @GetMapping("/reply/delete/{reply_id}")
     public String replyDelete(@PathVariable("reply_id") int reply_id) {
         Reply reply = replyRepository.findById(reply_id);
         Qna qna = qnaRepository.findById(reply.getQna().getQseq());
         reply.setUseyn("n");
-        qna.setCheckyn("n");
         replyRepository.save(reply);
+
+        List<Reply> replyList = replyService.getReplyListByQseq(qna.getQseq());
+        if (replyList.isEmpty()) {
+            qna.setCheckyn("n");
+            qnaRepository.save(qna);
+        }
 
         return "redirect:/qna/oneByone/detail/" + reply.getQna().getQseq();
     }

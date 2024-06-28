@@ -27,13 +27,11 @@
                 <div class="info">
                     <div class="space-between">
                         <div class="space-between-flex">
-                            작성자: <span
-                                th:text="${qna.member.name}">작성자명</span>
+                            <span th:text="'작성자 : '+${qna.member.name}">작성자명</span>
 
                         </div>
                         <div class="space-between-flex">
-                            작성일시: <span
-                                th:text="${#dates.format(qna.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
+                            <span th:text="'작성일시 : '+${#dates.format(qna.createdAt, 'yyyy-MM-dd HH:mm:ss')}">날짜시간</span>
                         </div>
                     </div>
                     <hr>
@@ -43,14 +41,12 @@
                 <input id="content2" type="hidden" th:value="${qna.content}"/>
                 <hr>
                 <div id="img-area">
-                    <img id="img" class="campAreaImg" th:src="@{/assets/qnaImages/} + ${qna.image}">
+                    <img id="img" class="campAreaImg" th:if="${qna.image != null}" th:src="@{/assets/qnaImages/} + ${qna.image}">
                     <input type="hidden" th:value="${qna.image != null ? 'y' : 'n'}" id="imgCheck">
                     <input type="hidden" th:value="${qna.useyn}" id="useyn">
                 </div>
-                <div id="none-img-area">
-                    <p class="campAreaImg">이미지가 없습니다.</p>
-                </div>
                 <input type="file" name="img">
+
                 <hr>
                 <div class="buttonContain button-full">
                     <!-- 작성자만 수정 및 삭제 버튼을 볼 수 있도록 -->
@@ -74,16 +70,18 @@
 <th:block th:insert="/insert/footer"></th:block>
 <script>
 
+    document.ready(function() {
+        if $("#")
+    });
+
     $(document).ready(function () {
         var isImg = $("#imgCheck").val();
         if (isImg == 'y') {
             $("#img-area").show();
             $("#img").show();
-            $("#none-img-area").hide();
         } else {
             $("#img-area").hide();
             $("#img").hide();
-            $("#none-img-area").show();
         }
     });
     function edit() {

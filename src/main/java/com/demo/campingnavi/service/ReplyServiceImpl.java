@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ReplyServiceImpl implements ReplyService{
 
@@ -26,5 +28,10 @@ public class ReplyServiceImpl implements ReplyService{
     @Override
     public Page<Reply> findAllByQna(int qseq, Pageable pageable) {
         return replyRepository.findAllByQna(qseq, pageable);
+    }
+
+    @Override
+    public List<Reply> getReplyListByQseq(int qseq) {
+        return replyRepository.getReplyListByQseq(qseq);
     }
 }
