@@ -104,6 +104,10 @@
                 alert('사용자 삭제 ' + response.result);
                 // 삭제 후 목록 다시 로드
                 updateUseyn(response.useyn)
+                let deleteBtn = document.getElementById('delete-btn');
+                let restoreBtn = document.getElementById('restore-btn');
+                restoreBtn.style.display = 'inline-block';
+                deleteBtn.style.display = 'none';
             },
             error: function (error) {
                 alert('사용자 데이터 전송 실패', error);
@@ -129,6 +133,10 @@
                 alert('사용자 복구 ' + response.result);
                 // 삭제 후 목록 다시 로드
                 updateUseyn(response.useyn)
+                let deleteBtn = document.getElementById('delete-btn');
+                let restoreBtn = document.getElementById('restore-btn');
+                restoreBtn.style.display = 'none';
+                deleteBtn.style.display = 'inline-block';
             },
             error: function (error) {
                 alert('사용자 데이터 전송 실패', error);

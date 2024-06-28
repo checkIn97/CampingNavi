@@ -55,11 +55,11 @@
                 <input checked class="detailBtn" id="myPageInfoBtn" name="btn" type="radio">
                 <label for="myPageInfoBtn">내 정보</label>
                 <input class="detailBtn" id="myPageReviewBtn" name="btn" type="radio">
-                <label for="myPageReviewBtn">내가 남긴 후기</label>
+                <label for="myPageReviewBtn" id="reviewLabel">내가 남긴 후기</label>
                 <input class="detailBtn" id="myPageSaveBtn" name="btn" type="radio">
-                <label for="myPageSaveBtn">찜한 목록 보기</label>
+                <label for="myPageSaveBtn" id="saveLabel">찜한 목록 보기</label>
                 <input class="detailBtn" id="qna" name="btn" type="radio">
-                <label for="qna">고객문의</label>
+                <label for="qna" id="qnaLabel">고객문의</label>
             </div>
         </div>
         <!--내 정보-->
@@ -78,12 +78,14 @@
                     <div id="memberSexRead"
                          th:text="${member.sex == 'm' ? '남' : (member.sex == 'f' ? '여' : '성별을 입력해주세요.')}"></div>
                     <div id="memberSexChange">
-                        남<input checked id="male" name="sex" th:value="m" type="radio"/>
-                        여<input id="female" name="sex" th:value="f" type="radio"/>
+                        남<input checked id="male" name="sex" value="m" type="radio"/>
+                        여<input id="female" name="sex" value="f" type="radio"/>
+                        <input type="hidden" id="memberSex" th:value="${member.sex}">
                     </div>
                     <hr>
                     <div class="myPageTitle">생년월일</div>
                     <div id="memberBirthRead" th:text="${member.birth}"></div>
+                    <input type="hidden" name="birth" th:value="${member.birth}">
                     <hr>
                 </div>
 
@@ -95,25 +97,26 @@
                     <div id="memberPhoneChange">
                         <select  type="tel" class="webkit" name="phone" id="phone">
                             <option value="">선택</option>
-                            <option value="010">010</option>
-                            <option value="02">02) 서울</option>
-                            <option value="031">031) 경기</option>
-                            <option value="032">032) 인천</option>
-                            <option value="033">033) 강원</option>
-                            <option value="041">041) 충남</option>
-                            <option value="042">042) 대전</option>
-                            <option value="043">043) 충북</option>
-                            <option value="051">051) 부산</option>
-                            <option value="052">052) 울산</option>
-                            <option value="053">053) 대구</option>
-                            <option value="054">054) 경북</option>
-                            <option value="055">055) 경남</option>
-                            <option value="061">061) 전남</option>
-                            <option value="062">062) 광주</option>
-                            <option value="063">063) 전북</option>
-                            <option value="064">064) 제주</option>
+                            <option id="010" value="010">010</option>
+                            <option id="02" value="02">02) 서울</option>
+                            <option id="031" value="031">031) 경기</option>
+                            <option id="032" value="032">032) 인천</option>
+                            <option id="033" value="033">033) 강원</option>
+                            <option id="041" value="041">041) 충남</option>
+                            <option id="042" value="042">042) 대전</option>
+                            <option id="043" value="043">043) 충북</option>
+                            <option id="051" value="051">051) 부산</option>
+                            <option id="052" value="052">052) 울산</option>
+                            <option id="053" value="053">053) 대구</option>
+                            <option id="054" value="054">054) 경북</option>
+                            <option id="055" value="055">055) 경남</option>
+                            <option id="061" value="061">061) 전남</option>
+                            <option id="062" value="062">062) 광주</option>
+                            <option id="063" value="063">063) 전북</option>
+                            <option id="064" value="064">064) 제주</option>
                         </select>
-                        <input th:value="${member.phone != null ? member.phone : ''}" type="text" class="myPageInput" name="phone2" id="phone2">
+                        <input type="hidden" id="prefixPhone" th:value="${member.phone.substring(0, 3)}">
+                        <input th:value="${member.phone != null ? member.phone.substring(3, member.phone.length()) : ''}" type="text" class="myPageInput" name="phone2" id="phone2">
                     </div>
                     <hr>
                     <div class="myPageTitle">이메일</div>
@@ -224,7 +227,8 @@
     <div class="buttonContain">
         <button class="mainBtn" id="myPageChange" type="button">수정하기</button>
         <button class="mainBtn" id="myPageRead" type="button">수정완료</button>
-        <button onclick="goBack()" type="button">뒤로가기</button>
+        <button class="mainBtn" id="myPageCancle" type="button">수정취소</button>
+        <button onclick="goBack()" type="button" id="goToback">뒤로가기</button>
     </div>
 </div>
 
@@ -492,6 +496,9 @@
         var myPageReview = document.getElementById('myPageReview');
         var myPageSave = document.getElementById('myPageSave');
         var myPageQna = document.getElementById('myPageQna');
+        var myPageChange = document.getElementById('myPageChange');
+        var myPageRead = document.getElementById('myPageRead');
+        var myPageCancle = document.getElementById('myPageCancle');
 
         // myPageInfoBtn을 클릭하면 myPageInfo를 보이게 하고, 나머지는 숨깁니다.
         myPageInfoBtn.addEventListener('click', function () {
@@ -499,6 +506,9 @@
             myPageReview.style.display = 'none';
             myPageSave.style.display = 'none';
             myPageQna.style.display = 'none';
+            myPageChange.style.display = 'block';
+            myPageRead.style.display='none';
+            myPageCancle.style.display='none';
         });
 
         // myPageReviewBtn을 클릭하면 myPageReview를 보이게 하고, 나머지는 숨깁니다.
@@ -507,6 +517,9 @@
             myPageReview.style.display = 'block';
             myPageSave.style.display = 'none';
             myPageQna.style.display = 'none';
+            myPageChange.style.display = 'none';
+            myPageRead.style.display = 'none';
+            myPageCancle.style.display='none';
         });
 
         // myPageSaveBtn을 클릭하면 myPageSave를 보이게 하고, 나머지는 숨깁니다.
@@ -515,6 +528,9 @@
             myPageReview.style.display = 'none';
             myPageQna.style.display = 'none';
             myPageSave.style.display = 'block';
+            myPageChange.style.display = 'none';
+            myPageRead.style.display = 'none';
+            myPageCancle.style.display='none';
         });
 
         // qnaBtn을 클릭하면 myPgaeQna를 보이게 하고, 나머지는 숨깁니다.
@@ -523,6 +539,9 @@
             myPageReview.style.display = 'none';
             myPageSave.style.display = 'none';
             myPageQna.style.display = 'block';
+            myPageChange.style.display = 'none';
+            myPageRead.style.display = 'none';
+            myPageCancle.style.display='none';
         })
     }
 </script>
@@ -596,6 +615,9 @@
     }
 
     document.getElementById('myPageChange').addEventListener('click', function () {
+        let prefix = $("#prefixPhone").val();
+        let sex = $("#memberSex").val();
+
         // Change가 붙은 요소들을 block으로 설정
         document.getElementById('memberSexChange').style.display = 'block';
         document.getElementById('memberPhoneChange').style.display = 'block';
@@ -605,6 +627,18 @@
         document.getElementById('myPageRead').style.display = 'block';
         document.getElementById('myPageProPicture').style.display = 'block';
         document.getElementById('myPageProPicture').style.display = 'flex';
+        document.getElementById('phone').value = prefix;
+        document.getElementById('myPageCancle').style.display='block';
+
+        if (sex === 'm') {
+            document.getElementById('male').checked = true;
+            document.getElementById('female').checked = false;
+        } else {
+            document.getElementById('male').checked = false;
+            document.getElementById('female').checked = true;
+        }
+
+
 
         // Read가 붙은 요소들을 none으로 설정
         document.getElementById('memberSexRead').style.display = 'none';
@@ -613,6 +647,11 @@
         document.getElementById('memberAddr2Read').style.display = 'none';
         document.getElementById('memberNickNameRead').style.display = 'none';
         document.getElementById('myPageChange').style.display = 'none';
+        document.getElementById('goToback').style.display = 'none';
+
+        $("#reviewLabel").hide();
+        $("#saveLabel").hide();
+        $("#qnaLabel").hide();
     });
 
     document.getElementById('myPageRead').addEventListener('click', function () {
@@ -653,25 +692,22 @@
 
         if (nickname == "") {
             alert("사이트에서 사용할 닉네임을 입력해주세요!");
-            $("#nickname").focus()
+            $("#nickname").focus();
         } else if (nickname != $("#originNickname").val() && nickname != $("#hiddenNickname").val()) {
             alert("닉네임 중복확인을 진행해주세요!");
             $("#nickname").focus();
         } else if (birth == "" || birth == "n") {
             alert("생일을 입력해주세요!");
-            $("#birth").focus()
+            $("#birth").focus();
         } else if (phone == "" || phone == "n") {
             alert("전화번호를 입력해주세요!");
-            $("#phone").focus()
+            $("#phone").focus();
         } else if (phonePattern.test(phone2) !== true) {
             alert("전화번호를 입력해주세요!");
-            $("#phone2").focus()
+            $("#phone2").focus();
         } else if (addr1 == "" || addr1 == "n") {
             alert("도로명주소를 입력해주세요!");
-            $("#addr1").focus()
-        } else if (addr2.length < 2) {
-            alert("상세주소를 입력해주세요!");
-            $("#addr2").focus();
+            $("#addr1").focus();
         } else {
             $.ajax({
                 url: "/member/mypage/edit/detail",
@@ -681,7 +717,7 @@
                 contentType: false,
                 success: function (response) {
                     document.getElementById('memberAddr2Read').textContent = response.addr2;
-                    document.getElementById('memberSexRead').textContent = response.sex;
+                    document.getElementById('memberSexRead').textContent = response.sex == 'm' ? '남' : '여';
                     document.getElementById('memberAddr1Read').textContent = response.addr1;
                     document.getElementById('memberNickNameRead').textContent = response.nickname;
                     document.getElementById('memberPhoneRead').textContent = response.phone + response.phone2;
@@ -702,7 +738,15 @@
                     document.getElementById('memberAddr1Read').style.display = 'block';
                     document.getElementById('memberAddr2Read').style.display = 'block';
                     document.getElementById('memberNickNameRead').style.display = 'block';
+                    document.getElementById('goToback').style.display = 'block';
+
+                    $("#reviewLabel").show();
+                    $("#saveLabel").show();
+                    $("#qnaLabel").show();
+
+
                     document.getElementById('myPageChange').style.display = 'block';
+                    document.getElementById('myPageCancle').style.display='none';
                     alert("수정완료");
                 },
                 error: function (error) {
@@ -712,6 +756,31 @@
             })
         }
     });
+
+    document.getElementById('myPageCancle').addEventListener('click', function () {
+        // Change가 붙은 요소들을 block으로 설정
+        document.getElementById('memberSexChange').style.display = 'none';
+        document.getElementById('memberPhoneChange').style.display = 'none';
+        document.getElementById('memberAddr1Change').style.display = 'none';
+        document.getElementById('memberAddr2Change').style.display = 'none';
+        document.getElementById('memberNickNameChange').style.display = 'none';
+        document.getElementById('myPageRead').style.display = 'none';
+        document.getElementById('myPageProPicture').style.display = 'none';
+        document.getElementById('goToback').style.display = 'block';
+
+        // Read가 붙은 요소들을 none으로 설정
+        $("#reviewLabel").show();
+        $("#saveLabel").show();
+        $("#qnaLabel").show();
+
+        document.getElementById('memberSexRead').style.display = 'block';
+        document.getElementById('memberPhoneRead').style.display = 'block';
+        document.getElementById('memberAddr1Read').style.display = 'block';
+        document.getElementById('memberAddr2Read').style.display = 'block';
+        document.getElementById('memberNickNameRead').style.display = 'block';
+        document.getElementById('myPageChange').style.display = 'block';
+        document.getElementById('myPageCancle').style.display='none';
+    })
 
     document.getElementById('myPagePictureUploadInput').addEventListener('change', function (e) {
         var file = e.target.files[0];
@@ -746,6 +815,10 @@
         }
 
 
+    })
+
+    $(document).ready(function () {
+        document.getElementById('myPageCancle').style.display = 'none';
     })
 </script>
 

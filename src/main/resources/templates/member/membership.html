@@ -194,6 +194,8 @@
     // 모달 닫기
     function closeModal() {
         var modal = document.getElementById('verificationModal');
+        var modalInput = $("#verificationCodeInput");
+        modalInput.val("");
         modal.style.display = 'none';
         clearInterval(countdown); // 카운트 다운 정지
     }

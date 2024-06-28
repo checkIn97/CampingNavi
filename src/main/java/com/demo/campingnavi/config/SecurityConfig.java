@@ -85,6 +85,7 @@ public class SecurityConfig {
                         )
                         .permitAll()
                 );
+
         http
                 .csrf((auth) -> auth.disable()
                 ); // 테스트하기 위해 잠시 disable
