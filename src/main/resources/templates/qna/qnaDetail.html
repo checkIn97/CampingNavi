@@ -5,7 +5,8 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
     <link href="/assets/css/main.css" rel="stylesheet"/>
-    <link href="/assets/css/bg/BG.css" rel="stylesheet"/>
+    <link href="/assets/css/bg/BG.css" rel="stylesheet" th:if="${member.role == 'ROLE_USER'}"/>
+    <link href="/assets/css/bg/adminBG.css" rel="stylesheet" th:unless="${member.role == 'ROLE_USER'}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <title>CampNavi</title>
