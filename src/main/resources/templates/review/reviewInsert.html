@@ -18,32 +18,31 @@
 <th:block th:insert="insert/header.html"></th:block>
 
 <article class="box centerBox review-box">
-    <form name="form" method="post" enctype="multipart/form-data" action="/review/insert">
+    <form name="form" method="post" enctype="multipart/form-data" action="/review/insert" onsubmit="return validateForm()">
 
-            <h2 class="review-title">캠핑장 리뷰 작성</h2>
-            <hr>
+        <h2 class="review-title">캠핑장 리뷰 작성</h2>
+        <hr>
 
-            <div class="review-insert-title">캠핑장 이름</div>
-            <input class="webkit review-insert-input" type="text" id="camp" name="camp" th:value="${camp.name}" readonly>
-            <input type="hidden" name="cseq" th:value="${camp.cseq}">
+        <div class="review-insert-title">캠핑장 이름</div>
+        <input class="webkit review-insert-input" type="text" id="camp" name="camp" th:value="${camp.name}" readonly>
+        <input type="hidden" name="cseq" th:value="${camp.cseq}">
         <hr>
         <div>
-           <div class="review-insert-title">Title</div>
+            <div class="review-insert-title">Title</div>
             <input class="webkit review-insert-input" type="text" id="title" name="title">
         </div>
         <hr>
         <div class="buttonContain">
-         <div class="review-insert-title review-insert-margin-right review-insert-rating-title">평점</div>
-        <div id="rating_area"></div>
+            <div class="review-insert-title review-insert-margin-right review-insert-rating-title">평점</div>
+            <div id="rating_area"></div>
         </div>
         <hr>
         <div class="post-form">
             <textarea id="summernote" name="content"></textarea>
         </div>
         <div class="buttonContain review-topMargin">
-        <button type="submit" class="mainBtn">게시글 등록</button>
+            <button type="submit" class="mainBtn">게시글 등록</button>
             <button type="button" onclick="window.history.go(-1)" class="button">돌아가기</button>
-
         </div>
     </form>
 </article>
@@ -115,14 +114,22 @@
         });
     }
 
+    function validateForm() {
+        var content = $('#summernote').val();
+        if ($.trim(content) === '') {
+            alert("내용을 입력해 주세요.");
+            return false;
+        }
+        return true;
+    }
 
     function reloadRating(current, index) {
         $.ajax({
             type: "POST",
             url: "/review/reloadRating",
             data: {
-               current: current,
-               index: index
+                current: current,
+                index: index
             },
             success: function(data) {
                 let starScore = data.starScore;
