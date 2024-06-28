@@ -172,9 +172,14 @@
                         faqArea.append('<span>자주 묻는 질문을 등록해주세요.</span>');
                     } else {
                         faqs.forEach(function (faq) {
-                            faqArea.append('<details><summary class="faqTitle">' + faq.title + '</summary>' +
-                                '<span class="faqSpan"><div class="faqContent">' + faq.content + '' +
-                                '</div><img class="faqImg webkit" src="/assets/qnaImages/' + faq.image + '"></span></details>');
+                            let tmp_html = "";
+                            tmp_html += "<details><summary class=\"faqTitle\">" + faq.title + "</summary>";
+                            tmp_html += "<span class=\"faqSpan\"><div class=\"faqContent\">" + faq.content + "</div>";
+                            if (faq.image != null) {
+                                tmp_html += "<img class=\"faqImg webkit\" src=\"/assets/qnaImages/" + faq.image + "\">";
+                            }
+                            tmp_html += "</span></details>";
+                            faqArea.append(tmp_html);
                         });
                     }
                     var pagination_FAQ = $("#pagination_FAQ");

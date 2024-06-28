@@ -26,18 +26,16 @@
                 <div class="info">
                     <div class="space-between">
                         <div class="space-between-flex">
-                            작성자: <span
-                                th:text="${qna.member.name}">작성자명</span>
+                            <span th:text="'작성자 : '+${qna.member.name}">작성자명</span>
 
                         </div>
                         <div class="space-between-flex">
-                            작성일시: <span
-                                th:text="${qna.createdAt}">날짜시간</span>
+                            <span th:text="'작성일시 : '+${qna.createdAt}">날짜시간</span>
                         </div>
                     </div>
-                    <div>
-                        <img class="campAreaImg" th:src="@{/assets/qnaImages/} + ${qna.image}" th:if="${qna.image != null}">
-                        <p class="campAreaImg" th:unless="${qna.image != null}">이미지가 없습니다.</p>
+                    <div th:if="${qna.image != null}">
+                        <hr>
+                        <img class="campAreaImg" th:src="@{/assets/qnaImages/} + ${qna.image}">
                     </div>
                     <hr>
                 </div>
