@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="kr" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="kr" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8"/>
@@ -26,27 +26,31 @@
     <div class="slideshow-container">
         <img alt="arrowL" class="arrow" id="arrowL" src="/assets/images/icon/arrowL.png">
         <img alt="arrowR" class="arrow" id="arrowR" src="/assets/images/icon/arrowR.png">
+        <div class="loading" style="display: block;">
+            <img class="camp-loading" src="/assets/images/bg/lodingBg.gif">
+        </div>
         <div class="slideshow">
             <div class="slide" th:each="image : ${imageUrls}">
-                <img class="detailImg" th:src="${image.imageUrl}">
+                <img class="detailImg" onload="hideLoading()" style="display: none;" th:src="${image.imageUrl}">
             </div>
         </div>
-        <!-- 슬라이드 쇼의 하단에 동그라미를 추가 -->
-        <div class="dots" id="dots">
-            <!-- 각 슬라이드에 대응하는 동그라미를 추가 -->
-            <div class="dot" th:each="image, index : ${imageUrls}" th:id="'dot' + ${index}"></div>
-        </div>
+    </div>
+    <!-- 슬라이드 쇼의 하단에 동그라미를 추가 -->
+    <div class="dots" id="dots">
+        <!-- 각 슬라이드에 대응하는 동그라미를 추가 -->
+        <div class="dot" th:each="image, index : ${imageUrls}" th:id="'dot' + ${index}"></div>
+    </div>
 
-        <div th:each="image, index : ${imageUrls}">
-            <input name="slide" th:checked="${index == 0}" th:id="'radio' + ${index}" type="radio">
-        </div>
+    <div th:each="image, index : ${imageUrls}">
+        <input name="slide" th:checked="${index == 0}" th:id="'radio' + ${index}" type="radio">
     </div>
 
     <div class="buttonContain">
         <th:block th:each="camp : ${camps}">
             <h1 class="campingName" th:text="${camp.facltNm}">캠핑장 이름이 들어가는 곳</h1>
             <!--찜하기 버튼-->
-            <input class="saveInput" th:checked="${jjimChecked}" th:id="'saveBtn-' + ${cseq}" th:name="'saveBtn-' + ${cseq}"
+            <input class="saveInput" th:checked="${jjimChecked}" th:id="'saveBtn-' + ${cseq}"
+                   th:name="'saveBtn-' + ${cseq}"
                    type="checkbox">
             <label class="saveLabel" id="saveLabel" th:data-cseq="${cseq}" th:for="'saveBtn-' + ${cseq}">
                 <img class="saveBtn saveBtnImg"
@@ -120,14 +124,15 @@
         </th:block>
     </div>
     <div class="buttonContain">
-            <button class="mainBtn" id="reservationBtn" target="_blank" th:each="camp : ${camps}" th:if="${not #strings.isEmpty(camp.resveUrl)}" th:data-url="${camp.resveUrl}" type="button">
-                예약하기
-            </button>
+        <button class="mainBtn" id="reservationBtn" target="_blank" th:data-url="${camp.resveUrl}"
+                th:each="camp : ${camps}" th:if="${not #strings.isEmpty(camp.resveUrl)}" type="button">
+            예약하기
+        </button>
         <button id="goingBtn" type="button">커뮤니티</button>
     </div>
 
     <div class="buttonContain" id="detailContain">
-        <input class="detailBtn" id="viewDetailBtn" name="btn" type="radio" checked>
+        <input checked class="detailBtn" id="viewDetailBtn" name="btn" type="radio">
         <label for="viewDetailBtn">상세보기</label>
         <input class="detailBtn" id="reviewBtn" name="btn" type="radio">
         <label for="reviewBtn">후기</label>
@@ -214,24 +219,23 @@
         </a>
 
         <div class="reviewList">
-        <!-- 리스트 영역 -->
-        <div id="reviewList"></div>
+            <!-- 리스트 영역 -->
+            <div id="reviewList"></div>
 
-        <!-- 페이지 영역 -->
-        <div class="page-box">
-            <img class="icon width-rem1" id="prevBtn" src="/assets/images/icon/arrowL.png">
-            <div id="pagination" class="page-numbers"></div> <!-- 페이지 숫자가 들어갈 영역 -->
-            <img class="icon width-rem1" id="nextBtn" src="/assets/images/icon/arrowR.png">
-            <!-- hidden inputs -->
-            <input type="hidden" id="currentPage" name="currentPage" value="1">
-            <input type="hidden" id="maxPage" name="maxPage" value="1">
+            <!-- 페이지 영역 -->
+            <div class="page-box">
+                <img class="icon width-rem1" id="prevBtn" src="/assets/images/icon/arrowL.png">
+                <div class="page-numbers" id="pagination"></div> <!-- 페이지 숫자가 들어갈 영역 -->
+                <img class="icon width-rem1" id="nextBtn" src="/assets/images/icon/arrowR.png">
+                <!-- hidden inputs -->
+                <input id="currentPage" name="currentPage" type="hidden" value="1">
+                <input id="maxPage" name="maxPage" type="hidden" value="1">
+            </div>
         </div>
-    </div>
-
 
 
     </div>
-    </div>
+</div>
 
 </div>
 
@@ -299,11 +303,11 @@
         let endPage = currentPage + displayRange;
         if (startPage < 1) {
             startPage = 1;
-            endPage = Math.min(startPage + displayRange*2, maxPage);
+            endPage = Math.min(startPage + displayRange * 2, maxPage);
         }
         if (endPage > maxPage) {
             endPage = maxPage;
-            startPage = Math.max(endPage - displayRange*2, 1);
+            startPage = Math.max(endPage - displayRange * 2, 1);
         }
 
         // 시작 페이지와 끝 페이지 사이에 페이지 버튼 생성
@@ -520,6 +524,22 @@
         const url = `/chat/room?cseq=${cseq}&campName=${encodeURIComponent(campName)}`;
         window.location.href = url;
     });
+
+    function hideLoading() {
+        // 모든 이미지가 로드되었는지 확인합니다.
+        var allImagesLoaded = Array.from(document.querySelectorAll('.detailImg')).every(function (img) {
+            return img.complete;
+        });
+
+        // 모든 이미지가 로드되었다면 로딩 이미지를 숨깁니다.
+        if (allImagesLoaded) {
+            document.querySelector('.loading').style.display = 'none';
+            // 모든 실제 이미지를 보여줍니다.
+            Array.from(document.querySelectorAll('.detailImg')).forEach(function (img) {
+                img.style.display = 'block';
+            });
+        }
+    }
 </script>
 </body>
 </html>

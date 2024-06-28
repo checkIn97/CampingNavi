@@ -746,6 +746,10 @@ input[name="slide"] {
 
 /*CampDetail*/
 
+.camp-loading {
+    width: 50rem;
+}
+
 .imgIcon {
     width: 20px;
 }
