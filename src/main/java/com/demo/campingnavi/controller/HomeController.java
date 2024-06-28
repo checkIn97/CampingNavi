@@ -42,4 +42,9 @@ public class HomeController {
         System.out.println(nickname);
         return result;
     }
+
+    @RequestMapping("/loding")
+    public String loding() {
+        return "lodingPage";
+    }
 }
