@@ -1422,6 +1422,7 @@ h1 {
     /*position: relative;*/
     width: 40%;
     margin: auto;
+    height: 50rem;
 }
 
 
@@ -1467,8 +1468,25 @@ h1 {
 }
 
 .myPage-review-box {
-    height: 40rem;
+    height: 39rem;
     overflow: scroll;
+}
+
+.myPage-review-box::-webkit-scrollbar {
+    width: 2px; /* 원하는 스크롤바의 너비를 설정하세요 */
+}
+
+.myPage-review-box::-webkit-scrollbar-track {
+    background: transparent; /* 원하는 스크롤바 트랙의 배경색을 설정하세요 */
+}
+
+.myPage-review-box::-webkit-scrollbar-thumb {
+    background: #888; /* 원하는 스크롤바 핸들의 배경색을 설정하세요 */
+    border-radius: 1rem;
+}
+
+.myPage-review-box::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 원하는 스크롤바 핸들의 호버 배경색을 설정하세요 */
 }
 
 .myPageBox {
