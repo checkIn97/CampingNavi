@@ -101,36 +101,41 @@ public class QnaController {
         Qna qna = qnaService.findById(qseq);
         model.addAttribute("member", member);
         model.addAttribute("qna", qna);
-        model.addAttribute("img_file", qna.getImage() == null ? null : qna.getImage().substring(qna.getImage().indexOf("_") + 1));
+        model.addAttribute("img_file", qna.getImage() == null ? "파일 없음" : qna.getImage().substring(qna.getImage().indexOf("_") + 1));
+        model.addAttribute("isEmpty", qna.getImage() == null);
 
         return "qna/qnaEdit";
     }
 
     @PostMapping("/detail/edit")
-    public String editQna(QnaVo vo, HttpSession session, Model model) {
+    public String editQna(QnaVo vo, HttpSession session, Model model, @RequestParam("isEmpty") boolean isEmpty) {
 
         Member member = (Member) session.getAttribute("loginUser");
         Qna qna = qnaService.findById(vo.getQseq());
         if(qna.getMember().getMseq() == member.getMseq() || member.getRole().equals(Role.ADMIN.getKey()) || member.getRole().equals(Role.SUPERVISOR.getKey())) {
             qna.setTitle(vo.getTitle());
             qna.setContent(vo.getContent());
-            if (!vo.getImg().isEmpty()) {
-                String fileName = vo.getImg().getOriginalFilename();
-                String uuid = UUID.randomUUID().toString();
-                String saveName = uuid + "_" + fileName;
-                qna.setImage(saveName);
-                try {
-                    String uploadPath = PathConfig.intelliJPath_QNA + saveName;
-                    boolean exists = PathConfig.isExistsPath();
-                    if(exists) {
-                        vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
-                    } else {
-                        uploadPath = PathConfig.eclipsePath_QNA + saveName;
-                        vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+            if (!isEmpty) {
+                if (!vo.getImg().isEmpty()) {
+                    String fileName = vo.getImg().getOriginalFilename();
+                    String uuid = UUID.randomUUID().toString();
+                    String saveName = uuid + "_" + fileName;
+                    qna.setImage(saveName);
+                    try {
+                        String uploadPath = PathConfig.intelliJPath_QNA + saveName;
+                        boolean exists = PathConfig.isExistsPath();
+                        if(exists) {
+                            vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+                        } else {
+                            uploadPath = PathConfig.eclipsePath_QNA + saveName;
+                            vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+                        }
+                    } catch (IllegalStateException | IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IllegalStateException | IOException e) {
-                    e.printStackTrace();
                 }
+            } else {
+                qna.setImage(null);
             }
 
             qnaService.saveQna(qna);
@@ -195,6 +200,7 @@ public class QnaController {
     @GetMapping("/faq/writeView")
     public String faqWriteView(HttpSession session, Model model) {
         Member member = (Member) session.getAttribute("loginUser");
+        model.addAttribute("isEmpty", true);
         model.addAttribute("member", member);
 
         return "qna/writeFAQ";
@@ -203,13 +209,14 @@ public class QnaController {
     @GetMapping("/oneByone/writeView")
     public String qnaWriteView(HttpSession session, Model model) {
         Member member = (Member) session.getAttribute("loginUser");
+        model.addAttribute("isEmpty", true);
         model.addAttribute("member", member);
 
         return "qna/writeQNA";
     }
 
     @PostMapping("/faq/write")
-    public String writeFAQ(QnaVo vo, HttpSession session, Model model) {
+    public String writeFAQ(QnaVo vo, HttpSession session, Model model, @RequestParam("isEmpty") boolean isEmpty) {
         Member member = (Member) session.getAttribute("loginUser");
 
         Qna qna = Qna.builder()
@@ -221,22 +228,24 @@ public class QnaController {
                 .useyn("y")
                 .build();
 
-        if (!vo.getImg().isEmpty()) {
-            String fileName = vo.getImg().getOriginalFilename();
-            String uuid = UUID.randomUUID().toString();
-            String saveName = uuid + "_" + fileName;
-            qna.setImage(saveName);
-            try {
-                String uploadPath = PathConfig.intelliJPath_QNA + saveName;
-                boolean exists = PathConfig.isExistsPath();
-                if(exists) {
-                    vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
-                } else {
-                    uploadPath = PathConfig.eclipsePath_QNA + saveName;
-                    vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+        if (!isEmpty) {
+            if (!vo.getImg().isEmpty()) {
+                String fileName = vo.getImg().getOriginalFilename();
+                String uuid = UUID.randomUUID().toString();
+                String saveName = uuid + "_" + fileName;
+                qna.setImage(saveName);
+                try {
+                    String uploadPath = PathConfig.intelliJPath_QNA + saveName;
+                    boolean exists = PathConfig.isExistsPath();
+                    if(exists) {
+                        vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+                    } else {
+                        uploadPath = PathConfig.eclipsePath_QNA + saveName;
+                        vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+                    }
+                } catch (IllegalStateException | IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IllegalStateException | IOException e) {
-                e.printStackTrace();
             }
         }
 
@@ -246,7 +255,7 @@ public class QnaController {
     }
 
     @PostMapping("/oneByone/write")
-    public String writeQNA(QnaVo vo, HttpSession session, Model model) {
+    public String writeQNA(QnaVo vo, HttpSession session, Model model, @RequestParam("isEmpty") boolean isEmpty) {
         Member member = (Member) session.getAttribute("loginUser");
         Qna qna = Qna.builder()
                 .member(member)
@@ -257,22 +266,24 @@ public class QnaController {
                 .useyn("y")
                 .build();
 
-        if (!vo.getImg().isEmpty()) {
-            String fileName = vo.getImg().getOriginalFilename();
-            String uuid = UUID.randomUUID().toString();
-            String saveName = uuid + "_" + fileName;
-            qna.setImage(saveName);
-            try {
-                String uploadPath = PathConfig.intelliJPath_QNA + saveName;
-                boolean exists = PathConfig.isExistsPath();
-                if(exists) {
-                    vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
-                } else {
-                    uploadPath = PathConfig.eclipsePath_QNA + saveName;
-                    vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+        if (!isEmpty) {
+            if (!vo.getImg().isEmpty()) {
+                String fileName = vo.getImg().getOriginalFilename();
+                String uuid = UUID.randomUUID().toString();
+                String saveName = uuid + "_" + fileName;
+                qna.setImage(saveName);
+                try {
+                    String uploadPath = PathConfig.intelliJPath_QNA + saveName;
+                    boolean exists = PathConfig.isExistsPath();
+                    if(exists) {
+                        vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+                    } else {
+                        uploadPath = PathConfig.eclipsePath_QNA + saveName;
+                        vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+                    }
+                } catch (IllegalStateException | IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IllegalStateException | IOException e) {
-                e.printStackTrace();
             }
         }
 
@@ -288,6 +299,7 @@ public class QnaController {
         Qna qna = qnaService.findById(qseq);
         model.addAttribute("qna", qna);
         model.addAttribute("member", member);
+        model.addAttribute("isEmpty", true);
 
         return "qna/replyWrite";
     }
@@ -295,7 +307,7 @@ public class QnaController {
     @Transactional
     @PostMapping("/reply/answer")
     public String replyAnswer(ReplyVo vo, Model model, HttpSession session,
-                              @RequestParam("qseq") int qseq) {
+                              @RequestParam("qseq") int qseq, @RequestParam("isEmpty") boolean isEmpty) {
         Member member = (Member) session.getAttribute("loginUser");
         Qna qna = qnaService.findById(qseq);
         qna.setCheckyn("y");
@@ -308,22 +320,24 @@ public class QnaController {
                 .member(member)
                 .build();
 
-        if (!vo.getImg().isEmpty()) {
-            String fileName = vo.getImg().getOriginalFilename();
-            String uuid = UUID.randomUUID().toString();
-            String saveName = uuid + "_" + fileName;
-            reply.setImg(saveName);
-            try {
-                String uploadPath = PathConfig.intelliJPath_REPLY + saveName;
-                boolean exists = PathConfig.isExistsPath();
-                if(exists) {
-                    vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
-                } else {
-                    uploadPath = PathConfig.eclipsePath_REPLY + saveName;
-                    vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+        if (!isEmpty) {
+            if (!vo.getImg().isEmpty()) {
+                String fileName = vo.getImg().getOriginalFilename();
+                String uuid = UUID.randomUUID().toString();
+                String saveName = uuid + "_" + fileName;
+                reply.setImg(saveName);
+                try {
+                    String uploadPath = PathConfig.intelliJPath_REPLY + saveName;
+                    boolean exists = PathConfig.isExistsPath();
+                    if(exists) {
+                        vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+                    } else {
+                        uploadPath = PathConfig.eclipsePath_REPLY + saveName;
+                        vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+                    }
+                } catch (IllegalStateException | IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IllegalStateException | IOException e) {
-                e.printStackTrace();
             }
         }
 
@@ -351,32 +365,39 @@ public class QnaController {
         Reply reply = replyRepository.findById(reply_id);
 
         model.addAttribute("reply", reply);
+        model.addAttribute("img_file", reply.getImg() == null ? "파일 없음" : reply.getImg().substring(reply.getImg().indexOf("_") + 1));
+        model.addAttribute("isEmpty", reply.getImg() == null);
         return "qna/replyEdit";
     }
 
     @PostMapping("/reply/edit")
-    public String replyEdit(ReplyVo vo, Model model) {
+    public String replyEdit(ReplyVo vo, Model model, @RequestParam("isEmpty") boolean isEmpty) {
         Reply reply = replyRepository.findById(vo.getReply_id());
         reply.setContent(vo.getContent());
 
-        if(!vo.getImg().isEmpty()) {
-            String fileName = vo.getImg().getOriginalFilename();
-            String uuid = UUID.randomUUID().toString();
-            String saveName = uuid + "_" + fileName;
-            reply.setImg(saveName);
-            try {
-                String uploadPath = PathConfig.intelliJPath_REPLY + saveName;
-                boolean exists = PathConfig.isExistsPath();
-                if(exists) {
-                    vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
-                } else {
-                    uploadPath = PathConfig.eclipsePath_REPLY + saveName;
-                    vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+        if (!isEmpty) {
+            if(!vo.getImg().isEmpty()) {
+                String fileName = vo.getImg().getOriginalFilename();
+                String uuid = UUID.randomUUID().toString();
+                String saveName = uuid + "_" + fileName;
+                reply.setImg(saveName);
+                try {
+                    String uploadPath = PathConfig.intelliJPath_REPLY + saveName;
+                    boolean exists = PathConfig.isExistsPath();
+                    if(exists) {
+                        vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+                    } else {
+                        uploadPath = PathConfig.eclipsePath_REPLY + saveName;
+                        vo.getImg().transferTo(new File(PathConfig.realPath(uploadPath)));
+                    }
+                } catch (IllegalStateException | IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IllegalStateException | IOException e) {
-                e.printStackTrace();
             }
+        } else {
+            reply.setImg(null);
         }
+
         replyRepository.save(reply);
         return "redirect:/qna/oneByone/detail/" + reply.getQna().getQseq();
     }

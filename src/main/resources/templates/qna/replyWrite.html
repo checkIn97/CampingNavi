@@ -44,7 +44,11 @@
                 <hr>
                 <textarea class="qna-content" id="content" name="content"></textarea>
                 <hr>
-                <input type="file" name="img">
+                <button type="button" id="input_file">파일 첨부</button>
+                <input type="text" id="input_file_name" name="input_file_name" value="파일 없음" readonly>
+                <input type="file" name="img" id="img" hidden="hidden">
+                <input type="hidden" id="isEmpty" name="isEmpty" th:value="${isEmpty}">
+                <button type="button" id="input_file_clear">삭제</button>
                 <hr>
                 <div class="buttonContain button-full">
                     <!-- 작성자만 수정 및 삭제 버튼을 볼 수 있도록 -->
@@ -78,6 +82,21 @@
     function backToDetail() {
         history.go(-1);
     }
+
+    document.getElementById("input_file").addEventListener("click", function() {
+        $("#img").click();
+    });
+
+    document.getElementById("input_file_clear").addEventListener("click", function() {
+        $("#input_file_name").val('파일 없음');
+        $("#isEmpty").val(true);
+    });
+
+    document.getElementById("img").addEventListener("change", function() {
+        let target = document.getElementById("img");
+        $("#input_file_name").val(target.files[0].name);
+        $("#isEmpty").val(false);
+    });
 </script>
 </body>
 </html>
