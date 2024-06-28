@@ -58,8 +58,9 @@ public class QnaController {
 
     @GetMapping("/oneByone")
     @ResponseBody
-    public Page<Qna> oneByonePaging(Pageable pageable) {
-        return qnaService.findAllByType("ONE", pageable);
+    public Page<Qna> oneByonePaging(HttpSession session, Pageable pageable) {
+        Member member = (Member) session.getAttribute("loginUser");
+        return qnaService.findAllByMember(member, pageable);
     }
 
     @GetMapping("/faq/detail/{qseq}")
