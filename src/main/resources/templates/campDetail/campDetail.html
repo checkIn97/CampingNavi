@@ -530,20 +530,35 @@
     });
 
     function hideLoading() {
-        // 모든 이미지가 로드되었는지 확인합니다.
-        var allImagesLoaded = Array.from(document.querySelectorAll('.detailImg')).every(function (img) {
-            return img.complete;
-        });
+        const loadingElement = document.querySelector('.loading');
+        const detailImages = document.querySelectorAll('.detailImg');
 
-        // 모든 이미지가 로드되었다면 로딩 이미지를 숨깁니다.
-        if (allImagesLoaded) {
-            document.querySelector('.loading').style.display = 'none';
-            // 모든 실제 이미지를 보여줍니다.
-            Array.from(document.querySelectorAll('.detailImg')).forEach(function (img) {
-                img.style.display = 'block';
-            });
+        // 이미지 로드 이벤트 핸들러
+        function onImageLoad() {
+            // 모든 이미지가 로드되었는지 확인
+            const allImagesLoaded = Array.from(detailImages).every(img => img.complete);
+
+            // 모든 이미지가 로드되었다면 로딩 이미지를 숨기고 실제 이미지를 표시
+            if (allImagesLoaded) {
+                loadingElement.style.display = 'none';
+                detailImages.forEach(img => img.style.display = 'block');
+            }
         }
+
+        // 모든 이미지에 로드 이벤트 리스너 추가
+        detailImages.forEach(img => {
+            // 이미지가 이미 로드되었는지 확인하고 로드되지 않은 경우 이벤트 리스너 추가
+            if (img.complete) {
+                onImageLoad();
+            } else {
+                img.addEventListener('load', onImageLoad);
+                img.addEventListener('error', onImageLoad); // 오류 처리
+            }
+        });
     }
+
+    // 페이지 로드 시 hideLoading 함수 호출
+    document.addEventListener('DOMContentLoaded', hideLoading);
 </script>
 </body>
 </html>
