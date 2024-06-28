@@ -23,12 +23,12 @@
 <th:block th:insert="~{insert/header.html}"></th:block>
 
 <div class="box detailBox">
+    <div class="loading" style="display: block;">
+        <img class="camp-loading" src="/assets/images/bg/lodingBg.gif">
+    </div>
     <div class="slideshow-container">
         <img alt="arrowL" class="arrow" id="arrowL" src="/assets/images/icon/arrowL.png">
         <img alt="arrowR" class="arrow" id="arrowR" src="/assets/images/icon/arrowR.png">
-        <div class="loading" style="display: block;">
-            <img class="camp-loading" src="/assets/images/bg/lodingBg.gif">
-        </div>
         <div class="slideshow">
             <div class="slide" th:each="image : ${imageUrls}">
                 <img class="detailImg" onload="hideLoading()" style="display: none;" th:src="${image.imageUrl}">
@@ -44,7 +44,6 @@
             <input name="slide" th:checked="${index == 0}" th:id="'radio' + ${index}" type="radio">
         </div>
     </div>
-
 
 
     <div class="buttonContain">
