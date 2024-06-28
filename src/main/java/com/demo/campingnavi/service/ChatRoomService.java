@@ -27,5 +27,5 @@ public interface ChatRoomService {
     public void addBanUser(String roomId, int mseq);
     public List<String> getBanUserList(String roomId);
     public void deleteRoom(String roomId);
-
+    public List<ChatRoom> findByCampNameContainingAndPurposeIn(String campName, String[] purposes);
 }

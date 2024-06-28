@@ -17,4 +17,5 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, String> {
             "WHERE chatRoom.camp = camp ")
     List<Camp> getCampListExistingChatRoom();
     List<ChatRoom> findByUserListContains(String memberMseq);
+    List<ChatRoom> findByCampNameContainingAndPurposeIn(String campName, String[] purposes);
 }

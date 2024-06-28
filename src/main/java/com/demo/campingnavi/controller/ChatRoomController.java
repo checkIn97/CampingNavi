@@ -74,9 +74,16 @@ public class ChatRoomController {
     @GetMapping("/rooms")
     @ResponseBody
     public List<ChatRoomVo> room(@RequestParam(defaultValue = "") String campName,
+                                 @RequestParam(defaultValue = "") String[] purpose,
                                HttpSession session) {
-        System.out.println(campName + "으로 찾기실행");
-        List<ChatRoom> chatRoomList = chatRoomService.findByCampNameContaining(campName);
+        System.out.println(campName + "캠핑장 으로 찾기실행");
+        System.out.println(purpose + "캠프목적 으로 찾기 실행");
+        List<ChatRoom> chatRoomList;
+        if (purpose.length > 0) {
+            chatRoomList = chatRoomService.findByCampNameContainingAndPurposeIn(campName, purpose);
+        } else {
+            chatRoomList = chatRoomService.findByCampNameContaining(campName);
+        }
         List<ChatRoomVo> chatRoomVoList = new ArrayList<>();
         Member member = (Member) session.getAttribute("loginUser");
         CampRecommendVo campRecommendVo = new CampRecommendVo();

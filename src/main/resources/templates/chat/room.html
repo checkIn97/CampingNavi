@@ -16,14 +16,6 @@
     <article class="box centerBox" id="chatRoomBox">
         <div class="container">
             <div class="row">
-                <!--            <div class="col-md-4 chatRoomBox" v-bind:key="item.roomId" v-for="item in chatrooms"-->
-                <!--                 v-on:click="enterRoom(item.roomId)">-->
-                <!--                <ul class="list-group">-->
-                <!--                    <li class="list-group-item list-group-item-action">-->
-                <!--                        {{item.name}}-->
-                <!--                    </li>-->
-                <!--                </ul>-->
-                <!--            </div>-->
                 <div class="col-md-4 chatRoomBox" v-bind:key="item.chatRoom.roomId" v-for="item in chatrooms"
                      v-on:click="enterRoom(item.chatRoom.roomId)">
                     <ul class="list-group">
@@ -183,6 +175,7 @@
     let memberName = $('input[name=memberName]').val();
     let memberMseq = $('input[name=memberMseq]').val();
     let comuCamp = $('input[name=comuCamp]').val();
+    let purpose = $('input[name=chatPurpose]');
 </script>
 <script>
     let vm = new Vue({
@@ -191,6 +184,7 @@
             room_name: '',
             chatrooms: [],
             start_date: '',
+
             end_date: '',
             max_mem: '',
             purpose: [],
@@ -211,7 +205,15 @@
             findAllRoom: function () {
                 let params = new URLSearchParams();
                 params.append("campName", comuCamp);
-                console.log(comuCamp + "rooms 로 전송");
+                if (this.purpose.length > 0) {
+                    // purpose 배열을 문자열로 변환하여 전송
+                    params.append("purpose", this.purpose.join(','));
+                } else {
+                    // purpose 배열이 비어있으면 아무 값도 전송하지 않음
+                    params.append("purpose", ""); // 빈 문자열 또는 null로 설정할 수 있음
+                }
+                console.log(comuCamp + "rooms 로 캠프정보 전송");
+                console.log(purpose + "rooms 로 캠프목적 전송")
                 axios.get('/chat/rooms', {params: params}).then(response => {
                     this.chatrooms = response.data;
 
@@ -273,13 +275,9 @@
                     )
             },
             searchRoom: function () {
-                if ("" === this.search_word) {
-                    alert("검색어를 입력해 주십시요.");
-                    return;
-                } else {
-                    comuCamp = this.search_word
-                    this.findAllRoom();
-                }
+                comuCamp = this.search_word;
+                purpose = this.purpose;
+                this.findAllRoom();
             },
             findMyRoomList: function () {
                 axios.get("/chat/myList/" + memberMseq).then(

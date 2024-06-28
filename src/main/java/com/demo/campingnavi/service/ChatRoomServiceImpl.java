@@ -120,5 +120,10 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         chatRoomRepository.deleteById(roomId);
     }
 
+    @Override
+    public List<ChatRoom> findByCampNameContainingAndPurposeIn(String campName, String[] purposes) {
+        return chatRoomRepository.findByCampNameContainingAndPurposeIn(campName, purposes);
+    }
+
 
 }
