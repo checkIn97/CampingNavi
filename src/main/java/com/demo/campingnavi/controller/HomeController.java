@@ -1,18 +1,11 @@
 package com.demo.campingnavi.controller;
 
 import com.demo.campingnavi.domain.Member;
-import com.demo.campingnavi.dto.CustomOauth2UserDetails;
-import com.demo.campingnavi.dto.CustomSecurityUserDetails;
-import com.demo.campingnavi.repository.jpa.MemberRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,8 +36,14 @@ public class HomeController {
         return result;
     }
 
-    @RequestMapping("/loding")
-    public String loding() {
-        return "lodingPage";
+    @RequestMapping("/loading")
+    public String loading() {
+        return "loadingPage";
+    }
+
+    @GetMapping("/search/loading/{cseq}")
+    public String loading_search(@PathVariable("cseq") int cseq, Model model) {
+        model.addAttribute("cseq", cseq);
+        return "search/loadingPage_search";
     }
 }

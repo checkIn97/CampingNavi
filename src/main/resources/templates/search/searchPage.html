@@ -369,7 +369,7 @@
                         markers.push(marker);
 
                         kakao.maps.event.addListener(marker, 'click', function () {
-                            location.href = "/camp/detail/?cseq=" + list[i].camp.cseq;
+                            location.href = "/search/loading/" + list[i].camp.cseq;
                         });
 
                         // 마커에 표시할 인포윈도우를 생성합니다
