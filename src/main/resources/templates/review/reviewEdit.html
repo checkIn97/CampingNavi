@@ -18,7 +18,7 @@
 <th:block th:insert="insert/header.html"></th:block>
 
 <article class="box centerBox review-box">
-    <form name="form" method="post" enctype="multipart/form-data" action="/review/edit">
+    <form name="form" id="form" method="post" enctype="multipart/form-data" action="/review/edit">
 
         <h2 class="review-title">캠핑장 리뷰 수정</h2>
         <hr>
@@ -43,7 +43,7 @@
             <textarea id="summernote" name="content" th:utext="${review.content}"></textarea>
         </div>
         <div class="buttonContain review-topMargin">
-            <button type="submit" class="mainBtn">게시글 등록</button>
+            <button type="button" class="mainBtn" onclick="review_write()">게시글 등록</button>
             <button type="button" onclick="window.location.href='/review/list'" class="button">돌아가기</button>
         </div>
     </form>
@@ -176,6 +176,17 @@
                 alert("평점 출력 실패");
             }
         });
+    }
+
+    function review_write() {
+        if ($("#camp").val().length == 0) {
+            alert("캠핑장 이름을 입력해 주세요.")
+            $("#camp").focus();
+        } else if ($("#summernote").summernote('isEmpty'))
+            alert("리뷰 내용을 입력해 주세요.")
+        else {
+            $("#form").submit();
+        }
     }
 </script>
 
