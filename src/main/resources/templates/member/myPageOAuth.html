@@ -19,7 +19,7 @@
 </script>
 <body>
 
-<div class="box" id="myPageContainer">
+<div class="box centerBox" id="myPageContainer">
 
     <div class="myPageSpace">
         <div class="myPageUserIdImg">
@@ -38,7 +38,7 @@
             </div>
 
             <div id="memberNickNameRead">
-                <h1 th:text="${member.nickname}"></h1>
+                <h1 id="nickname_view" th:text="${member.nickname}"></h1>
                 <button id="valNick" class="myPageBtn mainBtn" onclick="validateNickname()" type="button">닉네임 변경</button>
             </div>
             <div class="buttonContain" id="memberNickNameChange">
@@ -107,7 +107,7 @@
                             <option value="063">063) 전북</option>
                             <option value="064">064) 제주</option>
                         </select>
-                        <input th:value="${member.phone != null ? member.phone : ''}" type="text" class="myPageInput" name="phone2" id="phone2">
+                        <input th:value="${member.phone != null ? member.phone.replace(' ', '') : null}" type="text" class="myPageInput" name="phone2" id="phone2">
                     </div>
                     <hr>
                     <div class="myPageTitle">이메일</div>
@@ -119,18 +119,18 @@
                     <h3 class="myPage-info-title">주소</h3>
                     <hr>
                     <div class="myPageTitle">도로명주소</div>
-                    <div id="memberAddr1Read" th:text="${member.addr1 != null ? member.addr1 : '도로명주소를 입력해주세요.'}"></div>
+                    <div id="memberAddr1Read" th:text="${member.addr1 != null ? member.addr1.trim() : '도로명주소를 입력해주세요.'}"></div>
                     <div id="memberAddr1Change">
                         <input class="myPageInput" id="addr1" name="addr1" readonly
-                               th:value="${member.addr1 != null ? member.addr1 : ''}" type="text"/>
+                               th:value="${member.addr1 != null ? member.addr1.trim() : null}" type="text"/>
                         <button class="myPageBtn mainBtn" onclick="searchAddress()" type="button">주소 검색</button>
                     </div>
                     <hr>
                     <div class="myPageTitle">상세주소</div>
-                    <div id="memberAddr2Read" th:text="${member.addr2 != null ? member.addr2 : ' '}"></div>
+                    <div id="memberAddr2Read" th:text="${member.addr2 != null ? member.addr2.trim() : null}"></div>
                     <div id="memberAddr2Change">
                         <input class="myPageInput" id="addr2" name="addr2"
-                               th:value="${member.addr2 != null ? member.addr2 : ''}" type="text"/>
+                               th:value="${member.addr2 != null ? member.addr2.trim() : null}" type="text"/>
                     </div>
                     <hr>
                 </div>
@@ -148,7 +148,7 @@
     <div class="buttonContain">
         <button class="mainBtn" id="myPageChange" type="button">수정하기</button>
         <button class="mainBtn" id="myPageRead" type="button">수정완료</button>
-        <button onclick="goBack()" type="button">뒤로가기</button>
+        <button onclick="location.href = '/oauth-login/member/logoutProc'" type="button">뒤로가기</button>
     </div>
 </div>
 
@@ -158,7 +158,6 @@
 </footer>
 
 <script>
-
     $(document).ready(function () {
         var img = $("#backURL").val();
         if (img != null) {
@@ -226,13 +225,10 @@
         var provider = $("#originProvider").val();
         var name = $("#name").text();
         var val = false;
-        var pt = prompt("현재 닉네임을 변경하시려면 '네'를 입력해주세요.");
-        if (pt !== '네' || pt == null) {
-            document.getElementById('valNick').style.display = 'none';
-            alert("확인되었습니다. 정보 수정을 계속 진행하여 주십시오.");
-        } else {
+        var pt = prompt("새 닉네임을 입력해 주세요.");
+        if (pt != null) {
             var nicknameRegex = /^[가-힣a-zA-Z]{2,}$/;
-            var cn = prompt("변경할 닉네임을 적어주세요.");
+            var cn = pt;
             if (nicknameRegex.test(cn)) {
                 $.ajax({
                     type: 'POST',
@@ -243,16 +239,16 @@
                     success: function (data) {
                         var result = data.result;
                         if (result === "success") {
-                            $("#hiddenNickname").val(nickname);
+                            $("#hiddenNickname").val(cn);
                             alert("사용 가능한 닉네임 입니다.")
                             $('#myPageRead').prop('disabled', false);
-                            document.getElementById('nickname').textContent = cn;
+                            document.getElementById('nickname').value = cn;
+                            $("#nickname_view").text(cn);
                         } else {
                             alert("이미 존재하는 닉네임 입니다.")
                             $('#myPageRead').prop('disabled', true);
                             $("#nickname").focus()
                         }
-
                     },
                     error: function (error) {
                         alert("전송 실패")
@@ -333,7 +329,7 @@
         var nickname = $("#nickname").val();
         var birth = $("#birth").val();
         var phone = $("#phone").val();
-        var phone2 = $("#phone2").val().substring(1, $("#phone2").val().length);
+        var phone2 = $("#phone2").val();
         var addr1 = $("#addr1").val();
         var addr2 = $("#addr2").val();
         var img = $("#backURL").val();

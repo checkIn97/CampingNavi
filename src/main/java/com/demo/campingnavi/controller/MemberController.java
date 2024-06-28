@@ -164,7 +164,7 @@ public class MemberController {
 
     @PostMapping("/mypage/edit/detail")
     @ResponseBody
-    public Map<String, Object> myPageEdit(Model model,
+    public Map<String, Object> myPageEdit(Model model, HttpSession session,
                                           @RequestParam("nickname") String nickname,
                                           @RequestParam("sex") String sex,
                                           @RequestParam(value = "birth", defaultValue = "") String birth,
@@ -212,7 +212,7 @@ public class MemberController {
         member.setImg(img);
         member.setNickname(nickname);
         member.setSex(sex);
-        if (birth != "") {
+        if (!birth.isEmpty()) {
             member.setBirth(birth);
         }
         member.setPhone(phone + phone2);
@@ -220,6 +220,7 @@ public class MemberController {
         member.setAddr2(addr2);
 
         memberRepository.save(member);
+        session.setAttribute("loginUser", member);
 
         data.put("nickname", nickname);
         data.put("sex", sex);
