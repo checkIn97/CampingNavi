@@ -26,12 +26,9 @@
     <div class="slideshow-container">
         <img alt="arrowL" class="arrow" id="arrowL" src="/assets/images/icon/arrowL.png">
         <img alt="arrowR" class="arrow" id="arrowR" src="/assets/images/icon/arrowR.png">
-        <div class="loading" style="display: block;">
-            <img class="camp-loading" src="/assets/images/bg/lodingBg.gif">
-        </div>
         <div class="slideshow">
             <div class="slide" th:each="image : ${imageUrls}">
-                <img class="detailImg" onload="hideLoading()" style="display: none;" th:src="${image.imageUrl}">
+                <img class="detailImg" th:src="${image.imageUrl}">
             </div>
         </div>
         <!-- 슬라이드 쇼의 하단에 동그라미를 추가 -->
@@ -39,11 +36,10 @@
             <!-- 각 슬라이드에 대응하는 동그라미를 추가 -->
             <div class="dot" th:each="image, index : ${imageUrls}" th:id="'dot' + ${index}"></div>
         </div>
-    </div>
 
-
-    <div th:each="image, index : ${imageUrls}">
-        <input name="slide" th:checked="${index == 0}" th:id="'radio' + ${index}" type="radio">
+        <div th:each="image, index : ${imageUrls}">
+            <input name="slide" th:checked="${index == 0}" th:id="'radio' + ${index}" type="radio">
+        </div>
     </div>
 
     <div class="buttonContain">
@@ -518,29 +514,6 @@
     });
 
 </script>
-<script>
-    document.getElementById('goingBtn').addEventListener('click', function () {
-        const cseq = document.getElementById('cseq').value;
-        const campName = document.getElementById('campName').value;
-        const url = `/chat/room?cseq=${cseq}&campName=${encodeURIComponent(campName)}`;
-        window.location.href = url;
-    });
 
-    function hideLoading() {
-        // 모든 이미지가 로드되었는지 확인합니다.
-        var allImagesLoaded = Array.from(document.querySelectorAll('.detailImg')).every(function (img) {
-            return img.complete;
-        });
-
-        // 모든 이미지가 로드되었다면 로딩 이미지를 숨깁니다.
-        if (allImagesLoaded) {
-            document.querySelector('.loading').style.display = 'none';
-            // 모든 실제 이미지를 보여줍니다.
-            Array.from(document.querySelectorAll('.detailImg')).forEach(function (img) {
-                img.style.display = 'block';
-            });
-        }
-    }
-</script>
 </body>
 </html>
