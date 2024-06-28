@@ -34,12 +34,13 @@
                 <img class="detailImg" onload="hideLoading()" style="display: none;" th:src="${image.imageUrl}">
             </div>
         </div>
+        <!-- 슬라이드 쇼의 하단에 동그라미를 추가 -->
+        <div class="dots" id="dots">
+            <!-- 각 슬라이드에 대응하는 동그라미를 추가 -->
+            <div class="dot" th:each="image, index : ${imageUrls}" th:id="'dot' + ${index}"></div>
+        </div>
     </div>
-    <!-- 슬라이드 쇼의 하단에 동그라미를 추가 -->
-    <div class="dots" id="dots">
-        <!-- 각 슬라이드에 대응하는 동그라미를 추가 -->
-        <div class="dot" th:each="image, index : ${imageUrls}" th:id="'dot' + ${index}"></div>
-    </div>
+
 
     <div th:each="image, index : ${imageUrls}">
         <input name="slide" th:checked="${index == 0}" th:id="'radio' + ${index}" type="radio">
