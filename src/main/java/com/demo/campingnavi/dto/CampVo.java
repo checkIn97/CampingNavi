@@ -34,7 +34,7 @@ public class CampVo {
     public CampVo(Camp camp, float score, String predict) {
         this(camp);
         this.score = score;
-        this.scoreView = String.format("%.1f", score);
+        this.scoreView = String.valueOf(score).substring(0, 3);
         this.predict = predict;
     }
 }

@@ -166,6 +166,48 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
+    public void reviewListDeleteInCsv(List<Integer> reviewList) {
+        // 리뷰가 작성될 때 Review.csv 파일로 평점정보를 내보내는 메소드
+        String csvFile = "tmp_review.csv";
+        String pyFile = "ReviewListDeleteInCsv.py";
+        csvFile = PathConfig.realPath(csvFile);
+        pyFile = PathConfig.realPath(pyFile);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("vseq\n");
+
+        for (int n : reviewList) {
+            stringBuilder
+                    .append(n).append("\n");
+        }
+
+        try {
+            FileWriter fileWriter = new FileWriter(csvFile);
+            try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+                bufferedWriter.write(stringBuilder.toString());
+            }
+            fileWriter.close();
+            ProcessBuilder processBuilder = new ProcessBuilder("python", pyFile, csvFile);
+            Process process = processBuilder.start();
+            process.waitFor();
+            System.out.println("review 데이터 내보내기 성공");
+        }catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("review 데이터 내보내기 실패");
+        }
+
+        File file = new File(csvFile);
+        if (file.exists()) {
+            if (file.delete()) {
+                System.out.println("임시파일 삭제 완료");
+            } else {
+                System.out.println("임시파일 삭제 실패");
+            }
+        }
+    }
+
+    @Override
     public void campListOutToCsv(List<Camp> campList, String csvFile, String pyFile) {
         // 평점정보를 가져올 캠프 리스트를 내보내는 메소드
         csvFile = PathConfig.realPath(csvFile);

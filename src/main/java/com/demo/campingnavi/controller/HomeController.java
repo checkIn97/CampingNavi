@@ -32,7 +32,6 @@ public class HomeController {
             nickname = ((Member)session.getAttribute("loginUser")).getNickname();
         }
         result.put("nickname", nickname);
-        System.out.println(nickname);
         return result;
     }
 

@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from surprise import SVD
 from surprise import Dataset
 from surprise import Reader
@@ -52,6 +53,7 @@ if not os.path.exists(rating_new_file):
 rating_new = pd.read_csv(rating_new_file, encoding='utf-8', sep=',')
 rating_new.set_index(['member', 'camp'], inplace=True)
 rating_new.sort_values(by='vseq', ascending=True, inplace=True)
+rating_new['rate'] = rating_new['rate'].apply(refine_rate)
 
 indexes = []
 for i in rating_new.index:
@@ -65,7 +67,10 @@ rate_new = []
 for (i, j) in indexes:
     member_new.append(str(i))
     camp_new.append(j)
-    rate_new.append(rating_new.loc[(i, j)]['rate'].iloc[-1])
+    if type(rating_new.loc[(i, j)]['rate']) == np.float64:
+        rate_new.append(rating_new.loc[(i, j)]['rate'])
+    else :
+        rate_new.append(rating_new.loc[(i, j)]['rate'].iloc[-1])
 
 rating_renewal = pd.DataFrame({'member':member_new, 'camp':camp_new, 'rate':rate_new})
 

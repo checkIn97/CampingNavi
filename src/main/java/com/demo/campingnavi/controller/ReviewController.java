@@ -291,6 +291,9 @@ public class ReviewController {
         // model.addAttribute("memberVo", memberVo);
         reviewCommentService.deletAllComment(vseq);
         reviewService.deleteReview(vseq);
+        List<Integer> list = new ArrayList<>();
+        list.add(vseq);
+        dataService.reviewListDeleteInCsv(list);
 
         return "redirect:/review/list";
 
@@ -327,7 +330,7 @@ public class ReviewController {
                             @RequestParam("content") String content,
                             @RequestParam("vseq") int vseq,
                             @RequestParam("cseq") int cseq,
-                            @RequestParam("likes") int likes,
+                            @RequestParam("likes") float likes,
                             @RequestParam("cnt") int cnt,
                             HttpSession session, HttpServletRequest request, Model model) {
 
@@ -355,6 +358,9 @@ public class ReviewController {
 
         reviewService.editReview(vo);
         reviewCommentService.updateCommentCount(vseq);
+        List<Review> list = new ArrayList<>();
+        list.add(vo);
+        dataService.reviewListOutToCsv(list);
         return "redirect:/review/list"; // 저장 후 리스트 페이지로 리다이렉트합니다.
     }
 

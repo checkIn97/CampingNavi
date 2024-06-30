@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from surprise import SVD
 from surprise import Dataset
 from surprise import Reader
@@ -64,7 +65,10 @@ review_data.sort_values(by='vseq', ascending=True, inplace=True)
 predict = []
 for i in result.index:
     try:
-        result.loc[i]['rate'] = review_data.loc[member, i]['rate'].iloc[-1]
+        if type(review_data.loc[member, i]['rate']) == np.float64:
+            result.loc[i]['rate'] = review_data.loc[member, i]['rate']
+        else:
+            result.loc[i]['rate'] = review_data.loc[member, i]['rate'].iloc[-1]
         predict.append('n')
     except:
         predict.append('y')

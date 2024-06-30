@@ -11,7 +11,9 @@ try:
     if os.path.exists(file_name):
         original_data = pd.read_csv(file_name, encoding='utf-8')
         original_data.set_index('vseq', inplace=True)
-        data = pd.concat([original_data, new_data])
+        for i in new_data.index:
+            original_data.loc[i] = new_data.loc[i]
+        data = original_data
     else:
         data = new_data
 except:

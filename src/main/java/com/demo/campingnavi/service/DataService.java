@@ -8,6 +8,7 @@ import java.util.List;
 public interface DataService {
     List<Camp> campInFromCsv(String csvFile, String n);
     void reviewListOutToCsv(List<Review> reviewList);
+    void reviewListDeleteInCsv(List<Integer> reviewList);
     void campListOutToCsv(List<Camp> campList, String csvFile, String pyFile);
     String deleteFile(String filename);
     String createFile(String filename);
