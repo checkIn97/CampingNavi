@@ -391,7 +391,7 @@ public class AdminController {
 
     @ResponseBody
     @PostMapping("/load_update_history")
-    public Map<String, Object> loadUpdateHistory(@RequestParam(value = "kind") String kind) {
+    public Map<String, Object> loadUpdateHistory(HttpSession session, @RequestParam(value = "kind") String kind) {
         Map<String, Object> result = new HashMap<>();
         List<UpdateHistory> updateHistoryListSuccess = updateHistoryService.getUpdateHistoryList(kind, "success");
         List<UpdateHistory> updateHistoryListFail = updateHistoryService.getUpdateHistoryList(kind, "fail");
@@ -448,6 +448,8 @@ public class AdminController {
             } else if (updateHistoryFailUseq > updateHistorySuccessUseq && updateHistoryFailUseq > updateHistoryStoppedUseq) {
                 updateTry = updateHistoryFail.getUpdateTime().toString().substring(0, 19);
                 text = "fail";
+            } else if (String.valueOf(session.getAttribute("crawling")).equals("y")) {
+                text = "stopped";
             }
         }
 
