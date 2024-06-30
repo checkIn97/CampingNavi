@@ -42,6 +42,13 @@ rating_init['rate'] = rating_init['rate'].apply(refine_rate)
 
 # 새로 축적된 리뷰 데이터 (평점 포함)
 rating_new_file = 'Review.csv'
+if not os.path.exists(rating_new_file):
+    tmp_review = pd.DataFrame({'vseq':[], 'member':[], 'camp':[], 'rate':[]})
+    tmp_review.to_csv(rating_new_file, encoding='utf-8', index=False)
+    while True:
+        if os.path.exists(rating_new_file):
+            break
+
 rating_new = pd.read_csv(rating_new_file, encoding='utf-8', sep=',')
 rating_new.set_index(['member', 'camp'], inplace=True)
 rating_new.sort_values(by='vseq', ascending=True, inplace=True)
@@ -68,11 +75,12 @@ rating_renewal = pd.DataFrame({'member':member_new, 'camp':camp_new, 'rate':rate
 rating = pd.concat([rating_init, rating_renewal])
 rating.reset_index(inplace=True)
 rating.drop('index', axis=1, inplace=True)
+rating['camp'] = rating['camp'].apply(lambda x: int(x))
 
 
 
 # 최적화
-reader = Reader(rating_scale=(0.0, 5.0))
+reader = Reader(rating_scale=(0.5, 5.0))
 data = Dataset.load_from_df(rating[['member', 'camp', 'rate']], reader)
 
 # 최적화할 파라미터
@@ -93,6 +101,10 @@ best_factors = gs.best_params['rmse']['n_factors']
 rating_noh = rating.copy()
 rating_noh_file = 'rating_noh.csv'
 rating_noh.to_csv(rating_noh_file, sep=';', encoding='utf-8-sig', index=False, header=False)
+while True:
+    if os.path.exists(rating_noh_file):
+        break
+
 reader = Reader(line_format='user item rating', sep=';', rating_scale=(0.5, 5.0))
 data_folds = DatasetAutoFolds(ratings_file=rating_noh_file, reader=reader)
 
