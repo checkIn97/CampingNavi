@@ -13,5 +13,12 @@
 <hr>
 <h4>저희 Team Navigation은 사용자 편의를 위한 인터페이스와 맞춤 추천 시스템을 제공합니다.</h4>
 
-### 화면 정의서 살펴보기
+<hr>
+<strong>프로젝트 기획 문서</strong>
+
+### 요구사항 정의서 살펴보기
+[CampingNavi 기획 문서.pdf](https://github.com/user-attachments/files/16047752/CampingNavi.pdf)
+
+
+### 프로젝트 포트폴리오 살펴보기
 [CampNavi.pdf](https://github.com/user-attachments/files/16047740/CampNavi.pdf)
