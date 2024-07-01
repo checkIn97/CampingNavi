@@ -30,7 +30,7 @@ public class CampDetailServiceImpl implements CampDetailService {
     @Override
     public List<ApiResponse.Item> DataFromApi(String mapX, String mapY) {
 
-        String serviceKey = "YV8OhM3PmYs8nZRYBGLvcJ3c%2Bl3I13ySsOnUgSm4N1y5sae29L3T3cdo3E8hty%2FooLqQUATTLzf2jxnOpuP15w%3D%3D";
+        String serviceKey = "api키";
         String MobileOS = "ETC";
         String MobileApp = "AppTest";
         String radius = "5";
@@ -70,7 +70,7 @@ public class CampDetailServiceImpl implements CampDetailService {
 
     @Override
     public List<ApiImageResponse.Item> DataFromApiImage(String contentId) {
-        String serviceKey = "YV8OhM3PmYs8nZRYBGLvcJ3c%2Bl3I13ySsOnUgSm4N1y5sae29L3T3cdo3E8hty%2FooLqQUATTLzf2jxnOpuP15w%3D%3D";
+        String serviceKey = "api키";
         String MobileOS = "ETC";
         String MobileApp = "AppTest";
         String type = "json";
