@@ -2,7 +2,8 @@
 
 <h3>메인화면</h3>
 
-![로그인 성공 시 메인화면](https://github.com/checkIn97/CampingNavi/assets/158795073/b1171bb0-3b51-44d6-bd6c-a783bce3c705)
+![로그인 화면](https://github.com/checkIn97/CampingNavi/assets/158795073/56aa1a40-1128-479c-bcf7-ea67f8d9cd24)
+
 
 <hr>
 
