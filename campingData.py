@@ -18,7 +18,7 @@ url_numOfRows = '&numOfRows='
 url_pageNo = '&pageNo='
 url_dataType = '&_type=json'
 
-serviceKey = 'cSqs0wGkiNNILoYdHrUMd4ydoaavnQUkUF7ahPxZnrAQCj%2FtBUlv%2B4kmdxzncn7Dk%2BJcy8IadGRdrFJ2yje%2B6A%3D%3D'
+serviceKey = 'api 서비스 키'
 
 
 
