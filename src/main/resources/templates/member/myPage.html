@@ -531,16 +531,16 @@
                     reviews.forEach(function (review) {
                         let titleLen = review.title.length;
                         if (titleLen <= 6) {
-                            reviewHTML += '<h3> ' + review.title + '</h3>';
+                            reviewHTML += '<a class="myPageSaveLink" href="/review/detail/' + review.vseq + '"><h3> ' + review.title + '</h3></a>';
                         } else {
                             reviewHTML += '<h3>' + review.title.substring(0, 6) + '...</h3>';
                         }
-                        reviewHTML += '<a class="myPageSaveLink" href="/review/detail/' + review.vseq + '">리뷰 평점: ' + review.likes + '</a><br>';
+                        reviewHTML += '<span>리뷰 평점: ' + review.likes + '</span><br>';
                         let campLen = review.camp.name.length;
                         if (campLen <= 6) {
-                            reviewHTML += '<a class="myPageSavaLink" href="/camp/detail/?mapX=' + review.camp.mapX + '&mapY=' + review.camp.mapY + '&contentId=' + review.camp.contentId + '&cseq=' + review.camp.cseq + '">' + review.camp.name + '</a><br>';
+                            reviewHTML += '<a class="myPageSavaLink" href="/camp/detail/?cseq=' + review.camp.cseq + '">' + review.camp.name + '</a><br>';
                         } else {
-                            reviewHTML += '<a class="myPageSavaLink" href="/camp/detail/?mapX=' + review.camp.mapX + '&mapY=' + review.camp.mapY + '&contentId=' + review.camp.contentId + '&cseq=' + review.camp.cseq + '">' + review.camp.name.substring(0, 6) + '...</a><br>';
+                            reviewHTML += '<a class="myPageSavaLink" href="/camp/detail/?cseq=' + review.camp.cseq + '">' + review.camp.name.substring(0, 6) + '...</a><br>';
                         }
                         let contentLen = review.content.length;
                         if (contentLen <= 20) {
@@ -554,7 +554,7 @@
                     reviewArea.append(reviewHTML);
                 } else {
                     if (reviewArea.find('strong').length === 0) {
-                        reviewArea.append('<strong>남긴 리뷰가 없습니다.</strong>');
+                        reviewArea.append('<strong>마지막 게시물입니다.</strong>');
                     }
                 }
             },
@@ -600,7 +600,7 @@
                         listHTML += '<div>';
                         listHTML += '<div class="buttonContain">';
                         listHTML += '<h3 class="myPageSaveTitle">' + recommend.camp.name + '</h3>';
-                        listHTML += '<a class="myPageSavaLink" href="/camp/detail/?mapX=' + recommend.camp.mapX + '&mapY=' + recommend.camp.mapY + '&contentId=' + recommend.camp.contentId + '&cseq=' + recommend.camp.cseq + '">상세보기</a>';
+                        listHTML += '<a class="myPageSavaLink" href="/camp/detail/?cseq=' + recommend.camp.cseq + '">상세보기</a>';
                         listHTML += '</div>';
                         listHTML += '<hr>';
                         listHTML += '</div>';
@@ -608,7 +608,7 @@
                     listArea.append(listHTML);
                 } else {
                     if (listArea.find('strong').length === 0) {
-                        listArea.append('<strong>찜한 캠핑장이 없습니다.</strong>');
+                        listArea.append('<strong>마지막 게시물입니다.</strong>');
                     }
                 }
             },
@@ -671,7 +671,7 @@
                     qnaArea.append(qnaHTML);
                 } else {
                     if (qnaArea.find('strong').length === 0) {
-                        qnaArea.append('<strong>등록한 문의가 없습니다.</strong>');
+                        qnaArea.append('<strong>마지막 게시물입니다.</strong>');
                     }
                 }
             },
